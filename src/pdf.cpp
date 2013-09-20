@@ -10,7 +10,7 @@ using namespace std;
 #include <iterator>
 #include "interpolator.h"
 
-#include "CPDF.h"
+#include "pdf.h"
 
 //CPDF::CPDF()
 //{
@@ -63,7 +63,10 @@ cashing(cashing_),
 use_cashed_interpolator(use_cashed_interpolator_)
 {
      // Print friendly message
-     cout << "\n[CPDF::" << __func__ << "] Attempting init of '" << provider << "' pdf at O(as^" << pert_order << ") ,error='" << pdf_error << "'";
+     cout << "\n[CPDF::" << __func__
+            << "] Attempting init of '"<< provider
+            << "' pdf at O(as^" << pert_order
+            << ") ,error='" << pdf_error << "'";
      //cout<<"\n pdf of particle # "<<iprtn;
     // if (n_as>0) cout<<" from particle # "<<jprtn;
     // cout << "\nn_as = " << n_as << ", n_eps = " << n_eps;
@@ -323,7 +326,7 @@ vector<double> CPDF::calculate_pdf_error(const vector<double>& result)
   vector<double> pdferr;
   
   // if we don't want the pdf error, return 0s
-  if(pdf_error)
+  if(!pdf_error)
   {
     pdferr.push_back(0.0);
     pdferr.push_back(0.0);

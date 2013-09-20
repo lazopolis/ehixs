@@ -3,7 +3,7 @@
 
 #include<complex>
 #include<string>
-#include "CConstants.h"
+#include "constants.h"
 using namespace std;
 
 class ParticleObject
@@ -35,6 +35,7 @@ public:
 	void Set_Xq(double);
      void evolve_mass_to_mur(const double&,const double & ,int );
      bool needs_evolution;
+    void set_reference_scale(const double & mu_ref){ref_scale = mu_ref;evolved=false;}
 
 private:
      double evolution_step();

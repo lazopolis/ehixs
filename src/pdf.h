@@ -6,7 +6,7 @@
 #define PDF_H
 
 #include "interpolator.h"
-#include "cashed_interpolator.h"
+#include "cached_interpolator.h"
 #include "splitting_kernels.h"
 class CPDF
 {
@@ -55,13 +55,10 @@ class CPDF
   vector<double> NNPDF_pdferror(const vector<double>&);
 
 
-  /** \brief Interpolate 
-    *
-    * More infor please... */
+  
   void interpolate(double, double, double, int, int, int, int,const string&,int);
-  /** \brief Test interpolation
-    *
-    * Tests the interpolation on some sample x-points and prints out the results. TBI !*/
+
+   // * Tests the interpolation on some sample x-points and prints out the results. TBI !*/
   void test_interpolation(int, double);
 
   /** \brief Parameter input */
@@ -116,7 +113,7 @@ public:
 #ifndef PDFONTHEFLY_H
 #define PDFONTHEFLY_H
 
-#include "OneDInterpolator.h"
+#include "one_d_interpolator.h"
 
 
 class SinglePDFMemberInterpolator: public InterpolatorBase

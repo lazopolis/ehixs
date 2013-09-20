@@ -13,7 +13,7 @@ void check_sectors(vector<channel_name> channels,double mur,double muf,int pole,
 void check_sectors(vector<channel_name> channels,double mur,double muf,int pole,int pertord,double*res,const string &);
 void check_sectors(vector<channel_name> channels,double mur,double muf,int pole,int pertord,double*res,const vector<int> & specific_sector_numbers);
 void check_sectors(vector<channel_name> channels,double mur,double muf,int pole,int pertord,double*res,const string & _me_approx,const vector<int> & specific_sector_numbers);
-
+void proceed_to_check(const vector<string>& sector_names, double mur,double muf,int pole,int pertord,double* res,const string & _me_approx);
 
 class MultiThreadArgumentKeeper
 {

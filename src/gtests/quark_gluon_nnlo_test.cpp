@@ -6,11 +6,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "ggf_headers.h"
 
-#include "Production.h"
-//#include "GluonFusionInclusive.h"
-#include "GluonFusion.h"
-#include "Process.h"
 using namespace std;
 
 #include "gtest/gtest.h"

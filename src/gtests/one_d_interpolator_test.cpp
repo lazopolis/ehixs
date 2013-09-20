@@ -6,12 +6,9 @@
 #include <iostream>
 #include <cmath>
 
+#include "ggf_headers.h"
 
-#include "Production.h"
-//#include "GluonFusionInclusive.h"
-#include "GluonFusion.h"
-#include "Process.h"
-#include "OneDInterpolator.h"
+#include "one_d_interpolator.h"
 using namespace std;
 
 #include "gtest/gtest.h"

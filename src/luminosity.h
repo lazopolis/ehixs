@@ -1,11 +1,12 @@
 #ifndef LUMINOSITY_H
 #define LUMINOSITY_H
 
-#include "CPDF.h"
-#include "CConstants.h"
+#include "pdf.h"
+#include "constants.h"
 #include <utility>
 #include <string>
-#include "OneDInterpolator.h"
+#include "one_d_interpolator.h"
+#include "user_interface.h"
 using namespace std;
 
 class Luminosity;
@@ -15,10 +16,8 @@ class Luminosity;
 
 class Luminosity
 {
-    public:
-        Luminosity(double NF_, double muf_, double mur_, int pert_order_, const string& provider_, bool pdf_error_)
-            :nf(NF_),mu_f(muf_),mu_r(mur_),perturbative_order(pert_order_),provider(provider_),pdf_error(pdf_error_){};
-        ~Luminosity(){};
+    public://data
+        
         
         struct pdf_desc
         {
@@ -30,9 +29,7 @@ class Luminosity
                 int i,j,n_as,n_eps;
                 
         };
-        
-        void add_pair(const pdf_desc & , const pdf_desc &);
-        void set_cur_lumi(const double &,const double &, vector<double> &);
+    
         
         static pdf_desc F_b_00 , F_bbar_00,F_g_00,F_b_from_g_11,F_bbar_from_g_11,F_d_00,
         F_u_00,F_s_00,F_c_00,F_dbar_00,F_ubar_00,F_sbar_00,F_cbar_00,F_b_from_b_11,F_bbar_from_bbar_11,
@@ -100,22 +97,39 @@ class Luminosity
         int perturbative_order;
         string provider;
         bool pdf_error;
-        unsigned pdf_size() const;
-     //void set_alpha_s();
-     void alpha_s_at_mz(vector<double> &);
-     void  evolve_alpha_s_from_mz_to_mur(vector<double> &);
+    
+        vector<double> alpha_s_at_mz_vector,yukawa_b_vector;
+    
+public://methods
+    Luminosity(double NF_, double muf_, double mur_,
+               int pert_order_, const string& provider_, bool pdf_error_)
+                :nf(NF_),mu_f(muf_),mu_r(mur_),
+                perturbative_order(pert_order_),
+                provider(provider_),pdf_error(pdf_error_){};
+    Luminosity(const UserInterface& UI);
+    ~Luminosity(){};
+    void add_pair(const pdf_desc & , const pdf_desc &);
+    void set_cur_lumi(const double &,const double &, vector<double> &);
+    void set_cur_lumi(const double &x1,const double &x2);
+    double LL(unsigned i) {return _local_current_luminosity[i];}
+    unsigned pdf_size() const;
+    vector<double> give_a_s_at_mz();
+    void alpha_s_at_mz(vector<double> &);
+    void  evolve_alpha_s_from_mz_to_mur(vector<double> &);
 	void  evolve_mb_from_mb_ref_to_mur(double &,vector<double>&);
 	double  SSC(double ,double ,int );//: a_s running
 	double  yukawa_b(double ,int ,double ,double  ,
                       double ); //: function for Yukawa running
-     vector<double> alpha_s_at_mz_vector,/*alpha_s_vector,*/yukawa_b_vector;
+    
      double  give_lumi(const double &x1,const double &x2);
      void show_necessary_pdfs(){cout<<"\n--- necessary pdfs: ";for (int i=0;i<pdfs.size();i++) cout<<"\n"<<i<<" : "<<pdfs[i].second.i
           <<"_"<<pdfs[i].second.j<<"_"<<pdfs[i].second.n_as<<"_"<<pdfs[i].second.n_eps;}
-    private:
+    vector<double> calculate_pdf_error(const vector<double> xx)
+                        {cout<<"\nyuppieeeee "<<xx[0];return pdfs[0].first->calculate_pdf_error(xx);}
+private://data
         vector< pair<CPDF*,pdf_desc> >  pdfs; 
         vector< pair<CPDF*,CPDF*> >     pairs;
-        
+    vector<double> _local_current_luminosity;
 };
 
 class InterpolatedLuminosity:public Luminosity{

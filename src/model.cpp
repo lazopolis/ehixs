@@ -4,6 +4,7 @@
 #include "iostream"
 using namespace::std;
 
+
 CModel::CModel()
 {
 top=ParticleObject("top",172.7,0.0,1.0,2.0/3.0);
@@ -16,6 +17,7 @@ quarks.push_back(&bottom);
 vector_bosons.push_back(&W);
 vector_bosons.push_back(&Z);
 
+    _mu_r=0.0;
 }
 
 
@@ -90,6 +92,7 @@ if (option=="G_Z")
 
 void CModel::evolve(const vector<double> & a_at_mz,const double & mur, int porder)
 {
+    _mu_r=mur;
      alpha_strong_at_mz = a_at_mz;
      evolve_quark_masses(mur,porder);
      evolve_as_to_mur(mur,porder);

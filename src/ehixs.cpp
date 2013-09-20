@@ -13,10 +13,10 @@
 #include <iomanip>
 #include <map>
 #include <math.h>
-#include "Process.h"
+#include "process.h"
 
 
-#include "UserInterface.h"
+#include "user_interface.h"
 
 using namespace std;
 

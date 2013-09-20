@@ -1,10 +1,13 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "ParticleObject.h"
+#include "particle.h"
 #include<vector>
 #include <stdlib.h>
 using namespace std;
+
+
+
 
 class CModel{
 public:
@@ -31,9 +34,9 @@ public:
      void evolve_quark_masses(const double & mur,int porder);
      void evolve_as_to_mur(const double & mur,int porder);
      double run_alpha_strong(const double & a_prev,const double & mur,int porder);
-
+    double mu_r(){return _mu_r;}
 private:
-	
+	double _mu_r;
 };
 
 #endif

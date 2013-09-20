@@ -3,7 +3,7 @@
 #ifndef CCUT_H
 #define CCUT_H
 
-#include "Momenta.h"
+#include "momenta.h"
 
 /** \brief Base class for cuts.
   *

@@ -21,137 +21,117 @@ using namespace std;
 // First includes
 //#include "CPDF.h"
 //#include "CMonteCarlo.h"
-#include "Model.h"
+#include "model.h"
 #include "chaplin.h"
 #include "fvector.h"
 //#include "CConstants.h"
-#include "CCut.h"
+#include "cut.h"
 
 //#include "Interface_to_amplitudes.h"
-#include "UserInterface.h"
+#include "user_interface.h"
 //#include "luminosity.h"
 #include "hub.hpp"
-#include "Decay.h"
-#include "Production.h"
-#include "VegasAdaptor.h"
+#include "decay.h"
+#include "production.h"
+#include "vegas_adaptor.h"
 // ==================================================
 // Forward declarations
 class CHistogram;
 class CHistogram2d;
 class AverageObservable;
 
-#include "Momenta.h"
+#include "momenta.h"
+
+class HistogramBox
+{
+public://methods
+    HistogramBox(const UserInterface & UI);
+    void show_histogram_info_and_exit();
+    void  book_histograms( Event *,const double & vegas_weight);
+    void update_histograms_end_of_iteration(int NOP);
+	void update_histograms_end_of_vegas_point();
+    void print_histograms();
+    string print_histograms_to_string();
+    void write_to_histogram_file();
+    CHistogram* ptr_to_histogram_with_id(unsigned m){return histogram_vector[m];}
+
+private://data
+    vector<CHistogram*> histogram_vector;
+    vector<CHistogram*> available_histograms;
+    
+
+private://methods
+};
 
 
-
-
+class CutBox
+{
+public://methods
+    CutBox(const UserInterface&);
+    void show_cut_info_and_exit();
+    bool passes_cuts(Event* the_event);
+private://data
+    vector<CCut*> _cuts;
+    vector<CCut*> _available_cuts;
+};
 
 
 class Process
 {
-public:
-     Process(const UserInterface& UI);
-     
-     void  perform();
-     
-     void  Evaluate_integral(const double xx[]);//: public because it has to be accessed by Integrand
-	void set_production(Production * theproduction);
-     void set_decay(Decay * thedecay);
-     VegasAdaptor Vegas;
-     
-     double total_xs(){return Vegas.vegas_integral_output[0];}
-     double total_err(){return Vegas.vegas_error_output[0];}
-     string sector_info();
-     
-     vector<CHistogram*> histogram_vector; //: public so that histograms from different sectors can be compared
-     vector<string> give_sector_names(const string & pleft,const string & pright,const string & myorder,const int&,const string & );
-protected:
-     UserInterface my_UI;
-     TheHatch the_hatch;
-     void  book_histograms( Event *);
-     void book_null_event();
-     void book_event(Event *);
-     void proceed_to_production_phase();
-     void proceed_to_decay_phase(Event*);
-     void perform_decay_alone();
-     void book_decay_event(Event *);
-     void print_output_intermediate();
-     void  calculate_number_of_components();
-     void  print_output();
-     string input_filename,output_filename;
-	//
-	bool sectors_are_defined_in_production_and_decay();
-
-	//
+public://methods
+    Process(const UserInterface& UI);
+    void  perform();
+    //: public because it has to be accessed by Integrand
+    void  Evaluate_integral(const double xx[]);
 	
-	//:
-     int perturbative_order;
-	int dimension_of_integration;
+    double total_xs(){return Vegas.vegas_integral_output[0];}
+    double total_err(){return Vegas.vegas_error_output[0];}
+    string sector_info();
+    vector<string> give_sector_names(const string & pleft,
+                                     const string & pright,
+                                     const string & myorder,
+                                     const int&,const string & );
+    CHistogram* ptr_to_histogram_with_id(unsigned m)
+                    {return _histograms->ptr_to_histogram_with_id(m);}
+public://data
+    VegasAdaptor Vegas;
+    //: public so that histograms from different sectors can be compared
+    
+private://data
+    UserInterface my_UI;
+    TheHatch the_hatch;
+    HistogramBox* _histograms;
+    CutBox* _cuts;
+    Decay *my_decay;
+    Production* my_production;
+    fstream my_event_stream;
+
+private://methods
+    void set_production(Production * theproduction);
+    void set_decay(Decay * thedecay);
+    void book_null_event();
+    void book_event(Event *);
+    void proceed_to_production_phase();
+    void proceed_to_decay_phase(Event*);
+    void perform_decay_alone();
+    void book_decay_event(Event *);
+    void print_output_intermediate();
+    void calculate_number_of_components();
+    void print_output();
+	bool sectors_are_defined_in_production_and_decay();
 	void calculate_dimension_of_integration();
-     //: histograms
-     void  setup_histograms();
-     void update_histograms_end_of_iteration(int NOP);
-	void update_histograms_end_of_vegas_point();
-     vector<CHistogram*> available_histograms;
-     //vector<CHistogram2d*>  histogram2d_vector;
-     //vector<AverageObservable*> average_observable_vector;
-     
-     //: cuts 
-     void  setup_cuts();
-	vector<CCut*> cuts;
-     vector<CCut*> available_cuts;
-     
-     bool passes_cuts(Event* the_event);
-     
-     Decay *my_decay;
-     Production* my_production;
-     bool production_is_defined;
-     bool decay_is_defined;
-     //: event printing
-     fstream my_event_stream;
-     void open_event_filename();
-     void close_event_filename();
-     void print_event(Event*);
-     //Cluster the_cluster;
-     //
-     vector<double>  vegas_variables_for_histograming_use;
+    bool production_is_defined;
+    bool decay_is_defined;
+    //: event printing
+    void open_event_filename();
+    void close_event_filename();
+    void print_event(LightEvent*);
 };
-
-
-class InclusiveProcess
-{
-public:
-     InclusiveProcess(const UserInterface& UI);
-     void set_production(InclusiveProduction * theproduction);
-     void  perform();
-     VegasAdaptor Vegas;
-     void Evaluate_integral(const double xx[]);
-
-private:
-     TheHatch the_hatch;
-     InclusiveProduction* my_production;
-     bool production_is_defined;
-     UserInterface my_UI;
-     string input_filename,output_filename;
-
-     
-     bool sectors_are_defined_in_production();
-     void  calculate_number_of_components();
-     void print_output();
-     void proceed_to_production_phase();
-     void proceed_to_decay_phase(const double &w);
-     void perform_decay_alone();
-     void book_event(const double & w);
-
-};
-
-
-
 
 
 // ==================================================
 // Last includes
-#include "CBin.h"
-#include "CHistogram.h"
+#include "bin.h"
+#include "histogram.h"
 
 #endif

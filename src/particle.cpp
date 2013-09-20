@@ -1,5 +1,5 @@
 
-#include "ParticleObject.h"
+#include "particle.h"
 #include "iostream"
 using namespace std;
 ParticleObject::ParticleObject(string iname,double imq,double _ref_scale,double iGq,double iYq,double ich)
@@ -132,9 +132,12 @@ void ParticleObject::evolve_mass_to_mur(const double & as_at_ref_scale,const dou
           }
      m_at_scale_mur=m_prev;
      evolved=true;
+    
+    cout<<"\n"<<name<<" quark evolved from m("<<ref_scale<<")="<<m_at_ref_scale
+    <<" -> m("<<mur<<")="<<m_at_scale_mur;
 }
 
- 
+
 
 
 

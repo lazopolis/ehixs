@@ -6,17 +6,12 @@
 #include <iostream>
 #include <cmath>
 
-
-#include "Production.h"
-//#include "GluonFusionInclusive.h"
-#include "GluonFusion.h"
-#include "Process.h"
-#include "test_utils.h"
+#include "ggf_headers.h"
 using namespace std;
 
 #include "gtest/gtest.h"
 
-/*
+
 TEST(lo_exact,finite)
 {
      vector<channel_name> chs;
@@ -33,7 +28,7 @@ TEST(lo_exact,finite)
      double expected_xs = 7.614;// +- 0.004
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-*/
+
 /*
 TEST(nlo_soft_exact,finite)
 {
@@ -72,7 +67,7 @@ TEST(nlo_hard_exact,finite)
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
 */
-
+/*
 TEST(nlo_exact_real_gg,finite)
 {
      vector<channel_name> chs;
@@ -90,7 +85,7 @@ TEST(nlo_exact_real_gg,finite)
      double expected_xs = 3.3309;// +- 0.0016
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-
+*/
 
 
 

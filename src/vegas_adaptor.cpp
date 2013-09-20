@@ -1,6 +1,7 @@
 
-#include "VegasAdaptor.h"
+#include "vegas_adaptor.h"
 #include "cuba.h"
+#include "math.h"
 
 
 
@@ -38,7 +39,7 @@ void VegasAdaptor::call_vegas()
      cout<<"-------------------- Vegas  --------------------\n";
      //
      Vegas(
-           the_hatch->GetVEGASDim(), 
+           number_of_dims,
            number_of_components,
            integrand_t(my_integrand),
            NULL,
@@ -78,6 +79,23 @@ void VegasAdaptor::set_up_vegas_ff(double res)
 
 
 
+
+VegasAdaptor::VegasAdaptor(const UserInterface & UI,pointer_to_Integrand ptr,int ndim)
+{
+    //: MC, setting options
+    epsrel=UI.epsrel;
+    epsabs=UI.epsabs;
+    verbose=UI.verbose;
+    mineval=UI.mineval;
+    maxeval=UI.maxeval;
+    nstart=UI.nstart;
+    nincrease=UI.nincrease;
+
+    my_integrand = static_cast<pointer_to_Integrand>(ptr);
+    number_of_dims = ndim;
+}
+
+
 VegasAdaptor::VegasAdaptor(const UserInterface & UI )
 {
      //: MC, setting options
@@ -88,7 +106,7 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI )
      maxeval=UI.maxeval;
      nstart=UI.nstart;
      nincrease=UI.nincrease;
-     
+    number_of_dims = 0;
 
 }
 
@@ -115,5 +133,210 @@ bool VegasAdaptor::new_iteration_has_started()
           return false;
      }
 }
+
+
+
+
+//  ---------------------------------------------------------------------------
+
+
+
+double CoolInt::evaluateIntegral(const double xx[])
+{
+    //ptr_to_inclusive_process->Vegas.vegas_weight = *weight;
+	//ptr_to_inclusive_process->Vegas.vegas_iteration_number = *iteration_number;
+	//ptr_to_inclusive_process->Evaluate_integral(xx);
+    
+    double lambda = xx[0];
+    return pow(lambda,3.0);
+    
+}
+
+
+CoolInt::CoolInt()
+{
+    _gridno=0;
+    _seed=0;//:0: Sobol,  >0 Ranlux
+    _nbatch=10;
+    _mineval=10000;
+    _maxeval=50000000;
+    _nstart=5000;
+    _nincrease=1000;
+    _verbose = 2;
+   // ptr_to_cool_int=this;
+    _number_of_dims = 1;
+    _epsrel = 1e-3;
+    _epsabs = 0.0;
+   // ptr_to_cool_int=this;
+    _vector_of_xs.push_back(new Bin);
+    _running_xs_values.push_back(0.0);
+}
+
+
+void CoolInt::setParams(int number_of_dims,double epsrel,double epsabs,
+                        int mineval,int maxeval,int nstart,int nincrease)
+
+{
+    _gridno=0;
+    _seed=0;//:0: Sobol,  >0 Ranlux
+    _nbatch=10;
+    _verbose = 2;
+    _number_of_dims = number_of_dims;
+    _epsabs = epsabs;
+    _epsrel = epsrel;
+    _mineval = mineval;
+    _maxeval = maxeval;
+    _nstart = nstart;
+    _nincrease = nincrease;
+}
+
+void CoolInt::setParams(int number_of_dims,double epsrel,double epsabs)
+{
+    _gridno=0;
+    _seed=0;//:0: Sobol,  >0 Ranlux
+    _nbatch=10;
+    _mineval=10000;
+    _maxeval=50000000;
+    _nstart=5000;
+    _nincrease=1000;
+    _verbose = 2;
+    _number_of_dims = number_of_dims;
+    _epsrel = epsrel;
+    _epsabs = epsabs;
+}
+
+
+void CoolInt::call_vegas()
+{
+    Vegas(
+          _number_of_dims,
+          1,// number of components
+          integrand_t(&cool_integral),
+          this,
+          _epsrel,
+          _epsabs,
+          _verbose,
+          _seed,
+          _mineval, // = mineval
+          _maxeval,
+          _nstart,
+          _nincrease,
+          _nbatch,
+          _gridno,
+          NULL,//grid_file_name.c_str(),
+          &_neval,
+          &_fail,
+          _central_value,
+          _vegas_error,
+          _prob);
+    // update the bins after the last iteration
+    for (unsigned i=0;i<_vector_of_xs.size();i++)
+        _vector_of_xs[i]->end_of_iteration_update();
+}
+
+void CoolInt::set_number_of_xs_values_we_keep(unsigned nox)
+{
+    // there is already one bin in _vector_of_xs,
+    // and one double in _running_xs_values from constructor
+    for (unsigned i=0;i<nox-1;i++)
+        {
+        _vector_of_xs.push_back(new Bin);
+        _running_xs_values.push_back(0.0);
+        }
+    
+}
+
+void CoolInt::check_whether_we_need_to_update_bins(unsigned new_iter_number)
+{
+    if(new_iter_number!=_iter_num)
+        {
+        for (unsigned i=0;i<_vector_of_xs.size();i++)
+            _vector_of_xs[i]->end_of_iteration_update();
+        cout<<"\n new iteration. Previous iteration value = "
+            <<_vector_of_xs[0]->value()<<" +- "<<_vector_of_xs[0]->error();
+        }
+}
+
+void CoolInt::add_to_bins(const double & w)
+{
+    for (unsigned i=0;i<_vector_of_xs.size();i++)
+        {
+        _vector_of_xs[i]->add_single_point_package(w* _running_xs_values[i]);
+        }
+}
+
+
+
+
+const vector<double>  CoolInt::give_vector_of_res()
+{
+    vector<double> res;
+    for (unsigned i=0;i<_vector_of_xs.size();i++)
+        res.push_back(_vector_of_xs[i]->value());
+    return res;
+}
+
+double CoolInt::give_res_component(unsigned i)
+{
+    if (i<_vector_of_xs.size())
+        return _vector_of_xs[i]->value();
+    else
+        {
+        cerr<<"\nError: you asked from CoolInt a result for component #"
+            <<i<<" while it only has "<<_vector_of_xs.size()<<" compnents";
+        return 0.0;
+        }
+}
+
+double CoolInt::give_err_component(unsigned i)
+{
+    if (i<_vector_of_xs.size())
+        return _vector_of_xs[i]->error();
+    else
+        {
+        cerr<<"\nError: you asked from CoolInt a result for component #"
+        <<i<<" while it only has "<<_vector_of_xs.size()<<" compnents";
+        return 0.0;
+        }
+}
+
+
+AnotherInt::AnotherInt():CoolInt(){};//{ptr_to_cool_int=this;};
+
+
+double AnotherInt::evaluateIntegral(const double xx[])
+{
+    double z=0.732;
+    double lambda = xx[0];
+    double res = 3.0*pow(lambda,2.0)*123.456789;
+    _running_xs_values[0] = res;
+    return res;
+    
+}
+
+
+int cool_integral(const int *ndim, const double xx[],
+                  const int *ncomp, double ff[],void * theclass,
+                  double* weight_from_vegas,
+                  int* iteration_number_from_vegas)
+{
+
+    CoolInt* ptr_to_class = static_cast<CoolInt*>(theclass);
+	ff[0]=ptr_to_class->evaluateIntegral(xx);
+    
+    ptr_to_class->check_whether_we_need_to_update_bins(*iteration_number_from_vegas);
+    ptr_to_class->set_iteration_number(*iteration_number_from_vegas);
+    ptr_to_class->add_to_bins(*weight_from_vegas);
+    
+    return(0);
+}
+
+
+
+
+
+
+
+
 
 

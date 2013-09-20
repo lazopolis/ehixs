@@ -8,7 +8,7 @@
 
 using namespace std;
 
-#include "CPDF.h"
+#include "pdf.h"
 
 #include "gtest/gtest.h"
 

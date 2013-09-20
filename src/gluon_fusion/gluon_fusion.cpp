@@ -1,4 +1,4 @@
-#include "GluonFusion.h"
+#include "gluon_fusion.h"
 
 #ifndef ONCE_PTR_TO_GGF
 #define ONCE_PTR_TO_GGF
@@ -7,14 +7,95 @@ Production* ptr_to_GGF; //: static global pointer to use as a handle for plugins
 #endif
 
 
+//: external function definitions
+#include "nlo_exact_matrix_elements.h"
 
 
 
-
-GluonFusion::GluonFusion() : Production()
+GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
 {
      ptr_to_GGF = this;
      for (int i=0;i<7;i++){smax[i]=0.0;smin[i]=1000.0;}
+    set_up_wilson_coefficients();
+    set_up_beta_constants();
+    //cout<<"\ntau="<<tau<<"\tEtot="<<Etot;
+    //g_ew=sqrt(16.0*pow(Model.W.m,4.0)*pow(consts::G_fermi,2.0)/pow(consts::Pi,3.0));
+    //: using the real mass
+    
+    
+    set_up_sectors(UI);
+    if (UI.info)
+        {
+        vector<SimpleSector*> necessary_sectors=give_necessary_sectors(UI);
+       
+        
+        cout<<"\n Sectors that fit your selection criteria:\n";
+        
+        for (int i=0;i<necessary_sectors.size();i++)
+            {
+            cout<<"\n"<<i<<" : "<<necessary_sectors[i]->name;
+            }
+        cout<<"\n\n number of Sectors defined : "<<necessary_sectors.size()<<endl;
+        check_which_sectors_can_be_run_together(necessary_sectors);
+        exit(0);
+        }
+    
+    if (UI.show_me_list)
+        {
+        cout<<"\n ME available:\n";
+        for (int i=0;i<available_matrix_elements.size();i++)
+            {
+            cout<<*available_matrix_elements[i]<<endl;
+            }
+        exit(0);
+        }
+    
+    
+    find_topology(UI); //: finding topology and setting all appropriate pointers to Channel, Convolution, PartonicMode, PartonicXS, Topology etc.
+    if (UI.dummy_process == false)
+        {
+        if (is_sector_defined())
+            {
+            
+            allocate_luminosity();
+            cout <<"\n----------------------------------\n\tSECTOR "
+            <<the_sector->name
+            <<"\n----------------------------------\n"<<endl;
+            //: constructing the cur_lumi and cur_lumi_LO vectors (necessary because lumi assigns to cur_lumi[i] instead of pushing back)
+            cur_lumi = vector<double>(lumi->pdf_size(),0.0);
+            cur_lumiLO = vector<double>(lumi->pdf_size(),0.0);
+            
+            //:after init_base is called (where Etot is set)
+            tau = pow(Model.higgs.m(),2.0)/pow(Etot,2.0);
+            
+            
+            all_momenta.init_fvector("p1");
+            all_momenta.init_fvector("p2");
+            all_momenta.init_fvector("h");
+            all_momenta.init_fvector("pf3");
+            all_momenta.init_fvector("pf4");
+            
+            if (UI.matrix_element_approximation=="exact")
+                {
+                calculate_exact_born_me_LO();
+                }
+            
+            //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
+            //: Gf = 1.16637*10^{-5} * 0.389379*10^9
+            pref_sgg = 35.0309;
+            lh= -log_muf_sq_over_mh_sq;//: note the '-' sign: Franz's convention for lh=log(m_h^2/mu_f^2)
+            sector_specific_prefactors_from_a_e_expansion=1.0;
+            for (unsigned i=0;i<the_sector->factors.size();i++)
+                {
+                sector_specific_prefactors_from_a_e_expansion = sector_specific_prefactors_from_a_e_expansion * the_sector->factors[i]->give_value();
+                }
+            sector_specific_prefactors_from_a_e_expansion = sector_specific_prefactors_from_a_e_expansion
+            * pow(Model.alpha_strong[0]/consts::Pi,the_sector->alpha_power);
+            }
+        
+        cout<<"\n***** \t\t a_s used = "<<Model.alpha_strong[0]
+        <<"\t^"<<the_sector->alpha_power;
+        }
 }
 
 
@@ -29,7 +110,7 @@ vector<string> GluonFusion::give_sector_names(const string & pleft,const string 
           if (pleft==available_sectors[i]->F1.parton_from and pright==available_sectors[i]->F2.parton_from and
                     available_sectors[i]->alpha_power==requested_alpha_power
               and available_sectors[i]->epsilon_power==requested_epsilon_power
-              and available_sectors[i]->ME->me_approximation=="effective"
+              and available_sectors[i]->ME->me_approximation()=="effective"
               )
                {
                all_names.push_back(available_sectors[i]->name);
@@ -133,7 +214,7 @@ vector<string> GluonFusion::give_sector_names(const string & pleft,const string 
           if (pleft==available_sectors[i]->F1.parton_from and pright==available_sectors[i]->F2.parton_from and
               available_sectors[i]->alpha_power==requested_alpha_power
               and available_sectors[i]->epsilon_power==requested_epsilon_power
-              and available_sectors[i]->ME->me_approximation==me_approx
+              and available_sectors[i]->ME->me_approximation()==me_approx
               )
                {
                all_names.push_back(available_sectors[i]->name);
@@ -161,7 +242,7 @@ vector<SimpleSector*> GluonFusion::give_necessary_sectors(const UserInterface & 
                                              (UI.Fleft=="none" and UI.Fright=="none");
           bool a_power_fits=available_sectors[i]->alpha_power==UI.perturbative_order+2;
           bool e_power_fits = available_sectors[i]->epsilon_power==UI.pole;
-          bool me_approx_fits = available_sectors[i]->ME->me_approximation==UI.matrix_element_approximation;
+          bool me_approx_fits = available_sectors[i]->ME->me_approximation()==UI.matrix_element_approximation;
           if (initial_state_partons_fit and a_power_fits and e_power_fits and me_approx_fits)
                {
                necessary_sectors.push_back(available_sectors[i]);
@@ -176,42 +257,75 @@ vector<SimpleSector*> GluonFusion::give_necessary_sectors(const UserInterface & 
 }
 
 
+MeExternalInfo::MeExternalInfo(const string & _pi,const string & _pj,const string& _pord,
+               const string & _name, int _epower,
+               const string & _me_approximation)
+{
+    parton_i=_pi;
+    parton_j=_pj;
+    name=_name;
+    epsilon_power=_epower;
+    if (_pord=="LO") alpha_power=0;
+    else if (_pord=="NLO") alpha_power=1;
+    else if (_pord=="NNLO") alpha_power=2;
+    else if (_pord=="N3LO") alpha_power=3;
+    else {cout<<"\n unrecognized pord when constructing MatrixElement"<<endl;exit(1);}
+    me_approximation=_me_approximation;
+}
+
+MatrixElement::MatrixElement( MeExternalInfo* info,const string & _kin,
+                             const string& _str_param,
+                             ptr_to_GluonFusion_function _the_ggf_func,
+                             pointer_to_Franz_gluon_fusion  ptr_to_fr,
+                             int num_topologies,
+                             double _e_exp_in_subtr)
+{
+    _info=info;
+    if (_kin=="kinematics:LO") dimension=2;
+    else if (_kin=="kinematics:NLO") dimension=4;
+    else if (_kin=="kinematics:NNLO") dimension=6;
+    else {cout<<"\nUnrecognized kinematics when constructing MatrixElement"<<endl;exit(1);}
+    if (_str_param == "param:LO")  parametrization=&GluonFusion::LO_parametrization_only;
+    else if (_str_param=="param:NLO") parametrization=&GluonFusion::NLO_parametrization;
+    else {cout<<"\nerror, param not equal to LO or NLO"<<endl;exit(1);}
+    
+    
+    the_ggf_func = _the_ggf_func;
+    is_franz_topology=true;
+    franz_func=ptr_to_fr;
+    number_of_sectors_in_this_topology=num_topologies;
+    epsilon_exponent_in_z_subtraction = _e_exp_in_subtr;
+}
+
 MatrixElement::MatrixElement(const string & _pi,const string & _pj,const string& _pord,
               const string & _name, const string & _kin,int _epower,
               const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,
               pointer_to_Franz_gluon_fusion  ptr_to_fr, int num_topologies,double _e_exp_in_subtr,const string & _me_approx)
 {
-     parton_i=_pi;
-     parton_j=_pj;
-     name = _name;
+    _info= new MeExternalInfo(_pi,_pj,_pord,_name,_epower,_me_approx);
+    
      if (_kin=="kinematics:LO") dimension=2;
      else if (_kin=="kinematics:NLO") dimension=4;
      else if (_kin=="kinematics:NNLO") dimension=6;
      else {cout<<"\nUnrecognized kinematics when constructing MatrixElement"<<endl;exit(1);}
-     epsilon_power=_epower;
+     
      if (_str_param == "param:LO")  parametrization=&GluonFusion::LO_parametrization_only;
      else if (_str_param=="param:NLO") parametrization=&GluonFusion::NLO_parametrization;
      else {cout<<"\nerror, param not equal to LO or NLO"<<endl;exit(1);}
      
-     if (_pord=="LO") alpha_power=0;
-     else if (_pord=="NLO") alpha_power=1;
-     else if (_pord=="NNLO") alpha_power=2;
-     else if (_pord=="N3LO") alpha_power=3;
-     else {cout<<"\n unrecognized pord when constructing MatrixElement"<<endl;exit(1);}
      the_ggf_func = _the_ggf_func;
      is_franz_topology=true;
      franz_func=ptr_to_fr;
      number_of_sectors_in_this_topology=num_topologies;
      epsilon_exponent_in_z_subtraction = _e_exp_in_subtr;
-     me_approximation = _me_approx;
 }
 
 
 SimpleSector::SimpleSector(const FFF& _f1,const FFF& _f2,const vector<ExpansionTerm*>& _factors,MatrixElement* _ME):F1(_f1),F2(_f2),factors(_factors),ME(_ME)
 {
-     alpha_power= F1.order+F2.order+ME->alpha_power;
+     alpha_power= F1.order+F2.order+ME->alpha_power();
      //: the minus below: FFF has an epsilon order defined positive (otherwise the pdf complain)
-     epsilon_power = -F1.epsilon_order-F2.epsilon_order+ME->epsilon_power;
+     epsilon_power = -F1.epsilon_order-F2.epsilon_order+ME->epsilon_power();
      for (int i=0;i<factors.size();i++)
           {
           alpha_power += factors[i]->give_a_power();
@@ -228,24 +342,6 @@ SimpleSector::SimpleSector(const FFF& _f1,const FFF& _f2,const vector<ExpansionT
      name=stream.str();
 }
 
-
-ostream& operator<<(ostream& stream, const ConsolidatedSector& CS)
-{
-     stream<<"[ ";
-     for (unsigned i=0;i<CS.sectors.size();i++)
-          {
-          stream<<CS.sectors[i]->F1<<"(*)"<<CS.sectors[i]->F2<<"(*)";
-          for (int j=0;j<CS.sectors[i]->factors.size();j++)
-               {
-               stream<<CS.sectors[i]->factors[j]->give_name()<<"(*)";
-               }
-          stream<<" + ";
-          }
-     stream<<" ]";
-     stream<<*CS.sectors[0]->ME;
-     stream<<" : a^"<<CS.sectors[0]->alpha_power<<",e^"<<CS.sectors[0]->epsilon_power;
-     return stream;
-}
 
 
 void SimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
@@ -314,7 +410,9 @@ pdf_pair_list SimpleSector::give_list_of_pdf_pairs()
 
 ostream& operator<<(ostream& stream, const MatrixElement& ME)
 {
-     stream<<"S("<<ME.parton_i<<","<<ME.parton_j<<","<< ME.name<<",a^"<<ME.alpha_power<<",e^"<<ME.epsilon_power<<" ,dim="<<ME.dimension<<")";
+     stream<<"S("<<ME.parton_i()<<","<<ME.parton_j()<<","<< ME.name()
+        <<",a^"<<ME.alpha_power()<<",e^"<<ME.epsilon_power()
+        <<" ,dim="<<ME.dimension<<")";
      
      return stream;
 }
@@ -359,21 +457,7 @@ void GluonFusion::push_me(const string & _pi,const string & _pj,const string& _p
           }
 }
 
-void GluonFusion::push_me(const string & _pi,const string & _pj,const string& _pord,
-                          const string & _name, const string & _kin,
-                          const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k,
-                          pointer_to_Franz_gluon_fusion  ptr_to_fr[], int num_topologies,int num_sect[])
-{
-     for (int s=0;s<num_topologies;s++)
-          {
-          for (int k=from_k;k<to_k+1;k++)
-               {
-               stringstream name_str;
-               name_str<<_name<<" t"<<s+1;
-               available_matrix_elements.push_back(new MatrixElement(_pi,_pj,_pord,name_str.str(),_kin,k,_str_param,_the_ggf_func,ptr_to_fr[s],num_sect[s],0.0,"effective"));
-               }
-          }
-}
+
 
 void GluonFusion::push_me(const string & _pi,const string & _pj,const string& _pord,
                           const string & _name, const string & _kin,
@@ -389,6 +473,22 @@ void GluonFusion::push_me(const string & _pi,const string & _pj,const string& _p
                available_matrix_elements.push_back(new MatrixElement(_pi,_pj,_pord,name_str.str(),_kin,k,_str_param,_the_ggf_func,ptr_to_fr[s],num_sect[s],eps_exp,"effective"));
                }
           }
+}
+
+void GluonFusion::push_me(const string & _pi,const string & _pj,const string& _pord,
+                          const string & _name, const string & _kin,
+                          const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k,
+                          pointer_to_Franz_gluon_fusion  ptr_to_fr[], int num_topologies,int num_sect[])
+{
+    for (int s=0;s<num_topologies;s++)
+         {
+        for (int k=from_k;k<to_k+1;k++)
+             {
+            stringstream name_str;
+            name_str<<_name<<" t"<<s+1;
+            available_matrix_elements.push_back(new MatrixElement(_pi,_pj,_pord,name_str.str(),_kin,k,_str_param,_the_ggf_func,ptr_to_fr[s],num_sect[s],0.0,"effective"));
+             }
+         }
 }
 
 void GluonFusion::add_qqbar_sectors()
@@ -493,7 +593,8 @@ void GluonFusion::add_qg_sectors()
 
 void GluonFusion::add_gq_sectors()
 {
-     const int num_topologies=15;
+    
+    const int num_topologies=15;
      pointer_to_Franz_gluon_fusion rr[num_topologies]={rrgq2qght1,rrgq2qght2,rrgq2qght3,rrgq2qght4,rrgq2qght5,rrgq2qght6,rrgq2qght7,rrgq2qght8,rrgq2qght9,rrgq2qght10,rrgq2qght11,rrgq2qght12,rrgq2qght13,rrgq2qght14,rrgq2qght15};
      int num_sect[num_topologies]={1,2,1,1,8,2,2,4,2,1,1,1,1,1,1};//: number of sectors per topology
 
@@ -508,7 +609,7 @@ void GluonFusion::add_gq_sectors()
      push_me("gluon","quark","NNLO","RV","kinematics:NLO","param:NLO",&GluonFusion::nlo_me,-3,0,rv,rvnumtop,rvnum_sect);
      push_me("gluon","quark","NNLO","RR","kinematics:NNLO","param:NLO",&GluonFusion::NNLO_hard_no_subtraction,-3,0,rr,num_topologies,num_sect);
      
-}
+ }
 
 
 void GluonFusion::find_topology(const UserInterface & UI)
@@ -548,6 +649,7 @@ void GluonFusion::find_topology(const UserInterface & UI)
                sector_defined=true;
                the_sector=necessary_sectors[sector_id];
                dim_of_integration=the_sector->ME->dimension;
+               cout<<"===> dim_of_integration = "<<dim_of_integration;
                }
           else
                {
@@ -558,87 +660,22 @@ void GluonFusion::find_topology(const UserInterface & UI)
                
                }
           }
-     else
+     else if (UI.dummy_process == false)
           {
           cout<<"\n You didn't specify a sector name or a sector id number";
           cout<<"\n Please run with UI.info=true or --info to get the list of sector names"<<endl;
           throw "\n Can't proceed!\n";
           }
+     else
+         {
+         cout<<"\n dummy process - no sector name provided"<<endl;
+         }
      
 }
  
 void GluonFusion::init(const UserInterface& UI,TheHatch* the_hatch)
 {
-     calculate_derived_variables(UI);
-     set_up_sectors(UI);
-     if (UI.info)
-          {
-          vector<SimpleSector*> necessary_sectors=give_necessary_sectors(UI);
-          //cout<<"\n ME available:\n";
-          //for (int i=0;i<available_matrix_elements.size();i++)
-          //     {
-          //     cout<<"\n"<<*available_matrix_elements[i];
-          //     }
-          //cout<<"\n\n number of MEs defined : "<<available_matrix_elements.size();
-
-          cout<<"\n Sectors that fit your selection criteria:\n";
-          
-          for (int i=0;i<necessary_sectors.size();i++)
-               {
-               cout<<"\n"<<i<<" : "<<necessary_sectors[i]->name;
-               }
-          cout<<"\n\n number of Sectors defined : "<<necessary_sectors.size()<<endl;
-          check_which_sectors_can_be_run_together(necessary_sectors);
-          exit(0);
-          }
      
-     find_topology(UI); //: finding topology and setting all appropriate pointers to Channel, Convolution, PartonicMode, PartonicXS, Topology etc. 
-     
-     if (is_sector_defined())
-          {
-          lumi = new Luminosity(UI.number_of_flavours,UI.muf_over_mhiggs * UI.m_higgs,UI.mur_over_mhiggs * UI.m_higgs,UI.perturbative_order,UI.pdf_provider,UI.pdf_error);
-          allocate_luminosity();
-          cout <<"\n----------------------------------\n\tSECTOR "
-               <<the_sector->name
-               <<"\n----------------------------------\n"<<endl;
-          //: constructing the cur_lumi and cur_lumi_LO vectors (necessary because lumi assigns to cur_lumi[i] instead of pushing back)
-          cur_lumi = vector<double>(lumi->pdf_size(),0.0);
-          cur_lumiLO = vector<double>(lumi->pdf_size(),0.0);
-          //: call init_base that sets m_higgs and runs the coupling constants
-          init_base(UI,the_hatch);
-          
-          //:after init_base is called (where Etot is set)
-          tau = pow(Model.higgs.m(),2.0)/pow(Etot,2.0);
-          
-
-          all_momenta.init_fvector("p1");
-          all_momenta.init_fvector("p2");
-          all_momenta.init_fvector("h");
-          all_momenta.init_fvector("pf3");
-          all_momenta.init_fvector("pf4");
-          //: calculate kinematic variables or Model constants that are input dependent
-          //: necessarily after init_base where UI input passes to the Production class.
-          
-          Model.set_Xq_for_quarks();
-          //: this depends on m_higgs which we take to be the nominal higgs mass
-          //: CHANGE the above in case Higgs is off-shell.
-          if (UI.matrix_element_approximation=="exact")
-               {
-               calculate_exact_born_me_LO();
-               }
-          
-          //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
-          //: Gf = 1.16637*10^{-5} * 0.389379*10^9
-          pref_sgg = 35.0309;
-          lh= -log_muf_sq_over_mh_sq;//: note the '-' sign: Franz's convention for lh=log(m_h^2/mu_f^2)
-          sector_specific_prefactors_from_a_e_expansion=1.0;
-          for (unsigned i=0;i<the_sector->factors.size();i++)
-               {
-               sector_specific_prefactors_from_a_e_expansion = sector_specific_prefactors_from_a_e_expansion * the_sector->factors[i]->give_value();
-               }
-          sector_specific_prefactors_from_a_e_expansion = sector_specific_prefactors_from_a_e_expansion
-               * pow(Model.alpha_strong[0]/consts::Pi,the_sector->alpha_power);
-          }
 }
 
 void GluonFusion::allocate_luminosity()
@@ -659,21 +696,7 @@ void GluonFusion::calculate_derived_variables(const UserInterface& UI)
 {
      
      
-	set_up_wilson_coefficients();
-     set_up_beta_constants();
-     //cout<<"\ntau="<<tau<<"\tEtot="<<Etot;
-     //g_ew=sqrt(16.0*pow(Model.W.m,4.0)*pow(consts::G_fermi,2.0)/pow(consts::Pi,3.0));
-     //: using the real mass
-     
-     mu_r=UI.mur_over_mhiggs * UI.m_higgs;
-     mu_f=UI.muf_over_mhiggs * UI.m_higgs;
-     
-     Etot=UI.Etot;
-     log_muf_sq_over_mh_sq = 2.0*log(mu_f/Model.higgs.m());
-     log_mur_sq_over_mh_sq = 2.0*log(mu_r/Model.higgs.m());
-     log_muf_sq_over_mt_sq = 2.0*log(mu_f/Model.top.m());
-     log_mur_sq_over_muf_sq = 2.0*log(mu_r/mu_f);
-     log_one_minus_tau = log(1.0 - pow(Model.higgs.m(),2.0)/pow(Etot,2.0));
+	
      
 }
 
@@ -707,57 +730,10 @@ void GluonFusion::set_up_sectors(const UserInterface& UI)
      av_partons.push_back("quark2");
      build_sectors("quark","quark2");
      
-   /*
-    consolidate_sectors();
-     cout<<"\n Consolidated Sectors available: "<<all_cons_sectors.size() <<"\n";
-     for (int i=0;i<all_cons_sectors.size();i++)
-          {
-          cout<<"\n"<<*(all_cons_sectors[i]);
-          }
-    */
-}
-
-
-
-void GluonFusion::consolidate_sectors()
-{
-     for (unsigned i=0;i<available_sectors.size();i++)
-          {
-          bool found=false;
-          for (unsigned j=0;j<all_cons_sectors.size();j++)
-               {
-               if (all_cons_sectors[j]->has_same_me_as(available_sectors[i]))
-                    {
-                    found=true;
-                    break;
-                    }
-               }
-          if (found==false) //: the current sector doesn't belong to any of the existing consolidated sectors
-               {
-               all_cons_sectors.push_back(new ConsolidatedSector(available_sectors[i]));
-               }
-          }
-}
-
-bool ConsolidatedSector::has_same_me_as(SimpleSector* new_sector)
-{
-     //: here we are comparing pointers to MatrixElement objects, so it might be a good idea to make sure
-     //: that each MatrixElement can only be defined once and for all, and that we never copy the MatrixElement
-     //: object itself, but only copying the pointer around. We could also define a == operator for MatrixElements
-     //: and compare them directly
-     if (
-         sectors[0]->ME==new_sector->ME
-         and sectors[0]->alpha_power==new_sector->alpha_power
-         and sectors[0]->epsilon_power==new_sector->epsilon_power
-         )
-          {
-          sectors.push_back(new_sector);
-          return true;
-          }
-     else
-          return false;
 
 }
+
+
 
 void GluonFusion::build_sectors(const string &parton_left, const string &parton_right)
 {
@@ -832,7 +808,7 @@ void GluonFusion::build_sectors_with_fixed_a_order_and_pdfs(const FFF & F1,const
           if (pleft=="quark2" and pright=="gluon") pleft="quark";
           if (pleft=="antiquark" and pright=="quark") {pleft="quark"; pright="antiquark";}
           //: the check
-          if (pleft==available_matrix_elements[ime]->parton_i and pright==available_matrix_elements[ime]->parton_j)
+          if (pleft==available_matrix_elements[ime]->parton_i() and pright==available_matrix_elements[ime]->parton_j())
                {
                matching_mes.push_back(available_matrix_elements[ime]);
                }
@@ -881,13 +857,13 @@ void GluonFusion::build_sectors_with_fixed_a_order_e_order_and_pdfs(const FFF & 
      //AREN_vector.push_back(new ExpansionTerm("(-b0*a*lh)",-beta.zero*lh,1,0));
      for (int ime=0;ime<matching_mes.size();ime++)
           {
-          if (matching_mes[ime]->alpha_power<=Sorder)
+          if (matching_mes[ime]->alpha_power()<=Sorder)
                {
                MatrixElement* cur_me=matching_mes[ime];
                //: assigning trivial renormalization factor (1)
                vector<ExpansionTerm*> cur_aren=AREN_vector_trivial;
                //: assigning  -b0 * a exp(e*lh) / e if the matrix element is nlo
-               if (cur_me->alpha_power==1) cur_aren=AREN_vector;
+               if (cur_me->alpha_power()==1) cur_aren=AREN_vector;
                for (int iwc=0;iwc<WCET_vector.size();iwc++)
                     {
                     for (int izren=0;izren<ZREN_vector.size();izren++)
@@ -898,11 +874,11 @@ void GluonFusion::build_sectors_with_fixed_a_order_e_order_and_pdfs(const FFF & 
                               int total_alpha_order = WCET_vector[iwc]->give_a_power()
                                                   +ZREN_vector[izren]->give_a_power()
                                                   +cur_aren[iaren]->give_a_power()
-                                                  +cur_me->alpha_power;
+                                                  +cur_me->alpha_power();
                               int total_epsilon_order = WCET_vector[iwc]->give_e_power()
                                                   +ZREN_vector[izren]->give_e_power()
                                                   +cur_aren[iaren]->give_e_power()
-                                                  +cur_me->epsilon_power;
+                                                  +cur_me->epsilon_power();
                               if (total_alpha_order==Sorder and total_epsilon_order==Eorder)
                                    {
                                    vector<ExpansionTerm*> factors;
@@ -969,7 +945,15 @@ void GluonFusion::clear_previously_allocated_events_and_free_memory()
 //          else cout<<"\n{"<<the_sector->name<<"}";
           delete production_events[i];
           }
-     production_events.clear();
+    production_events.clear();
+
+    for (int i=0;i<light_events.size();i++)
+        {
+        //          if (the_sector->name == "F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,RR t5,a^2,e^-2 ,dim=6) : a^4,e^-2") cout<<"\n"<<*production_events[i];
+        //          else cout<<"\n{"<<the_sector->name<<"}";
+        delete light_events[i];
+        }
+    light_events.clear();
 }
 
 void GluonFusion:: prepare_phase_space_dependent_quantities()
@@ -1026,6 +1010,9 @@ void GluonFusion::parametrization_for_LO_kinematics()
           
           ISP.measLO = 1.0/x*jac_from_rap_param;
           
+         
+          
+          
           ISP.x1LO=x;
           ISP.zLO=1.0;
           ISP.x2LO= tau/x;
@@ -1059,30 +1046,7 @@ void GluonFusion::parametrization_for_LO_kinematics()
      //     cout<<"\nhello "<<x1<<x2<<"\t"<<xx_vegas[0]<<"\t"<<xx_vegas[1]<<"\t"<<tau;
 }
 
-/*
-bool GluonFusion::bjorken_x_out_of_range(const double & x1,const double & x2)
-{
-     double almost_one = 1.0-1e-14;
-     const double delta = 1e-14;
-     if (x1<almost_one and x2<almost_one and x1>0.0 and x2>0.0 and (x1*x2>=(tau-delta))) 
-          {
-          
-          return false;
-          }
-     else 
-          {
-          if (x1*x2<tau-delta)
-               {
-               cout<<setprecision(16)<<"\n x1*x2="<<x1*x2<<" < "<<tau<<"=tau";
-               }
-          else
-               {
-               // cout<<"\nx1="<<x1<<"\tx2="<<x2;
-               }
-          return true;
-          }
-}
-*/
+
 
 void GluonFusion::parametrization_for_NLO_kinematics()
 {
@@ -1159,7 +1123,6 @@ double GluonFusion::generate_x1(double & jac_from_rap_param)
      double u=umin+(umax-umin)*xlambda;
      jac_from_rap_param = sqrt(tau)*exp(u)*(umax-umin);
      double x= sqrt(tau)*exp(u);
-     //cout<<setprecision(18)<<"\nxx_vegas[0]="<<xx_vegas[0]<<" x="<<x<<" tau/x="<<tau/x<<" tau="<<tau<<" u="<<u<<" umin="<<umin;
      return x;
 }
 
@@ -1196,31 +1159,24 @@ void GluonFusion::book_production_event(const double & sigma_central,
      if (sigma_central!=0.0)
           {
           const double shat = pow(Etot,2.0)*x1*x2;
-          update_smaxmin(0,x1);
-          update_smaxmin(1,z);
-          update_smaxmin(2,s13/shat);
-          update_smaxmin(3,s23/shat);
-          update_smaxmin(4,s14/shat);
-          update_smaxmin(5,s24/shat);
-          update_smaxmin(6,s34/shat);
-          /*
-          cout<<"\n"
-          <<x1<<"|"<<smin[0]<<"-"<<smax[0]<<"\t"
-          <<z<<"|"<<smin[1]<<"-"<<smax[1]<<"\t"
-          <<s13/shat<<"|"<<smin[2]<<"-"<<smax[2]<<"\t"
-          <<s23/shat<<"|"<<smin[3]<<"-"<<smax[3]<<"\t"
-          <<s14/shat<<"|"<<smin[4]<<"-"<<smax[4]<<"\t"
-          <<s24/shat<<"|"<<smin[5]<<"-"<<smax[5]<<"\t"
-          <<s34/shat<<"|"<<smin[6]<<"-"<<smax[6]<<"\t";
-          */
-          //cout<<"\n sigma_central when booking = "<<sigma_central;
           set_up_event_kinematics(x1,x2,z,s13,s23,s14,s24,s34);
           push_back_event(sigma_central);
-          //the_cluster.process(x1,z,s13,s23,s14,s24,s34);
-          //production_events.push_back(new Event(sigma_central,all_momenta));
-          //cout<<"\n booking production event event number="<<production_events.size();
+          writeEventToFile(x1,all_momenta["h"].pT(),
+                           all_momenta["h"].zrap(),sigma_central);
+
           }
 }
+
+void GluonFusion::writeEventToFile(const double & x1,const double &pt,
+                                   const double & y,const double & weight)
+{
+
+        light_events.push_back(new LightEvent(x1,pt,y,weight));
+    
+    
+}
+
+
 
 void GluonFusion::update_smaxmin(int i,double x)
 {
@@ -1330,8 +1286,8 @@ void GluonFusion::NLO_event_kinematics(const double & x1,
                }
           
           
-          
           }
+
 }
 
 void GluonFusion::set_up_event_kinematics(
@@ -1581,17 +1537,24 @@ void GluonFusion::set_up_event_kinematics(
      } //: end of else from trivial NLO checks at the begining of the function
 }
 
+
+
+
+
+
+
 //: ------- gluon fusion LO 
 void GluonFusion::LO()
 {
      //: the_sector->ME->epsilon_power doesn't matter here because LO has the structure 1+e+e^2
-     if (the_sector->ME->epsilon_power>=0)
+     if (the_sector->ME->epsilon_power()>=0)
           {
           double sigma_central =   pref_sgg
                               *ISP.measLO
                               *cur_lumiLO[0]
                               //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
                               *sector_specific_prefactors_from_a_e_expansion;
+          
           JLO(sigma_central);
           }
 }
@@ -1623,7 +1586,7 @@ void GluonFusion::nlo_me()
           for (unsigned i=0;i<the_sector->ME->number_of_sectors_in_this_topology;i++)
                {
                double dummyres;
-               (*the_sector->ME->franz_func)(i+1,the_sector->ME->epsilon_power,shat,x1,x2,  z,lh, weight,consts::nf,lambda,0.0,0.0,0.0,dummyres);
+               (*the_sector->ME->franz_func)(i+1,the_sector->ME->epsilon_power(),shat,x1,x2,  z,lh, weight,consts::nf,lambda,0.0,0.0,0.0,dummyres);
                }
           }
 }
@@ -1632,7 +1595,7 @@ void GluonFusion::nlo_me()
 //: SOFT means virtual + soft real + renormalization
 void GluonFusion::gg_NLO_SOFT()
 {
-     if (the_sector->ME->epsilon_power==0)
+     if (the_sector->ME->epsilon_power()==0)
           {
           //double beta_0 = 11.0/4.0-consts::nf/6.0;
           double sigma_soft_nlo = pref_sgg
@@ -1646,7 +1609,7 @@ void GluonFusion::gg_NLO_SOFT()
                     //  + 2.0*WC.c0*WC.c1 );//: the wilson coefficient contribution
           JLO(sigma_soft_nlo);
           }
-     else if (the_sector->ME->epsilon_power==1)
+     else if (the_sector->ME->epsilon_power()==1)
           {
           //double beta_0 = 11.0/4.0-consts::nf/6.0;
           double sigma_soft_nlo = pref_sgg
@@ -1670,7 +1633,7 @@ void GluonFusion::gg_NLO_SOFT()
 //: HARD
 void GluonFusion::gg_NLO_HARD()
 {
-     if (abs(the_sector->ME->epsilon_power)>2)
+     if (abs(the_sector->ME->epsilon_power())>2)
           {
           book_production_event();
           }
@@ -1691,7 +1654,7 @@ void GluonFusion::gg_NLO_HARD()
                          *1.0/(1.0-ISP.z)
                          *sector_specific_prefactors_from_a_e_expansion
                          ;
-          if (the_sector->ME->epsilon_power== -1)
+          if (the_sector->ME->epsilon_power()== -1)
                {
                for (int ts=1;ts<3;ts++) //: ts=topology sector (there are 2 in rgg2ght1)
                     {
@@ -1699,7 +1662,7 @@ void GluonFusion::gg_NLO_HARD()
                     rgg2ght1(ts,-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,lh,-weightLO,consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                     }
                }
-          else if (the_sector->ME->epsilon_power==0)
+          else if (the_sector->ME->epsilon_power()==0)
                {
                for (int ts=1;ts<3;ts++) //: ts=topology sector (there are 2 in rgg2ght1)
                     {
@@ -1713,7 +1676,7 @@ void GluonFusion::gg_NLO_HARD()
                     rgg2ght1(ts,-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,lh,-weightLO*extra_weight,consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                     }
                }
-          else if (the_sector->ME->epsilon_power==1)
+          else if (the_sector->ME->epsilon_power()==1)
                {
                for (int ts=1;ts<3;ts++) //: ts=topology sector (there are 2 in rgg2ght1)
                     {
@@ -1755,14 +1718,14 @@ void GluonFusion::gg_NNLO_SOFT()
      double DD1= (weight-weightLO)/(1.0-ISP.z)*ISP.Log_1mz * 0.0;
      double DD2= (weight-weightLO)/(1.0-ISP.z)*pow(ISP.Log_1mz,2.0) * 0.0;
      double DD3= (weight-weightLO)/(1.0-ISP.z)*pow(ISP.Log_1mz,3.0) * 0.0;
-     if (the_sector->ME->epsilon_power==-2)
+     if (the_sector->ME->epsilon_power()==-2)
           {
           double sigma_m2=    -3.0*consts::pi_square*delta
                               +(-33.0/4.0+1.0/2.0*consts::nf)*DD0
                               +36.0*DD1;
           JLO(sigma_m2);
           }
-     else if (the_sector->ME->epsilon_power==-1)
+     else if (the_sector->ME->epsilon_power()==-1)
           {
           double sigma_m1 =(-1.0/4.0*consts::pi_square
                               -315.0/4.0*consts::z3+27.0/4.0
@@ -1774,7 +1737,7 @@ void GluonFusion::gg_NNLO_SOFT()
                          -108.0*DD2;
           JLO(sigma_m1);
           }
-     else if (the_sector->ME->epsilon_power==0)
+     else if (the_sector->ME->epsilon_power()==0)
           {
           double sigma_0 = 
                          +(   -120.0*consts::z3
@@ -1828,7 +1791,7 @@ void GluonFusion::NNLO_hard_no_subtraction()
                     {
                     (*the_sector->ME->franz_func)
                          (i+1,//:franz counts from one
-                          the_sector->ME->epsilon_power,
+                          the_sector->ME->epsilon_power(),
                           shat,x1,x2,  z,lh, weight,consts::nf,
                           xx_vegas[2],xx_vegas[3],xx_vegas[4],xx_vegas[5],dummyres);
                     
@@ -1853,7 +1816,7 @@ void GluonFusion::NNLO_rv_with_subtraction()
 
 void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4)
 {
-     if (the_sector->ME->epsilon_power<-3 or the_sector->ME->epsilon_power>1){book_production_event();}
+     if (the_sector->ME->epsilon_power()<-3 or the_sector->ME->epsilon_power()>1){book_production_event();}
      else
           {
           double dummyres;
@@ -1880,10 +1843,10 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
           //z=0.1;x2=tau/z/x1;shat=pow(Model.higgs.m,2.0)/z; weight=1.0;//: franz's test point
           if (the_sector->ME->is_franz_topology)
                {
-               for (int m=-3;m<the_sector->ME->epsilon_power+1;m++)
+               for (int m=-3;m<the_sector->ME->epsilon_power()+1;m++)
                     {
                     double thelog;
-                    int k=the_sector->ME->epsilon_power-m;
+                    int k=the_sector->ME->epsilon_power()-m;
                     if (k>0)
                          {
                          double factorials[3]={1.0,2.0,6.0};
@@ -1930,29 +1893,29 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
 
 void GluonFusion::LO_exact()
 {
-     if (the_sector->ME->epsilon_power>=0)
+     if (the_sector->ME->epsilon_power()>=0)
           {
           double sigma_central =   pref_sgg
           *ISP.measLO
           *cur_lumiLO[0]
           //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
           *sector_specific_prefactors_from_a_e_expansion
-          *LO_exact_coefficient[the_sector->ME->epsilon_power];//: LO_exact_coefficient is a vector that holds the coefficients calculated once
-          //cout<<"\n** "<<LO_exact_coefficient[the_sector->ME->epsilon_power];
+          *LO_exact_coefficient[the_sector->ME->epsilon_power()];//: LO_exact_coefficient is a vector that holds the coefficients calculated once
+          //cout<<"\n**LO exact coefficient = "<<LO_exact_coefficient[the_sector->ME->epsilon_power()];
           JLO(sigma_central);
           }
 }
 
 void GluonFusion::NLO_soft_exact()
 {
-     if (the_sector->ME->epsilon_power==0) //: we do not have an implementation of the e-pieces
+     if (the_sector->ME->epsilon_power()==0) //: we do not have an implementation of the e-pieces
           {
           double sigma_central =   pref_sgg
           *ISP.measLO
           *cur_lumiLO[0]
           //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
           *sector_specific_prefactors_from_a_e_expansion
-          *NLO_soft_exact_coefficient[the_sector->ME->epsilon_power];//: LO_exact_coefficient is a vector that holds the coefficients calculated once
+          *NLO_soft_exact_coefficient[the_sector->ME->epsilon_power()];//: LO_exact_coefficient is a vector that holds the coefficients calculated once
           //cout<<"\n** "<<LO_exact_coefficient[the_sector->ME->epsilon_power];
           JLO(sigma_central);
           }
@@ -1977,6 +1940,9 @@ double GluonFusion::LO_exact_e0()
           {
           ME = ME + Model.quarks[i]->Y * born(Model.quarks[i]->X);
           }
+    
+    cout<<"\n LO exact : "<<pow(abs(ME),2.0);
+
      return(pow(abs(ME),2.0));
 }
 
@@ -2066,7 +2032,7 @@ double GluonFusion::NLO_soft_exact_e0()
      for (int i=0;i<Model.quarks.size();i++)
           {
         //  cout<<"\n quark # "<<i+1<<": "<<Model.quarks[i]->name<<" with mass "<<Model.quarks[i]->m()<<" Y="<<Model.quarks[i]->Y<<" x="<<Model.quarks[i]->X;
-          V = V + Model.quarks[i]->Y * virtual_0(Model.quarks[i]->X);
+          V = V + Model.quarks[i]->Y * ggf_exact_virtual_ep0(Model.quarks[i]->X);
           Born = Born+Model.quarks[i]->Y * born(Model.quarks[i]->X);
           //cout<<"\t\t ME="<<ME;
           
@@ -2076,65 +2042,6 @@ double GluonFusion::NLO_soft_exact_e0()
      cout<<"\n NLO soft= "<<res<<"\t"<<conj(V);
      return(res);
 }
-
-complex<double> GluonFusion::virtual_0(complex<double> x)
-{
-     //	Below is an implementation of the two_loop virtual
-     //   amplitude in the presence of heavy quarks (the non-pi^2, non-log piece of it)
-     //	Its limit as m->infty is 11/2*born
-     //	The implementation (by Stephan) follows eq.26-30
-     //	in http://arxiv.org/abs/hep-ph/0611266
-
-     // see eq.28 of  http://arxiv.org/abs/hep-ph/0611266
-     complex<double> H2 = 4.0/5.0*pow(consts::z2,2.0)
-                         + 2.0*consts::z3
-                         + 3.0*consts::z3/2.0*log(x)
-                         - 3.0*consts::z3*log(1.0-x)
-                         + consts::z2*HPL2(1,0,x)
-                         + 1.0/4.0*(1.0+2*consts::z2)*HPL2(0,0,x)
-                         - 2.0*HPL3(1,0,0,x)
-                         + HPL4(0,0,-1,0,x)
-                         + 1.0/4.0*HPL4(0,0,0,0,x)
-                         + 2.0*HPL4(1,0,-1,0,x)
-                         - HPL4(1,0,0,0,x);
-     complex<double> G2lCA_onehalf = 4.0* x/pow(x-1.0,2.0) *
-                                        (
-                                        3.0
-                                         + x*(1.0+8.0*x+3.0*x*x) /pow(x-1.0,3.0)*HPL3(0,0,0,x)
-                                         -2.0*pow(1.0+x,2.0)/pow(1.0-x,2.0)* H2
-                                         +consts::z3
-                                         -HPL3(1,0,0,x)
-                                         )
-                                        ;
-     // see eq.11 of http://arxiv.org/abs/hep-ph/0611266
-     complex<double> H1 = 9.0*pow(consts::z2,2.0)/10.0
-                         + 2.0*consts::z3*log(x)
-                         + consts::z2*HPL2(0,0,x)
-                         + 1.0/4.0*HPL4(0,0,0,0,x)
-                         + 7.0/2.0*HPL4(0,1,0,0,x)
-                         - 2.0*HPL4(0,-1,0,0,x)
-                         + 4.0*HPL4(0,0,-1,0,x)
-                         - HPL4(0,0,1,0,x);
-     
-     complex<double> F2lonehalf = 36.0*x/pow(x-1.0,2.0)
-                         - 4.0*x*(1.0-14.0*x+x*x)/pow(x-1.0,4.0)*consts::z3
-                         - 4.0*x*(1.0+x)*log(x)/pow(x-1.0,3.0)
-                         - 8.0*x*(1.0+9.0*x+x*x)/pow(x-1.0,4.0)*HPL2(0,0,x)
-                         +2.0*x*(3.0+25.0*x-7.0*x*x+3.0*pow(x,3.0))/pow(x-1.0,5.0)*HPL3(0,0,0,x)
-                         + 4.0*x*(1.0+2.0*x+x*x)/pow(x-1.0,4.0)*(consts::z2*log(x) + 4.0*HPL3(0,-1,0,x) - HPL3(0,1,0,x))
-                         + 4.0*x*(5.0-6.0*x+5.0*pow(x,2.0))/pow(x-1.0,4.0)*HPL3(1,0,0,x)
-                         - 8.0*x*(1.0+x+pow(x,2.0)+pow(x,3.0))/pow(x-1.0,5.0)*H1;
-     
-     //: putting the above together: we keep here N arbitrary for readability reasons only
-     double N=3.0;
-     double Cf=(N*N-1.0)/2.0/N;
-     complex<double> res =1.0/2.0 * (Cf * F2lonehalf  +  N * G2lCA_onehalf) / (-2.0/3.0);
-     
-     cout<<"\n**"<<F2lonehalf<<"\t"<<G2lCA_onehalf<<"\t"<<x;
-     return res+conj(res);
-     
-}
-
 
 
 
@@ -2194,7 +2101,7 @@ double GluonFusion::abs_sq_of_sum_over_quarks_of(complex<double> (*f)(const doub
 
 void GluonFusion::gg_NLO_hard_exact()
 {
-     if (abs(the_sector->ME->epsilon_power)>2)
+     if (abs(the_sector->ME->epsilon_power())>2)
           {
           book_production_event();
           }
@@ -2215,18 +2122,18 @@ void GluonFusion::gg_NLO_hard_exact()
           *sector_specific_prefactors_from_a_e_expansion
           ;
           double weight_soft = pref_sgg*ISP.measLO*cur_lumiLO[0]*sector_specific_prefactors_from_a_e_expansion/2.0;
-          if (the_sector->ME->epsilon_power== -2)//: double pole from the soft limit
+          if (the_sector->ME->epsilon_power()== -2)//: double pole from the soft limit
                {
                     rgg2ghEXACT(-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,  1.0,lh, weight_soft,consts::nf,0.0);
                }
-          if (the_sector->ME->epsilon_power== -1)
+          if (the_sector->ME->epsilon_power()== -1)
                {
                     
                     rgg2ghEXACT(-1,ISP.curs,ISP.x1,ISP.x2,  ISP.z,lh, weight,consts::nf,ISP.lambda);
                     rgg2ghEXACT(-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,lh,-weightLO,consts::nf,ISP.lambda);
                     rgg2ghEXACT(-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,lh,weight_soft*ISP.Log_1mz,consts::nf,ISP.lambda);               
                }
-          else if (the_sector->ME->epsilon_power==0)
+          else if (the_sector->ME->epsilon_power()==0)
                {
                
                     //: contribution from finite coefficient of rgg2ght1

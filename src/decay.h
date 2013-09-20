@@ -5,12 +5,12 @@
 #include <complex>
 using namespace std;
 
-#include "UserInterface.h"
+#include "user_interface.h"
 #include "fvector.h"
-#include "CConstants.h"
+#include "constants.h"
 #include "hub.hpp"
-#include "Momenta.h"
-#include "Model.h"
+#include "momenta.h"
+#include "model.h"
 #include "chaplin.h"
 
 /** \brief Decay base class 

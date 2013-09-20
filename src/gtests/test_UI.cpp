@@ -7,7 +7,7 @@
 #include <cmath>
 
 
-#include "UserInterface.h"
+#include "user_interface.h"
 
 using namespace std;
 
@@ -21,8 +21,7 @@ char ** gargv;
  TEST(defaults,input_filename)
  {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      EXPECT_EQ(UI.input_filename,"runcard");
@@ -32,8 +31,7 @@ char ** gargv;
 TEST(defaults,output_filename)
 {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
 
@@ -44,8 +42,7 @@ TEST(defaults,output_filename)
 TEST(defaults,m_higgs)
 {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
 
@@ -55,8 +52,8 @@ TEST(defaults,m_higgs)
 TEST(defaults,muf_over_mh)
 {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      
@@ -66,8 +63,8 @@ TEST(defaults,muf_over_mh)
 TEST(defaults,production)
 {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      
@@ -77,8 +74,8 @@ TEST(defaults,production)
 TEST(defaults,cutinfo)
 {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      
@@ -88,8 +85,8 @@ TEST(defaults,cutinfo)
 TEST(runcard,Etot)
 {
      int locargc=1;
-     char* locargv[1];
-     locargv[0]="./ehixs";
+     char * const locargv[1]={"./ehixs"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      
@@ -99,10 +96,7 @@ TEST(runcard,Etot)
 TEST(commandLine,epsrel)
 {
      int locargc=3;
-     char* locargv[3];
-     locargv[0]="./ehixs";
-     locargv[1]="--epsrel=0.0009";
-     locargv[2]="--mineval=7000";
+     char * const locargv[3]={"./ehixs","--epsrel=0.0009","--mineval=7000"};
 
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
@@ -113,10 +107,8 @@ TEST(commandLine,epsrel)
 TEST(commandLine,mineval)
 {
      int locargc=3;
-     char* locargv[3];
-     locargv[0]="./ehixs";
-     locargv[1]="--epsrel=0.0009";
-     locargv[2]="--mineval=7000";
+     char * const locargv[3]={"./ehixs","--epsrel=0.0009","--mineval=7000"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      
@@ -126,10 +118,8 @@ TEST(commandLine,mineval)
 TEST(commandLine,info)
 {
      int locargc=3;
-     char* locargv[3];
-     locargv[0]="./ehixs";
-     locargv[1]="--info";
-     locargv[2]="--mineval=7000";
+     char * const locargv[3]={"./ehixs","--info","--mineval=7000"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      
@@ -139,12 +129,7 @@ TEST(commandLine,info)
 TEST(commandLineShort,pole)
 {
      int locargc=5;
-     char* locargv[5];
-     locargv[0]="./ehixs";
-     locargv[1]="-p";
-     locargv[2]="2";
-     locargv[3]="-i";
-     locargv[4]="cucu";
+     char * const locargv[5]={"./ehixs","-p","2","-i","cucu"};
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
 //     UI.ParseInput(gargc,gargv);
@@ -154,11 +139,7 @@ TEST(commandLineShort,pole)
 TEST(commandLineShort,poleagain)
 {
      int locargc=4;
-     char* locargv[4];
-     locargv[0]="./ehixs";
-     locargv[1]="-p";
-     locargv[2]="-2";
-     locargv[3]="cucu";
+     char * const locargv[4]={"./ehixs","-p","-2","cucu"};
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      //     UI.ParseInput(gargc,gargv);
@@ -168,11 +149,8 @@ TEST(commandLineShort,poleagain)
 TEST(commandLineShort,unrecognized)
 {
      int locargc=4;
-     char* locargv[4];
-     locargv[0]="./ehixs";
-     locargv[1]="-q";
-     locargv[2]="-2";
-     locargv[3]="--shit";
+     char * const locargv[4]={"./ehixs","-q","2","--shit"};
+
      UserInterface UI;
      UI.ParseInput(locargc,locargv);
      //     UI.ParseInput(gargc,gargv);

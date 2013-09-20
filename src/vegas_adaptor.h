@@ -9,8 +9,10 @@
 #include <fstream>
 #include <vector>
 using namespace std;
-#include "UserInterface.h"
+#include "user_interface.h"
 #include "hub.hpp"
+#include "bin.h"
+
 
 
 typedef int (*pointer_to_Integrand)(const int *ndim, const double xx[],
@@ -18,7 +20,8 @@ const int *ncomp, double ff[],void * therun, double* weight, int* iteration_numb
 
 class VegasAdaptor{
 public:
-     VegasAdaptor(const UserInterface & UI);
+    VegasAdaptor(const UserInterface & UI);
+    VegasAdaptor(const UserInterface & UI,const pointer_to_Integrand ptr,int dim);
      vector<double> ff_vegas; //: public because it has to be accessed by Integrand
      int number_of_components;//: public because it has to be accessed by Integrand
      void call_vegas();
@@ -33,18 +36,107 @@ public:
      int vegas_iteration_number_old;
      bool new_iteration_has_started();
      
-     void set_ptr_to_the_hatch(TheHatch* in_hatch){the_hatch=in_hatch;}
+    void set_ptr_to_the_hatch(TheHatch* in_hatch)
+        {the_hatch=in_hatch;}
+    void set_number_of_dimensions(int dd){number_of_dims=dd;}
      void set_ptr_to_integrand(pointer_to_Integrand ptr){my_integrand=ptr;}
      
      friend ostream& operator<<(ostream&, const VegasAdaptor&);
 private:
      double epsrel,epsabs;
-     int verbose,mineval,maxeval,nstart,nincrease;
+     int verbose,mineval,maxeval,nstart,nincrease,number_of_dims;
      TheHatch* the_hatch;
      pointer_to_Integrand my_integrand;
      
 };
 
+//  ---------------------------------------------------------------------------
+//
+//  classes for easy vegas integration
+//
+//  usage:  subclass CoolInt to overload the function
+//          double evaluateIntegral(const double xx[]);
+//          Then use by constructing an object of the derived class
+//          setting it up potentially
+//          and then call_vegas();
+//
+//          see example below AnotherInt
+//
+
+class CoolInt;
+
+#ifndef POINTER_TO_COOL_INTEGRAL
+#define POINTER_TO_COOL_INTEGRAL
+//CoolInt * ptr_to_cool_int;
+#endif
+
+int cool_integral(const int *ndim, const double xx[],
+                  const int *ncomp, double ff[],void * therun,
+                  double* weight, int* iteration_number);
+
+
+class CoolInt{
+public: //data
+    
+
+public: //functions
+    // default constructor setting default 
+    CoolInt();
+    ~CoolInt(){};
+    
+    void setParams(int number_of_dims,double epsrel,double epsabs,
+                   int mineval,int maxeval,int nstart,int nincrease);
+    void setParams(int number_of_dims,double epsrel,double epsabs);
+    
+    virtual double evaluateIntegral(const double xx[]);
+    void call_vegas();
+    
+    double result(){return _central_value[0];}
+    double error(){return _vegas_error[0];}
+    double central_value(){return _vector_of_xs[0]->value();}
+    double mc_error_of_central_value(){return _vector_of_xs[0]->error();}
+    void check_whether_we_need_to_update_bins(unsigned new_iter_number);
+
+    void set_iteration_number(unsigned int ii){_iter_num = ii;}
+    void add_to_bins(const double & ww);
+    
+    const vector<double>  give_vector_of_res();
+    unsigned long number_of_components(){return _vector_of_xs.size();}
+    double give_res_component(unsigned i);
+    double give_err_component(unsigned i);
+
+    void set_number_of_xs_values_we_keep(unsigned);
+protected: //functions
+    
+    unsigned iteration_number(){return _iter_num;}
+private: //data
+    int _number_of_dims;
+    double _central_value[1];
+    double _vegas_error[1];
+    double _prob[1];
+    int _neval,_fail;
+    int _gridno;
+    int _seed;
+    
+    int _nbatch,_verbose;
+    double _epsrel,_epsabs;
+    int _mineval,_maxeval,_nstart,_nincrease;
+    unsigned _iter_num;
+    vector<Bin*> _vector_of_xs;
+protected://data
+    vector<double> _running_xs_values;
+};
+
+
+
+class AnotherInt: public CoolInt
+{
+public:
+    AnotherInt();
+    double evaluateIntegral(const double xx[]);
+private:
+
+};
 
 #endif
 

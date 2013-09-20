@@ -5,20 +5,16 @@
 
 #include <iostream>
 #include <cmath>
-
-
-#include "Production.h"
-//#include "GluonFusionInclusive.h"
-#include "GluonFusion.h"
-#include "Process.h"
-#include "test_utils.h"
-
 using namespace std;
+
+
+#include "ggf_headers.h"
+
+
 
 #include "gtest/gtest.h"
 
 
-/*
 TEST(LO_test,xsection_muf_muf_mh)
 {
      vector<channel_name> chs;
@@ -35,9 +31,9 @@ TEST(LO_test,xsection_muf_muf_mh)
      double expected_xs =7.608;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
- */
+ 
 
-
+/*
 TEST(NLO_test,gg_xsection_muf_muf_mh)
 {
      vector<channel_name> chs;
@@ -54,7 +50,7 @@ TEST(NLO_test,gg_xsection_muf_muf_mh)
      double expected_xs =7.923;// NLO piece alone. The total NLO (including the LO contribution with NLO pdfs) is 13.845;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-
+*/
 /*
 TEST(NLO_test,gg_xsection_mu_wild)
 {

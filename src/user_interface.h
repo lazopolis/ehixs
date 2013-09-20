@@ -123,9 +123,9 @@ public:
      
      vector<Option*> options;
 
-     void ParseInput(int argc, char **argv);
+     void ParseInput(int argc, char * const *argv);
      int ParseFile(const string &, bool);
-     vector<vector<string> > ParseCmd(int argc, char **argv, bool verbose);
+     vector<vector<string> > ParseCmd(int argc,  char * const *argv, bool verbose);
 
      void print_help_message();
 
@@ -138,8 +138,9 @@ public:
      
      double Etot,m_higgs,epsrel,epsabs,muf_over_mhiggs,mur_over_mhiggs,number_of_flavours;
      string production,decay,pdf_provider,sector_name,sector_for_production,input_filename,output_filename,matrix_element_approximation,Fleft,Fright;
-     int verbose,maxeval,mineval,nstart,nincrease,perturbative_order,pole,decay_sector,pdf_error,sector_control;
-     bool info,histogram_info,cut_info,list_processes,help;
+     int verbose,maxeval,mineval,nstart,nincrease,perturbative_order,pole,decay_sector,sector_control,requested_histogram,requested_cut;
+     bool info,histogram_info,cut_info,list_processes,help,show_me_list,
+            pdf_error, dummy_process;
      
      //: histograms
      vector<string> requested_histograms;

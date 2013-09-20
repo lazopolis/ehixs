@@ -128,7 +128,15 @@ Luminosity::pdf_desc Luminosity::F_g_21(0,100,2,1);
 Luminosity::pdf_desc Luminosity::F_g_22(0,100,2,2);
 
 
-
+Luminosity::Luminosity(const UserInterface& UI)
+{
+    nf = UI.number_of_flavours;
+    mu_f = UI.muf_over_mhiggs * UI.m_higgs;
+    mu_r = UI.mur_over_mhiggs * UI.m_higgs;
+    perturbative_order =  UI.perturbative_order;
+    provider =  UI.pdf_provider;
+    pdf_error = UI.pdf_error;
+}
 
 
 void Luminosity::add_pair(const pdf_desc & left, const pdf_desc & right)
@@ -176,6 +184,18 @@ void Luminosity::add_pair(const pdf_desc & left, const pdf_desc & right)
                                 );             
     }                            
     pairs.push_back(pair<CPDF*,CPDF*>(pdfs[ipos].first, pdfs[jpos].first));
+    
+
+    if (pdfs.empty())
+        {
+        cout<<"\n\n Critical error: I cannot initialize the _local_current_luminosity. I exit! "<<endl;
+        exit(1);
+        }
+    else
+        {
+        _local_current_luminosity = vector<double>(pdfs[0].first->size(),0.0);
+        }
+
 }
 
 
@@ -212,6 +232,39 @@ void  Luminosity::set_cur_lumi(const double &x1,const double &x2, vector<double>
     }
      //cout<<"\nin lumi "<<x1<<"\t"<<x2<<"\t"<<newlumi[0];
 }
+
+void  Luminosity::set_cur_lumi(const double &x1,const double &x2)
+{
+    //cout<<"\n in Luminosity::operator() number of members "<<pdf_size()<<endl;
+    double locres;
+    const double almost_zero =1e-16;// 1e-23;
+    //:check if x1 and x2 are within (0,1).
+    //: if not set the lumi to zero
+    
+    if (x1>1.0-almost_zero or x2>1.0-almost_zero or x1<almost_zero or x2<almost_zero)
+        {
+        //cout<<"\n lumi cut: x1="<<x1<<" x2="<<x2;
+        for (unsigned i=0;i<pdf_size();i++)
+            {
+            _local_current_luminosity[i]=0.0;
+            }
+        }
+    else //: calculate lumi
+        {
+        for (unsigned i=0;i<pdf_size();i++)
+            {
+            locres=0.0;
+            for (unsigned k=0;k<pairs.size();k++)
+                {
+                locres += pairs[k].first->give_f(x1,i)*pairs[k].second->give_f(x2,i)*x1*x2;
+                
+                }
+            _local_current_luminosity[i]=locres;
+            }
+        }
+}
+
+
 
 double  Luminosity::give_lumi(const double &x1,const double &x2)
 {
@@ -253,7 +306,22 @@ unsigned Luminosity::pdf_size() const
     }
      
 }
-        
+
+vector<double> Luminosity::give_a_s_at_mz()
+{
+    if (pdfs.empty())
+        {
+        cout<<"\n\n Critical error: you attempt to get the size of the PDF from Luminosity before assigning PDFs to it. I exit! "<<endl;
+        exit(1);
+        }
+    else
+        {
+        return pdfs[0].first->alpha_s_at_mz;
+        }
+
+}
+
+
 void Luminosity::alpha_s_at_mz(vector<double> & as_ext)
 {
     if (pdfs.empty())
@@ -317,7 +385,7 @@ void Luminosity::evolve_alpha_s_from_mz_to_mur(vector<double> & alpha_s_external
 //     }
 
      cout<<"\nEvolving alpha_s with evolution of order : "<<perturbative_order
-          <<" from "<<91.187<<" to "<<mu_r;
+          <<" from "<<91.187<<" to "<<mu_r<<endl;
      for (int i=0;i<alpha_s_at_mz_vector.size();i++)
      {
           const double evolved_as_value=SSC(alpha_s_at_mz_vector[i],mu_r,perturbative_order);

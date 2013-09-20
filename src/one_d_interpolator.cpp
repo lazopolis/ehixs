@@ -1,6 +1,6 @@
 
 
-#include "OneDInterpolator.h"
+#include "one_d_interpolator.h"
 #include <iomanip>
 using namespace std;
 
@@ -143,7 +143,7 @@ double InterpolatorBase::g_dist_inv(const double& lambda)
 
 
 
-#include "CConstants.h"
+#include "constants.h"
 
 double Interpolator_peaking_at_zero_and_one::g_dist(const double&x)
 {

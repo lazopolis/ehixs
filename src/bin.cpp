@@ -8,32 +8,9 @@
 
 using namespace std;
 
-#include "CBin.h"
+#include "bin.h"
 
-/*
 
-inline int Factorial(int x) {
-    return (x == 1 ? x : x * Factorial(x - 1));
-}
-
-inline int my_factorial(const double & x)
-{
-    if (fmod(x,1.0)==0.0)
-    {
-        return Factorial(x);
-    }
-    else if (fmod(x,1.0)==0.5)
-    {
-        return(Factorial(2*unsigned(x)));
-    }
-    else
-    {
-        cout<<"\nnon (semi) integer input in factorial"<<endl;
-        //exit(0);
-        return 0;
-    }
-}
-*/
 
 void Bin::update(unsigned NOP)
 {
@@ -94,11 +71,29 @@ void Bin::end()
   intra_point_f  = 0.0;
 }
 
+void Bin::add_single_point_package(const double &w)
+{
+    intra_point_f += w;
+    point_counter++;
+    end();
+    points_since_last_update++;
+}
+
+void Bin::end_of_iteration_update()
+{
+    update(points_since_last_update);
+    points_since_last_update=0.0;
+}
+
+
+
+
 ostream& operator<<(ostream& stream, const Bin& bin)
 {
   
   return stream << bin.avg_f 
                 << " +- " << bin.avg_err 
-     << " \t| " << bin.chi_sq <<" / "<<bin.iteration_number;
+     << " \t| " << bin.chi_sq <<" / "<<bin.iteration_number
+    <<" : "<<bin.point_counter<<" points";
                 ;
 }

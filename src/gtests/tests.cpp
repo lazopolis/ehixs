@@ -5,14 +5,11 @@
 
 #include <iostream>
 #include <cmath>
-#include "Decay.h"
-#include "Decay_bb.h"
+#include "decay.h"
+#include "decay_bb.h"
 
-#include "Production.h"
-//#include "GluonFusionInclusive.h"
-#include "GluonFusion.h"
+#include "ggf_headers.h"
 
-#include "Process.h"
 #include "histograms.hpp" //: particular available histograms are defined here. The base class for histograms is at CHistogram.h
 #include "cuts.hpp" //: the particular available cuts are defined here. The base class is at CCut.h
 //#define debug

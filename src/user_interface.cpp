@@ -7,7 +7,7 @@
 #include <getopt.h>
 
 
-#include "UserInterface.h"
+#include "user_interface.h"
 
 
 UserInterface::UserInterface()
@@ -30,7 +30,7 @@ UserInterface::UserInterface()
      options.push_back(new StringOption("matrix_element_approximation",0,"effective vs exact field theory for Gluon Fusion","Required",&matrix_element_approximation,"effective"));
      options.push_back(new StringOption("Fleft",0,"specifies the flavor of the parton on left beam","Required",&Fleft, "none"));
      options.push_back(new StringOption("Fright",0,"specifies the flavor of the parton on right beam","Required",&Fright, "none"));
-
+    
 
      options.push_back(new IntOption("verbose",0,"level of verbosity","Required",&verbose,2));
      options.push_back(new IntOption("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,20000));
@@ -40,24 +40,33 @@ UserInterface::UserInterface()
      options.push_back(new IntOption("perturbative_order",0,"a_s perturbative order (0,1,2)","Required",&perturbative_order,2));
      options.push_back(new IntOption("pole",'p',"pole coefficient degree (0,-1,-2,-3,...)","Required",&pole,0));
      options.push_back(new IntOption("decay_sector",0,"decay sector: DEPRECATED","Required",&decay_sector,0));
-     options.push_back(new IntOption("pdf_error",0,"whether or not to compute error due to pdfs: DEPRECATED","Required",&pdf_error,0));
+     
      options.push_back(new IntOption("sector_control",0,"sector id number used in bbH: DEPRECATED","Required",&sector_control,0));
-
+    options.push_back(new IntOption("requested_histogram",0,"requested histogram id number","Required",&requested_histogram,-1));
+    options.push_back(new IntOption("requested_cut",0,"requested cut id number","Required",&requested_cut,-1));
+    
      options.push_back(new BoolOption("info",0,"information mode","Optional",&info,false));
      options.push_back(new BoolOption("histogram_info",0,"histograms available","Optional",&histogram_info, false));
      options.push_back(new BoolOption("cut_info",0,"cuts available","Optional",&cut_info,false));
      options.push_back(new BoolOption("list_processes",0,"list all implemented processes","Optional",&list_processes, false));
      options.push_back(new BoolOption("help",0,"help with command line options","Optional",&help, false));
+    options.push_back(new BoolOption("show_me_list",0,"show all matrix elements declared","Optional",&show_me_list, false));
+    options.push_back(new BoolOption("pdf_error",0,
+            "whether or not to compute error due to pdfs: only used in ihixs++",
+                                     "Required",
+                                     &pdf_error,0));
+    options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
 }
 
-void UserInterface::ParseInput(int argc, char **argv)
+void UserInterface::ParseInput(int argc, char * const *argv)
 {
      // parse command line arguments
      vector<vector<string> > parsed_options = ParseCmd(argc, argv, true);
      // look for runcard overwritting
      for (unsigned i=0;i<parsed_options.size();i++)
           {
-          cout<<"command line option: "<<parsed_options[i][0]<<" set to "<<parsed_options[i][1]<<endl;
+          cout  <<"command line option: "<<parsed_options[i][0]
+                <<" set to "<<parsed_options[i][1]<<endl;
           if (parsed_options[i][0]=="input_filename")
                {
                input_filename=parsed_options[i][1];
@@ -206,8 +215,10 @@ void UserInterface::print_help_message()
      exit(1);
 }
 
-vector<vector<string> > UserInterface::ParseCmd(int argc, char **argv, bool locverbose)
+vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, bool locverbose)
 {
+     // getopt quirckiness:
+     char * const * argv_for_getopt = argv;
      // create the long_option array
      option *long_options = create_getopt_option_array();
      // create short options descriptor
@@ -228,7 +239,7 @@ vector<vector<string> > UserInterface::ParseCmd(int argc, char **argv, bool locv
      //: 'x' for any short option corresponding to short-name='x'
      //: in the case 0, the variable option_index holds
      //: the position of the recognized option in the long_option array
-     while((c = getopt_long(argc, argv, optdesc.c_str(), long_options, &option_index)) != -1)
+     while((c = getopt_long(argc, argv_for_getopt, optdesc.c_str(), long_options, &option_index)) != -1)
           {
           // do flag
           bool did=false;
