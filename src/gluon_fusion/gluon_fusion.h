@@ -7,21 +7,25 @@
 #include "chaplin.h"
 #include "convolutions.h"
 
-
-
-
-
-
-
-
-typedef void (*pointer_to_Franz_gluon_fusion)(const int&, const int&, 
-                                 const double&,const double&,const double&,const double&, 
-                                 const double&,const double&,const double&,const double&, 
-                                 const double&, const double&,const double&,const double&);
+typedef void (*pointer_to_Franz_gluon_fusion)(  const int&,
+                                                const int&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&,
+                                                const double&);
 
 class GluonFusion;
 
 typedef void (GluonFusion::*ptr_to_GluonFusion_function)();
+
 
 class MeExternalInfo
 {
@@ -38,38 +42,35 @@ public:
     string me_approximation;
 };
 
-class MeRunData
-{
+class FranzBinder{
 public:
+    FranzBinder(){_ptr = NULL; _num_sectors = 0; _is_franz = false;}
+    FranzBinder(pointer_to_Franz_gluon_fusion ptr,int num_sec)
+                                        :_ptr(ptr),_num_sectors(num_sec)
+                                        {_is_franz = true;}
+    int number_of_sectors(){return _num_sectors;}
+    pointer_to_Franz_gluon_fusion func(){return _ptr;}
+    bool is_franz(){return _is_franz;}
 private:
-    
+    pointer_to_Franz_gluon_fusion _ptr;
+    int _num_sectors;
+    bool _is_franz;
 };
 
 class MatrixElement
 {
 public:
-
-     MatrixElement(const string & _pi,const string & _pj,const string& _pord,
-                   const string & _name, const string & _kin,int _epower,
-                   const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,
-                   pointer_to_Franz_gluon_fusion  ptr_to_fr, int num_topologies,double _e_exp_in_subtr,const string & _me_approximation);
     MatrixElement(MeExternalInfo* info,
                   const string & _kin,
                   const string& _str_param,
                   ptr_to_GluonFusion_function _the_ggf_func,
-                  pointer_to_Franz_gluon_fusion  ptr_to_fr,
-                  int num_topologies,double _e_exp_in_subtr);
-     int dimension;
-     ptr_to_GluonFusion_function parametrization;
-     ptr_to_GluonFusion_function the_ggf_func;
-     bool is_franz_topology;
-     pointer_to_Franz_gluon_fusion  franz_func;
-     int  number_of_sectors_in_this_topology;
-     double epsilon_exponent_in_z_subtraction;
+                  FranzBinder* fr,
+                  double _e_exp_in_subtr);
      
-private:
-    MeExternalInfo* _info;
 public:
+    int number_of_sectors_in_this_topology(){return _franz->number_of_sectors();}
+    pointer_to_Franz_gluon_fusion franz_func(){return _franz->func();}
+    bool is_franz_topology(){return _franz->is_franz();}
     friend ostream& operator<<(ostream&, const MatrixElement&);
     string give_name(){ostringstream  stream;
         stream<<*this;
@@ -80,6 +81,15 @@ public:
     string parton_j()const {return _info->parton_j;}
     string name()const {return _info->name;}
     string me_approximation(){return _info->me_approximation;}
+public://data
+    int dimension;
+    ptr_to_GluonFusion_function parametrization;
+    ptr_to_GluonFusion_function the_ggf_func;
+    double epsilon_exponent_in_z_subtraction;
+private:
+    MeExternalInfo* _info;
+    FranzBinder* _franz;
+
 
 };
 
@@ -110,8 +120,65 @@ struct ISparams{
 };
 
 
+class GluonFusionMatrixElementBox
+{
+public:
+    GluonFusionMatrixElementBox();
+    int size(){return available_matrix_elements.size();}
+    MatrixElement* give_me(int k){return available_matrix_elements[k];}
+private://data
+    vector<MatrixElement*> available_matrix_elements;
+    
+private://methods
+    void add_gg_sectors();
+    void add_qg_sectors();
+    void add_gq_sectors();
+    void add_qqbar_sectors();
+    void add_q1q2_sectors();
+    void add_qq_sectors();
+    void push_me(const string & _pi,
+                 const string & _pj,
+                 const string& _pord,
+                 const string & _name,
+                 const string & _kin,
+                 const string& _str_param,
+                 ptr_to_GluonFusion_function _the_ggf_func,
+                 int from_k,int to_k,
+                 FranzBinder*,
+                 const string& me_approx,
+                 double eps_exp);
+};
 
 
+class GluonFusionSectorBox
+{
+public:
+    GluonFusionSectorBox(const WilsonCoefficients&, const BetaConstants&,const double& log_mur_sq_over_muf_sq);
+    vector<string> give_sector_names(const string & pleft,const string & pright,const string & myorder,const int & requested_epsilon_power, const string& me_approx);
+    vector<SimpleSector*> give_necessary_sectors(const UserInterface & UI);
+    int size(){return available_sectors.size();}
+    SimpleSector* give(int i){return available_sectors[i];}
+private://data
+    GluonFusionMatrixElementBox* available_matrix_elements;
+    vector<SimpleSector*> available_sectors;
+    vector<string> _av_partons;
+    WilsonCoefficients _WC;
+    BetaConstants _beta;
+    double _log_mur_sq_over_muf_sq;
+private://methods
+    void build_sectors(const string& p_left,const string & p_right);
+    void build_sectors_with_fixed_a_order(int,int,int,const string& p_left,
+                                          const string & p_right);
+    void build_sectors_with_fixed_a_order_and_pdfs(const FFF & F1,
+                                                   const FFF & F2,int Sorder);
+    void build_sectors_with_fixed_a_order_e_order_and_pdfs(const FFF & F1,
+                                                           const FFF & F2,
+                                                           int Sorder,
+                                                           int Eorder,
+                                                           const vector<MatrixElement*> & matching_mes);
+    vector<FFF> give_possible_F(const string & parton,int f1order);
+
+};
 
 
 class GluonFusion:public Production
@@ -119,18 +186,14 @@ class GluonFusion:public Production
 public://methods
     GluonFusion(const UserInterface & UI);
     ~GluonFusion();
-    void init(const UserInterface&,TheHatch* the_hatch);
     int  set_sector_control_by_name(const string & user_sector_name);
     vector<string> give_sector_names(const string & pleft,
                                      const string & pright,
                                      const string & myorder,
-                                     const int &);
+                                     const int & ep_power,
+                                     const string & me_approx){return all_sectors->give_sector_names(pleft, pright, myorder, ep_power,me_approx);}
     
-    vector<string> give_sector_names(const string & pleft,
-                                     const string & pright,
-                                     const string & myorder,
-                                     const int & requested_epsilon_power,
-                                     const string & me_approx);
+
     void evaluate_sector();
     void clear_previously_allocated_events_and_free_memory();
     //: public because of weird structure
@@ -143,15 +206,27 @@ public://methods
                                const double &,const double &,
                                const double &,const double &,
                                const double &);
+    void LO();
+    void gg_NLO_SOFT();
+    void gg_NLO_HARD();
+    void gg_NNLO_SOFT();
+    void nlo_me();
+    void NNLO_hard_no_subtraction();
+    void NNLO_hard_with_subtraction();
+    void NNLO_rv_with_subtraction();
+    void NNLO_subtraction(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4);
+    void LO_exact();
+    void NLO_soft_exact();
+    void gg_NLO_hard_exact();
 private://data
     pointer_to_Franz_gluon_fusion myFR;
 
     double smax[7],smin[7];
-    vector<MatrixElement*> available_matrix_elements;
     
+    GluonFusionSectorBox* all_sectors;
     SimpleSector* the_sector;
     
-    vector<SimpleSector*> available_sectors;
+    
     
     
     double tau,pref_sgg,lh,sector_specific_prefactors_from_a_e_expansion;
@@ -160,7 +235,7 @@ private://data
     
     WilsonCoefficients WC;
     BetaConstants beta;
-    vector<string> av_partons;
+    
     
     vector<double> LO_exact_coefficient;
     vector<double> NLO_soft_exact_coefficient;
@@ -172,7 +247,6 @@ private://methods
     void (GluonFusion::*pointer_to_function_for_parametrization)();
     void update_smaxmin(int,double);
     void check_which_sectors_can_be_run_together(const vector<SimpleSector*>&);
-    vector<SimpleSector*> give_necessary_sectors(const UserInterface & UI);
     bool sectors_are_compatible(SimpleSector* s1,SimpleSector* s2);
     void set_up_wilson_coefficients();
     void set_up_beta_constants();
@@ -181,14 +255,7 @@ private://methods
     void parametrization_for_LO_kinematics();
     void parametrization_for_NLO_kinematics();
     
-     void set_up_sectors(const UserInterface& UI);
-     void add_gg_sectors();
-     void add_qg_sectors();
-     void add_gq_sectors();
-     void add_qqbar_sectors();
-     void add_q1q2_sectors();
-     void add_qq_sectors();
-     void calculate_derived_variables(const UserInterface& UI);
+     
      double generate_x1(double & jac_from_rap_param);
      void  set_up_event_kinematics(
 							const double & x1,
@@ -210,58 +277,27 @@ private://methods
      void JLO(const double &);
      void find_topology(const UserInterface & );
      void allocate_luminosity();
-     void build_sectors(const string& p_left,const string & p_right);
-     void build_sectors_with_fixed_a_order(int,int,int,const string& p_left,
-                                           const string & p_right);
-     void build_sectors_with_fixed_a_order_and_pdfs(const FFF & F1,
-                                                    const FFF & F2,int Sorder);
-     void build_sectors_with_fixed_a_order_e_order_and_pdfs(const FFF & F1,
-                                                            const FFF & F2,
-                                                            int Sorder,
-                                                            int Eorder,
-                                                            const vector<MatrixElement*> & matching_mes);
-     vector<FFF> give_possible_F(const string & parton,int f1order);
+     
     void push_back_event(const double & sigma);
     
     
-    void push_me(const string & _pi,const string & _pj,const string& _pord,
-                 const string & _name, const string & _kin,
-                 const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k,
-                 pointer_to_Franz_gluon_fusion  ptr_to_fr[], int num_topologies,int num_sect[]);
-    void push_me(const string & _pi,const string & _pj,const string& _pord,
-                 const string & _name, const string & _kin,
-                 const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k,
-                 pointer_to_Franz_gluon_fusion  ptr_to_fr, int num_topologies);
-    void push_me(const string & _pi,const string & _pj,const string& _pord,
-                 const string & _name, const string & _kin,
-                 const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k);
-    void push_me(const string & _pi,const string & _pj,const string& _pord,
-                 const string & _name, const string & _kin,
-                 const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k,
-                 pointer_to_Franz_gluon_fusion  ptr_to_fr[], int num_topologies,int num_sect[],double eps_exp);
-    void push_me(const string & _pi,const string & _pj,const string& _pord,
-                 const string & _name, const string & _kin,
-                 const string& _str_param,ptr_to_GluonFusion_function _the_ggf_func,int from_k,int to_k,const string & me_approx);
     
+    
+    
+       
     
     void writeEventToFile(const double &,const double &,
                           const double &,const double &);
     
     
-    void LO();
-    void gg_NLO_SOFT();
-    void gg_NLO_HARD();
-    void gg_NNLO_SOFT();
+    
     
     void nlo_partonic_xsections(pointer_to_Franz_gluon_fusion the_franz_function,const double &,int i);
-    void nlo_me();
     
-    void NNLO_hard_no_subtraction();
-    void NNLO_hard_with_subtraction();
-    void NNLO_rv_with_subtraction();
-    void NNLO_subtraction(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4);
     
-    void LO_exact();
+    
+    
+    
     void calculate_exact_born_me_LO();
     double LO_exact_e0();
     double LO_exact_e1();
@@ -272,11 +308,9 @@ private://methods
     complex<double> born_e(complex<double> x);
     complex<double> born_e2(complex<double> x);
     
-    void NLO_soft_exact();
-    
     double NLO_soft_exact_e0();
     
-    void gg_NLO_hard_exact();
+    
     void rgg2ghEXACT(int pole,double s,double x1,double x2,double z,
                      double lh,double  weight,double nf, double lambda);
     double abs_sq_of_sum_over_quarks_of(complex<double> (*f)(const double& z,
