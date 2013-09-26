@@ -134,7 +134,8 @@ string compare_histograms(const SimpleHistogram* H1,const SimpleHistogram* H2,co
 
 string compare_histograms(const vector< SimpleHistogram*> & all_H)
 {
-     stringstream  stream(stringstream::out);
+    
+    stringstream  stream(stringstream::out);
      bool comparison_possible=true;
      for (int i=0;i<all_H.size();i++)
           {
@@ -277,17 +278,26 @@ string compare_histograms(const vector< CHistogram*> & all_H,bool color)
 {
     stringstream  stream(stringstream::out);
     bool comparison_possible=true;
+    cout<<"\n Hello from compare_histograms. There are "<<all_H.size()<<
+    " histos to compare."<<endl;
+
     for (int i=0;i<all_H.size();i++)
         {
+        cout<<"\n i="<<i<<endl;
         if (all_H[i]->_name!=all_H[0]->_name)
             {
             stream<<"\n comparison of histograms impossible: the names don't match: H[0]="<<all_H[0]->_name<<" vs H["<<i<<"]="<<all_H[i]->_name;
             comparison_possible=false;
             }
+        else
+            {
+            cout<<"\n name matched"<<endl;
+            }
         }
     
     if (comparison_possible)
         {
+        
         stream << "\n\n Histogram comparison " << all_H[0]->_name << endl;
         
         vector<double> total(all_H.size(),0.0);
@@ -336,6 +346,10 @@ string compare_histograms(const vector< CHistogram*> & all_H,bool color)
             stream<<"\t"<< total[k] ;
             }
         stream<<"\n\n\n";
+        }
+    else
+        {
+        cout<<"\n comparison impossible for some reason"<<endl;
         }
     return stream.str();
 }

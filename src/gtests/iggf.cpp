@@ -150,13 +150,8 @@ TEST(generalSetUp,cur_lumiLO)
     UI->Etot = 8000.0;
     
     
-    Luminosity* lumi = new Luminosity(UI->number_of_flavours,
-                                      UI->muf_over_mhiggs * UI->m_higgs,
-                                      UI->mur_over_mhiggs * UI->m_higgs,
-                                      UI->perturbative_order,
-                                      UI->pdf_provider,
-                                      UI->pdf_error);
-    lumi->add_pair(Luminosity::F_g_00,Luminosity::F_g_00);
+    Luminosity* lumi = new Luminosity(*UI);
+    lumi->add_pair(pdf_desc(0,0,0,0),pdf_desc(0,0,0,0));
     
     InitialState my_in_state(UI,lumi);
     my_in_state.new_state(0.580635);
@@ -187,13 +182,8 @@ TEST(generalSetUp,integrand)
     UI->Etot = 8000.0;
     
     
-    Luminosity * lumi=new Luminosity(UI->number_of_flavours,
-                        UI->muf_over_mhiggs * UI->m_higgs,
-                        UI->mur_over_mhiggs * UI->m_higgs,
-                        UI->perturbative_order,
-                        UI->pdf_provider,
-                        UI->pdf_error);
-    lumi->add_pair(Luminosity::F_g_00,Luminosity::F_g_00);
+    Luminosity * lumi=new Luminosity(*UI);
+    lumi->add_pair(pdf_desc(0,0,0,0),pdf_desc(0,0,0,0));
     
     IntegratedContribution integral(UI,lumi);
     

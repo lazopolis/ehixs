@@ -46,7 +46,8 @@ int main(int argc, char** argv)
 {
      // get init time
      clock_t t_init = clock();
-     
+    
+    print_logo();
      // UI initialization
      UserInterface UI;
      

@@ -330,9 +330,9 @@ add_executable(channel_tests  ${EHIXS_SRC_DIR}/gtests/channel_tests.cpp)
 target_link_libraries(channel_tests   
                                         gtest   tools)
 
-add_executable(pdf_test  ${EHIXS_SRC_DIR}/gtests/pdf_test.cpp)
-target_link_libraries(pdf_test  
-                                        cuba gtest gfortran  tools pdf avh_olo LHAPDF ${LHAPDF})
+#add_executable(pdf_test  ${EHIXS_SRC_DIR}/gtests/pdf_test.cpp)
+#target_link_libraries(pdf_test  
+#                                        cuba gtest gfortran  tools pdf avh_olo LHAPDF ${LHAPDF})
 
 #add_executable(integration_tests  ${EHIXS_SRC_DIR}/gtests/integration_tests.cpp)
 #target_link_libraries(integration_tests  

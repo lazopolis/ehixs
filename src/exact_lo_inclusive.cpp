@@ -78,7 +78,7 @@ Exact_LO_Inclusive:: Exact_LO_Inclusive(CModel * imodel, UserInterface* iui)
     Model = imodel;
     UI = iui;
     set_up_gg_lumi();
-    Model->evolve(lumi->give_a_s_at_mz(),
+    Model->evolve(lumi->alpha_s_at_mz_vector(),
                   UI->mur_over_mhiggs * UI->m_higgs,
                   UI->perturbative_order);
     Model->set_Xq_for_quarks();
@@ -101,13 +101,8 @@ Exact_LO_Inclusive:: Exact_LO_Inclusive(CModel * imodel, UserInterface* iui)
 
 void Exact_LO_Inclusive::set_up_gg_lumi()
 {
-    lumi=new Luminosity(UI->number_of_flavours,
-                        UI->muf_over_mhiggs * UI->m_higgs,
-                        UI->mur_over_mhiggs * UI->m_higgs,
-                        UI->perturbative_order,
-                        UI->pdf_provider,
-                        UI->pdf_error);
-    lumi->add_pair(Luminosity::F_g_00,Luminosity::F_g_00);
+    lumi=new Luminosity(*UI);
+    lumi->add_pair(pdf_desc(0,0,0,0),pdf_desc(0,0,0,0));
 }
 
 void Exact_LO_Inclusive::evaluate_phase_space_independent_exact_LO_ME()

@@ -54,7 +54,7 @@ public://methods
     string print_histograms_to_string();
     void write_to_histogram_file();
     CHistogram* ptr_to_histogram_with_id(unsigned m){return histogram_vector[m];}
-
+    int size(){return histogram_vector.size();}
 private://data
     vector<CHistogram*> histogram_vector;
     vector<CHistogram*> available_histograms;
@@ -91,6 +91,7 @@ public://methods
                                      const string & pright,
                                      const string & myorder,
                                      const int&,const string & );
+    int number_of_active_histograms(){return _histograms->size();}
     CHistogram* ptr_to_histogram_with_id(unsigned m)
                     {return _histograms->ptr_to_histogram_with_id(m);}
 public://data

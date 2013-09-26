@@ -54,14 +54,17 @@ Production::Production(const UserInterface & UI)
     my_sector_name = "If you see this, the specific production hasn't declared it's sector_name yet.";
     sector_defined=false;
     EC=this;
+    cout<<"\n[Production] : setting up luminosity";
     lumi = new Luminosity(UI);
+    cout<<"\n[Production] : consolidating Model";
     Model.higgs.set_m_at_ref_scale(UI.m_higgs);
-    lumi->evolve_alpha_s_from_mz_to_mur(alpha_s_vector); // necessarily before evolve_mb_from_mb_ref_to_mur
-    for (int i=0;i<alpha_s_vector.size();i++)
-        {
-        cout<<"\nalpha_s["<<i<<"]="<<alpha_s_vector[i];
-        }
-    Model.evolve(lumi->alpha_s_at_mz_vector,mu_r,UI.perturbative_order);
+    
+    cout<<"\n[Production] : setting up scales and Etot";
+    mu_r=UI.mur_over_mhiggs * UI.m_higgs;
+    mu_f=UI.muf_over_mhiggs * UI.m_higgs;
+    
+    
+    Model.evolve(lumi->alpha_s_at_mz_vector(),mu_r,UI.perturbative_order);
     //: calculate kinematic variables or Model constants that are input dependent
     //: necessarily after init_base where UI input passes to the Production class.
     
@@ -74,8 +77,6 @@ Production::Production(const UserInterface & UI)
         }
     //consts::nf = UI.number_of_flavours;
     
-    mu_r=UI.mur_over_mhiggs * UI.m_higgs;
-    mu_f=UI.muf_over_mhiggs * UI.m_higgs;
     
     Etot=UI.Etot;
     log_muf_sq_over_mh_sq = 2.0*log(mu_f/Model.higgs.m());
@@ -108,8 +109,8 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
 void ProductionMockUp::init(const UserInterface& UI,TheHatch* the_hatch)
 {
      dim_of_integration=7;
-     lumi=new Luminosity(UI.number_of_flavours,UI.muf_over_mhiggs * UI.m_higgs,UI.mur_over_mhiggs * UI.m_higgs,UI.perturbative_order,UI.pdf_provider,UI.pdf_error);
-     lumi->add_pair(Luminosity::F_b_00,Luminosity::F_bbar_00);
+     lumi=new Luminosity(UI);
+     lumi->add_pair(pdf_desc(5,5,0,0),pdf_desc(5,5,0,0));
      set_up_the_hatch(the_hatch);//: calling base init
 }
 

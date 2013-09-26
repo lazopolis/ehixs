@@ -33,7 +33,7 @@ TEST(LO_test,xsection_muf_muf_mh)
 }
  
 
-/*
+
 TEST(NLO_test,gg_xsection_muf_muf_mh)
 {
      vector<channel_name> chs;
@@ -50,8 +50,8 @@ TEST(NLO_test,gg_xsection_muf_muf_mh)
      double expected_xs =7.923;// NLO piece alone. The total NLO (including the LO contribution with NLO pdfs) is 13.845;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-*/
-/*
+
+
 TEST(NLO_test,gg_xsection_mu_wild)
 {
      vector<channel_name> chs;
@@ -68,8 +68,8 @@ TEST(NLO_test,gg_xsection_mu_wild)
      double expected_xs =24.2895-12.1688;// NLO piece alone. The total NLO (including the LO contribution with NLO pdfs) is 24.2895;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-*/
-/*
+
+
 TEST(NLO_test,qg_xsection_mu_is_mh)
 {
      vector<channel_name> chs;
@@ -88,8 +88,8 @@ TEST(NLO_test,qg_xsection_mu_is_mh)
      double expected_xs =-0.1966;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-*/
-/*
+
+
 TEST(NLO_test,qg_xsection_mu_wild)
 {
      vector<channel_name> chs;
@@ -108,8 +108,8 @@ TEST(NLO_test,qg_xsection_mu_wild)
      double expected_xs =0.42925;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-*/
-/*
+
+
 TEST(NLO_test,qqbar_xsection_mu_wild)
 {
      vector<channel_name> chs;
@@ -127,7 +127,7 @@ TEST(NLO_test,qqbar_xsection_mu_wild)
      double expected_xs =0.0248037;
      EXPECT_LT(fabs(xs-expected_xs),err);
 }
-*/
+
 
 
 int main(int argc, char**argv)

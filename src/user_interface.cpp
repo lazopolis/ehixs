@@ -33,7 +33,7 @@ UserInterface::UserInterface()
     
 
      options.push_back(new IntOption("verbose",0,"level of verbosity","Required",&verbose,2));
-     options.push_back(new IntOption("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,20000));
+     options.push_back(new IntOption("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,200000));
      options.push_back(new IntOption("maxeval",0,"vegas argument: maximum points to be evaluated","Required",&maxeval,50000000));
      options.push_back(new IntOption("nstart",0,"vegas argument: #of points for first iteration","Required",&nstart,20000));
      options.push_back(new IntOption("nincrease",0,"vegas argument: # of points for step increase","Required",&nincrease,1000));

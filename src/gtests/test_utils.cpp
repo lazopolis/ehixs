@@ -24,14 +24,18 @@ void  run_sector(void * args);
 
 vector<string> give_sectors(vector<channel_name> channels)
 {
+
+    WilsonCoefficients wc;
+    BetaConstants beta;
+    GluonFusionSectorBox thebox(wc, beta,0.0);
+    
     UserInterface UI;
     UI.decay_sector=0;
-    UI.dummy_process = true;
-    Process* dummyprocess = new Process(UI);
+
     vector<string> sector_names;
     for (unsigned i=0;i<channels.size();i++)
           {
-          vector<string> curnames=dummyprocess->give_sector_names(channels[i].p1,channels[i].p2,channels[i].pord,channels[i].e_ord,channels[i].me_approx);
+          vector<string> curnames=thebox.give_sector_names(channels[i].p1,channels[i].p2,channels[i].pord,channels[i].e_ord,channels[i].me_approx);
           sector_names.insert(sector_names.end(),curnames.begin(),curnames.end());
           }
     cout<<"\n sectors that satisfy your criteria";
@@ -40,7 +44,6 @@ vector<string> give_sectors(vector<channel_name> channels)
         cout<<"\n"<<i<<" : "<<sector_names[i];
         }
     cout<<endl;
-    delete dummyprocess;
     return sector_names;
 }
 
@@ -51,6 +54,8 @@ MultiThreadArgumentKeeper::MultiThreadArgumentKeeper(int number_of_sectors)
           {
           xs.push_back(0.0);
           err.push_back(0.0);
+          
+          // all_hists hold one histogram for every sector (a misnomer?)
           all_hists.push_back(NULL);
           }
 }
@@ -127,10 +132,12 @@ void proceed_to_check(const vector<string>& sector_names, double mur,double muf,
     
     
     //: after every sector has finished
-    
-    if (the_keeper->all_hists.size()>0)
+    cout<<"\n[proceed_to_check] : after all sector have run. " <<endl;
+    cout<<"\n There are "<<the_keeper->all_hists.size()<<" historgams declared."<<endl;
+    if (the_keeper->all_hists.size()>0 and the_keeper->all_hists[0]!=NULL)
         {
         bool color_on =true;
+        cout<<"\n we will now compare histograms"<<endl;
         cout<<compare_histograms(the_keeper->all_hists,color_on);
         }
     res[0]=0.0;
@@ -142,7 +149,7 @@ void proceed_to_check(const vector<string>& sector_names, double mur,double muf,
         cout<<"\n"<<i+1<<" : "<<the_keeper->xs[i]<<" +- "<<sqrt(the_keeper->err[i])<<"\t"<<sector_names[i];
         }
     res[1] = sqrt(res[1]);
-    cout<<"\n********\tTotal for Franz: "<<res[0]<<" +- "<<res[1];
+    cout<<"\n********\tTotal for Franz: "<<res[0]<<" +- "<<res[1]<<endl;
 }
 
 
@@ -183,12 +190,11 @@ void run_sector(void * args)
      //UI.requested_cuts.push_back("pt_cut_pH");
      //UI.requested_cuts.push_back("pt_bin_pH");
      //UI.requested_cuts.push_back("pt_zero_bin_pH");
-    cout<<"\n###########################################################"<<endl;
      Process* cur_process = new Process(UI);
      cur_process->perform();
      
      int id = mydata->ID;
-     if (UI.requested_histograms.size()>0)
+    if (cur_process->number_of_active_histograms()>0)
           {
           mydata->the_keeper->all_hists[id] =
                                     cur_process->ptr_to_histogram_with_id(0);

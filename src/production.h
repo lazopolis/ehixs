@@ -56,7 +56,6 @@ public://data
 protected://: data
     Momenta all_momenta;
     double* xx_vegas;
-    
     Luminosity *lumi;
     vector<double> alpha_s_vector;
     vector<double> alpha_s_at_mz_vector;

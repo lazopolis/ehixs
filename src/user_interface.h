@@ -142,12 +142,6 @@ public:
      bool info,histogram_info,cut_info,list_processes,help,show_me_list,
             pdf_error, dummy_process;
      
-     //: histograms
-     vector<string> requested_histograms;
-     
-     //: cuts
-     vector<string> requested_cuts;
-     
 };
 
 #endif

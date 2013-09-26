@@ -96,6 +96,8 @@ void CModel::evolve(const vector<double> & a_at_mz,const double & mur, int porde
      alpha_strong_at_mz = a_at_mz;
      evolve_quark_masses(mur,porder);
      evolve_as_to_mur(mur,porder);
+    cout<<"\n[CModel] : received a_s[0](m_z) = "<<alpha_strong_at_mz[0]
+        <<"\t mur = "<<_mu_r<<endl;
 }
 
 void CModel::evolve_quark_masses(const double & mur,int porder)

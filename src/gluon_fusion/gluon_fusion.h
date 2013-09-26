@@ -42,7 +42,8 @@ public:
     string me_approximation;
 };
 
-class FranzBinder{
+class FranzBinder
+{
 public:
     FranzBinder(){_ptr = NULL; _num_sectors = 0; _is_franz = false;}
     FranzBinder(pointer_to_Franz_gluon_fusion ptr,int num_sec)
@@ -98,19 +99,24 @@ private:
 class SimpleSector
 {
 public:
-     SimpleSector(const FFF& _f1,const FFF& _f2,const vector<ExpansionTerm*>& _factors,MatrixElement* _ME);
-     MatrixElement* ME;
-     vector<ExpansionTerm*> factors;
-     FFF F1,F2;
-     int alpha_power,epsilon_power;
-     friend ostream& operator<<(ostream&, const SimpleSector&);
-     string name;
+    SimpleSector(const FFF& _f1,const FFF& _f2,const vector<ExpansionTerm*>& _factors,MatrixElement* _ME);
+    MatrixElement* ME;
+    vector<ExpansionTerm*> factors;
+    FFF F1,F2;
+    int alpha_power,epsilon_power;
+    friend ostream& operator<<(ostream&, const SimpleSector&);
+    string name;
      
-     void add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi);
-     void single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
-     void double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
-     int give_pid(const string & name);
-     pdf_pair_list give_list_of_pdf_pairs();
+    void add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi);
+    void single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
+    void double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
+    int give_pid(const string & name);
+    pdf_pair_list give_list_of_pdf_pairs();
+    
+    void setUpPrefactor(const double & a_s_over_pi);
+    double sector_specific_prefactors_from_a_e_expansion(){return _prefactor;}
+private:
+    double _prefactor;
 };
 
 struct ISparams{
@@ -181,6 +187,27 @@ private://methods
 };
 
 
+class GluonFusionExactCoefficients
+{
+public://methods
+    GluonFusionExactCoefficients(const CModel&);
+    double LO_epsilon(int m){return LO_exact_coefficient[m];}
+    double NLO_epsilon(int m){return NLO_soft_exact_coefficient[m];}
+
+private://data
+    vector<double> LO_exact_coefficient;
+    vector<double> NLO_soft_exact_coefficient;
+    CModel Model;
+private://emthods
+    double NLO_soft_exact_e0();
+    complex<double> born_e2(complex<double> x);
+    complex<double> born_e(complex<double> x);
+    complex<double> born(complex<double> x);
+    double LO_exact_e2();
+    double LO_exact_e1();
+    double LO_exact_e0();
+};
+
 class GluonFusion:public Production
 {
 public://methods
@@ -206,6 +233,8 @@ public://methods
                                const double &,const double &,
                                const double &,const double &,
                                const double &);
+    //: all the functions below are public so that pointers to them can be
+    //: accessed by GluonFusionSectorBox
     void LO();
     void gg_NLO_SOFT();
     void gg_NLO_HARD();
@@ -214,37 +243,21 @@ public://methods
     void NNLO_hard_no_subtraction();
     void NNLO_hard_with_subtraction();
     void NNLO_rv_with_subtraction();
-    void NNLO_subtraction(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4);
+    void NNLO_subtraction(const double& lambda1,const double& lambda2,
+                          const double& lambda3,const double& lambda4);
     void LO_exact();
     void NLO_soft_exact();
     void gg_NLO_hard_exact();
 private://data
-    pointer_to_Franz_gluon_fusion myFR;
-
     double smax[7],smin[7];
-    
     GluonFusionSectorBox* all_sectors;
     SimpleSector* the_sector;
-    
-    
-    
-    
-    double tau,pref_sgg,lh,sector_specific_prefactors_from_a_e_expansion;
+    double tau,pref_sgg;
     ISparams ISP;
-    
-    
     WilsonCoefficients WC;
     BetaConstants beta;
-    
-    
-    vector<double> LO_exact_coefficient;
-    vector<double> NLO_soft_exact_coefficient;
-    
-    vector<double> cur_lumiLO;
-    vector<double> cur_lumi;
+    GluonFusionExactCoefficients * exact_coefficients;
 private://methods
-    void (GluonFusion::*pointer_to_function_for_sector)();
-    void (GluonFusion::*pointer_to_function_for_parametrization)();
     void update_smaxmin(int,double);
     void check_which_sectors_can_be_run_together(const vector<SimpleSector*>&);
     bool sectors_are_compatible(SimpleSector* s1,SimpleSector* s2);
@@ -256,8 +269,8 @@ private://methods
     void parametrization_for_NLO_kinematics();
     
      
-     double generate_x1(double & jac_from_rap_param);
-     void  set_up_event_kinematics(
+    double generate_x1(double & jac_from_rap_param);
+    void  set_up_event_kinematics(
 							const double & x1,
 							const double & x2,
 							const double & z,
@@ -266,51 +279,22 @@ private://methods
 							const double & s14,
 							const double & s24,
 							const double & s34);
-     void LO_event_kinematics(const double & x1,const double & x2);
-     void NLO_event_kinematics(const double & x1,
+    void LO_event_kinematics(const double & x1,const double & x2);
+    void NLO_event_kinematics(const double & x1,
                               const double & x2,
                               const double & z,
                               const double & s13,
                               const double & s23);
-     void Jnlo(const double & res, const double & x1,
+    void Jnlo(const double & res, const double & x1,
                const double & x2,const double &z, const double & lambda);
-     void JLO(const double &);
-     void find_topology(const UserInterface & );
-     void allocate_luminosity();
+    void JLO(const double &);
+    void find_topology(const UserInterface & );
+    void allocate_luminosity();
      
     void push_back_event(const double & sigma);
-    
-    
-    
-    
-    
-       
-    
     void writeEventToFile(const double &,const double &,
                           const double &,const double &);
-    
-    
-    
-    
     void nlo_partonic_xsections(pointer_to_Franz_gluon_fusion the_franz_function,const double &,int i);
-    
-    
-    
-    
-    
-    void calculate_exact_born_me_LO();
-    double LO_exact_e0();
-    double LO_exact_e1();
-    double LO_exact_e2();
-    
-    
-    complex<double> born(complex<double> x);
-    complex<double> born_e(complex<double> x);
-    complex<double> born_e2(complex<double> x);
-    
-    double NLO_soft_exact_e0();
-    
-    
     void rgg2ghEXACT(int pole,double s,double x1,double x2,double z,
                      double lh,double  weight,double nf, double lambda);
     double abs_sq_of_sum_over_quarks_of(complex<double> (*f)(const double& z,

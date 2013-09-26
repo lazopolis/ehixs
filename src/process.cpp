@@ -57,23 +57,12 @@ HistogramBox::HistogramBox(const UserInterface& my_UI)
     available_histograms.push_back(new Xhistogram(5,20,"vegas x[5]"));
     
     if (my_UI.requested_histogram>-1)
-        histogram_vector.push_back(available_histograms[my_UI.requested_histogram]);
-    for (unsigned requested_histo_k=0;requested_histo_k<my_UI.requested_histograms.size();requested_histo_k++)
         {
-        bool requested_histo_available=false;
-        for (unsigned available_histo_k=0;available_histo_k<available_histograms.size();available_histo_k++)
-            {
-            if (available_histograms[available_histo_k]->give_name()==my_UI.requested_histograms[requested_histo_k])
-                {
-                requested_histo_available=true;
-                histogram_vector.push_back(available_histograms[available_histo_k]);
-                }
-            }
-        if (not(requested_histo_available))
-            {
-            cout<<"\n The requested histogram "<<my_UI.requested_histograms[requested_histo_k]<<" is not available. We'll proceed without it. Use UI.histogram_info = true; to see which histograms are available"<<endl;
-            }
+        cout<<"\n[HistogramBox]: will push histogram since UI.requested_histogram = "<<my_UI.requested_histogram<<endl;
+        histogram_vector.push_back(available_histograms[my_UI.requested_histogram]);
         }
+    
+    cout<<"\n[HistogramBox] : number of histograms requested = "<<histogram_vector.size();
 }
 
 void HistogramBox::show_histogram_info_and_exit()
@@ -159,23 +148,7 @@ CutBox::CutBox(const UserInterface & my_UI)
     
     if (my_UI.requested_cut>-1)
         _cuts.push_back(_available_cuts[my_UI.requested_cut]);
-    for (unsigned requested_cut_k=0;requested_cut_k<my_UI.requested_cuts.size();requested_cut_k++)
-        {
-        bool requested_cut_available=false;
-        for (unsigned available_cut_k=0;available_cut_k<_available_cuts.size();available_cut_k++)
-            {
-            if (_available_cuts[available_cut_k]->give_name()==my_UI.requested_cuts[requested_cut_k])
-                {
-                requested_cut_available=true;
-                _cuts.push_back(_available_cuts[available_cut_k]);
-                }
-            }
-        if (not(requested_cut_available))
-            {
-            cout<<"\n The requested cut "<<my_UI.requested_cuts[requested_cut_k]<<" is not available. We'll proceed without it. Use UI.cut_info = true; to see which cuts are available"<<endl;
-            }
-        }
-    
+        
 
 }
 
@@ -213,6 +186,7 @@ Process::Process(const UserInterface & UI)
 : 
 Vegas(UI)
 {
+    cout<<"\n------------------------ new Process"<<endl;
     //: DEFAULT SETTINGS
     Vegas.number_of_components=1;
     Vegas.set_ptr_to_the_hatch(&the_hatch);
@@ -281,20 +255,15 @@ void Process::set_decay(Decay * thedecay)
           //: in case there is no production at all
           //: To get one, we init a lumi
      
-     Luminosity loclumi(consts::nf,my_UI.muf_over_mhiggs * my_UI.m_higgs,my_UI.mur_over_mhiggs * my_UI.m_higgs,my_UI.perturbative_order,my_UI.pdf_provider,my_UI.pdf_error);
+     Luminosity loclumi(my_UI);
           //: we add a pair of pdfs (which is getting evolved for nothing)
      
-          loclumi.add_pair(Luminosity::F_b_00,Luminosity::F_bbar_00);
+          loclumi.add_pair(pdf_desc(5,5,0,0),pdf_desc(5,5,0,0));
           vector<double> alpha_s;
           vector<double> yukawa_b_vector;
 
-
-          //: we evolve a_s and yukawa
-          loclumi.evolve_alpha_s_from_mz_to_mur(alpha_s); // necessarily before evolve_mb_from_mb_ref_to_mur
-          for (int i=0;i<alpha_s.size();i++){cout<<"\nalpha_s["<<i<<"]="<<alpha_s[i];}
-          cout<<"\n*** mb is not evolved here - needs fixing at Process.cpp, set_decay(Decay* the_decay)";
-     //loclumi.evolve_mb_from_mb_ref_to_mur(my_decay->Model.bottom.m(),yukawa_b_vector);
-          //: and we set the couplings to decay
+     cout<<"\n the evolution of couplings needs to be checked and updated in Process::set_decay(). I exit"<<endl;exit(0);
+         
           my_decay->set_alpha_s(alpha_s);
           my_decay->set_y_b(yukawa_b_vector);
           cout<<"\ny_b="<<yukawa_b_vector[0]<<"\t"<<my_decay->Model.bottom.m();
@@ -369,10 +338,12 @@ void Process::Evaluate_integral(const double xx[])
          my_event_stream<<Vegas.NOP_in_previous_iteration<<"$"<<endl;
          }
      
-     
+    // cout<<"\n[Process::EvaluateIntegral] : setting the vegas vars to the_hatch"
+    //    <<endl;
      //: copying vegas random variables from xx to TheHatch 
      the_hatch.SetVars(xx);
-     
+    //cout<<"\n[Process::EvaluateIntegral] : proceeding to production phase"
+    //<<endl;
      proceed_to_production_phase();
      
      _histograms->update_histograms_end_of_vegas_point();
