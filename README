@@ -1,0 +1,15 @@
+To configure and compile: 
+
+1.go to cmake_build directory:
+
+cd cmake_build
+
+2. run cmake on src/CMakeLists.txt to configure
+
+cmake ../src/
+
+3. compile with 
+
+make
+
+

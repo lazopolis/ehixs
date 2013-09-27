@@ -31,7 +31,7 @@ endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
 set (CMAKE_CXX_FLAGS "-Wno-return-type-c-linkage -Wno-deprecated-writable-strings -Wno-delete-non-virtual-dtor ")
 
-SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
 SET(CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
 
