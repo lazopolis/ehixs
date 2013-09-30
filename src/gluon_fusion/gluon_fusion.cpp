@@ -191,21 +191,21 @@ void GluonFusionMatrixElementBox::add_qqbar_sectors()
     
     vector<FranzBinder *> RR_functions;
     RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht1,1));
-    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht1,2));
-    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht1,1));
-    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht1,4));
-    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht1,1));
-    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht1,1));
+    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht2,2));
+    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht3,1));
+    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht4,4));
+    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht5,1));
+    RR_functions.push_back(new FranzBinder(rrqqbar2qqbarht6,1));
     
     RR_functions.push_back(new FranzBinder(rrqqbar2gght1,1));
-    RR_functions.push_back(new FranzBinder(rrqqbar2gght1,2));
-    RR_functions.push_back(new FranzBinder(rrqqbar2gght1,1));
-    RR_functions.push_back(new FranzBinder(rrqqbar2gght1,1));
-    RR_functions.push_back(new FranzBinder(rrqqbar2gght1,4));
-    RR_functions.push_back(new FranzBinder(rrqqbar2gght1,1));
+    RR_functions.push_back(new FranzBinder(rrqqbar2gght2,2));
+    RR_functions.push_back(new FranzBinder(rrqqbar2gght3,1));
+    RR_functions.push_back(new FranzBinder(rrqqbar2gght4,1));
+    RR_functions.push_back(new FranzBinder(rrqqbar2gght5,4));
+    RR_functions.push_back(new FranzBinder(rrqqbar2gght6,1));
     
     RR_functions.push_back(new FranzBinder(rrq1q1bar2q2q2barht1,1));
-    RR_functions.push_back(new FranzBinder(rrq1q1bar2q2q2barht1,1));
+    RR_functions.push_back(new FranzBinder(rrq1q1bar2q2q2barht2,1));
     for (unsigned i=0; i<RR_functions.size(); i++)
         {
         stringstream name_str;name_str<<"RR t"<<i+1;

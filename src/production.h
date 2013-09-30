@@ -8,7 +8,7 @@
 using namespace std;
 
 
-#include "Model.h"
+#include "model.h"
 //#include "chaplin.h"
 //#include "fvector.h"
 //#include "CConstants.h"

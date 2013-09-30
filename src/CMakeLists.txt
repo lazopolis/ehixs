@@ -29,17 +29,25 @@ endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
 
 
-set (CMAKE_CXX_FLAGS "-Wno-return-type-c-linkage -Wno-deprecated-writable-strings -Wno-delete-non-virtual-dtor ")
+set (CMAKE_CXX_FLAGS "-Wno-return-type-c-linkage -Wno-deprecated-writable-strings -Wno-delete-non-virtual-dtor -DGTEST_HAS_PTHREAD=0 -pthread")
 
 SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
 SET(CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
 
+SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.6.0)
+#SET(CUBA_DIR /Users/lazopolis/my_code/ehixs/Cuba-2.1)
+SET(LHAPDF_DIR ) 
+
+
+
 
 
 include_directories(${EHIXS_SRC_DIR}
                     ${CHAPLIN_SOURCES}
-                    /Users/lazopolis/other_codes/gtest-1.6.0/include
+                    ${GTEST_DIR}/include
+                    ${LHAPDF_DIR}/include
+                    ${CUBA_DIR}
                     ${EHIXS_SRC_DIR}/bottom_fusion
                     ${EHIXS_SRC_DIR}/gluon_fusion
                     ${EHIXS_SRC_DIR}/gtests
@@ -47,10 +55,10 @@ include_directories(${EHIXS_SRC_DIR}
                     )
 
 link_directories(
-               #/Users/lazopolis/my_code/ehixs/Cuba-2.1/  
-               /Users/lazopolis/other_codes/gtest-1.6.0/build/
-               #${PROJECT_SOURCE_DIR}/../chaplin/cmakebuild/
-               ${LHAPDFDIR}
+                ${CUBA_DIR}/
+                ${GTEST_DIR}/build/
+                ${LHAPDF_DIR}/lib/
+                ${LHAPDFDIR}
                )
 
 add_library(chaplin STATIC    ${CHAPLIN_SOURCES}/HPL1.f         
@@ -316,7 +324,8 @@ add_library(avh_olo      ${EHIXS_SRC_DIR}/avh_olo/avh_olo_3div.f
 
 
 find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
-#This will check the environment for a variable named LHAPDF_PATH. If it exists, you can then use
+#This will check the environment for a variable named LHAPDF_PATH. 
+#If it exists, you can then use
 #target_link_libraries(mytarget ${LHAPDF})
 #If it does not, it can be set through the CMake GUI.
 
@@ -324,56 +333,189 @@ find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
 
 add_executable(tests  ${EHIXS_SRC_DIR}/gtests/tests.cpp)
 target_link_libraries(tests  
-                                        main cuba gtest gfortran chaplin tools   decay_bb  fortran_bbh fortran_ggf  pdf avh_olo LHAPDF ${LHAPDF})
+                        main 
+                        cuba 
+                        gtest 
+                        gfortran 
+                        chaplin tools   
+                        decay_bb  
+                        fortran_bbh 
+                        fortran_ggf  
+                        pdf 
+                        avh_olo 
+                        LHAPDF 
+                        ${LHAPDF})
 
-add_executable(channel_tests  ${EHIXS_SRC_DIR}/gtests/channel_tests.cpp)
-target_link_libraries(channel_tests   
-                                        gtest   tools)
+
 
 #add_executable(pdf_test  ${EHIXS_SRC_DIR}/gtests/pdf_test.cpp)
 #target_link_libraries(pdf_test  
-#                                        cuba gtest gfortran  tools pdf avh_olo LHAPDF ${LHAPDF})
+#                      cuba gtest gfortran  tools pdf avh_olo LHAPDF ${LHAPDF})
 
 #add_executable(integration_tests  ${EHIXS_SRC_DIR}/gtests/integration_tests.cpp)
 #target_link_libraries(integration_tests  
-#                                        cuba gtest gfortran chaplin tools  decay_bb  main fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+#               cuba gtest gfortran chaplin tools  decay_bb
+#               main fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
 
-add_executable(nlo_poles_test  ${EHIXS_SRC_DIR}/gtests/ggf_pole_cancelation_nlo_test.cpp)
-target_link_libraries(nlo_poles_test  
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+add_executable(nlo_poles_test  
+                ${EHIXS_SRC_DIR}/gtests/ggf_pole_cancelation_nlo_test.cpp)
+target_link_libraries(nlo_poles_test
+			test_utils
+            decay_bb
+            main  models
+            gluon_fusion tools
+            nlo_exact_matrix_elements
+            fortran_ggf
+            fortran_bbh
+            chaplin
+            pdf
+            avh_olo
+            cuba
+            gtest
+            LHAPDF
+            ${LHAPDF})  
 
 
 add_executable(nlo_gg_xs_test  ${EHIXS_SRC_DIR}/gtests/ggf_nlo_gg_channel_xsection_test.cpp)
-target_link_libraries(nlo_gg_xs_test  
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nlo_gg_xs_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF})
+  
 
 add_executable(nnlo_q1q2_pole_test ${EHIXS_SRC_DIR}/gtests/ggf_NNLO_q1q2_pole_cancelation_test.cpp)
-target_link_libraries(nnlo_q1q2_pole_test  
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nnlo_q1q2_pole_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF})
+  
 
 add_executable(nnlo_qq_test ${EHIXS_SRC_DIR}/gtests/ggf_nnlo_qq_test.cpp)
-target_link_libraries(nnlo_qq_test  
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nnlo_qq_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF})  
 
 add_executable(nnlo_qqbar_test ${EHIXS_SRC_DIR}/gtests/ggf_nnlo_qqbar_test.cpp)
-target_link_libraries(nnlo_qqbar_test 
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nnlo_qqbar_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF})
+ 
 
 add_executable(nnlo_qg_test ${EHIXS_SRC_DIR}/gtests/quark_gluon_nnlo_test.cpp)
-target_link_libraries(nnlo_qg_test  
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements  fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nnlo_qg_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF})  
 
 add_executable(nnlo_gg_test ${EHIXS_SRC_DIR}/gtests/gluon_gluon_nnlo_test.cpp)
-target_link_libraries(nnlo_gg_test  
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nnlo_gg_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF})  
 
 add_executable(nnlo_gq_test ${EHIXS_SRC_DIR}/gtests/gluon_quark_nnlo_test.cpp)
-target_link_libraries(nnlo_gq_test 
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nnlo_gq_test
+			test_utils
+                        decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+                        gtest
+                        LHAPDF
+                        ${LHAPDF}) 
 
 add_executable(nlo_exact_test ${EHIXS_SRC_DIR}/gtests/nlo_exact_test.cpp)
-target_link_libraries(nlo_exact_test 
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+target_link_libraries(nlo_exact_test
+			test_utils 
+			decay_bb
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements
+                        fortran_ggf
+                        fortran_bbh
+                        chaplin
+                        pdf
+                        avh_olo
+                        cuba
+			gtest
+                        LHAPDF
+                        ${LHAPDF}
+			)
+			
 
 add_executable(one_d_interpolator_test ${EHIXS_SRC_DIR}/gtests/one_d_interpolator_test.cpp)
 target_link_libraries(one_d_interpolator_test 
@@ -439,8 +581,22 @@ target_link_libraries(ihixs++
 			)
 
 add_executable(ehixs  ${EHIXS_SRC_DIR}/ehixs.cpp)
+
 target_link_libraries(ehixs    
-                                        models test_utils cuba gtest gfortran chaplin tools  decay_bb  main gluon_fusion nlo_exact_matrix_elements fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF}  )
+                        decay_bb  
+                        main  models
+                        gluon_fusion tools
+                        nlo_exact_matrix_elements 
+                        fortran_ggf 
+			fortran_bbh
+			chaplin
+                        pdf 
+                        avh_olo 
+			cuba
+                        LHAPDF 
+                        ${LHAPDF}  
+			)
+
 
 set(CMAKE_BUILD_TYPE Release)
 

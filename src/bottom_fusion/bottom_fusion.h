@@ -1,14 +1,14 @@
 #ifndef BOTTOM_FUSION_H
 #define BOTTOM_FUSION_H 
 
-#include "Production.h"
+#include "production.h"
 //#include "BottomFusion_NLO_ME.h"
 // Parametrizations
 //#include "parametrizations.hpp"
 // Topology subtraction
 //#include "subtraction.hpp"
-#include "Interface_to_amplitudes.h"
-#include "Sector.h"
+#include "interface_to_amplitudes.h"
+#include "sector.h"
 
 
 typedef void (*pointer_to_Franz)(const int&, const int&, 

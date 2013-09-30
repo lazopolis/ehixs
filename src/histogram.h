@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 using namespace std;
-#include "Momenta.h"
+#include "momenta.h"
 #include "bin.h"
 
 

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include "decay.h"
-#include "decay_bb.h"
+#include "Decay_bb.h"
 
 #include "ggf_headers.h"
 

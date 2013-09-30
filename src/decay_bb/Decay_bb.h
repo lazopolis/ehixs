@@ -1,27 +1,19 @@
 #ifndef DECAY_BB
 #define DECAY_BB
 
-#include "Decay.h"
-#include "Sector.h"
-//#include <string>
-//#include <complex>
+#include "decay.h"
+#include "sector.h"
+
 #include <iostream>
 using namespace std;
 
-//#include "UserInterface.h"
-//#include "fvector.h"
-//#include "CConstants.h"
-//#include "hub.hpp"
-//#include "Momenta.h"
-//#include "Model.h"
-//#include "chaplin.h"
+
 
 class Decay_bb;
 
 typedef void (Decay_bb::*ptr_to_Decay_bb_function)();
 
 
-#include "Sector.h"
 
 
 class Decay_bb: public Decay

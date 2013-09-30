@@ -1,5 +1,5 @@
 
-#include "Convolutions.h"
+#include "convolutions.h"
 #include <iostream>
 #include <sstream>
 using namespace std;

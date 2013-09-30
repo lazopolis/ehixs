@@ -1,5 +1,5 @@
 
-#include "Decay.h"
+#include "decay.h"
 
 
 void Decay::setup_hatch(TheHatch* the_hatch)

@@ -322,9 +322,6 @@ double TestingNloReal::evaluateIntegral(const double xx[])
 {
     double z=0.732;
     double lambda = xx[0];
-    
-    
-    
     complex<double> born = born_exact_summed_over_quarks(_model);
 
     return (
@@ -332,7 +329,6 @@ double TestingNloReal::evaluateIntegral(const double xx[])
             - pow(1.0-z+z*z,2.0) * pow(abs(born),2.0)
             )
             /lambda/(1.0-lambda)  + 11.0/6.0 * pow(1.0-z,4.0);
-
 }
 
 
