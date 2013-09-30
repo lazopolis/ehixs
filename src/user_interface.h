@@ -4,7 +4,7 @@
 #include<string>
 #include<vector>
 #include<iostream>
-
+#include <stdlib.h> //: for exit()
 using namespace std;
 
 //: declaring the getopt specialized class option (not small initial 'o')
@@ -26,7 +26,7 @@ public:
      
      Option(const std::string& name_, char short_name_, const std::string& desc_, const string& type_): name(name_),short_name(short_name_),desc(desc_),type(type_){};
      
-     int get_type(){if (type=="Required") return 1;else if (type=="Optional")  return 2;else if (type=="None") return 0;else cout<<"\n wrong option option"<<endl;exit(1);}
+    int get_type();
      /** Set and match... */
      virtual void set(const string&) 
      {}

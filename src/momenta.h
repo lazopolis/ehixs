@@ -3,6 +3,8 @@
 #define MOMENTA_H
 #include<vector>
 #include "fvector.h"
+#include <stdlib.h> //: for exit()
+
 using namespace std;
 
 class Momenta

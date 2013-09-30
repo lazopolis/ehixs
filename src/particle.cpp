@@ -1,6 +1,8 @@
 
 #include "particle.h"
 #include "iostream"
+#include <stdlib.h> //: for exit()
+
 using namespace std;
 ParticleObject::ParticleObject(string iname,double imq,double _ref_scale,double iGq,double iYq,double ich)
 {

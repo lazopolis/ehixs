@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#include <stdlib.h> //: for exit()
 
 #include "histogram.h"
 #include "histograms.hpp"

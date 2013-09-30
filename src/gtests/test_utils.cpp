@@ -12,6 +12,8 @@
 #include "gluon_fusion.h"
 #include "process.h"
 #include "test_utils.h"
+#include <stdlib.h> //: for exit()
+
 //#include <pthread.h>
 using namespace std;
 

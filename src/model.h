@@ -3,7 +3,7 @@
 
 #include "particle.h"
 #include<vector>
-#include <stdlib.h>
+#include <stdlib.h> //: for exit()
 using namespace std;
 
 

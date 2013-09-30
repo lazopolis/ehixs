@@ -5,6 +5,7 @@
 #include "histograms.hpp" //: particular available histograms are defined here. The base class for histograms is at CHistogram.h
 #include "cuts.hpp" //: the particular available cuts are defined here. The base class is at CCut.h
 
+#include <stdlib.h> //: for exit()
 
 
 

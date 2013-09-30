@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include <stdlib.h>
+#include <stdlib.h> //: for exit()
 
 using namespace std;
 

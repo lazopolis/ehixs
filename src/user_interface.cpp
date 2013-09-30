@@ -6,8 +6,20 @@
 #include <string.h>
 #include <getopt.h>
 
-
 #include "user_interface.h"
+
+int Option::get_type()
+{
+    if (type=="Required") return 1;
+    else if (type=="Optional")  return 2;
+    else if (type=="None") return 0;
+    else
+        {
+        cout<<"\n wrong option option"<<endl;
+        exit(1);
+        }
+}
+
 
 
 UserInterface::UserInterface()
@@ -57,6 +69,9 @@ UserInterface::UserInterface()
                                      &pdf_error,0));
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
 }
+
+
+
 
 void UserInterface::ParseInput(int argc, char * const *argv)
 {

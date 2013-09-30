@@ -2,6 +2,8 @@
 
 #include "one_d_interpolator.h"
 #include <iomanip>
+#include <stdlib.h> //: for exit()
+
 using namespace std;
 
 

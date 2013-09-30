@@ -1,4 +1,5 @@
 #include "Production.h"
+#include <stdlib.h> //: for exit()
 
 
 #ifndef ONCE_EC
