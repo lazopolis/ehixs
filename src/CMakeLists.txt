@@ -4,6 +4,20 @@
 cmake_minimum_required(VERSION 2.6)
 project(ehixstests)
 
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+#
+#   Please edit below to set the absolute paths for gtest, cuba and lhapdf
+#
+SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.6.0)
+SET(CUBA_DIR /Users/lazopolis/my_code/ehixs/Cuba-2.1)
+SET(LHAPDF_DIR /Users/lazopolis/Downloads/lhapdf-5.8.6)
+#
+#
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+
+
+
 enable_language(Fortran)
 
 
@@ -35,9 +49,7 @@ SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
 SET(CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
 
-SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.6.0)
-#SET(CUBA_DIR /Users/lazopolis/my_code/ehixs/Cuba-2.1)
-SET(LHAPDF_DIR ) 
+
 
 
 

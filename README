@@ -4,6 +4,10 @@ To configure and compile:
 
 cd cmake_build
 
+2.edit CMakeLists.txt to set the paths for cuba, gtests and lhapdf
+
+nano ../src.CMakeLists.txt
+
 2. run cmake on src/CMakeLists.txt to configure
 
 cmake ../src/
