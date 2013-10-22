@@ -102,11 +102,9 @@ add_library(chaplin STATIC    ${CHAPLIN_SOURCES}/HPL1.f
                               ${CHAPLIN_SOURCES}/coefficients.f
                               )
 
-
-
-add_library(decay_bb 
-                    ${EHIXS_SRC_DIR}/decay_bb/Decay_bb.cpp
-                    )
+#add_library(decay_bb
+#                    ${EHIXS_SRC_DIR}/decay_bb/Decay_bb.cpp
+#                    )
 
 add_library(test_utils ${EHIXS_SRC_DIR}/gtests/test_utils.cpp)
 
@@ -346,11 +344,12 @@ find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
 add_executable(tests  ${EHIXS_SRC_DIR}/gtests/tests.cpp)
 target_link_libraries(tests  
                         main 
-                        cuba 
+                        decay_zzww
+                        cuba
                         gtest 
                         gfortran 
                         chaplin tools   
-                        decay_bb  
+                        #decay_bb
                         fortran_bbh 
                         fortran_ggf  
                         pdf 
@@ -367,14 +366,15 @@ target_link_libraries(tests
 #add_executable(integration_tests  ${EHIXS_SRC_DIR}/gtests/integration_tests.cpp)
 #target_link_libraries(integration_tests  
 #               cuba gtest gfortran chaplin tools  decay_bb
-#               main fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
+#               main decay_zzww fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
 
 add_executable(nlo_poles_test  
                 ${EHIXS_SRC_DIR}/gtests/ggf_pole_cancelation_nlo_test.cpp)
 target_link_libraries(nlo_poles_test
 			test_utils
-            decay_bb
-            main  models
+            #decay_bb
+            main  decay_zzww
+            models
             gluon_fusion tools
             nlo_exact_matrix_elements
             fortran_ggf
@@ -391,8 +391,9 @@ target_link_libraries(nlo_poles_test
 add_executable(nlo_gg_xs_test  ${EHIXS_SRC_DIR}/gtests/ggf_nlo_gg_channel_xsection_test.cpp)
 target_link_libraries(nlo_gg_xs_test
 			test_utils
-                        decay_bb
+                        #decay_bb
                         main  models
+                        decay_zzww
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -409,8 +410,9 @@ target_link_libraries(nlo_gg_xs_test
 add_executable(nnlo_q1q2_pole_test ${EHIXS_SRC_DIR}/gtests/ggf_NNLO_q1q2_pole_cancelation_test.cpp)
 target_link_libraries(nnlo_q1q2_pole_test
 			test_utils
-                        decay_bb
+                        #decay_bb
                         main  models
+                        decay_zzww
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -427,8 +429,8 @@ target_link_libraries(nnlo_q1q2_pole_test
 add_executable(nnlo_qq_test ${EHIXS_SRC_DIR}/gtests/ggf_nnlo_qq_test.cpp)
 target_link_libraries(nnlo_qq_test
 			test_utils
-                        decay_bb
-                        main  models
+                        #decay_bb
+                        main  decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -444,8 +446,8 @@ target_link_libraries(nnlo_qq_test
 add_executable(nnlo_qqbar_test ${EHIXS_SRC_DIR}/gtests/ggf_nnlo_qqbar_test.cpp)
 target_link_libraries(nnlo_qqbar_test
 			test_utils
-                        decay_bb
-                        main  models
+                        #decay_bb
+                        main  decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -462,8 +464,8 @@ target_link_libraries(nnlo_qqbar_test
 add_executable(nnlo_qg_test ${EHIXS_SRC_DIR}/gtests/quark_gluon_nnlo_test.cpp)
 target_link_libraries(nnlo_qg_test
 			test_utils
-                        decay_bb
-                        main  models
+                        #decay_bb
+                        main  decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -479,8 +481,8 @@ target_link_libraries(nnlo_qg_test
 add_executable(nnlo_gg_test ${EHIXS_SRC_DIR}/gtests/gluon_gluon_nnlo_test.cpp)
 target_link_libraries(nnlo_gg_test
 			test_utils
-                        decay_bb
-                        main  models
+                        #decay_bb
+                        main  decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -496,8 +498,8 @@ target_link_libraries(nnlo_gg_test
 add_executable(nnlo_gq_test ${EHIXS_SRC_DIR}/gtests/gluon_quark_nnlo_test.cpp)
 target_link_libraries(nnlo_gq_test
 			test_utils
-                        decay_bb
-                        main  models
+                        #decay_bb
+                        main decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -513,8 +515,8 @@ target_link_libraries(nnlo_gq_test
 add_executable(nlo_exact_test ${EHIXS_SRC_DIR}/gtests/nlo_exact_test.cpp)
 target_link_libraries(nlo_exact_test
 			test_utils 
-			decay_bb
-                        main  models
+			#decay_bb
+                        main  decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements
                         fortran_ggf
@@ -592,11 +594,21 @@ target_link_libraries(ihixs++
 			LHAPDF ${LHAPDF} 
 			)
 
+
+
+
+
+
 add_executable(ehixs  ${EHIXS_SRC_DIR}/ehixs.cpp)
 
+
+add_library(decay_zzww
+                    ${EHIXS_SRC_DIR}/higgs_zerfall/higgs_zerfall.f
+                    ${EHIXS_SRC_DIR}/higgs_zerfall/higgs_zerfall_amplitudes.f
+                    )
 target_link_libraries(ehixs    
-                        decay_bb  
-                        main  models
+                       # decay_bb
+                        main  decay_zzww models
                         gluon_fusion tools
                         nlo_exact_matrix_elements 
                         fortran_ggf 
@@ -605,7 +617,7 @@ target_link_libraries(ehixs
                         pdf 
                         avh_olo 
 			cuba
-                        LHAPDF 
+                        LHAPDF
                         ${LHAPDF}  
 			)
 

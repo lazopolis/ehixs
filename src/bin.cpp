@@ -92,7 +92,8 @@ ostream& operator<<(ostream& stream, const Bin& bin)
 {
   
   return stream << bin.avg_f 
-                << " +- " << bin.avg_err 
+                << " +- " << bin.avg_err
+                << "("<<fabs(bin.avg_err/bin.avg_f)*100.0<<" %)"
      << " \t| " << bin.chi_sq <<" / "<<bin.iteration_number
     <<" : "<<bin.point_counter<<" points";
                 ;

@@ -61,10 +61,7 @@ void  Luminosity::set_cur_lumiLO(const double &x1,const double &x2)
 {
     double locres;
     const double almost_zero =1e-16;// 1e-23;
-    //cout<<"\n[Luminosity] : current LO luminosity vector is of size "
-    //<<_local_current_luminosity_LO.size()<<" while pdf size is "
-    //<<pdf_size()<<endl;
-    //cout<<"[Luminosity] : there are "<<pairs.size()<<" initialized pairs"<<endl;
+    
     if (x1>1.0-almost_zero or x2>1.0-almost_zero or x1<almost_zero or x2<almost_zero)
         {
         for (unsigned i=0;i<pdf_size();i++)
@@ -90,26 +87,6 @@ void  Luminosity::set_cur_lumiLO(const double &x1,const double &x2)
             }
         }
 }
-
-
-
-//double InterpolatedLuminosity::integrate_out_x1(const double &z)
-//{
-//    int TRAPEZIUM=5000;
-//    double tau_over_z=tau/z;
-//    double minus_log_tau_over_z = -log(tau_over_z);
-//    double lambda=0.0;
-//    double I=0.0;
-//    for (int k=0; k<TRAPEZIUM; k++)
-//        {
-//        lambda += 1.0/TRAPEZIUM;
-//        I += 1.0/TRAPEZIUM * minus_log_tau_over_z * give_lumi(pow(tau_over_z,lambda),pow(tau_over_z,1.0-lambda));
-//        }
-//    return I;
-//    
-//}
-//
-
 
 
 

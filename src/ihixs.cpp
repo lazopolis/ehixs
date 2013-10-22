@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
         CModel *Model = new CModel;
         //Model->quarks[0]->set_m_at_ref_scale(20.0);
-        Model->quarks[1]->Y = 0.0;
+        Model->quarks[1]->set_Y(0.0);
         
         Exact_LO_Inclusive default_LO(Model, &UI);
         default_LO.perform();
@@ -63,13 +63,13 @@ int main(int argc, char** argv)
             <<"\n LO exact cross-section = "<<xs<<" +- "<<err
         <<"\t(PDF+a_s) error = "<<default_LO.pdf_error_in_string_format()
             <<"\n \ninput used:"
-            <<"\na_s("<<Model->mu_r()<<") = "<<Model->alpha_strong[0];
+            <<"\na_s("<<Model->mu_r()<<") = "<<Model->alpha_strong();
         
         for (unsigned i=0;i<Model->quarks.size();i++)
             {
-            cout<<"\nm_"<<Model->quarks[i]->name<<"("<<Model->mu_r()
+            cout<<"\nm_"<<Model->quarks[i]->name()<<"("<<Model->mu_r()
             <<")= "<<Model->quarks[i]->m();
-            if (Model->quarks[i]->Y!=0.0) cout<<"\t Y="<<Model->quarks[i]->Y;
+            if (Model->quarks[i]->Y()!=0.0) cout<<"\t Y="<<Model->quarks[i]->Y();
             else cout<<"\t INACTIVE";
             }
 

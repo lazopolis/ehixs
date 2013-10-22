@@ -36,7 +36,8 @@ TEST(ggf_nlo_exact_virtual,mt_infinity)
 
         y =  pow(mq,2.0) / pow(mh,2.0);
         x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-        res= ggf_exact_virtual_ep0(x);
+        res= 2.0*ggf_exact_virtual_ep0(x, 4.0/3.0); //on-shell scheme
+        // the limit is scheme-independent
         expected=complex<double>(11.0/2.0,0.0);
     
         cout<<setprecision(16)<<endl
@@ -52,7 +53,8 @@ TEST(ggf_nlo_exact_virtual,mt_infinity)
     mq=complex<double>(3200.0,0.0);
     y =  pow(mq,2.0) / pow(mh,2.0);
     x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-    res= ggf_exact_virtual_ep0(x);
+    res= 2.0*ggf_exact_virtual_ep0(x,4.0/3.0); // on-shell scheme
+    // the limit is scheme-independent
     expected=complex<double>(11.0/2.0,0.0);
     EXPECT_LT(abs(real(res-expected)),1e-3);
 }
@@ -73,7 +75,8 @@ TEST(ggf_nlo_exact_virtual,mt_zero)
         
         y =  pow(mq,2.0) / pow(mh,2.0);
         x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-        res= ggf_exact_virtual_ep0(x);
+        res= 2.0* ggf_exact_virtual_ep0(x,4.0/3.0);// on-shell scheme
+        // the limit is scheme-independent
         expected=complex<double>(0.0,0.0);
         
         cout<<setprecision(16)<<endl
@@ -89,7 +92,8 @@ TEST(ggf_nlo_exact_virtual,mt_zero)
     mq=complex<double>(1e-4,0.0);
     y =  pow(mq,2.0) / pow(mh,2.0);
     x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-    res= ggf_exact_virtual_ep0(x);
+    res= 2.0*ggf_exact_virtual_ep0(x, 4.0/3.0); // on-shell scheme
+    // the limit is scheme-independent
     expected=complex<double>(0.0,0.0);
     EXPECT_LT(abs(real(res-expected)),1e-6);
 }
@@ -122,7 +126,7 @@ TEST(ggf_nlo_exact_virtual,threshold)
         
         y =  pow(mq,2.0) / pow(mh,2.0);
         x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-        res= ggf_exact_virtual_ep0(x);
+        res= 2.0*ggf_exact_virtual_ep0(x,4.0/3.0);//on-shell scheme
         
         cout<<setprecision(16)<<endl
         <<"\tx="<<x<<"\t|x|="<<abs(x)
@@ -143,7 +147,7 @@ TEST(ggf_nlo_exact_virtual,threshold)
         complex<double> tau =complex<double>( 2.0*double(i)/double(100)+1e-10,0.0);
         y = 1.0/4.0/tau;
         x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-        res= ggf_exact_virtual_ep0(x);
+        res= 2.0* ggf_exact_virtual_ep0(x, 4.0/3.0); // on-shell scheme
         
         cout<<setprecision(16)<<endl
         <<real(1.0/y/4.0)<<" "<<real(res);
@@ -155,7 +159,7 @@ TEST(ggf_nlo_exact_virtual,threshold)
     mq=complex<double>(mh/2.0,0.0);
     y =  pow(mq,2.0) / pow(mh,2.0);
     x= ( sqrt(1.0-4.0*y) - 1.0 ) / ( sqrt(1.0-4.0*y) + 1.0 );
-    res= ggf_exact_virtual_ep0(x);
+    res= 2.0*ggf_exact_virtual_ep0(x, 4.0/3.0); //: on-shell scheme
     cout<<"\n|RE(res-expected)|="<<abs(real(res-expected))<<endl;
     EXPECT_LT(abs(real(res-expected)),1e-6);
 }
@@ -185,22 +189,22 @@ TEST(ggf_nlo_exact_real, limit_z_to_1)
 {
     double lambda = 0.35;
     CModel* Model = new CModel();
-    Model->quarks[1]->Y = 0.0;
-    vector<double> as_at_mz;as_at_mz.push_back(0.117);
-    Model->evolve(as_at_mz, 62.5, 1);
-    Model->set_Xq_for_quarks();
+    Model->quarks[1]->set_Y(0.0);
+
+    Model->consolidate(0.117, 0.5, 1);
+
     
     cout<<"\n---------\n"<<"mh = "<<Model->higgs.m()<<endl;
     cout<<"Contributing quarks: "<<endl;
     for (int i=0;i<Model->quarks.size();i++)
         {
-        if (Model->quarks[i]->Y != 0.0)
+        if (Model->quarks[i]->Y() != 0.0)
             {
-            ParticleObject* quark = Model->quarks[i];
+            Particle* quark = Model->quarks[i];
             cout<<setprecision(8)
-                <<quark->name<<" "
-                <<quark->Y<<" "
-                <<sqrt(quark->complex_mass_squared_at_mur())
+                <<quark->name()<<" "
+                <<quark->Y()<<" "
+                <<sqrt(quark->cm_sq())
                 <<endl;
             }
         }
@@ -227,22 +231,22 @@ TEST(ggf_nlo_exact_real, limit_lambda_to_1)
 {
     double z = 0.75;
     CModel* Model = new CModel();
-    Model->quarks[1]->Y = 0.0;
-    vector<double> as_at_mz;as_at_mz.push_back(0.117);
-    Model->evolve(as_at_mz, 62.5, 1);
-    Model->set_Xq_for_quarks();
+    Model->quarks[1]->set_Y(0.0);
+
+    Model->consolidate(0.117, 0.5, 1);
+
     
     cout<<"\n---------\n"<<"mh = "<<Model->higgs.m()<<endl;
     cout<<"Contributing quarks: "<<endl;
     for (int i=0;i<Model->quarks.size();i++)
         {
-        if (Model->quarks[i]->Y != 0.0)
+        if (Model->quarks[i]->Y() != 0.0)
             {
-            ParticleObject* quark = Model->quarks[i];
+            Particle* quark = Model->quarks[i];
             cout<<setprecision(8)
-            <<quark->name<<" "
-            <<quark->Y<<" "
-            <<sqrt(quark->complex_mass_squared_at_mur())
+            <<quark->name()<<" "
+            <<quark->Y()<<" "
+            <<sqrt(quark->cm_sq())
             <<endl;
             }
         }
@@ -269,22 +273,21 @@ TEST(ggf_nlo_exact_real, limit_lambda_to_0)
 {
     double z = 0.655;
     CModel* Model = new CModel();
-    Model->quarks[1]->Y = 0.0;
-    vector<double> as_at_mz;as_at_mz.push_back(0.117);
-    Model->evolve(as_at_mz, 62.5, 1);
-    Model->set_Xq_for_quarks();
+    Model->quarks[1]->set_Y(0.0);
+    Model->consolidate(0.117, 0.5, 1);
+
     
     cout<<"\n---------\n"<<"mh = "<<Model->higgs.m()<<endl;
     cout<<"Contributing quarks: "<<endl;
     for (int i=0;i<Model->quarks.size();i++)
         {
-        if (Model->quarks[i]->Y != 0.0)
+        if (Model->quarks[i]->Y() != 0.0)
             {
-            ParticleObject* quark = Model->quarks[i];
+            Particle* quark = Model->quarks[i];
             cout<<setprecision(8)
-            <<quark->name<<" "
-            <<quark->Y<<" "
-            <<sqrt(quark->complex_mass_squared_at_mur())
+            <<quark->name()<<" "
+            <<quark->Y()<<" "
+            <<sqrt(quark->cm_sq())
             <<endl;
             }
         }
@@ -332,14 +335,14 @@ double TestingNloReal::evaluateIntegral(const double xx[])
 }
 
 
-TEST(ggf_nlo_exact_real, large_mt_limit)
+TEST(ggf_nlo_exact_real, DISABLED_large_mt_limit)
 {
     CModel* Model = new CModel();
-    Model->quarks[0]->set_m_at_ref_scale(20.0);
-    Model->quarks[1]->Y = 0.0;
-    vector<double> as_at_mz;as_at_mz.push_back(0.117);
-    Model->evolve(as_at_mz, 62.5, 1);
-    Model->set_Xq_for_quarks();
+    Model->quarks[0]->set_pole_mass(2000.0);
+    Model->quarks[1]->set_Y(0.0);
+
+    Model->consolidate(0.117, 1.0, 1);
+
     
     TestingNloReal my_dude;
     my_dude.setModel(Model);
@@ -349,6 +352,82 @@ TEST(ggf_nlo_exact_real, large_mt_limit)
 }
 
 
+TEST(Masters,bubf)
+{
+    complex<double> m(2.97428550666969     ,-1.681076005913941E-017);
+    double s1 = -3421.13630838635;
+    double s2 = 15625.7868283835;
+    complex<double> x1 = sqrt(1.0-4.0*m*m/s1);
+    complex<double> x2 = sqrt(1.0-4.0*m*m/s2);
+    complex<double> expected(  1.47343745569861,-3.13803347841651);
+    complex<double> res = bubf(x1,x2);
+    EXPECT_LT(abs(real(res-expected))/abs(expected),1e-15)<<" expected = "<<expected
+    <<"\t res = "<<res;
+}
+
+TEST(Masters,triaf1)
+{
+    complex<double> m(2.97428550666969     ,-1.681076005913941E-017);
+    double s1 = -1394.30085241407;
+    complex<double> expected(  12.8661981549883,-8.095806348395888E-013);
+    complex<double> res = triaf(sqrt(1.0-4.0*m*m/s1));
+    EXPECT_LT(abs(real(res-expected))/abs(expected),1e-15)<<" expected = "<<expected
+    <<"\t res = "<<res;
+}
+
+TEST(Masters,triaf2)
+{
+    complex<double> m(2.97428550666969     ,-1.681076005913941E-017);
+    double s1 = 15624.5443840588;
+    complex<double> expected(  23.0064286786935 , -23.4848417178919);
+    complex<double> res = triaf(sqrt(1.0-4.0*m*m/s1));
+    EXPECT_LT(abs(real(res-expected))/abs(expected),1e-14)<<" expected = "<<expected
+    <<"\t res = "<<res;
+}
+
+TEST(Aqqgh,bottom_quark)
+{
+    double z = -7.23453383973682;
+    double mh = 125.003249603365;
+    complex<double> tau ( 2.264554070476561E-003,-2.559866901436423E-020);
+    complex<double> x = (sqrt(1.0-tau)-1.0)/(sqrt(1.0-tau)+1.0);
+    complex<double> m(2.97428550666969     ,-1.681076005913941E-017);
+
+    complex<double> expected(  -4.71636081027699     ,  19.9224142639752);
+    complex<double> res = Aqqgh_cpp(z,x);
+    EXPECT_LT(abs(real(res-expected))/abs(expected),1e-13)<<" expected = "<<expected
+    <<"\t res = "<<res;
+}
+
+
+//-706.168901481198      ( 0.996067101904021     , 3.972710522846434E-002)
+//-4.88975870452380      (  1.01600912524306     , 3.157339729178606E-002)
+
+TEST(sum_Aqqgh,StandardModel)
+{
+    CModel* model = new CModel;
+    model->consolidate(0.120180436153365,0.4567,1);//: a_s@mz, mur/mh, porder
+    double z = -706.168901481198;
+
+    complex<double> expected_cplx(0.996067101904021,3.97271052284643E-002);
+    double expected = pow(abs(expected_cplx),2.0);
+    double res = sum_of_abs_sq_of_Aqqgh(z,model);
+    EXPECT_LT(abs((res-expected))/abs(expected),1e-5)<<" expected = "<<expected
+    <<"\t res = "<<res;
+}
+
+TEST(sum_Aqqgh,StandardModel2)
+{
+    CModel* model = new CModel;
+    model->consolidate(0.120180436153365,0.4567,1);//: a_s@mz, mur/mh, porder
+    double z = -4.88975870452380;
+    
+    complex<double> expected_cplx(1.01600912524306,3.157339729178606E-002);
+    double expected = pow(abs(expected_cplx),2.0);
+    double res = sum_of_abs_sq_of_Aqqgh(z,model);
+    EXPECT_LT(abs((res-expected))/abs(expected),1e-4)<<" expected = "<<expected
+    <<"\t res = "<<res;
+}
 
 
 int main(int argc, char**argv)

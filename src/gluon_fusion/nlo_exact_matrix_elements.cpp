@@ -21,7 +21,8 @@ complex<double> F2lb(const complex<double> & x)
 }
 
 
-complex<double> ggf_exact_virtual_ep0(const complex<double> & x)
+complex<double> ggf_exact_virtual_ep0(const complex<double> & x,
+                                      const double& scheme_dependent_coeff)
 {
     //	Below is an implementation of the two_loop virtual
     //  amplitude in the presence of heavy quarks (the non-pi^2 piece)
@@ -106,11 +107,11 @@ complex<double> ggf_exact_virtual_ep0(const complex<double> & x)
     double Cf=(N*N-1.0)/2.0/N;
     complex<double> res =1.0/2.0
                         * (Cf * F2la  +  N * G2lCA_onehalf
-                           + Cf*4.0/3.0 * F2lb(x)
+                           + Cf * scheme_dependent_coeff * F2lb(x)
                            )
                         / (-2.0/3.0);
     
-    return res+conj(res);
+    return res;
     
 }
 
@@ -125,7 +126,7 @@ complex<double> born_exact_summed_over_quarks(CModel* Model)
     
     for (int i=0;i<Model->quarks.size();i++)
         {
-        ME = ME + Model->quarks[i]->Y * born(Model->quarks[i]->X);
+        ME = ME + Model->quarks[i]->Y() * born(Model->quarks[i]->X());
         }
     return(ME);
 }
@@ -152,12 +153,12 @@ double sum_of_abs_sq_of_Aqi(const double &z,const double & lambda,CModel* Model)
     complex<double> A4(0.0,0.0);
     for (int i=0;i<Model->quarks.size();i++)
         {
-        double Yq = Model->quarks[i]->Y;
+        double Yq = Model->quarks[i]->Y();
         if (Yq!=0.0)
             {
-            complex<double> Wq = Model->quarks[i]->Wq;
+            complex<double> Wq = Model->quarks[i]->Wq();
             complex<double> mq_cplx = sqrt(
-                            Model->quarks[i]->complex_mass_squared_at_mur());
+                            Model->quarks[i]->cm_sq());
             complex<double> factor = Yq * Wq * 3.0/32.0 /pow(mh,2.0);
             A1 += Aq1(z,lambda,mq_cplx,mh) * factor;
             A2 += Aq2a(z,lambda,mq_cplx,mh) * factor;
@@ -171,3 +172,56 @@ double sum_of_abs_sq_of_Aqi(const double &z,const double & lambda,CModel* Model)
                 + pow(abs(A3),2.0)
                 + pow(abs(A4),2.0));
 }
+
+
+double sum_of_abs_sq_of_Aqqgh(const double& y,CModel* Model)
+{
+    complex<double> ME ;
+    complex<double> sum_of_Aqqgh(0.0,0.0);
+    for (int i=0;i<Model->quarks.size();i++)
+        {
+        double Yq = Model->quarks[i]->Y();
+        if (Yq!=0.0)
+            {
+            complex<double> Wq = Model->quarks[i]->Wq();
+            complex<double> factor = Yq * Wq * 3.0 / 4.0;
+            sum_of_Aqqgh += Aqqgh_cpp(y,Model->quarks[i]->X()) * factor;
+            }
+        }
+    return pow(abs(sum_of_Aqqgh),2.0);
+}
+
+complex<double> Aqqgh_cpp(const double& y,const complex<double>& x)
+{
+    // y = -1/zbar/lambdabar in the case of qg->qH
+    complex<double> x12 = sqrt(1.0+4.0*x*y/pow(1.0-x,2.0));
+    complex<double> TS = triaf(x12);
+    complex<double> xmh = sqrt(1.0-(1.0-x12*x12)/y);
+    complex<double> TH = triaf(xmh);
+    double ybar = 1.0-y;
+    complex<double> res = y/ybar * (1.0/3.0 * pow(1.0-x,2.0)/x * born(x)
+                                  - 1.0 / ybar * 2.0 * bubf(x12,xmh)
+                                  + 1.0 / ybar * 4.0*x/pow(1.0-x,2.0) * (TS * y -TH)
+                                  -  TS);
+    return res;
+}
+
+complex<double> triaf(const complex<double>& x)
+{
+    complex<double> Ie(0.0,1e-15);
+    return 0.5*pow(log( (x-1.0)/(x+1.0) + Ie ),2.0);
+}
+
+complex<double> bubf(const complex<double>& x1, const complex<double>& x2)
+{
+    const complex<double> Ie(0.0,1e-15);
+    return bubble(x1) - bubble(x2);
+}
+
+complex<double> bubble(const complex<double>& x)
+{
+    const complex<double> Ie(0.0,1e-15);
+    return  x * log((x-1.0)/(x+1.0)+Ie);
+}
+
+

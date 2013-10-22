@@ -32,6 +32,7 @@ the NLO amplitudes  in C/C++ programs.
 #endif
 
 
+
 complex_double aq1_( double*, double*, complex_double*,double*);
 complex_double aq2a_( double*, double*, complex_double*,double*);
 complex_double aq2b_( double*, double*, complex_double*,double*);
@@ -46,6 +47,7 @@ double fjet_(double*,double*,double *s12,double *s13,double *s23,double *s14,dou
 #endif
 
 /* C declarations */
+
 
 
 inline complex_double Aq1(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)

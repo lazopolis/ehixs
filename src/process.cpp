@@ -56,7 +56,7 @@ HistogramBox::HistogramBox(const UserInterface& my_UI)
     available_histograms.push_back(new Xhistogram(3,20,"vegas x[3]"));
     available_histograms.push_back(new Xhistogram(4,20,"vegas x[4]"));
     available_histograms.push_back(new Xhistogram(5,20,"vegas x[5]"));
-    
+    available_histograms.push_back(new Hist_PT("lepton1",20,0,0.0,80.0,"lepton1_pT"));
     if (my_UI.requested_histogram>-1)
         {
         cout<<"\n[HistogramBox]: will push histogram since UI.requested_histogram = "<<my_UI.requested_histogram<<endl;
@@ -187,44 +187,64 @@ Process::Process(const UserInterface & UI)
 : 
 Vegas(UI)
 {
-    cout<<"\n------------------------ new Process"<<endl;
-    //: DEFAULT SETTINGS
-    Vegas.number_of_components=1;
-    Vegas.set_ptr_to_the_hatch(&the_hatch);
-    Vegas.set_ptr_to_integrand(&Integrand);
-    _histograms = new HistogramBox(UI);
-    _cuts = new CutBox(UI);
-    if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
-    if (UI.cut_info) _cuts->show_cut_info_and_exit();
-    if (UI.number_of_flavours!=5)
-          {
-          cout<<"\n\nerror in constructor of ExclusiveClass: during refactoring the nf became a global variable consts::nf and we don't want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
-          }
-    my_UI=UI;
-    ptr_to_process=this;
-    production_is_defined=false;
-    decay_is_defined=false;
-     //: setting production
-     // process forking
-     if( UI.production == "" || UI.production == "1" )
-          {
-          std::cout << "No process specified" << endl;
-          }
-     else
-          {
-          if (UI.production=="ggF")
-               {
-               std::cout<<"\nProcess initiated with production "<<UI.production;
-               set_production(new GluonFusion(UI));
-               }
-          else
-               {
-               cout<<endl<<"Process "<<UI.production<<" not implemented";
-               throw "non-implemented process";
-               }
-          }
-     // setting decay here!!
-     
+    
+        cout<<"\n------------------------ new Process"<<endl;
+    UI.PrintAllOptions();
+        //: DEFAULT SETTINGS
+        Vegas.number_of_components=1;
+        Vegas.set_ptr_to_the_hatch(&the_hatch);
+        Vegas.set_ptr_to_integrand(&Integrand);
+        _histograms = new HistogramBox(UI);
+        _cuts = new CutBox(UI);
+        if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
+        if (UI.cut_info) _cuts->show_cut_info_and_exit();
+        if (UI.number_of_flavours!=5)
+            {
+            cout<<"\n\nerror in constructor of ExclusiveClass: during refactoring the nf became a global variable consts::nf and we don't want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
+            }
+        my_UI=UI;
+        ptr_to_process=this;
+        production_is_defined=false;
+        decay_is_defined=false;
+        //: setting production
+        // process forking
+        if( UI.production == "" || UI.production == "1" )
+            {
+            std::cout << "No process specified" << endl;
+            }
+        else
+            {
+            if (UI.production=="ggF")
+                {
+                std::cout<<"\nProcess initiated with production "<<UI.production;
+                set_production(new GluonFusion(UI));
+                }
+            else
+                {
+                cout<<endl<<"Process "<<UI.production<<" not implemented";
+                throw "non-implemented process";
+                }
+            }
+        // setting decay here!!
+    if( UI.decay == "" || UI.decay == "1" )
+        {
+        std::cout << "No decay specified" << endl;
+        }
+    else
+        {
+        if (UI.decay=="4leptons")
+            {
+            std::cout<<"\nProcess initiated with decay "<<UI.decay;
+            set_decay(new Decay_WWZZ(UI));
+            }
+        else
+            {
+            cout<<endl<<"Process "<<UI.decay<<" not implemented";
+            throw "non-implemented process";
+            }
+        }
+
+    
 }
 
 
@@ -241,36 +261,10 @@ void Process::set_production(Production * theproduction)
 
 void Process::set_decay(Decay * thedecay)
 {
-     my_decay = thedecay;
-     my_decay->init(my_UI,&the_hatch);
-     
-     if (production_is_defined)
-     {
-          my_decay->set_alpha_s(my_production->Model.alpha_strong);
-          my_decay->set_y_b(my_production->y_b_vec());
-     }
-     else 
-     {
-          //:dirty hack here
-          //: we need some value for a_s and y_b
-          //: in case there is no production at all
-          //: To get one, we init a lumi
-     
-     Luminosity loclumi(my_UI);
-          //: we add a pair of pdfs (which is getting evolved for nothing)
-     
-          loclumi.add_pair(pdf_desc(5,5,0,0),pdf_desc(5,5,0,0));
-          vector<double> alpha_s;
-          vector<double> yukawa_b_vector;
-
-     cout<<"\n the evolution of couplings needs to be checked and updated in Process::set_decay(). I exit"<<endl;exit(0);
-         
-          my_decay->set_alpha_s(alpha_s);
-          my_decay->set_y_b(yukawa_b_vector);
-          cout<<"\ny_b="<<yukawa_b_vector[0]<<"\t"<<my_decay->Model.bottom.m();
-     }
-     
-     decay_is_defined=true;
+    my_decay = thedecay;
+    my_decay->set_up_the_hatch(&the_hatch);
+    Vegas.set_number_of_dimensions(the_hatch.GetVEGASDim());
+    decay_is_defined=true;
 }
 
 
@@ -278,7 +272,7 @@ void Process::perform()
 {
      if (!sectors_are_defined_in_production_and_decay())
           {
-          cout<<"\n Sectors are not properly defined. I exit!"<<endl;
+          cout<<"\n[Process] : Sectors are not properly defined. I exit!"<<endl;
           exit(1);
           }
      calculate_number_of_components();     
@@ -414,24 +408,30 @@ void Process::print_event(LightEvent* the_event)
 
 void Process::proceed_to_decay_phase(Event* production_event)
 {
-     if (decay_is_defined) //: decay is defined
-          { 
-               my_decay->do_decay(production_event->p["h"]);
-               for (int j=0;j<my_decay->decay_events.size();j++)
-                    {
-                    Event* decay_event=my_decay->decay_events[j];
-                    decay_event->merge(*production_event);
-                    
-                    if (decay_event->w!=0.0 and _cuts->passes_cuts(decay_event))
-                         {
-                         book_event(decay_event);
-                         }
-                    }
-          }
-     else //: there is no decay
-          {
-          book_event(production_event);
-          }
+    //cout<<"\n[Process] production event "<<production_event->w<<endl;
+    if (decay_is_defined) //: decay is defined
+        {
+        my_decay->do_decay(production_event->p["h"]);
+        for (int j=0;j<my_decay->decay_events.size();j++)
+            {
+            Event* decay_event=my_decay->decay_events[j];
+            decay_event->merge(*production_event);
+            //cout<<"\n[Process]: merged weight = "<<decay_event->w
+            //<<"----------------------"<<endl;
+            if (decay_event->w!=0.0 and _cuts->passes_cuts(decay_event))
+                {
+                // cout<<"\n[Process]: production event "
+                //     <<production_event->w
+                //     <<" x decay event "
+                //<<decay_event->w<<endl;
+                book_event(decay_event);
+                }
+            }
+        }
+    else //: there is no decay
+        {
+        book_event(production_event);
+        }
 }
 
 void Process::perform_decay_alone()//: no production was defined

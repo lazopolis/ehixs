@@ -21,6 +21,8 @@
       doubleprecision rgg2ght1s2em2  
       doubleprecision rgg2ght1s2em3  
       doubleprecision rgg2ght1s2em4  
+     
+
       if(pole.eq.1)then  
       if(sector.eq.1)then  
          fff=rgg2ght1s1e1  

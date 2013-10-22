@@ -38,28 +38,6 @@ private://data
 private://methods    
 
 };
-//
-//class InterpolatedLuminosity:public Luminosity{
-//public:
-//     InterpolatedLuminosity(double NF_, double muf_, double mur_, int pert_order_, const string& provider_, bool pdf_error_,const double & _tau)
-//     :Luminosity(NF_,muf_,mur_,pert_order_,provider_,pdf_error_) ,tau(_tau){};
-//     ~InterpolatedLuminosity(){};
-//     double integrate_out_x1(const double &z);
-//     double ff(const double& z){return integrate_out_x1(z);}
-//
-//     
-//     double tau;
-//     
-//};
-//
-//class LuminosityInterpolator: public InterpolatorBase
-//{
-//public:
-//     LuminosityInterpolator(InterpolatedLuminosity* _dd):InterpolatorBase(){dd=_dd;}
-//private:
-//     InterpolatedLuminosity *dd;
-//     double f_value(const double & x){return dd->ff(x);}
-//};
 
 #endif
 

@@ -55,7 +55,7 @@ int main(int argc, char** argv)
      try
           {
           UI.ParseInput(argc,argv);
-               
+          UI.RunSanityChecks();
           // Prints processes list: functionality that we lack currently: how to
           if(UI.list_processes)
                {

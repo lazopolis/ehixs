@@ -159,7 +159,7 @@ public://methods
     ~Exact_LO_Inclusive(){};
     
     double ME_sq(){return _ME_sq;}
-    double alpha_s_used(){return Model->alpha_strong[0];}
+    double alpha_s_used(){return Model->alpha_strong();}
     double cur_lumiLO(const double x);
         
 private://data

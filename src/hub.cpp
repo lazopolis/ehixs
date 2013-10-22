@@ -65,18 +65,20 @@ namespace Hub {
 //:=================================   TheHatch
 void TheHatch::RequestVar(string type)
 {
-     if(types.size()>=NVAR_MAX)
-          throw "too many variables requested. Change HUB_NVAR_MAX in headers.hpp (yes, it is dirty).";
-     else
-     {
-          if (type=="VEGAS")
-          {
-               types.push_back(0);
-               number_of_vegas_variables++;
-          }
-          else types.push_back(1);
-     }
-     
+    if(types.size()>=NVAR_MAX)
+        throw "too many variables requested. Change HUB_NVAR_MAX in headers.hpp (yes, it is dirty).";
+    else
+        {
+        if (type=="VEGAS")
+            {
+            types.push_back(0);
+            number_of_vegas_variables++;
+            cout<<"\n[TheHatch] new Vegas variable requested."
+                <<" Number of Vegas variables now = "
+                <<number_of_vegas_variables<<endl;
+            }
+        else types.push_back(1);
+        }
 }
 
 double* TheHatch::RequestPtr()

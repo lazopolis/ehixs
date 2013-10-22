@@ -51,40 +51,42 @@ double fjet_(double* x1,double *x2,double *s12,double *s13,double *s23,double *s
 
 Production::Production(const UserInterface & UI)
 {
-    ptbuf = 1e-10;
-    my_sector_name = "If you see this, the specific production hasn't declared it's sector_name yet.";
-    sector_defined=false;
-    EC=this;
-    cout<<"\n[Production] : setting up luminosity";
-    lumi = new Luminosity(UI);
-    cout<<"\n[Production] : consolidating Model";
-    Model.higgs.set_m_at_ref_scale(UI.m_higgs);
-    
-    cout<<"\n[Production] : setting up scales and Etot";
-    mu_r=UI.mur_over_mhiggs * UI.m_higgs;
-    mu_f=UI.muf_over_mhiggs * UI.m_higgs;
-    
-    
-    Model.evolve(lumi->alpha_s_at_mz_vector(),mu_r,UI.perturbative_order);
-    //: calculate kinematic variables or Model constants that are input dependent
-    //: necessarily after init_base where UI input passes to the Production class.
-    
-    Model.set_Xq_for_quarks();
-    //: this depends on m_higgs which we take to be the nominal higgs mass
-    //: CHANGE the above in case Higgs is off-shell.
-    if (UI.number_of_flavours!=5)
+    if (not(UI.info))
         {
-        cout<<"\n\nerror in constructor of Production: during refactoring the nf became a global variable consts::nf and we don;t want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
+        ptbuf = 1e-10;
+        my_sector_name = "If you see this, the specific production hasn't declared it's sector_name yet.";
+        sector_defined=false;
+        EC=this;
+        cout<<"\n[Production] : setting up luminosity";
+        lumi = new Luminosity(UI);
+        cout<<"\n[Production] : consolidating Model";
+        //Model.higgs.set_m_at_ref_scale(UI.m_higgs);
+    
+        cout<<"\n[Production] : setting up scales and Etot";
+        
+    
+    
+        Model.consolidate(lumi->alpha_s_at_mz_vector()[0],
+                          UI.mur_over_mhiggs,
+                          UI.perturbative_order);
+        mu_r=UI.mur_over_mhiggs * Model.higgs.m();
+        mu_f=UI.muf_over_mhiggs * Model.higgs.m();
+        //: this depends on m_higgs which we take to be the nominal higgs mass
+        //: CHANGE the above in case Higgs is off-shell.
+        if (UI.number_of_flavours!=5)
+            {
+            cout<<"\n\nerror in constructor of Production: during refactoring the nf became a global variable consts::nf and we don;t want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
+            }
+        //consts::nf = UI.number_of_flavours;
+    
+    
+        Etot=UI.Etot;
+        log_muf_sq_over_mh_sq = 2.0*log(mu_f/Model.higgs.m());
+        log_mur_sq_over_mh_sq = 2.0*log(mu_r/Model.higgs.m());
+        log_muf_sq_over_mt_sq = 2.0*log(mu_f/Model.top.m());
+        log_mur_sq_over_muf_sq = 2.0*log(mu_r/mu_f);
+        log_one_minus_tau = log(1.0 - pow(Model.higgs.m(),2.0)/pow(Etot,2.0));
         }
-    //consts::nf = UI.number_of_flavours;
-    
-    
-    Etot=UI.Etot;
-    log_muf_sq_over_mh_sq = 2.0*log(mu_f/Model.higgs.m());
-    log_mur_sq_over_mh_sq = 2.0*log(mu_r/Model.higgs.m());
-    log_muf_sq_over_mt_sq = 2.0*log(mu_f/Model.top.m());
-    log_mur_sq_over_muf_sq = 2.0*log(mu_r/mu_f);
-    log_one_minus_tau = log(1.0 - pow(Model.higgs.m(),2.0)/pow(Etot,2.0));
 }
 
 void Production::set_up_the_hatch(TheHatch* the_hatch)

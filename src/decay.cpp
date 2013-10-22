@@ -1,14 +1,65 @@
 
 #include "decay.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    void higgszerfall_(double*
+                       ,double*,double*,double*,double*,
+                       double*,double*,
+                       int*,     // decay mode 0:
+                       double*,// passing vegas variables
+                       double*,// the weight of the decay will be set here
+                       double*,
+                       double*,
+                       double*,
+                       double*
+                       );
+    
+#ifdef __cplusplus
+}
+#endif
+//
+inline void higgszerfall(
+                         const double& mh,const double& mw,const double& mz,
+                         const double& gamw,
+                         const double& gamz,
+                         const double& GF,
+                         double* pH,
+                         const int& decaymode,     // decay mode 0:
+                         double* decay_xx_vegas,// passing vegas variables
+                         double& decay_weight,  // the weight of the decay will be set here
+                         double* p1,double* p2,double* p3,double* p4
+                         )
+    {
+    higgszerfall_(
+                 (double*) &mh,(double*) &mw,(double*) &mz,(double*) &gamw,
+                 (double*) &gamz,
+                 (double*) &GF,
+                  (double*) pH,
+                 (int*) &decaymode,     // decay mode 0:
+                 (double*) decay_xx_vegas,// passing vegas variables
+                 (double*) &decay_weight,  // the weight of the decay will be set here
+                 (double*) p1,
+                  (double*) p2,(double*) p3,(double*) p4
+                  );
+    }
 
 
-void Decay::setup_hatch(TheHatch* the_hatch)
+
+//------------------------------------------------------------------------------
+
+
+void Decay::set_up_the_hatch(TheHatch* the_hatch)
 {
 
      decay_xx_vegas = the_hatch->RequestPtr();
      for (unsigned i=0;i<dimension_of_integration_for_decay;i++) 
           the_hatch->RequestVar("VEGAS");
 }
+
+
+
 
 
 /*
@@ -64,26 +115,79 @@ void Decay::setup_hatch(TheHatch* the_hatch)
  }
  */
 
+//=================== WW/ZZ ===============================
+
+ Decay_WWZZ::Decay_WWZZ(const UserInterface & UI)
+{
+    dimension_of_integration_for_decay=5;
+    
+    my_momenta.init_fvector("lepton1");
+    my_momenta.init_fvector("lepton2");
+    my_momenta.init_fvector("lepton3");
+    my_momenta.init_fvector("lepton4");
+}
+
+void Decay_WWZZ::do_decay()
+{
+    fvector PH_rest(Model.higgs.m(),0.0,0.0,0.0);
+    do_decay(PH_rest);
+}
+
+
+void Decay_WWZZ::do_decay(const fvector& PH)
+{
+    decay_events.clear();
+    
+    int decaymode = 1;
+    // decay mode 1:HZZeemm | 2: HZZllll | 3: HWWlnln | 4: HWWZZlnln
+    double pH[4]={PH[0],PH[1],PH[2],PH[3]};
+    
+    double p1[4];
+    double p2[4];
+    double p3[4];
+    double p4[4];
+    double decay_weight = 0.0;
+    //cout<<"\n[decay]: hello before"<<endl;
+    higgszerfall(
+                 Model.higgs.m(),Model.W.m(),Model.Z.m(),
+                 Model.W.width(),Model.Z.width(),consts::G_fermi,
+                 pH,
+                 decaymode,     
+                 decay_xx_vegas,// passing vegas variables
+                 decay_weight,  // the weight of the decay will be set here
+                 p1,p2,p3,p4
+                     );  // the four-momenta of the final state particles
+                                // as set by HiggsZerfall
+    //cout<<"\n[decay] Gamma = "<<decay_weight<<endl;
+    my_momenta["lepton1"].set(p1[0],p1[1],p1[2],p1[3]);
+    my_momenta["lepton2"].set(p2[0],p2[1],p2[2],p2[3]);
+    my_momenta["lepton3"].set(p3[0],p3[1],p3[2],p3[3]);
+    my_momenta["lepton4"].set(p4[0],p4[1],p4[2],p4[3]);
+    
+    decay_weight = decay_weight / Model.higgs.width();
+    
+    decay_events.push_back(new Event(decay_weight,my_momenta,decay_xx_vegas));
+}
+
+
 //=================== gamma gamma ===============================
 
 
 
 
 
-void Decay_gammagamma::init(const UserInterface & UI,TheHatch* the_hatch)
+Decay_gammagamma::Decay_gammagamma(const UserInterface & UI)
 {
-     Model.higgs.set_m_at_ref_scale(UI.m_higgs);
-     for (int i=0;i<Model.quarks.size();i++)
-          {
-          Model.quarks[i]->Set_Xq(Model.higgs.m());
-          }
-     for (int i=0;i<Model.vector_bosons.size();i++)
-          {
-          Model.vector_bosons[i]->Set_Xq(Model.higgs.m());
-          }
+    // Model.higgs.set_m_at_ref_scale(UI.m_higgs);
+//     for (int i=0;i<Model.quarks.size();i++)
+//          {
+//          Model.quarks[i]->Set_Xq(Model.higgs.m());
+//          }
+//     for (int i=0;i<Model.vector_bosons.size();i++)
+//          {
+//          Model.vector_bosons[i]->Set_Xq(Model.higgs.m());
+//          }
      dimension_of_integration_for_decay=2;
-     setup_hatch(the_hatch);
-     vector<string> mom_names;
 
      my_momenta.init_fvector("gamma1");
      my_momenta.init_fvector("gamma2");
@@ -135,13 +239,13 @@ void Decay_gammagamma::do_decay(const fvector& PH)
      for(int i=0; i<Model.quarks.size();i++)
           {
           //cout << "\n quark no " << i << "\t --> \t x = " << Model.quarks[i]->X;
-          temp += -4.0*born_for_gamma_gamma(Model.quarks[i]->X)*pow(Model.quarks[i]->charge,2);
+          temp += -4.0*born_for_gamma_gamma(Model.quarks[i]->X())*pow(Model.quarks[i]->charge(),2);
           //cout<<"\ntemp +="<<-4.0*born(Model.quarks[i]->X)*pow(Model.quarks[i]->charge,2);
           }
      
      for(int i=0; i<Model.vector_bosons.size();i++)
           {
-          temp += bosonloop(Model.vector_bosons[i]->X)*pow(Model.vector_bosons[i]->charge,2);
+          temp += bosonloop(Model.vector_bosons[i]->X())*pow(Model.vector_bosons[i]->charge(),2);
           }
      // the prefactor, taken from my masterthesis with PS-volume and flux factor divided out
      // and alpha expressed through Gf and mw. all mh are replaced by the higgs virtuality.

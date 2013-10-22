@@ -78,10 +78,7 @@ Exact_LO_Inclusive:: Exact_LO_Inclusive(CModel * imodel, UserInterface* iui)
     Model = imodel;
     UI = iui;
     set_up_gg_lumi();
-    Model->evolve(lumi->alpha_s_at_mz_vector(),
-                  UI->mur_over_mhiggs * UI->m_higgs,
-                  UI->perturbative_order);
-    Model->set_Xq_for_quarks();
+    Model->consolidate(lumi->alpha_s_at_mz_vector()[0], UI->mur_over_mhiggs, UI->perturbative_order);
     
     //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
     //: Gf = 1.16637*10^{-5} * 0.389379*10^9
@@ -111,9 +108,9 @@ void Exact_LO_Inclusive::evaluate_phase_space_independent_exact_LO_ME()
     
     for (int i=0;i<Model->quarks.size();i++)
         {
-        if (Model->quarks[i]->Y != 0.0)
+        if (Model->quarks[i]->Y() != 0.0)
             {
-            ME = ME + Model->quarks[i]->Y * born(Model->quarks[i]->X);
+            ME = ME + Model->quarks[i]->Y() * born(Model->quarks[i]->X());
             }
         }
     _ME_sq = pow(abs(ME),2.0);
@@ -147,8 +144,11 @@ void InclusiveTerm::_set_up_coefficient(const double &c,
     for (unsigned i=0;i<lumi->pdf_size();i++)
         {
         _coefficient->set_component(i,
-                                    c * pow(Model->alpha_strong[i]/consts::Pi,alpha_power)
+                                    c * pow(Model->alpha_strong()/consts::Pi,alpha_power)
                                     );
+        //: attention, there is only one alpha_strong (the central one) above.
+        //: we still have to find a way to accomodate for many different a_s
+        //: properly, including the dependence of everything in the Model on a_s
         }
     
 }

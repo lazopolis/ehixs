@@ -248,6 +248,12 @@ public://methods
     void LO_exact();
     void NLO_soft_exact();
     void gg_NLO_hard_exact();
+    void qg_NLO_hard_exact();
+    void gq_NLO_hard_exact();
+    void qqbar_NLO_hard_exact();
+    
+    string sector_name(){return the_sector->name;}
+    int number_of_necessary_sectors(){return number_of_necessary_sectors_;}
 private://data
     double smax[7],smin[7];
     GluonFusionSectorBox* all_sectors;
@@ -257,6 +263,7 @@ private://data
     WilsonCoefficients WC;
     BetaConstants beta;
     GluonFusionExactCoefficients * exact_coefficients;
+    int number_of_necessary_sectors_;
 private://methods
     void update_smaxmin(int,double);
     void check_which_sectors_can_be_run_together(const vector<SimpleSector*>&);
@@ -297,16 +304,24 @@ private://methods
     void nlo_partonic_xsections(pointer_to_Franz_gluon_fusion the_franz_function,const double &,int i);
     void rgg2ghEXACT(int pole,double s,double x1,double x2,double z,
                      double lh,double  weight,double nf, double lambda);
-    double abs_sq_of_sum_over_quarks_of(complex<double> (*f)(const double& z,
-                                                             const double& lambda,
-                                                             const complex<double>& M,
-                                                             const double& QQQ),
-                                        const double & z,const double & lambda);
+    void gg2gh_exact_Q_m1(const double& w,const double& z, const double& x1,
+                                 const double&x2);
+    void gg2gh_exact_Q_fin(const double& weight,const double& z,
+                           const double& x1,const double&x2, const double& lambda);
 
-
-     
-
-     
+    
+    void qg2qh_exact_Q_m1(const double& weight,const double& z,
+                                       const double& x1,const double&x2);
+    void qg2qh_exact_Q_fin(const double& weight,const double& z,
+                                        const double& x1,const double&x2,
+                                        const double& lambda);
+    
+    void gq2qh_exact_Q_m1(const double& weight,const double& z,
+                          const double& x1,const double&x2);
+    void gq2qh_exact_Q_fin(const double& weight,const double& z,
+                           const double& x1,const double&x2,
+                           const double& lambda);
+    
 };
 
 

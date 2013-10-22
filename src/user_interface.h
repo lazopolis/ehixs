@@ -5,6 +5,8 @@
 #include<vector>
 #include<iostream>
 #include <stdlib.h> //: for exit()
+#include <sstream> //: for stringstream
+
 using namespace std;
 
 //: declaring the getopt specialized class option (not small initial 'o')
@@ -31,8 +33,7 @@ public:
      virtual void set(const string&) 
      {}
      /** Print... */
-     virtual void print(ostream&) const
-     {}
+    virtual string print() =0;
 };
 
 
@@ -50,8 +51,7 @@ public:
      void set(const string &p_)  {*p=p_;}
      
      /** Print in stream */
-     void print(std::ostream& stream) const
-     { stream << *p; }
+    string print(){return *p;}
 };
 
 class DoublePrecisionOption : public Option {
@@ -67,8 +67,7 @@ public:
      void set(const string &p_)  {*p=atof(p_.c_str());}
      
      /** Print in stream */
-     void print(std::ostream& stream) const
-     { stream << *p; }
+    string print(){stringstream s;s<<*p;return s.str();}
 };
 
 class IntOption : public Option {
@@ -84,8 +83,8 @@ public:
      void set(const string &p_)  {*p=atoi(p_.c_str());}
      
      /** Print in stream */
-     void print(std::ostream& stream) const
-     { stream << *p; }
+    string print(){stringstream s;s<<*p;return s.str();}
+
 };
 
 class BoolOption : public Option {
@@ -102,46 +101,37 @@ public:
      // stob: string_to_boolean with cute return statement by Romain :)
      bool stob(const string& s) {return (s=="true" or s=="True");}
      /** Print in stream */
-     void print(std::ostream& stream) const
-     { stream << *p; }
+    string print(){stringstream s;s<<*p;return s.str();}
+
 };
 
 class UserInterface
 {
-public:
-
-     UserInterface();
-     /*{number_of_flavours=5.0;
-                    info=0;
-                    histogram_info=false;
-                    cut_info=false;
-                    matrix_element_approximation="effective";
-                    }*/
-     ~UserInterface(){};
-     
-     
-     
-     vector<Option*> options;
-
-     void ParseInput(int argc, char * const *argv);
-     int ParseFile(const string &, bool);
-     vector<vector<string> > ParseCmd(int argc,  char * const *argv, bool verbose);
-
-     void print_help_message();
-
+public://methods
+    UserInterface();
+    void ParseInput(int argc, char * const *argv);
+    void print_help_message();
+    void RunSanityChecks();
+    void PrintAllOptions() const;
+public://data
+    double Etot,m_higgs,epsrel,epsabs,muf_over_mhiggs,mur_over_mhiggs,number_of_flavours;
+    string production,decay,pdf_provider,sector_name,sector_for_production,input_filename,output_filename,matrix_element_approximation,Fleft,Fright;
+    int verbose,maxeval,mineval,nstart,nincrease,perturbative_order,pole,decay_sector,sector_control,requested_histogram,requested_cut;
+    int alpha_s_power;
+    bool info,histogram_info,cut_info,list_processes,help,show_me_list,
+    pdf_error, dummy_process;
+private://methods
+    int ParseFile(const string &, bool);
+    vector<vector<string> > ParseCmd(int argc,  char* const *argv,
+                                        bool verbose);
      //: getopt interface
      option * create_getopt_option_array();
      string create_getopt_optdesc();
+    //: checks
+    void CheckIf(bool condition, const string& error_message);
 
-     
-     //: variables
-     
-     double Etot,m_higgs,epsrel,epsabs,muf_over_mhiggs,mur_over_mhiggs,number_of_flavours;
-     string production,decay,pdf_provider,sector_name,sector_for_production,input_filename,output_filename,matrix_element_approximation,Fleft,Fright;
-     int verbose,maxeval,mineval,nstart,nincrease,perturbative_order,pole,decay_sector,sector_control,requested_histogram,requested_cut;
-     bool info,histogram_info,cut_info,list_processes,help,show_me_list,
-            pdf_error, dummy_process;
-     
+private://data
+    vector<Option*> options;
 };
 
 #endif

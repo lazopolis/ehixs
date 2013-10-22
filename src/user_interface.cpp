@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <fstream>
+
 // C
 #include <string.h>
 #include <getopt.h>
@@ -24,12 +25,12 @@ int Option::get_type()
 
 UserInterface::UserInterface()
 {
-     options.push_back(new DoublePrecisionOption("Etot",0,"COM energy of the collider","Required",&Etot,8000.0));
+     options.push_back(new DoublePrecisionOption("Etot",0,"COM energy of the collider","Required",&Etot,7000.0));
      options.push_back(new DoublePrecisionOption("m_higgs",0,"higgs mass in GeV","Required",&m_higgs,125.0));
      options.push_back(new DoublePrecisionOption("epsrel",0,"vegas argument: target relative error","Required",&epsrel,0.01));
-     options.push_back(new DoublePrecisionOption("epsabs",0,"vegas argument: target absolute error","Required",&epsabs,0.0));
-     options.push_back(new DoublePrecisionOption("muf_over_mhiggs",0,"mu_f / m_h","Required",&muf_over_mhiggs,0.5));
-     options.push_back(new DoublePrecisionOption("mur_over_mhiggs",0,"mu_r / m_h","Required",&mur_over_mhiggs,0.5));
+     options.push_back(new DoublePrecisionOption("epsabs",0,"vegas argument: target absolute error","Required",&epsabs,1e-10));
+     options.push_back(new DoublePrecisionOption("muf_over_mhiggs",0,"mu_f / m_h","Required",&muf_over_mhiggs,1.0));
+     options.push_back(new DoublePrecisionOption("mur_over_mhiggs",0,"mu_r / m_h","Required",&mur_over_mhiggs,1.0));
      options.push_back(new DoublePrecisionOption("number_of_flavours",0,"number of active flavors (do not change)","Required",&number_of_flavours,5.0));
 
      options.push_back(new StringOption("production",0,"production process","Required",&production,"ggF"));
@@ -49,7 +50,11 @@ UserInterface::UserInterface()
      options.push_back(new IntOption("maxeval",0,"vegas argument: maximum points to be evaluated","Required",&maxeval,50000000));
      options.push_back(new IntOption("nstart",0,"vegas argument: #of points for first iteration","Required",&nstart,20000));
      options.push_back(new IntOption("nincrease",0,"vegas argument: # of points for step increase","Required",&nincrease,1000));
-     options.push_back(new IntOption("perturbative_order",0,"a_s perturbative order (0,1,2)","Required",&perturbative_order,2));
+     options.push_back(new IntOption("perturbative_order",0,
+            "a_s perturbative order (0,1,2) for PDF choice and mass evolution",
+            "Required",
+            &perturbative_order,2));
+    options.push_back(new IntOption("alpha_s_power",0,"a_s power  (0,1,2)","Required",&alpha_s_power,2));
      options.push_back(new IntOption("pole",'p',"pole coefficient degree (0,-1,-2,-3,...)","Required",&pole,0));
      options.push_back(new IntOption("decay_sector",0,"decay sector: DEPRECATED","Required",&decay_sector,0));
      
@@ -70,9 +75,6 @@ UserInterface::UserInterface()
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
 }
 
-
-
-
 void UserInterface::ParseInput(int argc, char * const *argv)
 {
      // parse command line arguments
@@ -90,7 +92,8 @@ void UserInterface::ParseInput(int argc, char * const *argv)
           }
      // Read the (potentially user defined) filename
      ParseFile(input_filename, true);
-     // Modify parameters that were declared in command line, overwritting those of runcard
+    // Modify parameters that were declared in command line,
+    // overwritting those of runcard
      for (unsigned i=0;i<parsed_options.size();i++)
           {
           for (unsigned j=0;j<options.size();j++)
@@ -106,6 +109,22 @@ void UserInterface::ParseInput(int argc, char * const *argv)
      if (help) print_help_message();
 }
 
+
+void UserInterface::RunSanityChecks()
+{
+    CheckIf(perturbative_order >= alpha_s_power-2,
+            "you requested a perturbative order smaller than the power of a_s.");
+}
+
+void UserInterface::CheckIf(bool condition, const string& error_message)
+{
+    if (not condition)
+        {
+        cout<<"\nSanity check failed: "<<error_message;
+        cout<<"\nehixs has to exit!"<<endl<<endl;
+        exit(1);
+        }
+}
 
 int UserInterface::ParseFile(const string& in, bool verbose)
 {
@@ -230,6 +249,18 @@ void UserInterface::print_help_message()
      exit(1);
 }
 
+void UserInterface::PrintAllOptions() const
+{
+    cout<<"\n-----------------------------------------------------------------";
+    cout<<"UI options:"<<endl;
+    for (int i=0;i<options.size();i++)
+        {
+        cout<<"\n"<<options[i]->name<<" : "<<options[i]->print();
+        }
+    cout<<"\n-----------------------------------------------------------------";
+    cout<<endl;
+}
+
 vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, bool locverbose)
 {
      // getopt quirckiness:
@@ -318,3 +349,10 @@ vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, b
 
      return parsed_options;
 }
+
+
+
+
+
+
+

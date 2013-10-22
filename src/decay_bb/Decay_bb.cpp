@@ -9,10 +9,9 @@ Decay_bb::Decay_bb()
 }
 
 
-
-void Decay_bb::init(const UserInterface &UI,TheHatch* the_hatch)
+Decay_bb::init(const UserInterface &UI,TheHatch* the_hatch)
 {
-     Model.higgs.set_m_at_ref_scale(UI.m_higgs);
+     //Model.higgs.set_m_at_ref_scale(UI.m_higgs);
      
      my_sector=UI.decay_sector;
      if (my_sector<int(sectors.size()))
@@ -60,7 +59,7 @@ void Decay_bb::LO()
      const double flux = 1.0/2.0/mh;
      const double dPhi2 = 1.0/8.0/consts::Pi;
      const double Nc=3.0;
-     const double ME_sq = y_b[0]*y_b[0]*mh*mh * 2.0 * Nc;
+     const double ME_sq = y_b*y_b*mh*mh * 2.0 * Nc;
      const double decay_weight = flux * dPhi2  * ME_sq;
      //cout<<"\n new event with weight "<<decay_weight<<"\tyb="<<y_b[0];
      set_LO_momenta();

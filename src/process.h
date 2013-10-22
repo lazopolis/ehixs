@@ -94,6 +94,8 @@ public://methods
     int number_of_active_histograms(){return _histograms->size();}
     CHistogram* ptr_to_histogram_with_id(unsigned m)
                     {return _histograms->ptr_to_histogram_with_id(m);}
+    int number_of_necessary_sectors(){return my_production->number_of_necessary_sectors();}
+    string sector_name(){return my_production->sector_name();}
 public://data
     VegasAdaptor Vegas;
     //: public so that histograms from different sectors can be compared

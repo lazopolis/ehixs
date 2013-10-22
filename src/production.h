@@ -29,8 +29,9 @@ public://methods
 	~Production(){};
     void  perform();
     int dimension_of_integration(){return dim_of_integration;}
-    string sector_name(){return my_sector_name;}
+    virtual string sector_name(){return my_sector_name;}
     //: functions
+    virtual int number_of_necessary_sectors() = 0;
     virtual void evaluate_sector()=0; // overloaded in daughter class
     virtual void book_production_event(const double &,const double &,
                                        const double &,const double &,
@@ -39,7 +40,7 @@ public://methods
                                        const double &)=0;//: public to integrate with fortran Fjet
     
     
-    vector<double> y_b_vec(){return yukawa_b_vector;}
+    double y_b(){return 0.0;}//this should be corrected!!
     virtual vector<string> give_sector_names(const string & pleft,
                                              const string & pright,
                                              const string & myorder,
@@ -57,9 +58,9 @@ protected://: data
     Momenta all_momenta;
     double* xx_vegas;
     Luminosity *lumi;
-    vector<double> alpha_s_vector;
-    vector<double> alpha_s_at_mz_vector;
-	vector<double> yukawa_b_vector;
+//    double alpha_s_vector;
+//    double alpha_s_at_mz_vector;
+//	double yukawa_b_;
     bool sector_defined;
     //: kinematic variables
     double Etot;

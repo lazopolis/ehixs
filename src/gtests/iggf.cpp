@@ -81,7 +81,7 @@ TEST(generalSetUp,LO_exact_coefficient)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    //Model->quarks[1]->Y = 0.0;
+    //Model->quarks[1]->Y() = 0.0;
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -107,7 +107,7 @@ TEST(generalSetUp,alpha_s)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    //Model->quarks[1]->Y = 0.0;
+    //Model->quarks[1]->Y() = 0.0;
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -135,7 +135,7 @@ TEST(generalSetUp,cur_lumiLO)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    //Model->quarks[1]->Y = 0.0;
+    //Model->quarks[1]->Y() = 0.0;
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -167,7 +167,7 @@ TEST(generalSetUp,integrand)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    //Model->quarks[1]->Y = 0.0;
+    //Model->quarks[1]->Y() = 0.0;
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -200,7 +200,7 @@ TEST(generalSetUp,init)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    //Model->quarks[1]->Y = 0.0;
+    //Model->quarks[1]->Y() = 0.0;
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -227,7 +227,7 @@ TEST(generalSetUp,harlander_top_only_8TeV)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    Model->quarks[1]->Y = 0.0;
+    Model->quarks[1]->set_Y(0.0);
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -254,7 +254,7 @@ TEST(generalSetUp,harlander_top_only_13TeV)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    Model->quarks[1]->Y = 0.0;
+    Model->quarks[1]->set_Y(0.0);
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -280,8 +280,8 @@ TEST(generalSetUp,harlander_top_only_13TeV)
 TEST(generalSetUp,harlander_top_infty_13TeV)
 {
     CModel *Model = new CModel;
-    Model->quarks[0]->set_m_at_ref_scale(5000.0);
-    Model->quarks[1]->Y = 0.0;
+    Model->quarks[0]->set_pole_mass(5000.0);
+    Model->quarks[1]->set_Y(0.0);
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -308,9 +308,9 @@ TEST(generalSetUp,harlander_top_bottom_13TeV)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    //Model->quarks[1]->Y = 0.0;
-    Model->quarks[1]->set_reference_scale(4.3);
-    Model->quarks[1]->set_m_at_ref_scale(4.3);
+    //Model->quarks[1]->Y() = 0.0;
+    Model->quarks[1]->set_msbar_mass(4.3,4.3);
+
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
@@ -348,7 +348,7 @@ TEST(PDFerror,harlander_top_only_8TeV)
 {
     CModel *Model = new CModel;
     //Model->quarks[0]->set_m_at_ref_scale(20.0);
-    Model->quarks[1]->Y = 0.0;
+    Model->quarks[1]->set_Y(0.0);
     
     UserInterface* UI = new UserInterface;
     UI->number_of_flavours = 5.0;
