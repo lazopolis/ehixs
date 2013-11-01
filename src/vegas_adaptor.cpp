@@ -13,11 +13,10 @@ int Integrand(const int *ndim, const double xx[],
 ostream& operator<<(ostream& stream, const VegasAdaptor& Vegas)
 {
      
-     stream << "\n-------------------------------------------"
-     << "\n ehixs output" << endl
-     << "\n sigma = " << Vegas.vegas_integral_output[0]
-     << " +- " << Vegas.vegas_error_output[0]
-     << " \t prob = " << Vegas.vegas_prob_output[0];
+     stream<< "sigma = " << Vegas.vegas_integral_output[0]
+     << "\nerror = " << Vegas.vegas_error_output[0]
+     << " \nprob = " << Vegas.vegas_prob_output[0]
+    <<"\ntotal number of points = "<<Vegas.total_number_of_points();
      return stream;
 }
 
@@ -73,7 +72,7 @@ void VegasAdaptor::set_up_vegas_ff(double res)
      //: only central value passed to vegas here
      //: all other values of histograms are set in the histogram do_binning routine.
      ff_vegas[0]=ff_vegas[0]+res;
-     
+    
      //cout<<"\t\t sigma_0 += "<<res;
 }
 
@@ -93,6 +92,7 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI,pointer_to_Integrand ptr,int
 
     my_integrand = static_cast<pointer_to_Integrand>(ptr);
     number_of_dims = ndim;
+    total_number_of_points_ =0;
 }
 
 
@@ -107,7 +107,7 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI )
      nstart=UI.nstart;
      nincrease=UI.nincrease;
     number_of_dims = 0;
-
+    total_number_of_points_ =0;
 }
 
 
@@ -122,6 +122,7 @@ bool VegasAdaptor::new_iteration_has_started()
      //:checking whether this is the first point of new iteration
      if (vegas_iteration_number!=vegas_iteration_number_old)
      {
+        
           NOP_in_previous_iteration=vegas_NOP_in_current_iteration;
           vegas_NOP_in_current_iteration = 1;
           vegas_iteration_number_old=vegas_iteration_number;
@@ -129,6 +130,7 @@ bool VegasAdaptor::new_iteration_has_started()
      }
      else 
      {
+     total_number_of_points_ ++;
           vegas_NOP_in_current_iteration++;
           return false;
      }

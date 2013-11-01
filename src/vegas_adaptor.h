@@ -40,13 +40,14 @@ public:
         {the_hatch=in_hatch;}
     void set_number_of_dimensions(int dd){number_of_dims=dd;}
      void set_ptr_to_integrand(pointer_to_Integrand ptr){my_integrand=ptr;}
-     
+    int total_number_of_points() const {return total_number_of_points_;}
      friend ostream& operator<<(ostream&, const VegasAdaptor&);
 private:
      double epsrel,epsabs;
      int verbose,mineval,maxeval,nstart,nincrease,number_of_dims;
      TheHatch* the_hatch;
      pointer_to_Integrand my_integrand;
+    int total_number_of_points_;
      
 };
 

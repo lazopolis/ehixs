@@ -117,30 +117,33 @@ void Decay::set_up_the_hatch(TheHatch* the_hatch)
 
 //=================== WW/ZZ ===============================
 
+#include "decay_WWZZ_cuts.h"
+
+
+
+
+
  Decay_WWZZ::Decay_WWZZ(const UserInterface & UI)
 {
     dimension_of_integration_for_decay=5;
-    
-    my_momenta.init_fvector("lepton1");
-    my_momenta.init_fvector("lepton2");
-    my_momenta.init_fvector("lepton3");
-    my_momenta.init_fvector("lepton4");
+    #include "decay_WWZZ_cut_initialization.h"
+    cuts_->ParseCuts(UI);
 }
 
 void Decay_WWZZ::do_decay()
 {
-    fvector PH_rest(Model.higgs.m(),0.0,0.0,0.0);
+    FourMomentum*  PH_rest = new FourMomentum(Model.higgs.m(),0.0,0.0,0.0);
     do_decay(PH_rest);
 }
 
 
-void Decay_WWZZ::do_decay(const fvector& PH)
+void Decay_WWZZ::do_decay(FourMomentum* PH)
 {
     decay_events.clear();
     
     int decaymode = 1;
     // decay mode 1:HZZeemm | 2: HZZllll | 3: HWWlnln | 4: HWWZZlnln
-    double pH[4]={PH[0],PH[1],PH[2],PH[3]};
+    double pH[4]={PH->E(),PH->px(),PH->py(),PH->pz()};
     
     double p1[4];
     double p2[4];
@@ -159,14 +162,14 @@ void Decay_WWZZ::do_decay(const fvector& PH)
                      );  // the four-momenta of the final state particles
                                 // as set by HiggsZerfall
     //cout<<"\n[decay] Gamma = "<<decay_weight<<endl;
-    my_momenta["lepton1"].set(p1[0],p1[1],p1[2],p1[3]);
-    my_momenta["lepton2"].set(p2[0],p2[1],p2[2],p2[3]);
-    my_momenta["lepton3"].set(p3[0],p3[1],p3[2],p3[3]);
-    my_momenta["lepton4"].set(p4[0],p4[1],p4[2],p4[3]);
+    FourMomentum* pl1 = new FourMomentum(p1[0],p1[1],p1[2],p1[3]);
+    FourMomentum* pl2 = new FourMomentum(p2[0],p2[1],p2[2],p2[3]);
+    FourMomentum* pl3 = new FourMomentum(p3[0],p3[1],p3[2],p3[3]);
+    FourMomentum* pl4 = new FourMomentum(p4[0],p4[1],p4[2],p4[3]);
     
     decay_weight = decay_weight / Model.higgs.width();
     
-    decay_events.push_back(new Event(decay_weight,my_momenta,decay_xx_vegas));
+    decay_events.push_back(new HiggsTo4LeptonsEvent(decay_weight,pl1,pl2,pl3,pl4));
 }
 
 
@@ -189,19 +192,18 @@ Decay_gammagamma::Decay_gammagamma(const UserInterface & UI)
 //          }
      dimension_of_integration_for_decay=2;
 
-     my_momenta.init_fvector("gamma1");
-     my_momenta.init_fvector("gamma2");
+
 
 }
 
 
 void Decay_gammagamma::do_decay()
 {
-     fvector PH_rest(Model.higgs.m(),0.0,0.0,0.0);
+     FourMomentum* PH_rest = new FourMomentum(Model.higgs.m(),0.0,0.0,0.0);
      do_decay(PH_rest);
 }
 
-void Decay_gammagamma::do_decay(const fvector& PH)
+void Decay_gammagamma::do_decay(FourMomentum* PH)
 {
      //my_momenta=prod_mom;
      // higgs --> gamma gamma decay
@@ -217,10 +219,12 @@ void Decay_gammagamma::do_decay(const fvector& PH)
      //   }
      // get the momenta from the 1->2 PS routine
      double pi=consts::Pi;
-     
+    
+    FourMomentum* gamma1;
+    FourMomentum* gamma2;
      double PS = One_to_two_PSP(PH,0.0,0.0,
-                                my_momenta[0],
-                                my_momenta[1],
+                                gamma1,
+                                gamma2,
                                 decay_xx_vegas[0],
                                 decay_xx_vegas[1])
      /4.0/pow(pi,2); // 1/(8pi)
@@ -249,13 +253,13 @@ void Decay_gammagamma::do_decay(const fvector& PH)
           }
      // the prefactor, taken from my masterthesis with PS-volume and flux factor divided out
      // and alpha expressed through Gf and mw. all mh are replaced by the higgs virtuality.
-     double mh = sqrt(PH.square());
+     double mh = sqrt(PH->square());
      double alpha = 1.0/137.0; // hardcoded ATM
      double pref = consts::G_fermi*pow(mh,3)*pow(alpha,2)/sqrt(2.0)/16.0/pow(pi,2);
      double Msq = pref*real(temp*conj(temp));
      
      double decay_weight = PS*Msq*mh/pi; //*mh/pi to counter the normalisation of the Breit-Wigner.  
-     decay_events.push_back(new Event(decay_weight,my_momenta,decay_xx_vegas));
+     decay_events.push_back(new HiggsToGammaGammaEvent(decay_weight,gamma1,gamma2));
 }
 
 
@@ -286,8 +290,8 @@ complex<double> Decay_gammagamma::born_for_gamma_gamma(complex<double> x)
 
 //===============================================================
 
-double Decay::One_to_two_PSP(const fvector & P,const double & Q1_sq,const double & Q2_sq,
-                             fvector & p1,fvector & p2,
+double Decay::One_to_two_PSP(FourMomentum* P,const double & Q1_sq,const double & Q2_sq,
+                             FourMomentum* p1,FourMomentum* p2,
                              const double & x1,const double & x2)
 {
      //cout<<"\n***** "<<P;
@@ -298,7 +302,7 @@ double Decay::One_to_two_PSP(const fvector & P,const double & Q1_sq,const double
      double sintheta = sqrt(1.0-costheta*costheta);
      //: generate the phi angle at [0,2*pi] (induces a jacobian = 2*pi)
      double phi=2.0*pi*x2;
-     double p_sq=P*P;
+     double p_sq=P->square();
      //: calulate the energy of p1 at the rest frame of P
      double E1=(p_sq+Q1_sq-Q2_sq)/2.0/sqrt(p_sq);
      //: the energy of p2
@@ -306,13 +310,16 @@ double Decay::One_to_two_PSP(const fvector & P,const double & Q1_sq,const double
      //: the |p1_vector|
      double p1v=sqrt(E1*E1-Q1_sq);
      //: setting up the two vectors at the rest frame of P, so back to back
-     p1 = fvector(E1,p1v*sintheta*sin(phi),p1v*sintheta*cos(phi),p1v*costheta);
-     p2 = fvector(E2,-p1v*sintheta*sin(phi),-p1v*sintheta*cos(phi),-p1v*costheta);
-     
+     p1->set(E1,p1v*sintheta*sin(phi),p1v*sintheta*cos(phi),p1v*costheta);
+     p2->set(E2,-p1v*sintheta*sin(phi),-p1v*sintheta*cos(phi),-p1v*costheta);
+    
+    // ERROR below: re-implement boost!
+    
+    
      //: boosting back to the frame where P is defined
      //: i.e. with v = - Pvector / P_0
-     p1.boost(-P[1]/P[0],-P[2]/P[0],-P[3]/P[0]);
-     p2.boost(-P[1]/P[0],-P[2]/P[0],-P[3]/P[0]);
+     //p1.boost(-P[1]/P[0],-P[2]/P[0],-P[3]/P[0]);
+     //p2.boost(-P[1]/P[0],-P[2]/P[0],-P[3]/P[0]);
      
      //: returns the jacobian factor 4*pi times the PSP factor sqrt(lambda)/(8*P^2)
      return(4.0*pi/8.0/p_sq*sqrt(PSP_lambda(p_sq,Q1_sq,Q2_sq)));

@@ -73,6 +73,8 @@ UserInterface::UserInterface()
                                      "Required",
                                      &pdf_error,0));
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
+    vector<string>empty_vector;
+    options.push_back(new CutOption("cut",0,"generic cut option","Required",my_generic_cut, empty_vector));
 }
 
 void UserInterface::ParseInput(int argc, char * const *argv)
@@ -106,6 +108,55 @@ void UserInterface::ParseInput(int argc, char * const *argv)
                }
           
           }
+    
+    // reading cuts
+    for (int i=0;i<options.size();i++)
+        {
+        if (options[i]->name=="cut")
+            {
+            CutOption* total_cut = (CutOption*)(options[i]);
+            
+            cout<<"\n*************parsing the cut "<<endl;
+            for (int j=0;j<total_cut->all_cut_values.size();j++)
+                {
+                string s = total_cut->all_cut_values[j];
+                cout<<"\n value = "<<s;
+                size_t posbracket = s.find('[');
+                size_t posfirstcomma = s.find(',');
+                string cutname = s.substr(posbracket+1, posfirstcomma-1);
+                cout<<"\n cut name = "<<cutname<<endl;
+                string rest_of_string = s.substr(posfirstcomma+1,s.npos);
+                vector<string> cutvalues;
+                size_t next_comma = rest_of_string.find(',');
+                cout<<"rest of string = "<<rest_of_string<<endl;
+
+                while(next_comma != rest_of_string.npos)
+                    {
+                    cutvalues.push_back(rest_of_string.substr(0,next_comma));
+                    rest_of_string = rest_of_string.substr(next_comma+1,rest_of_string.npos);
+                    next_comma = rest_of_string.find(',');
+                    }
+                if (next_comma == rest_of_string.npos)
+                    {
+                    size_t pos_sq_bracket = rest_of_string.find(']');
+                    cutvalues.push_back(rest_of_string.substr(0,pos_sq_bracket));
+                    }
+                cout<<"values : ";
+                for (int i=0;i<cutvalues.size();i++) cout<<cutvalues[i]<<" | ";
+        // construct the vector of string values
+                all_cuts.push_back(new CutOption("cut",
+                                         0,
+                                         "cut",
+                                         "Required",
+                                         cutname,
+                                         cutvalues));
+                }
+            }
+        }
+    for(int i=0;i<all_cuts.size();i++)
+        {
+        cout<<"\n new cut : "<<all_cuts[i]->print();
+        }
      if (help) print_help_message();
 }
 
@@ -176,12 +227,16 @@ int UserInterface::ParseFile(const string& in, bool verbose)
                               if(s.substr(0, pos) == options[i]->name)
                                    {
                                    options[i]->set(s.substr(pos+1, s.npos));
+                                   cout<<"\n having recognised option "
+                                        <<options[i]->name
+                                        <<" in runcard, with value : "
+                                        <<s.substr(pos+1, s.npos);
                                    did=true;
                                    break;
                                    }
                          
                          if(!did && verbose) {
-                              std::cout << "Unexpected option in input file " << in << ": " << s << std::endl;
+                              std::cout << "Unexpected option in input file " << in << ": " << s.substr(0,pos) << std::endl;
                               return 1;
                          }
                          }

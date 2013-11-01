@@ -1,1 +1,8 @@
-
+Fleft = gluon 
+Fright = gluon 
+perturbative_order = 2 
+alpha_s_power = 4
+#cut = [CutHiggsPT,20.0]
+decay = 4leptons
+#cut = [LeptonPairInvariantMass,100.0]
+nstart = 10000

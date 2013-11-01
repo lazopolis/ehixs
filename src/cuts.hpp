@@ -6,38 +6,41 @@
 /** \brief Generic cut on momentum.
   *
   * This template class uses a pointer on a fvector pMem member of the class ExclusiveClass to call a fvector member function pointed by pFun. See examples after this declaration. */
-template<double (fvector::* pFun)() const>
-class MinCut : public CCut
-{
-  
-     const string variable;
-public:
-     MinCut(const string& _var,double _min,string _name) : variable(_var),CCut::CCut(_name,_min) {}
+//template<double (fvector::* pFun)() const>
+//class MinCut : public CCut
+//{
+//  
+//     const string variable;
+//public:
+//     MinCut(const string& _var,double _min,string _name) : variable(_var),CCut::CCut(_name,_min) {}
+//
+//	bool operator()(Event * XX)
+//    { if (((&(XX->p[variable]))->*pFun)()-min >0.0) return true; else return false; }
+//};
+//
+//
+//template<double (fvector::* pFun)() const>
+//class BinCut : public CCut
+//{
+//     
+//     const string variable;
+//public:
+//     BinCut(const string& _var,double _min,double _max,string _name) : variable(_var),CCut::CCut(_name,_min) {max = _max;}
+//     
+//	bool operator()(Event * XX)
+//     { if (((&(XX->p[variable]))->*pFun)()-min >0.0 and ((&(XX->p[variable]))->*pFun)()<max) return true; else return false; }
+//     double max;
+//};
+//
+/////** \brief Cut on the pT  */
+//typedef MinCut<   &fvector::pT> Pt_cut;
+/////** \brief Bin on the pT  */
+//typedef BinCut<   &fvector::pT> Pt_bin;
+/////** \brief Cut on the Y  */
+//typedef MinCut< &fvector::abszrap> Abs_y_cut;
+//
+//
 
-	bool operator()(Event * XX)
-    { if (((&(XX->p[variable]))->*pFun)()-min >0.0) return true; else return false; }
-};
-
-
-template<double (fvector::* pFun)() const>
-class BinCut : public CCut
-{
-     
-     const string variable;
-public:
-     BinCut(const string& _var,double _min,double _max,string _name) : variable(_var),CCut::CCut(_name,_min) {max = _max;}
-     
-	bool operator()(Event * XX)
-     { if (((&(XX->p[variable]))->*pFun)()-min >0.0 and ((&(XX->p[variable]))->*pFun)()<max) return true; else return false; }
-     double max;
-};
-
-///** \brief Cut on the pT  */
-typedef MinCut<   &fvector::pT> Pt_cut;
-///** \brief Bin on the pT  */
-typedef BinCut<   &fvector::pT> Pt_bin;
-///** \brief Cut on the Y  */
-typedef MinCut< &fvector::abszrap> Abs_y_cut;
 
 
 //

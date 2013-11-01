@@ -22,6 +22,7 @@ using namespace std;
 
 #include "momenta.h"
 
+
 class Production
 {
 public://methods
@@ -47,15 +48,18 @@ public://methods
                                              const int &,const string &)=0;
     bool is_sector_defined(){return sector_defined;}
     void set_up_the_hatch(TheHatch*);
+    bool this_event_passes_cuts(int i){return cuts_->passes_cuts(production_events[i]);}
+    CutBox* cuts_;
 public://data
 	
     vector<Event*> production_events;
-    vector<LightEvent*> light_events;
+    
     //: Model is public because Process needs to sync a_s
     //: between production and decay
     CModel Model;
 protected://: data
-    Momenta all_momenta;
+    
+    
     double* xx_vegas;
     Luminosity *lumi;
 //    double alpha_s_vector;

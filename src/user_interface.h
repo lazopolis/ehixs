@@ -105,6 +105,37 @@ public:
 
 };
 
+
+class CutOption : public Option {
+private:
+    /** Generic pointer */
+    string p;
+    vector<double> values_;
+public:
+    vector<string> all_cut_values;
+    
+    string give_name(){return p;}
+    vector<double> give_values(){return values_;}
+    /** Constructor */
+    CutOption(const std::string& name_, char short_name_, const string& desc_, const string & type_,  const string&  p_,const vector<string>& vals)
+    : Option(name_, short_name_, desc_, type_), p(p_)
+        {
+        for (int i=0;i<vals.size();i++)
+            values_.push_back(atof(vals[i].c_str()));
+        }
+    
+    void set(const string &stringwithnameandvalues)
+        {
+        all_cut_values.push_back(stringwithnameandvalues);
+        }
+
+    /** Print in stream */
+    string print(){stringstream s;s<<p<<" : ";
+        for (int i=0;i<values_.size();i++) s<<values_[i]<<" ";
+        return s.str();}
+    
+};
+
 class UserInterface
 {
 public://methods
@@ -120,6 +151,9 @@ public://data
     int alpha_s_power;
     bool info,histogram_info,cut_info,list_processes,help,show_me_list,
     pdf_error, dummy_process;
+    
+    string my_generic_cut;
+    vector<CutOption*> all_cuts;
 private://methods
     int ParseFile(const string &, bool);
     vector<vector<string> > ParseCmd(int argc,  char* const *argv,

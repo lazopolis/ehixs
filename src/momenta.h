@@ -7,6 +7,76 @@
 
 using namespace std;
 
+
+class FourMomentum
+{
+public:
+    FourMomentum(){E_=0.0;px_=0.0;py_=0.0;pz_=0.0;}
+
+    FourMomentum(const double& E,const double& px,
+                 const double& py,const double& pz)
+                    :E_(E),px_(px),py_(py),pz_(pz){};
+    void set(const double& E,const double& px,
+             const double& py,const double& pz)
+                    {E_=E;px_=px;py_=py;pz_=pz;}
+    double E(){return E_;}
+    double px(){return px_;}
+    double py(){return py_;}
+    double pz(){return pz_;}
+    double square(){return E_*E_ - px_*px_ - py_*py_ - pz_*pz_;}
+private://data
+    double E_,px_,py_,pz_;
+};
+
+
+class Event
+{
+public:
+    Event(const double& weight){weight_ = weight;}
+    virtual ~Event(){};
+    double weight(){return weight_;}
+    virtual FourMomentum* DecayParticleFourMomentum(){return new FourMomentum(0.0,0.0,0.0,0.0);}
+private:
+    double weight_;
+};
+
+
+class CombinedEvent
+{
+public:
+    CombinedEvent(Event* prod,Event* dec)
+    :production(prod),decay(dec){};
+    Event* production;
+    Event* decay;
+    double weight(){return production->weight()*decay->weight();}
+};
+
+
+class GluonFusionEvent : public Event
+{
+public:
+    GluonFusionEvent(const double& weight,FourMomentum* p1,FourMomentum* p2,
+                     FourMomentum* p3,FourMomentum* p4, FourMomentum* pH)
+    :Event(weight){p1_=p1;p2_=p2;p3_=p3;p4_=p4;pH_=pH;}
+    ~GluonFusionEvent(){delete p1_;delete p2_;delete p3_;delete p4_;delete pH_;}
+    FourMomentum* p1(){return p1_;}
+    FourMomentum* p2(){return p2_;}
+    FourMomentum* p3(){return p3_;}
+    FourMomentum* p4(){return p4_;}
+    FourMomentum* pH(){return pH_;}
+    FourMomentum* DecayParticleFourMomentum(){return pH_;}
+private:
+    FourMomentum* p1_;
+    FourMomentum* p2_;
+    FourMomentum* p3_;
+    FourMomentum* p4_;
+    FourMomentum* pH_;
+    
+};
+
+
+
+/*
 class Momenta
 {
 public:
@@ -25,9 +95,10 @@ public:
         {
         for (unsigned i=0;i<P.size();i++)
             {
-            if (names[i]==key){return P[i];}}
-            cout<<"\n momentum "<<key<<" not found! I exit"<<endl;exit(1);
+            if (names[i]==key){return P[i];}
             }
+        cout<<"\n momentum "<<key<<" not found! I exit"<<endl;exit(1);
+        }
     fvector& operator[](int i)
         {return P[i];}
     void merge(const Momenta& TT)
@@ -76,7 +147,7 @@ public:
     
      double w,x1,z,lambda;
 };
-          
+*/          
 #endif
 
 

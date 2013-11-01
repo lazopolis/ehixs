@@ -14,7 +14,7 @@
 #include <map>
 #include <math.h>
 #include "process.h"
-
+#include "timekeeper.h"
 
 #include "user_interface.h"
 
@@ -40,12 +40,12 @@ void print_logo()
 }
 
 
-
-
 int main(int argc, char** argv)
 {
      // get init time
-     clock_t t_init = clock();
+     //clock_t t_init = clock();
+    TimeKeeper myclock;
+    myclock.StartMeasurement();
     
     print_logo();
      // UI initialization
@@ -77,7 +77,9 @@ int main(int argc, char** argv)
           {
           cerr<<endl<<"Something went wrong but the exception thrown was not a string";
           }
-     cout << "Total running time  = " << float(clock()-t_init)/CLOCKS_PER_SEC << " s" << endl;
+    cout << "Total running time  = " << myclock.GiveMeasurement()
+        //float(clock()-t_init)/CLOCKS_PER_SEC
+        << " s" << endl;
      return 0;
 }
 

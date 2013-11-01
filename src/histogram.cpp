@@ -445,7 +445,7 @@ string compare_histograms(const vector< CHistogram*> & all_H)
 
 
 
-void CHistogram::bin_event(Event* X,  const double& vegas_weight)
+void CHistogram::bin_event(CombinedEvent* X,  const double& vegas_weight)
 {
     // Get value to be binned
     const double val = determine_xval(X);
@@ -458,11 +458,11 @@ void CHistogram::bin_event(Event* X,  const double& vegas_weight)
         // If adapt then adapt !
         //if(adapt) X->ff_vegas[bin] += weight;
         // Bin
-        _all_bins[bin-_firstbin].add(vegas_weight*X->w);
+        _all_bins[bin-_firstbin].add(vegas_weight*X->weight());
         }
     else
         {
-        if (val==val) _all_bins[_numbins-1].add(vegas_weight * X->w);
+        if (val==val) _all_bins[_numbins-1].add(vegas_weight * X->weight());
         else
             {
             cout<<"\n in CHistogram "<<_name<<", val out of bounds and a nan :"<<val;

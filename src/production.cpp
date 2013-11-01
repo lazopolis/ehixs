@@ -46,11 +46,11 @@ double fjet_(double* x1,double *x2,double *s12,double *s13,double *s23,double *s
      return 1;//: VERY IMPORTANT TOP RETURN 1 here 
 }
 
-
-
+//-----------------------------------------------------------------------------
 
 Production::Production(const UserInterface & UI)
 {
+    cuts_ = new CutBox();
     if (not(UI.info))
         {
         ptbuf = 1e-10;
@@ -64,6 +64,8 @@ Production::Production(const UserInterface & UI)
     
         cout<<"\n[Production] : setting up scales and Etot";
         
+        
+
     
     
         Model.consolidate(lumi->alpha_s_at_mz_vector()[0],

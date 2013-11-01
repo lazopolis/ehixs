@@ -869,6 +869,7 @@ double GluonFusionExactCoefficients::NLO_soft_exact_e0()
 
 //------------------------------------------------------------------------------
 
+#include "ggf_cuts.h"
 
 GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
 {
@@ -879,8 +880,13 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
     cout<<"\n[GluonFusion] : setting up sectors"<<endl;
     all_sectors = new GluonFusionSectorBox(WC,beta,log_mur_sq_over_muf_sq);
     
+    cout<<"\n hello before Parse"<<endl;
+    #include "ggf_cut_initialization.h"
+    cuts_->ParseCuts(UI);
+    
     if (UI.info)
         {
+        
         vector<SimpleSector*> necessary_sectors=
                                     all_sectors->give_necessary_sectors(UI);
         cout<<"\n Sectors that fit your selection criteria:\n";
@@ -920,11 +926,7 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
             tau = pow(Model.higgs.m(),2.0)/pow(Etot,2.0);
             
             
-            all_momenta.init_fvector("p1");
-            all_momenta.init_fvector("p2");
-            all_momenta.init_fvector("h");
-            all_momenta.init_fvector("pf3");
-            all_momenta.init_fvector("pf4");
+            
             
             if (UI.matrix_element_approximation=="exact")
                 {
@@ -1141,6 +1143,8 @@ void GluonFusion::set_up_beta_constants()
 
 void GluonFusion::evaluate_sector()
 {
+    //vegas_point_counter++;
+    //cout<<"\n point #"<<vegas_point_counter;
     //cout<<"\n[GluonFusion::evaluate_sector] clearing events."<<endl;
      clear_previously_allocated_events_and_free_memory();
     //cout<<"\n[GluonFusion::evaluate_sector] preparing phase space dependent quantities."<<endl;
@@ -1158,17 +1162,13 @@ void GluonFusion::clear_previously_allocated_events_and_free_memory()
           {
 //          if (the_sector->name == "F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,RR t5,a^2,e^-2 ,dim=6) : a^4,e^-2") cout<<"\n"<<*production_events[i];
 //          else cout<<"\n{"<<the_sector->name<<"}";
+          //cout<<"\n deleting event number "<<i<<endl;
           delete production_events[i];
           }
+//    cout<<"\n clearing the vector of production events."<<endl;
     production_events.clear();
-
-    for (int i=0;i<light_events.size();i++)
-        {
-        //          if (the_sector->name == "F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,RR t5,a^2,e^-2 ,dim=6) : a^4,e^-2") cout<<"\n"<<*production_events[i];
-        //          else cout<<"\n{"<<the_sector->name<<"}";
-        delete light_events[i];
-        }
-    light_events.clear();
+//    cout<<"\n---"<<endl;
+    
 }
 
 void GluonFusion:: prepare_phase_space_dependent_quantities()
@@ -1381,20 +1381,30 @@ void GluonFusion::book_production_event(const double & sigma_central,
           }
      if (sigma_central!=0.0)
           {
-          const double shat = pow(Etot,2.0)*x1*x2;
-          set_up_event_kinematics(x1,x2,z,s13,s23,s14,s24,s34);
-          push_back_event(sigma_central);
-          writeEventToFile(x1,all_momenta["h"].pT(),
-                           all_momenta["h"].zrap(),sigma_central);
-
+          if (s13==0.0 and s23==0.0)
+              {
+              //: NLO kinematics: we rename particle 4 to be particle 3 and call NLO_event
+              NLO_event_kinematics(sigma_central,x1,x2,z,s14,s24);
+              }
+          else if (s14==0.0 and s24==0.0)
+              {
+              //: NLO kinematics: we  call NLO_event
+              NLO_event_kinematics(sigma_central,x1,x2,z,s13,s23);
+              }
+          else
+              {
+              NNLO_event_kinematics(sigma_central,x1,x2,z,s13,s23,s14,s24,s34);
+              }
           }
 }
+
+
 
 void GluonFusion::writeEventToFile(const double & x1,const double &pt,
                                    const double & y,const double & weight)
 {
 
-        light_events.push_back(new LightEvent(x1,pt,y,weight));
+        //light_events.push_back(new LightEvent(x1,pt,y,weight));
     
     
 }
@@ -1458,34 +1468,34 @@ void GluonFusion::JLO(const double & sigma)
 {
      double x1=ISP.x1LO;
      double x2=ISP.x2LO;
-     all_momenta["p1"].set(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-     all_momenta["p2"].set(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-     all_momenta["h"].set((x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
-     all_momenta["pf3"].set(0.0,0.0,0.0,0.0);
-     all_momenta["pf4"].set(0.0,0.0,0.0,0.0);
-     push_back_event(sigma);
-     //production_events.push_back(new Event(sigma,all_momenta));
-}
-
-void GluonFusion::push_back_event(const double & sigma)
-{
-     
-     production_events.push_back(new Event(sigma,all_momenta,xx_vegas));
+     FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+     FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+     FourMomentum* pH = new FourMomentum((x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
+     FourMomentum* p3 = new FourMomentum(0.0,0.0,0.0,0.0);
+     FourMomentum* p4 = new FourMomentum(0.0,0.0,0.0,0.0);
+     //push_back_event(sigma);
+     production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH));
 }
 
 
 
-void GluonFusion::LO_event_kinematics(const double & x1,
+
+
+void GluonFusion::LO_event_kinematics(const double& sigma,
+                                      const double & x1,
                                       const double & x2)
 {
-    all_momenta["p1"].set(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-    all_momenta["p2"].set(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-    all_momenta["h"].set((x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
-    all_momenta["pf3"].set(0.0,0.0,0.0,0.0);
-    all_momenta["pf4"].set(0.0,0.0,0.0,0.0);
+    FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+    FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+    FourMomentum* pH = new FourMomentum((x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
+    FourMomentum* p3 = new FourMomentum(0.0,0.0,0.0,0.0);
+    FourMomentum* p4 = new FourMomentum(0.0,0.0,0.0,0.0);
+    production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH));
+
 }
 
-void GluonFusion::NLO_event_kinematics(const double & x1,
+void GluonFusion::NLO_event_kinematics(const double& sigma,
+                                       const double & x1,
                                        const double & x2,
                                        const double & z,
                                        const double & s13,
@@ -1494,16 +1504,19 @@ void GluonFusion::NLO_event_kinematics(const double & x1,
      if (s13==0.0 and s23==0.0)
           {
           //: actually LO kinematics
-          LO_event_kinematics(x1,x2);
+          LO_event_kinematics(sigma,x1,x2);
           }
      else
           {
+          FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+          FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+          FourMomentum* p4 = new FourMomentum(0.0,0.0,0.0,0.0);
+
           
           //     ----------------- Higgs and gluon momenta ----------------------
           const double shat = pow(Etot,2.0)*x1*x2;
           const double pt3 = sqrt(s13*s23/shat); //gluon 1
-          all_momenta["p1"].set(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-          all_momenta["p2"].set(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+          
           const double s1H = shat-s13;
           const double s2H = shat-s23;
           const double En3 = 0.5*(s13/x1/Etot+s23/x2/Etot);
@@ -1511,36 +1524,19 @@ void GluonFusion::NLO_event_kinematics(const double & x1,
           const double En =  0.5*(s1H/x1/Etot+s2H/x2/Etot);
           const double pZ =  0.5*(-s1H/x1/Etot+s2H/x2/Etot);
 
-          if (pt3<=ptbuf )
-               {
-               // icase="only Higgs";
-               all_momenta["h"].set(En,0.0,0.0,pZ);
-               all_momenta["pf3"].set(En3,0.0,0.0,pz3);
-               //const double phi_rotation_angle = 2.0*consts::Pi*rand();
-               //pH.rotate(phi_rotation_angle,unsigned(3));
-               //p3.rotate(phi_rotation_angle,unsigned(3));
-               //p4.rotate(phi_rotation_angle,unsigned(3));
-               }
-          else
-               {
-               // icase=" Higgs + p3";
-               double ptsq=s1H*s2H/shat-pow(Model.higgs.m(),2.0);
-               if (ptsq<0.0 and abs(ptsq)<1e-5) {ptsq=0.0;}//: taking the absolute value cares
-               //: for the case ptsq= -1e-16 which can happen due to roundoff
-               const double pT  = sqrt(ptsq); // Higgs
-               all_momenta["h"].set(En,pT,0.0,pZ);
-               all_momenta["pf3"].set(En3,-pt3,0.0,pz3);
-               const double phi_rotation_angle = 2.0*consts::Pi*ISP.phi;
-               all_momenta["h"].rotate(phi_rotation_angle,unsigned(3));
-               all_momenta["pf3"].rotate(phi_rotation_angle,unsigned(3));
-               }
           
+          const double sinphi = sin(2.0*consts::Pi*ISP.phi);
+          const double cosphi = cos(2.0*consts::Pi*ISP.phi);
+          FourMomentum* pH = new FourMomentum(En,pt3*sinphi,pt3*cosphi,pZ);
+          FourMomentum* p3 = new FourMomentum(En3,-pt3*sinphi,-pt3*cosphi,pz3);
+
+          production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH)); 
           
           }
 
 }
 
-void GluonFusion::set_up_event_kinematics(
+void GluonFusion::NNLO_event_kinematics( const double& sigma,
                                            const double & x1,
                                            const double & x2,
                                            const double & z,
@@ -1550,155 +1546,128 @@ void GluonFusion::set_up_event_kinematics(
                                            const double & s24,
                                            const double & s34)
 {
-     all_momenta.flush();
+    //: p1+p2 -> pH + p3 + p4 -> X1+X2+... + p3 + p4
+    //: the kinematical variables defined are
+    //: s_ij = 2*p_i*p_j
+    //: s_iH = 2*p_i*p_H
+    const double shat = pow(Etot,2.0)*x1*x2;
      
-     if (s13==0.0 and s23==0.0)
-          {
-          //: NLO kinematics: we rename particle 4 to be particle 3 and call NLO_event
-          NLO_event_kinematics(x1,x2,z,s14,s24);
-          }
-     else if (s14==0.0 and s24==0.0)
-          {
-          //: NLO kinematics: we  call NLO_event
-          NLO_event_kinematics(x1,x2,z,s13,s23);
-          }
-     else
-          {
+    const double s1H = shat-s13-s14;
+    const double s2H = shat-s23-s24;
+    const double s3H = s13+s23-s34;
+    //const double s4H = s14+s24-s34;
      
-     /*
-      //: ----- pt_H only !!
-      const double shat = pow(Etot,2.0)*x1*x2;
-      
-      const double s1H = shat-s13-s14;
-      const double s2H = shat-s23-s24;
-      double ptsq=s1H*s2H/shat-pow(Model.higgs.m,2.0);
-      if (ptsq<0.0 and abs(ptsq)<1e-5) {ptsq=0.0;}//: taking the absolute value cares 
-      //: for the case ptsq= -1e-16 which can happen due to roundoff
-      const double pT  = sqrt(ptsq); // Higgs
-      pH.set(0.0,pT,0.0,0.0);
-      //:-------- untill here
-      */
+    FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+    FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+    FourMomentum* p3;
+    FourMomentum* p4;
+    FourMomentum* pH;
+    //     ----------------- Higgs and gluon momenta ----------------------
      
-     //string icase="";
-     
-     //: p1+p2 -> pH + p3 + p4 -> X1+X2+... + p3 + p4
-     //: the kinematical variables defined are
-     //: s_ij = 2*p_i*p_j
-     //: s_iH = 2*p_i*p_H
-     const double shat = pow(Etot,2.0)*x1*x2;
-     
-     const double s1H = shat-s13-s14;
-     const double s2H = shat-s23-s24;
-     const double s3H = s13+s23-s34;
-     //const double s4H = s14+s24-s34;
-     
-     all_momenta["p1"].set(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-     all_momenta["p2"].set(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-     //     ----------------- Higgs and gluon momenta ----------------------
-     
-     double ptsq=s1H*s2H/shat-pow(Model.higgs.m(),2.0);
-     if (ptsq<0.0 and abs(ptsq)<1e-5) {ptsq=0.0;}//: taking the absolute value cares 
-     //: for the case ptsq= -1e-16 which can happen due to roundoff
-     const double pt3 = sqrt(s13*s23/shat); //gluon 1
-     const double pt4 = sqrt(s14*s24/shat); //gluon 2 
-     const double pT  = sqrt(ptsq); // Higgs
-     const double En3 = 0.5*(s13/x1/Etot+s23/x2/Etot);
-     const double En4 = 0.5*(s14/x1/Etot+s24/x2/Etot);
-     const double En =  0.5*(s1H/x1/Etot+s2H/x2/Etot);
-     const double pz3 = 0.5*(-s13/x1/Etot+s23/x2/Etot);
-     const double pz4 = 0.5*(-s14/x1/Etot+s24/x2/Etot);
-     const double pZ =  0.5*(-s1H/x1/Etot+s2H/x2/Etot);
+    double ptsq=s1H*s2H/shat-pow(Model.higgs.m(),2.0);
+    if (ptsq<0.0 and abs(ptsq)<1e-5) {ptsq=0.0;}
+    //: taking the absolute value cares
+    //: for the case ptsq= -1e-16 which can happen due to roundoff
+    const double pt3 = sqrt(s13*s23/shat); //gluon 1
+    const double pt4 = sqrt(s14*s24/shat); //gluon 2
+    const double pT  = sqrt(ptsq); // Higgs
+    const double En3 = 0.5*(s13/x1/Etot+s23/x2/Etot);
+    const double En4 = 0.5*(s14/x1/Etot+s24/x2/Etot);
+    const double En =  0.5*(s1H/x1/Etot+s2H/x2/Etot);
+    const double pz3 = 0.5*(-s13/x1/Etot+s23/x2/Etot);
+    const double pz4 = 0.5*(-s14/x1/Etot+s24/x2/Etot);
+    const double pZ =  0.5*(-s1H/x1/Etot+s2H/x2/Etot);
      
      
-     //: LO kinematics : Higgs + 0 hard partons, with HpT=0
-     if ((pt3<=ptbuf and pt4<=ptbuf) )
-          {
-          // icase="only Higgs";
-          all_momenta["h"].set(En,0.0,0.0,pZ);
-          all_momenta["pf3"].set(En3,0.0,0.0,pz3);
-          all_momenta["pf4"].set(En4,0.0,0.0,pz4);
-          //const double phi_rotation_angle = 2.0*consts::Pi*rand();
-          //pH.rotate(phi_rotation_angle,unsigned(3));
-          //p3.rotate(phi_rotation_angle,unsigned(3));
-          //p4.rotate(phi_rotation_angle,unsigned(3));
-          }
+    //: LO kinematics : Higgs + 0 hard partons, with HpT=0
+    if ((pt3<=ptbuf and pt4<=ptbuf) )
+        {
+        // icase="only Higgs";
+        pH = new FourMomentum(En,0.0,0.0,pZ);
+        p3 = new FourMomentum(En3,0.0,0.0,pz3);
+        p4 = new FourMomentum(En4,0.0,0.0,pz4);
+        }
      //: NLO real kinematics : H + hard parton
      else if (pt3>ptbuf and pt4<ptbuf)
-          {
-          // icase=" Higgs + p3";
-          all_momenta["h"].set(En,pT,0.0,pZ);
-          all_momenta["pf3"].set(En3,-pt3,0.0,pz3);
-          all_momenta["pf4"].set(En4,0.0,0.0,pz4);
-          const double phi_rotation_angle = 2.0*consts::Pi*rand();
-          all_momenta["h"].rotate(phi_rotation_angle,unsigned(3));
-          all_momenta["pf3"].rotate(phi_rotation_angle,unsigned(3));
-          //p4.rotate(phi_rotation_angle,unsigned(3));
-          }
+        {
+        // icase=" Higgs + p3";
+        const double sinphi = sin(2.0*consts::Pi*ISP.phi);
+        const double cosphi = cos(2.0*consts::Pi*ISP.phi);
+        
+        pH = new FourMomentum(En,pT*sinphi,pT*cosphi,pZ);
+        p3 = new FourMomentum(En3,-pt3*sinphi,-pt3*cosphi,pz3);
+        p4 = new FourMomentum(En4,0.0,0.0,pz4);
+        }
      else if (pt4>ptbuf and pt3<ptbuf)
-          {
-          //  icase=" Higgs + p4";
-          all_momenta["h"].set(En,pT,0.0,pZ);
-          all_momenta["pf4"].set(En4,-pt4,0.0,pz4);
-          all_momenta["pf3"].set(En3,0.0,0.0,pz3);
-          const double phi_rotation_angle = 2.0*consts::Pi*rand();
-          all_momenta["h"].rotate(phi_rotation_angle,unsigned(3));
-          all_momenta["pf4"].rotate(phi_rotation_angle,unsigned(3));
-          //p3.rotate(phi_rotation_angle,unsigned(3));
-          }
+        {
+        //  icase=" Higgs + p4";
+        const double sinphi = sin(2.0*consts::Pi*ISP.phi);
+        const double cosphi = cos(2.0*consts::Pi*ISP.phi);
+        
+        pH = new FourMomentum(En,pT*sinphi,pT*cosphi,pZ);
+        p4 = new FourMomentum(En4,-pt4*sinphi,-pt4*cosphi,pz4);
+        p3 = new FourMomentum(En3,0.0,0.0,pz3);
+        }
      //: NNLO double real kinematics : H + 2 hard partons
      else if (pt3>ptbuf and pt4>ptbuf)
-          {
-          if (pT>=0.1*ptbuf)//:the Higgs is not extra soft
-               {
-               //   icase=" Higgs + p3 + p4";
-               //: Higgs is temporary phi-reference
-               //: fixing the phi3		
-               double cos3H = (En3*En-pz3*pZ-0.5*s3H)/pt3/pT;
-               if (cos3H<-1.0) cos3H=-1.0;
-               else if (cos3H>1.0) cos3H=1.0;
-               double phi3 = acos(cos3H);//: acos returns in [0,Pi]
-               //: we now decide if p3T is in the lower or upper semicircle
-               //: in the pT plane
-               if (rand()<0.5) phi3 = 2.0*consts::Pi - phi3;//: if lower, phi -> 2*Pi-phi
-               
-               //all_momenta["pf3"].set_phi(phi3);
-               //all_momenta["h"].set_phi(0.0);
-               all_momenta["pf3"].set(En3,pt3*cos(phi3),pt3*sin(phi3),pz3);
-               all_momenta["h"].set(En,pT,0.0,pZ);
-               all_momenta["pf4"] = -all_momenta["h"]-all_momenta["pf3"]+all_momenta["p1"]+all_momenta["p2"];
-               //: now we rotate all pTs by a random angle 
-               const double phi_rotation_angle = 2.0*consts::Pi*rand();
-               all_momenta["h"].rotate(phi_rotation_angle,unsigned(3));
-               all_momenta["pf4"].rotate(phi_rotation_angle,unsigned(3));
-               all_momenta["pf3"].rotate(phi_rotation_angle,unsigned(3));
+        {
+        if (pT>=0.1*ptbuf)//:the Higgs is not extra soft
+            {
+            //   icase=" Higgs + p3 + p4";
+            //: Higgs is temporary phi-reference
+            //: fixing the phi3
+            double cos3H = (En3*En-pz3*pZ-0.5*s3H)/pt3/pT;
+            if (cos3H<-1.0) cos3H=-1.0;
+            else if (cos3H>1.0) cos3H=1.0;
+            double phi3 = acos(cos3H);//: acos returns in [0,Pi]
+            //: we now decide if p3T is in the lower or upper semicircle
+            //: in the pT plane
+            if (rand()<0.5) phi3 = 2.0*consts::Pi - phi3;
+            //: if lower, phi -> 2*Pi-phi
+            const double sinphi = sin(2.0*consts::Pi*ISP.phi);
+            const double cosphi = cos(2.0*consts::Pi*ISP.phi);
+            
+            
+            p3 = new FourMomentum(
+                                    En3,
+                                    pt3*cos(phi3)*sinphi + pt3*sin(phi3)*cosphi,
+                                    pt3*cos(phi3)*cosphi + pt3*sin(phi3)*sinphi,
+                                    pz3);
+            p4 = new FourMomentum(
+                            -En-En3,
+                            -pt3*cos(phi3)*sinphi - pt3*sin(phi3)*cosphi -pT*sinphi,
+                            -pt3*cos(phi3)*cosphi - pt3*sin(phi3)*sinphi-pT*cosphi,
+                            -pZ-pz3);
+            pH = new FourMomentum(En,pT*sinphi,pT*cosphi,pZ);
                }
-          else if (pT<0.1*ptbuf)//: soft Higgs accidentally, two jets back to back
-               {
-               //  icase="  p3 + p4";
-               //: p3 is the phi-reference along the x-axis
-               //cout<<"\n the soft Higgs case : PTH,pt3,pt4 ="<<pT<<"\t"<<pt3<<"\t"<<pt4;
-               all_momenta["h"] = fvector(En,0.0,0.0,pZ);
-               all_momenta["pf3"] = fvector(En3,pt3,0.0,pz3);
-               all_momenta["pf4"] = fvector(En4,-pt4,0.0,pz4);
-               //: now we rotate all pTs by a random angle 
-               const double phi_rotation_angle = 2.0*consts::Pi*rand();
-               //pH.rotate(phi_rotation_angle,unsigned(3)); //: no need to rotate pH since it has zero pt
-               all_momenta["pf4"].rotate(phi_rotation_angle,unsigned(3));
-               all_momenta["pf3"].rotate(phi_rotation_angle,unsigned(3));
-               }
-          else
-               {
-               cout<<"\n["<<__func__<<"]\tERROR : if you are at this fork, there must be a NAN among the pTs!"<<endl;
-               cout<<"\n info on kinematics: ptH="<<pT<<"\tpt3"<<pt3<<"\tpt4="<<pt4
+        else if (pT<0.1*ptbuf)
+        //: soft Higgs accidentally, two jets back to back
+            {
+            //  icase="  p3 + p4";
+            //: p3 is the phi-reference along the x-axis
+            const double sinphi = sin(2.0*consts::Pi*ISP.phi);
+            const double cosphi = cos(2.0*consts::Pi*ISP.phi);
+            p3 = new FourMomentum(En3,pt3*sinphi,pt3*cosphi,pz3);
+            p4 = new FourMomentum(En4,pt4*sinphi,pt4*cosphi,pz4);
+            pH = new FourMomentum(En,0.0,0.0,pZ);
+            }
+        else
+            {
+            cout<<"\n["<<__func__<<"]\tERROR : if you are at this fork, there must be a NAN among the pTs!"<<endl;
+            cout<<"\n info on kinematics: ptH="<<pT<<"\tpt3"<<pt3<<"\tpt4="<<pt4
                <<"\t"<<s1H<<" "<<s2H<<" x1="<<x1<<" x2="<<x2;
-               }
-          }
+            }
+        }
      else
-          {
-          cout<<"\n["<<__func__<<"]\tERROR : if you are at this fork, there must be a NAN among the pTs!"<<endl;
-          cout<<"\n info on kinematics: ptH="<<pT<<"\tpt3"<<pt3<<"\tpt4="<<pt4
+        {
+        cout<<"\n["<<__func__<<"]\tERROR : if you are at this fork, there must be a NAN among the pTs!"<<endl;
+        cout<<"\n info on kinematics: ptH="<<pT<<"\tpt3"<<pt3<<"\tpt4="<<pt4
           <<"\t"<<s1H<<" "<<s2H<<" x1="<<x1<<" x2="<<x2;
-          }
+        }
+    
+    production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH));
+    
+    
      //: momentum conservation check
      //
      // fvector PM = p1+p2-p3-p4-pH;
@@ -1784,7 +1753,7 @@ void GluonFusion::set_up_event_kinematics(
       }
       }
       */
-     } //: end of else from trivial NLO checks at the begining of the function
+     
 }
 
 

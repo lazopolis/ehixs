@@ -90,9 +90,9 @@ public:
   ~CHistogram() {}
 
    /** \brief ... */
-  void bin_event(Event*,const double &);
+  void bin_event(CombinedEvent*,const double &);
   /** \brief */
-  virtual double determine_xval(Event*) = 0;
+  virtual double determine_xval(CombinedEvent*) = 0;
     
     friend string compare_histograms( const CHistogram* H1,const CHistogram* H2,const string& comp_type);
     friend string compare_histograms( const vector<CHistogram*> &);

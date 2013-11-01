@@ -4,7 +4,7 @@
 #define CCUT_H
 
 #include "momenta.h"
-
+#include "user_interface.h"
 /** \brief Base class for cuts.
   *
   * This is basically just a callable object that should perform a test on a certain kinematical configuration of ExclusiveClass. */
@@ -22,5 +22,23 @@ public:
      double min;
      string info(){stringstream stream;stream<<name<<" : "<<min;return stream.str();}
 };
+
+
+
+class CutBox
+{
+public://methods
+    CutBox(){};
+    void AddAvailableCut(CCut* newcut){available_cuts_.push_back(newcut);}
+    void ParseCuts(const UserInterface&);
+    void show_cut_info_and_exit();
+    bool passes_cuts(Event* the_event);
+    void add_cut(CCut* newcut){available_cuts_.push_back(newcut);}
+private://data
+    vector<CCut*> cuts_;
+    vector<CCut*> available_cuts_;
+};
+
+
 
 #endif

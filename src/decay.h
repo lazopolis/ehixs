@@ -12,7 +12,7 @@ using namespace std;
 #include "momenta.h"
 #include "model.h"
 #include "chaplin.h"
-
+#include "cut.h"
 /** \brief Decay base class 
  It takes care of decay vegas variables, 
  it hosts the decay_events vector of pointers,
@@ -26,7 +26,9 @@ using namespace std;
 class Decay
 {
 public:
-     Decay(){my_sector_name = "If you see this, the specific decay hasn't declared it's sector_name yet.";sector_defined=false;}
+     Decay(){my_sector_name = "If you see this, the specific decay hasn't declared it's sector_name yet.";sector_defined=false;
+            cuts_ = new CutBox();
+            }
      //double  decay_WW();
      
 	
@@ -34,7 +36,7 @@ public:
      //Momenta decay_momenta;
      //CModel Model;
      //string decay_mode;
-     virtual void do_decay(const fvector& PH)=0;
+     virtual void do_decay(FourMomentum* PH)=0;
      virtual void do_decay()=0;//: default decay at rest frame
      vector<Event*> decay_events;
      int dimension_of_integration(){return dimension_of_integration_for_decay;}
@@ -44,14 +46,15 @@ public:
      CModel Model;
      bool is_sector_defined(){return sector_defined;}
     void set_up_the_hatch(TheHatch*);
-
+    CutBox* cuts_;
+    bool this_event_passes_cuts(int i){return cuts_->passes_cuts(decay_events[i]);}
 protected:
      string decay_mode;
      double* decay_xx_vegas;
-     Momenta my_momenta;
+     
      string my_sector_name;
-     double  One_to_two_PSP(const fvector & ,const double & ,const double & ,
-                            fvector & ,fvector & ,
+     double  One_to_two_PSP(FourMomentum* ,const double & ,const double & ,
+                            FourMomentum*  ,FourMomentum*  ,
                             const double & ,const double & );
      double  PSP_lambda(const double & ,const double & ,const double & );
      int dimension_of_integration_for_decay;
@@ -63,10 +66,28 @@ protected:
 
 //=================== WW/ZZ ===============================
 
+
+class HiggsTo4LeptonsEvent: public Event
+{
+public:
+    HiggsTo4LeptonsEvent(const double weight, FourMomentum* lept1,FourMomentum* lept2,FourMomentum* lept3,FourMomentum* lept4)
+    :Event(weight),lept1_(lept1),lept2_(lept2),lept3_(lept3),lept4_(lept4){};
+    FourMomentum* lept1(){return lept1_;}
+    FourMomentum* lept2(){return lept2_;}
+    FourMomentum* lept3(){return lept3_;}
+    FourMomentum* lept4(){return lept4_;}
+private:
+    FourMomentum* lept1_;
+    FourMomentum* lept2_;
+    FourMomentum* lept3_;
+    FourMomentum* lept4_;
+    
+};
+
 class Decay_WWZZ: public Decay
 {
 public:
-    void do_decay(const fvector& PH);
+    void do_decay(FourMomentum* PH);
     void do_decay();
     Decay_WWZZ(const UserInterface&);
 private:
@@ -78,10 +99,27 @@ private:
 
 //=================== gamma gamma ===============================
 
+class HiggsToGammaGammaEvent: public Event
+{
+public:
+    HiggsToGammaGammaEvent(const double& weight,
+                         FourMomentum* gamma1,FourMomentum* gamma2)
+        :Event(weight),gamma1_(gamma1),gamma2_(gamma2){};
+    FourMomentum* gamma1(){return gamma1_;}
+    FourMomentum* gamma2(){return gamma1_;}
+  
+private:
+    FourMomentum* gamma1_;
+    FourMomentum* gamma2_;
+
+    
+};
+
+
 class Decay_gammagamma: public Decay
 {
 public:
-     void do_decay(const fvector& PH);
+     void do_decay(FourMomentum* PH);
      void do_decay();
      Decay_gammagamma(const UserInterface&);
 private:

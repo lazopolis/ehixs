@@ -36,8 +36,8 @@ elseif (Fortran_COMPILER_NAME STREQUAL "g77")
 else (Fortran_COMPILER_NAME STREQUAL "gfortran")
   message ("CMAKE_Fortran_COMPILER full path: " ${CMAKE_Fortran_COMPILER})
   message ("Fortran compiler: " ${Fortran_COMPILER_NAME})
-  message ("No optimized Fortran compiler flags are known, we just try -O2...")
-  set (CMAKE_Fortran_FLAGS_RELEASE "-O2")
+  message ("No optimized Fortran compiler flags are known, we just try -O3...")
+  set (CMAKE_Fortran_FLAGS_RELEASE "-funroll-all-loops -fno-f2c -O3 -m64")
   set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g")
 endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
@@ -64,6 +64,9 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/gluon_fusion
                     ${EHIXS_SRC_DIR}/gtests
                     ${EHIXS_SRC_DIR}/decay_bb
+                    ${EHIXS_SRC_DIR}/../user_src/ggf_production
+                    ${EHIXS_SRC_DIR}/../user_src/WWZZ_decay
+
                     )
 
 link_directories(
@@ -112,6 +115,7 @@ add_library(tools
                     ${EHIXS_SRC_DIR}/hub.cpp
                     ${EHIXS_SRC_DIR}/vegas_adaptor.cpp
                     ${EHIXS_SRC_DIR}/histogram.cpp
+                    ${EHIXS_SRC_DIR}/cut.cpp
                     ${EHIXS_SRC_DIR}/bin.cpp
                     ${EHIXS_SRC_DIR}/convolutions.cpp
                     ${EHIXS_SRC_DIR}/user_interface.cpp
@@ -226,6 +230,10 @@ add_library(fortran_bbh
 add_library(nlo_exact_matrix_elements  
                 ${EHIXS_SRC_DIR}/gluon_fusion/nlo_exact_matrix_elements.cpp)
 
+
+SET(FORTRAN_FAST_GGF_DIR ${EHIXS_SRC_DIR}/gluon_fusion/fast_rgg2ggh)
+  
+
 add_library(fortran_ggf ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rgg2ght1.f
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rqg2qht1.f
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rgq2qht1.f
@@ -282,22 +290,22 @@ add_library(fortran_ggf ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elemen
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght14.f
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght15.f
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvqg2qht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght5.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght6.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght7.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght8.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght9.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght10.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght11.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght12.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght13.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght14.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght15.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2gght16.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght1.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght2.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght3.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght4.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght5.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght6.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght7.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght8.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght9.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght10.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght11.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght12.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght13.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght14.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght15.f
+                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght16.f
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht1.f                         
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht2.f                         
                          ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht3.f
@@ -333,7 +341,7 @@ add_library(avh_olo      ${EHIXS_SRC_DIR}/avh_olo/avh_olo_3div.f
           )
 
 
-find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
+#find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
 #This will check the environment for a variable named LHAPDF_PATH. 
 #If it exists, you can then use
 #target_link_libraries(mytarget ${LHAPDF})

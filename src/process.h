@@ -13,7 +13,7 @@
 #include <cassert>
 #include <complex>
 #include <cstdlib>
-#include <time.h>
+#include "timekeeper.h"
 
 using namespace std;
 
@@ -47,7 +47,7 @@ class HistogramBox
 public://methods
     HistogramBox(const UserInterface & UI);
     void show_histogram_info_and_exit();
-    void  book_histograms( Event *,const double & vegas_weight);
+    void  book_histograms(CombinedEvent*,const double & vegas_weight);
     void update_histograms_end_of_iteration(int NOP);
 	void update_histograms_end_of_vegas_point();
     void print_histograms();
@@ -63,17 +63,6 @@ private://data
 private://methods
 };
 
-
-class CutBox
-{
-public://methods
-    CutBox(const UserInterface&);
-    void show_cut_info_and_exit();
-    bool passes_cuts(Event* the_event);
-private://data
-    vector<CCut*> _cuts;
-    vector<CCut*> _available_cuts;
-};
 
 
 class Process
@@ -104,16 +93,16 @@ private://data
     UserInterface my_UI;
     TheHatch the_hatch;
     HistogramBox* _histograms;
-    CutBox* _cuts;
+    
     Decay *my_decay;
     Production* my_production;
     fstream my_event_stream;
-
+    TimeKeeper myclock_;
 private://methods
     void set_production(Production * theproduction);
     void set_decay(Decay * thedecay);
     void book_null_event();
-    void book_event(Event *);
+    void book_event(CombinedEvent *);
     void proceed_to_production_phase();
     void proceed_to_decay_phase(Event*);
     void perform_decay_alone();
@@ -128,7 +117,6 @@ private://methods
     //: event printing
     void open_event_filename();
     void close_event_filename();
-    void print_event(LightEvent*);
 };
 
 

@@ -10,41 +10,41 @@
   *
   * ... See MinCut for more informations ...
   */
-template<double (fvector::* pFun)() const>
-struct VecHistogram : public CHistogram
-{
-  /** \brief Constructor
-    *
-    * See CHistogram::CHistogram(). */
-  VecHistogram(string histogramed_quantity,unsigned nbins, unsigned firstbin, const double& lowend, const double& highend, const string& name, bool adapt=false)
-    : CHistogram(nbins, firstbin, lowend, highend, name, adapt)
-     {hist_quant=histogramed_quantity;}
-     string hist_quant;
-  /** \brief Call ((X->*pMem).*pFun)() */
-  double determine_xval(Event* X)
-  { return ((&(X->p[hist_quant]))->*pFun)(); }
-};
-
-/** \brief Histogram on pT of the Higgs. */
-typedef VecHistogram<&fvector::pT>     Hist_PT;
-/** \brief Histogram on zrap of the Higgs. */
-typedef VecHistogram<&fvector::zrap>   Hist_rap;
-
-
-struct Xhistogram:public CHistogram
-{
-     /** \brief Constructor
-      *
-      * See CHistogram::CHistogram(). */
-
-     Xhistogram(int histogramed_vegas_var_,unsigned nbins,  const string& name, bool adapt=false)
-     : CHistogram(nbins, 0, 0.0, 1.0, name, adapt)
-     {histogramed_vegas_var=histogramed_vegas_var_;}
-     int histogramed_vegas_var;
-     /** \brief Call ((X->*pMem).*pFun)() */
-     double determine_xval(Event* X)
-     { return (X->xx_vegas[histogramed_vegas_var]); }
-};
+//template<double (fvector::* pFun)() const>
+//struct VecHistogram : public CHistogram
+//{
+//  /** \brief Constructor
+//    *
+//    * See CHistogram::CHistogram(). */
+//  VecHistogram(string histogramed_quantity,unsigned nbins, unsigned firstbin, const double& lowend, const double& highend, const string& name, bool adapt=false)
+//    : CHistogram(nbins, firstbin, lowend, highend, name, adapt)
+//     {hist_quant=histogramed_quantity;}
+//     string hist_quant;
+//  /** \brief Call ((X->*pMem).*pFun)() */
+//  double determine_xval(Event* X)
+//  { return ((&(X->p[hist_quant]))->*pFun)(); }
+//};
+//
+///** \brief Histogram on pT of the Higgs. */
+//typedef VecHistogram<&fvector::pT>     Hist_PT;
+///** \brief Histogram on zrap of the Higgs. */
+//typedef VecHistogram<&fvector::zrap>   Hist_rap;
+//
+//
+//struct Xhistogram:public CHistogram
+//{
+//     /** \brief Constructor
+//      *
+//      * See CHistogram::CHistogram(). */
+//
+//     Xhistogram(int histogramed_vegas_var_,unsigned nbins,  const string& name, bool adapt=false)
+//     : CHistogram(nbins, 0, 0.0, 1.0, name, adapt)
+//     {histogramed_vegas_var=histogramed_vegas_var_;}
+//     int histogramed_vegas_var;
+//     /** \brief Call ((X->*pMem).*pFun)() */
+//     double determine_xval(Event* X)
+//     { return (X->xx_vegas[histogramed_vegas_var]); }
+//};
 
 
 //#include "mlp.h"

@@ -208,6 +208,13 @@ private://emthods
     double LO_exact_e0();
 };
 
+
+
+
+
+
+
+
 class GluonFusion:public Production
 {
 public://methods
@@ -264,6 +271,7 @@ private://data
     BetaConstants beta;
     GluonFusionExactCoefficients * exact_coefficients;
     int number_of_necessary_sectors_;
+    //int vegas_point_counter;
 private://methods
     void update_smaxmin(int,double);
     void check_which_sectors_can_be_run_together(const vector<SimpleSector*>&);
@@ -277,7 +285,7 @@ private://methods
     
      
     double generate_x1(double & jac_from_rap_param);
-    void  set_up_event_kinematics(
+    void  NNLO_event_kinematics(const double& sigma,
 							const double & x1,
 							const double & x2,
 							const double & z,
@@ -286,8 +294,8 @@ private://methods
 							const double & s14,
 							const double & s24,
 							const double & s34);
-    void LO_event_kinematics(const double & x1,const double & x2);
-    void NLO_event_kinematics(const double & x1,
+    void LO_event_kinematics(const double& sigma,const double & x1,const double & x2);
+    void NLO_event_kinematics(const double& sigma,const double & x1,
                               const double & x2,
                               const double & z,
                               const double & s13,

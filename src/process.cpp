@@ -40,23 +40,23 @@ int Integrand(const int *ndim, const double xx[],
 //-----------------------------------------------------------------------------
 HistogramBox::HistogramBox(const UserInterface& my_UI)
 {
-    available_histograms.push_back
-            (new Hist_rap("b1",20,0,-5.0,5.0,"b1_rapidity"));
-    available_histograms.push_back
-            (new Hist_rap("b2",20,0,-5.0,5.0,"b2_rapidity"));
-    available_histograms.push_back(new Hist_PT("b1",70,0,0.0,70.0,"b1_pT"));
-    available_histograms.push_back(new Hist_PT("b2",70,0,0.0,70.0,"b2_pT"));
-    available_histograms.push_back(new Hist_PT("h",20,0,0.0,100.0,"higgs_pT"));
-    available_histograms.push_back
-            (new Hist_rap("h",20,0,-5.0,5.0,"higgs_rapidity"));
-    available_histograms.push_back(new Hist_PT("pf3",20,0,0.0,100.0,"p3_pT"));
-    available_histograms.push_back(new Xhistogram(0,20,"vegas x[0]"));
-    available_histograms.push_back(new Xhistogram(1,20,"vegas x[1]"));
-    available_histograms.push_back(new Xhistogram(2,20,"vegas x[2]"));
-    available_histograms.push_back(new Xhistogram(3,20,"vegas x[3]"));
-    available_histograms.push_back(new Xhistogram(4,20,"vegas x[4]"));
-    available_histograms.push_back(new Xhistogram(5,20,"vegas x[5]"));
-    available_histograms.push_back(new Hist_PT("lepton1",20,0,0.0,80.0,"lepton1_pT"));
+//    available_histograms.push_back
+//            (new Hist_rap("b1",20,0,-5.0,5.0,"b1_rapidity"));
+//    available_histograms.push_back
+//            (new Hist_rap("b2",20,0,-5.0,5.0,"b2_rapidity"));
+//    available_histograms.push_back(new Hist_PT("b1",70,0,0.0,70.0,"b1_pT"));
+//    available_histograms.push_back(new Hist_PT("b2",70,0,0.0,70.0,"b2_pT"));
+//    available_histograms.push_back(new Hist_PT("h",20,0,0.0,100.0,"higgs_pT"));
+//    available_histograms.push_back
+//            (new Hist_rap("h",20,0,-5.0,5.0,"higgs_rapidity"));
+//    available_histograms.push_back(new Hist_PT("pf3",20,0,0.0,100.0,"p3_pT"));
+//    available_histograms.push_back(new Xhistogram(0,20,"vegas x[0]"));
+//    available_histograms.push_back(new Xhistogram(1,20,"vegas x[1]"));
+//    available_histograms.push_back(new Xhistogram(2,20,"vegas x[2]"));
+//    available_histograms.push_back(new Xhistogram(3,20,"vegas x[3]"));
+//    available_histograms.push_back(new Xhistogram(4,20,"vegas x[4]"));
+//    available_histograms.push_back(new Xhistogram(5,20,"vegas x[5]"));
+//    available_histograms.push_back(new Hist_PT("lepton1",20,0,0.0,80.0,"lepton1_pT"));
     if (my_UI.requested_histogram>-1)
         {
         cout<<"\n[HistogramBox]: will push histogram since UI.requested_histogram = "<<my_UI.requested_histogram<<endl;
@@ -78,7 +78,7 @@ void HistogramBox::show_histogram_info_and_exit()
     exit(0);
 }
 
-void HistogramBox::book_histograms( Event* the_event, const double& vegas_weight)
+void HistogramBox::book_histograms( CombinedEvent* the_event, const double& vegas_weight)
 {
     
     for (int i=0; i<histogram_vector.size(); i++)
@@ -135,53 +135,7 @@ void HistogramBox::write_to_histogram_file()
 }
 //-----------------------------------------------------------------------------
 
-CutBox::CutBox(const UserInterface & my_UI)
-{
-    _available_cuts.push_back(new Pt_cut("b1",62.3,"pt_cut_b1"));
-    _available_cuts.push_back(new Pt_cut("b2",45.0,"pt_cut_b2"));
-    _available_cuts.push_back(new Abs_y_cut("b1",2.0,"y_cut_b1"));
-    _available_cuts.push_back(new Pt_cut("pf3",35.3,"pt_cut_p3"));
-    _available_cuts.push_back(new Pt_cut("h",2.0,"pt_cut_pH"));
-    
-    _available_cuts.push_back(new Pt_bin("h",20.0,25.0,"pt_bin_pH"));
-    _available_cuts.push_back(new Pt_bin("h",-10.0,40.0,"pt_zero_bin_pH"));
-    
-    
-    if (my_UI.requested_cut>-1)
-        _cuts.push_back(_available_cuts[my_UI.requested_cut]);
-        
 
-}
-
-
-void CutBox::show_cut_info_and_exit()
-{
-    cout<<"\n**************************************\nAvailable cuts:";
-    for (unsigned i=0;i<_available_cuts.size();i++)
-        cout<<"\n"<<_available_cuts[i]->info();
-    cout<<"\n**************************************\nRequested cuts:";
-    for (unsigned i=0;i<_cuts.size();i++)
-        cout<<"\n"<<_cuts[i]->info();
-    cout<<"\n**************************************\n";
-    exit(0);
-}
-
-
-bool CutBox::passes_cuts(Event* the_event)
-{
-    bool event_passes=true;
-    for (int i=0;i<_cuts.size();i++)
-        {
-        
-        if(not((*_cuts[i])(the_event)))
-            {
-            event_passes = false; // the event is cut
-            break;// we don't proceed with the rest of the cuts
-            }
-        }
-    return event_passes;
-}
-//-----------------------------------------------------------------------------
 
 Process::Process(const UserInterface & UI)
 : 
@@ -195,9 +149,9 @@ Vegas(UI)
         Vegas.set_ptr_to_the_hatch(&the_hatch);
         Vegas.set_ptr_to_integrand(&Integrand);
         _histograms = new HistogramBox(UI);
-        _cuts = new CutBox(UI);
+        //_cuts = new CutBox(UI);
         if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
-        if (UI.cut_info) _cuts->show_cut_info_and_exit();
+        if (UI.cut_info) my_production->cuts_->show_cut_info_and_exit();
         if (UI.number_of_flavours!=5)
             {
             cout<<"\n\nerror in constructor of ExclusiveClass: during refactoring the nf became a global variable consts::nf and we don't want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
@@ -356,31 +310,33 @@ void Process::proceed_to_production_phase()
         my_production->evaluate_sector();
         for (int i=0;i<my_production->production_events.size();i++)
             {
-            Event* production_event=my_production->production_events[i];
-            if (production_event->w!=0.0
-                    and _cuts->passes_cuts(production_event)
-                )
-                    {
-                    if (Vegas.vegas_iteration_number>-1)
-                        {
-                        for (int i=0;i<my_production->light_events.size();i++)
-                            {
-                            LightEvent* production_light_event=my_production->light_events[i];
-                            production_light_event->w = production_light_event->w*Vegas.vegas_weight;
-                            print_event(production_light_event);
-                            }
-                        if(my_event_stream.is_open())
-                            {
-                            my_event_stream<<"#****"<<endl;
-                            }
-                        else
-                            {
-                            cout<<"\nfailbit = "<<my_event_stream.fail()<<endl;
-                            cout << "Error opening file "<<my_UI.output_filename.c_str()<<endl;
-                            }
-                        }
-                        proceed_to_decay_phase(production_event);
-                    }
+            if (my_production->this_event_passes_cuts(i))
+                {
+                Event* production_event=my_production->production_events[i];
+//            if (production_event->weight()!=0.0
+//                    and _cuts->passes_cuts(production_event)
+//                )
+//                    {
+//                    if (Vegas.vegas_iteration_number>-1)
+//                        {
+//                        for (int i=0;i<my_production->light_events.size();i++)
+//                            {
+//                            //LightEvent* production_light_event=my_production->light_events[i];
+//                            //production_light_event->w = production_light_event->w*Vegas.vegas_weight;
+//                            //print_event(production_light_event);
+//                            }
+//                        if(my_event_stream.is_open())
+//                            {
+//                            my_event_stream<<"#****"<<endl;
+//                            }
+//                        else
+//                            {
+//                            cout<<"\nfailbit = "<<my_event_stream.fail()<<endl;
+//                            cout << "Error opening file "<<my_UI.output_filename.c_str()<<endl;
+//                            }
+//                        }
+                proceed_to_decay_phase(production_event);
+                }
             }
         }
     else //: there is no production
@@ -389,48 +345,51 @@ void Process::proceed_to_production_phase()
         }     
 }
 
-void Process::print_event(LightEvent* the_event)
-{
-    if(my_event_stream.is_open())
-        {
-        my_event_stream<<the_event->x1<<" ";
-        my_event_stream<<the_event->z<<" ";
-        my_event_stream<<the_event->lambda<<" ";
-        my_event_stream<<the_event->w<<" ";
-        my_event_stream<<endl;
-        }
-    else
-        {
-        cout<<"\nfailbit = "<<my_event_stream.fail()<<endl;
-        cout << "Error opening file "<<my_UI.output_filename.c_str()<<endl;
-        }
-}
+//void Process::print_event(LightEvent* the_event)
+//{
+//    if(my_event_stream.is_open())
+//        {
+//        my_event_stream<<the_event->x1<<" ";
+//        my_event_stream<<the_event->z<<" ";
+//        my_event_stream<<the_event->lambda<<" ";
+//        my_event_stream<<the_event->w<<" ";
+//        my_event_stream<<endl;
+//        }
+//    else
+//        {
+//        cout<<"\nfailbit = "<<my_event_stream.fail()<<endl;
+//        cout << "Error opening file "<<my_UI.output_filename.c_str()<<endl;
+//        }
+//}
 
 void Process::proceed_to_decay_phase(Event* production_event)
 {
     //cout<<"\n[Process] production event "<<production_event->w<<endl;
     if (decay_is_defined) //: decay is defined
         {
-        my_decay->do_decay(production_event->p["h"]);
+        my_decay->do_decay(production_event->DecayParticleFourMomentum());
         for (int j=0;j<my_decay->decay_events.size();j++)
             {
-            Event* decay_event=my_decay->decay_events[j];
-            decay_event->merge(*production_event);
+            if (my_decay->this_event_passes_cuts(j))
+                {
+                Event* decay_event=my_decay->decay_events[j];
+            //decay_event->merge(*production_event);
             //cout<<"\n[Process]: merged weight = "<<decay_event->w
             //<<"----------------------"<<endl;
-            if (decay_event->w!=0.0 and _cuts->passes_cuts(decay_event))
-                {
+            
+            //if (decay_event->weight()!=0.0 and _cuts->passes_cuts(decay_event))
+                //{
                 // cout<<"\n[Process]: production event "
                 //     <<production_event->w
                 //     <<" x decay event "
                 //<<decay_event->w<<endl;
-                book_event(decay_event);
+                book_event(new CombinedEvent(production_event,decay_event));
                 }
             }
         }
     else //: there is no decay
         {
-        book_event(production_event);
+        book_event(new CombinedEvent(production_event, new Event(1.0)));
         }
 }
 
@@ -441,10 +400,11 @@ void Process::perform_decay_alone()//: no production was defined
                my_decay->do_decay();
                for (int j=0;j<my_decay->decay_events.size();j++)
                     {
-                    Event* decay_event=my_decay->decay_events[j];
-                    if (decay_event->w!=0.0 and _cuts->passes_cuts(decay_event))
+                    
+                    if (my_decay->this_event_passes_cuts(j))
                          {
-                         book_event(decay_event);
+                         Event* decay_event=my_decay->decay_events[j];
+                         book_event(new CombinedEvent(new Event(1.0),decay_event));
                          }
                     }
           }
@@ -454,10 +414,10 @@ void Process::perform_decay_alone()//: no production was defined
           }
 }
 
-void Process::book_event(Event* the_event)
+void Process::book_event(CombinedEvent* the_event)
 {    
      _histograms->book_histograms(the_event,Vegas.vegas_weight);
-     Vegas.set_up_vegas_ff(the_event->w);
+     Vegas.set_up_vegas_ff(the_event->weight());
 }
 
 void Process::book_null_event()
@@ -527,32 +487,32 @@ void Process::print_output()
     _histograms->print_histograms();
     
 
-     if (not(my_UI.output_filename.empty()))
-     {
-          cout << "\n writing output at " << my_UI.output_filename << endl;
-     
-          const char * output_fname = my_UI.output_filename.c_str();
-          fstream my_local_outfile(output_fname, fstream::out);
-     
-          if(my_local_outfile.is_open())
-          {
-               my_local_outfile << "\n-------------------------------------------";
-               my_local_outfile.precision(5);
-               my_local_outfile << "\n ehixs output" << endl;
-               my_local_outfile <<Vegas;
+    if (not(my_UI.output_filename.empty()))
+        {
+        cout << "\n writing output at " << my_UI.output_filename << endl;
+        const char * output_fname = my_UI.output_filename.c_str();
+        fstream my_local_outfile(output_fname, fstream::out);
+        if(my_local_outfile.is_open())
+            {
+            my_local_outfile.precision(5);
+            my_local_outfile << "#ehixs output" << endl;
+            my_local_outfile <<Vegas;
+            my_local_outfile << "\ntime needed (in sec) = "
+                            <<myclock_.GiveMeasurement();
+            my_local_outfile << "\nsecs per point = "
+            <<myclock_.GiveMeasurement()/Vegas.total_number_of_points();
           
-                my_local_outfile << _histograms->print_histograms_to_string();
-               my_local_outfile << "\n\n* * * * * * * * * * * * * * * * * * * * * * * * *\n\nRuncard used\n\n";
-               my_local_outfile << my_UI.input_filename;
-               cout << "\n output written" << endl;
-          }
-          else
-          {
-               cout<<"\nfailbit = "<<my_local_outfile.fail()<<endl;
-               cout << "Error opening file "<<my_UI.output_filename.c_str()<<endl;
-          }
-          my_local_outfile.close();
-     }
+            my_local_outfile << _histograms->print_histograms_to_string();
+            my_local_outfile << "\n#Runcard used: ./"<<my_UI.input_filename;
+            cout << "\noutput written in "<< my_UI.output_filename<< endl;
+            }
+        else
+            {
+            cout<<"\nfailbit = "<<my_local_outfile.fail()<<endl;
+            cout << "Error opening file "<<my_UI.output_filename.c_str()<<endl;
+            }
+        my_local_outfile.close();
+        }
      
     _histograms->write_to_histogram_file();
      
