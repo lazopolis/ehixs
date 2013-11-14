@@ -82,7 +82,7 @@ void EventBox::SetNumberOfParticles(int n)
         cout<<"\n[EventBox]: ERROR: more than 10 particle momenta "
             <<"are not supported. Please change the default Event in event.h"
             <<endl;
-            exit(1);
+            //exit(1);
         }
 }
 

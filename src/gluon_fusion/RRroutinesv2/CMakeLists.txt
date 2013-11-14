@@ -5,11 +5,11 @@
   
 
 add_library(fortran_ggf_RR 
-                         rrq1q22q1q2h/rrq1q22q1q2Ht1.f
-                         rrq1q22q1q2h/rrq1q22q1q2Ht2.f
-                         rrqq2qqh/rrqq2qqHt1.f
-                         rrqq2qqh/rrqq2qqHt2.f
-                         rrqq2qqh/rrqq2qqHt3.f
+                         rrq1q22q1q2h/rrq1q22q1q2ht1.f
+                         rrq1q22q1q2h/rrq1q22q1q2ht2.f
+                         rrqq2qqh/rrqq2qqht1.f
+                         rrqq2qqh/rrqq2qqht2.f
+                         rrqq2qqh/rrqq2qqht3.f
                          #rrq1q1bar2q2q2barh/rrqqbar2qqbarht1.f
                          #rrq1q1bar2q2q2barh/rrqqbar2qqbarht2.f
                          #rrq1q1bar2q2q2barh/rrqqbar2qqbarht3.f

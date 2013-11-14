@@ -98,7 +98,7 @@ void NewSimpleSector::SetInitialStateVars()
     
 }
 
-void SimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
+void NewSimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
 {
     curlumi.add_pair(
                      pdf_desc(i,j,F1.order,F1.epsilon_order),
@@ -106,12 +106,12 @@ void SimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
                      );
 }
 
-void SimpleSector::single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
+void NewSimpleSector::single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
 {
     for (int s=-5;s<6;s++) {if (s!=0) add_pair(i*s,j*s,k*s,m*s,curlumi);}
 }
 
-void SimpleSector::double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
+void NewSimpleSector::double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
 {
     for (int s=-5;s<6;s++)
         {
@@ -131,7 +131,7 @@ void SimpleSector::double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
         }
 }
 
-int SimpleSector::give_pid(const string & name)
+int NewSimpleSector::give_pid(const string & name)
 {
     if (name=="gluon") return 0;
     if (name=="quark") return 1;
@@ -142,7 +142,7 @@ int SimpleSector::give_pid(const string & name)
     return 0;
 }
 
-pdf_pair_list SimpleSector::give_list_of_pdf_pairs()
+pdf_pair_list NewSimpleSector::give_list_of_pdf_pairs()
 {
     pdf_pair_list curlumi;
     //: mapping glion,quark,antiquark,quark2 to 0,1,-1,2
@@ -160,7 +160,7 @@ pdf_pair_list SimpleSector::give_list_of_pdf_pairs()
     return curlumi;
 }
 
-void SimpleSector::setUpPrefactor(const double & a_s_over_pi)
+void NewSimpleSector::setUpPrefactor(const double & a_s_over_pi)
 {
     _prefactor =1.0;
     for (unsigned i=0;i<factors.size();i++)
