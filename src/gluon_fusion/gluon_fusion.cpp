@@ -14,7 +14,7 @@ Production* ptr_to_GGF; //: static global pointer to use as a handle for plugins
 
 MeExternalInfo::MeExternalInfo(const string & _pi,const string & _pj,const string& _pord,
                const string & _name, int _epower,
-               const string & _me_approximation)
+               const string & _me_approximation,int alpha_ew_pow)
 {
     parton_i=_pi;
     parton_j=_pj;
@@ -26,6 +26,7 @@ MeExternalInfo::MeExternalInfo(const string & _pi,const string & _pj,const strin
     else if (_pord=="N3LO") alpha_power=3;
     else {cout<<"\n unrecognized pord when constructing MatrixElement"<<endl;exit(1);}
     me_approximation=_me_approximation;
+    alpha_ew_power = alpha_ew_pow;
 }
 
 //------------------------------------------------------------------------------
@@ -333,6 +334,18 @@ void GluonFusionMatrixElementBox::add_gg_sectors()
     push_me("gluon","gluon","LO","LO exact","kinematics:LO","param:LO",&GluonFusion::LO_exact,0,2,new FranzBinder,"exact",0.0);
     push_me("gluon","gluon","NLO","NLO soft exact","kinematics:LO","param:NLO",&GluonFusion::NLO_soft_exact,0,0,new FranzBinder,"exact",0.0);//: only the e^0 piece
     push_me("gluon","gluon","NLO","NLO hard exact","kinematics:NLO","param:NLO",&GluonFusion::gg_NLO_hard_exact,-2,0,new FranzBinder,"exact",0.0);
+    
+    //: nlo ew
+    available_matrix_elements.push_back(
+    new MatrixElement(
+    new MeExternalInfo("gluon","gluon","LO","NLO_EWK_S effective",0,"effective",1),
+                "kinematics:LO","param:LO",&GluonFusion::NLO_ewk_soft,
+                      new FranzBinder,0.0));
+    available_matrix_elements.push_back(
+    new MatrixElement(
+    new MeExternalInfo("gluon","gluon","LO","NLO_EWK_S exact",0,"exact",1),
+                "kinematics:LO","param:LO",&GluonFusion::NLO_ewk_soft_exact,
+                      new FranzBinder,0.0));
 }
 
 void GluonFusionMatrixElementBox::add_qg_sectors()
@@ -370,7 +383,7 @@ void GluonFusionMatrixElementBox::add_qg_sectors()
         stringstream name_str;name_str<<"RR t"<<i+1;
         push_me("quark","gluon","NNLO",name_str.str(),
                 "kinematics:NNLO","param:NLO",
-                &GluonFusion::NNLO_hard_with_subtraction,-3,0,RR_functions[i],"effective",4.0);
+                &GluonFusion::NNLO_hard_no_subtraction,-3,0,RR_functions[i],"effective",4.0);
         }
     // qg exact
     push_me("quark","gluon","NLO","NLO hard exact","kinematics:NLO","param:NLO",&GluonFusion::qg_NLO_hard_exact,-1,0,new FranzBinder,"exact",0.0);
@@ -413,7 +426,7 @@ void GluonFusionMatrixElementBox::add_gq_sectors()
         stringstream name_str;name_str<<"RR t"<<i+1;
         push_me("gluon","quark","NNLO",name_str.str(),
                 "kinematics:NNLO","param:NLO",
-                &GluonFusion::NNLO_hard_with_subtraction,-3,0,RR_functions[i],"effective",4.0);
+                &GluonFusion::NNLO_hard_no_subtraction,-3,0,RR_functions[i],"effective",4.0);
         }
     
     // gq exact
@@ -698,14 +711,20 @@ vector<SimpleSector*> GluonFusionSectorBox::give_necessary_sectors(const UserInt
                                         )
         or
         (UI.Fleft=="none" and UI.Fright=="none");
-        bool a_power_fits=available_sectors[i]->alpha_power==UI.alpha_s_power;
+        bool a_power_fits=available_sectors[i]->alpha_power==UI.alpha_s_power or UI.alpha_s_power == -1;
         bool e_power_fits = available_sectors[i]->epsilon_power==UI.pole;
-        bool me_approx_fits = available_sectors[i]->ME->me_approximation()==UI.matrix_element_approximation;
-        if (initial_state_partons_fit and a_power_fits and e_power_fits and me_approx_fits)
+        string real_life_ME_approx = UI.matrix_element_approximation;
+        if (available_sectors[i]->alpha_power == 4)
+            real_life_ME_approx = "effective";
+        bool me_approx_fits = available_sectors[i]->ME->me_approximation()==real_life_ME_approx;
+        bool a_weak_power_fits = available_sectors[i]->ME->alpha_ew_power()==0;
+        if (UI.ew_soft) a_weak_power_fits = available_sectors[i]->ME->alpha_ew_power()==UI.alpha_ew_power or UI.alpha_ew_power == -1;
+        if (initial_state_partons_fit and a_power_fits and e_power_fits and me_approx_fits and a_weak_power_fits)
             {
             
             necessary_sectors.push_back(available_sectors[i]);
             }
+        
         /* else if (pleft==available_sectors[i]->F1.parton_from and pright==available_sectors[i]->F2.parton_from)
          {
          cout<<"\n-- sector failed "<<available_sectors[i]->name;
@@ -866,7 +885,99 @@ double GluonFusionExactCoefficients::NLO_soft_exact_e0()
     return(res);
 }
 
+//------------------------------------------------------------------------------
 
+GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
+{
+    
+    #include "electroweak_data.h"
+    
+    // reads EWK  corrections from Fig. 21 of
+    //      http://arXiv.org/pdf/0809.3667
+    //  by Actis, Passarino, Sturm, Uccirati
+    //   Data in  file "./electroweak.h" provided by the authors.
+    //   They have chosen the following paramegters:
+    
+    //       Mw = 80.398
+    //       GammaW = 2.093
+    //       Mz = 91.1876
+    //       GammaZ = 2.4952
+    //       Gfermi = 1.16637e-5 !/GeV^2
+    //       a(0) = 1.0/137.0359911.0
+    //       alphas_Mz = 0.118.0
+    //       Mtop =  170.9
+    
+    
+    cout<<"\nCalcualting ew correction factor";
+    const double mtop_pass = 170.9;
+    
+	const double eff_mh =model.higgs.m()*mtop_pass/model.top.m();
+    
+    if (eff_mh<100.0 or eff_mh>500.0)
+        {
+        cout<<"\nSoft ew corrections not available (mh<100 or mh>500). They are set to zero";
+        NLO_ew_coeff_ = 0.0;
+        }
+    else
+        {
+        int N = ew_data.size();
+        int position;
+    
+        for (int i=0;i<ew_data.size()-1;i++)
+            {
+            const double mleft = ew_data[i]->mass;
+            const double mright = ew_data[i+1]->mass;
+            if (mleft < eff_mh and eff_mh<mright)
+                {
+                position = i;
+                if (mright-eff_mh < eff_mh-mleft) {position = i+1;}
+                break;
+                }
+            }
+        int ibefore,ihere,iafter;
+        if (position==0){ibefore = 0;ihere=1;iafter=2;}
+        else if (position==N-1){ibefore = N-3;ihere=N-2;iafter=N-1;}
+        else
+            {
+            
+            ibefore = position-1;
+            ihere = position;
+            iafter = position+1;
+            }
+        cout<<"\n position = ["<<ibefore<<","<<ihere<<","<<iafter<<"] / "<<N<<endl;
+        double x[3]={ew_data[ibefore]->mass,
+                     ew_data[ihere]->mass,
+                     ew_data[iafter]->mass};
+        double y[3]={ew_data[ibefore]->deltaew,
+                     ew_data[ihere]->deltaew,
+                     ew_data[iafter]->deltaew};
+        vector<double> c = givecoeff(x,y);
+        double res = (c[2] + c[1] * eff_mh + c[0] * eff_mh*eff_mh)/100.0;
+        NLO_ew_coeff_ = sqrt(1.0+res)-1.0 ;
+        cout<<"\n NLO ew coeff = "<<NLO_ew_coeff_;
+        }
+}
+
+
+vector<double>  GluonFusionEWCoefficients::givecoeff(double x[3],double y[3])
+{
+    vector<double> res;
+    const double dx12 = x[0]-x[1];
+    const double dx23 = x[1]-x[2];
+    const double dx31 = x[2]-x[0];
+
+    const double den=dx12*dx23*dx31;
+    res.push_back((-y[0]*dx23-y[1]*dx31-y[2]*dx12)/den);
+
+    res.push_back(( y[0]*(x[1]*x[1]-x[2]*x[2])
+                +y[1]*(x[2]*x[2]-x[0]*x[0])
+                +y[2]*(x[0]*x[0]-x[1]*x[1]) ) /den);
+    
+    res.push_back( (-y[0]*dx23*x[1]*x[2]
+                -y[1]*dx31*x[0]*x[2]
+                -y[2]*dx12*x[0]*x[1]) / den);
+    return res;
+}
 //------------------------------------------------------------------------------
 
 #include "ggf_cuts.h"
@@ -874,6 +985,8 @@ double GluonFusionExactCoefficients::NLO_soft_exact_e0()
 GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
 {
     ptr_to_GGF = this;
+    SetNumberOfParticles();
+    SetDecayParticleIdInEventBox();
     for (int i=0;i<7;i++){smax[i]=0.0;smin[i]=1000.0;}
     set_up_wilson_coefficients();
     set_up_beta_constants();
@@ -896,6 +1009,36 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
             }
         cout<<"\n\n number of Sectors defined : "<<necessary_sectors.size()<<endl;
         check_which_sectors_can_be_run_together(necessary_sectors);
+        if (UI.xml_info!="none")
+            {
+            
+                const char * output_fname = UI.xml_info.c_str();
+                fstream my_local_outfile(output_fname, fstream::out);
+                if(my_local_outfile.is_open())
+                    {
+                    my_local_outfile.precision(5);
+                    my_local_outfile << "<ehixs_info " << endl;
+                    my_local_outfile << "\nnumber_of_sectors=\""
+                    <<necessary_sectors.size()<<"\"";
+                    
+                    my_local_outfile << "\n runcard_name=\""<<UI.input_filename
+                    <<"\" >"<<endl;
+                    for (int i=0;i<necessary_sectors.size();i++)
+                        {
+                        my_local_outfile<<"\n<sector id=\""<<i<<"\" name=\""<<necessary_sectors[i]->name<<"\" ></sector>";
+                        }
+                    
+                    my_local_outfile << "</ehixs_info>" << endl;                    
+                    }
+                else
+                    {
+                    cout<<"\nfailbit = "<<my_local_outfile.fail()<<endl;
+                    cout << "Error opening file "<<UI.xml_info.c_str()<<endl;
+                    }
+                my_local_outfile.close();
+                
+            }
+        
         exit(0);
         }
     
@@ -932,7 +1075,10 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
                 {
                 exact_coefficients = new GluonFusionExactCoefficients(Model);
                 }
-            
+            if (UI.ew_soft)
+                {
+                electroweak_coefficients = new GluonFusionEWCoefficients(Model);
+                }
             //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
             //: Gf = 1.16637*10^{-5} * 0.389379*10^9
             pref_sgg = 35.0309;
@@ -1143,33 +1289,11 @@ void GluonFusion::set_up_beta_constants()
 
 void GluonFusion::evaluate_sector()
 {
-    //vegas_point_counter++;
-    //cout<<"\n point #"<<vegas_point_counter;
-    //cout<<"\n[GluonFusion::evaluate_sector] clearing events."<<endl;
-     clear_previously_allocated_events_and_free_memory();
-    //cout<<"\n[GluonFusion::evaluate_sector] preparing phase space dependent quantities."<<endl;
-     prepare_phase_space_dependent_quantities();
-    //cout<<"\n[GluonFusion::evaluate_sector] calling the ggf_func"<<endl;
-
-      (this->*(the_sector->ME->the_ggf_func))();
+    event_box.CleanUp();
+    prepare_phase_space_dependent_quantities();
+    (this->*(the_sector->ME->the_ggf_func))();
 }
 
-void GluonFusion::clear_previously_allocated_events_and_free_memory()
-{
-     
-          
-     for (int i=0;i<production_events.size();i++)
-          {
-//          if (the_sector->name == "F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,RR t5,a^2,e^-2 ,dim=6) : a^4,e^-2") cout<<"\n"<<*production_events[i];
-//          else cout<<"\n{"<<the_sector->name<<"}";
-          //cout<<"\n deleting event number "<<i<<endl;
-          delete production_events[i];
-          }
-//    cout<<"\n clearing the vector of production events."<<endl;
-    production_events.clear();
-//    cout<<"\n---"<<endl;
-    
-}
 
 void GluonFusion:: prepare_phase_space_dependent_quantities()
 {
@@ -1466,15 +1590,14 @@ void GluonFusion::Jnlo(const double & sigma, const double & x1, const double & x
 
 void GluonFusion::JLO(const double & sigma)
 {
-     double x1=ISP.x1LO;
-     double x2=ISP.x2LO;
-     FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-     FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-     FourMomentum* pH = new FourMomentum((x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
-     FourMomentum* p3 = new FourMomentum(0.0,0.0,0.0,0.0);
-     FourMomentum* p4 = new FourMomentum(0.0,0.0,0.0,0.0);
-     //push_back_event(sigma);
-     production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH));
+    double x1=ISP.x1LO;
+    double x2=ISP.x2LO;
+    event_box.AddNewEvent(sigma);
+    event_box.SetP(1,x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+    event_box.SetP(2,x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+    event_box.SetP(3,0.0,0.0,0.0,0.0);
+    event_box.SetP(4,0.0,0.0,0.0,0.0);
+    event_box.SetP(5,(x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
 }
 
 
@@ -1485,13 +1608,12 @@ void GluonFusion::LO_event_kinematics(const double& sigma,
                                       const double & x1,
                                       const double & x2)
 {
-    FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-    FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-    FourMomentum* pH = new FourMomentum((x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
-    FourMomentum* p3 = new FourMomentum(0.0,0.0,0.0,0.0);
-    FourMomentum* p4 = new FourMomentum(0.0,0.0,0.0,0.0);
-    production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH));
-
+    event_box.AddNewEvent(sigma);
+    event_box.SetP(1,x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+    event_box.SetP(2,x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+    event_box.SetP(3,0.0,0.0,0.0,0.0);
+    event_box.SetP(4,0.0,0.0,0.0,0.0);
+    event_box.SetP(5,(x1+x2)*Etot/2.0,0.0,0.0,(x1-x2)*Etot/2.0);
 }
 
 void GluonFusion::NLO_event_kinematics(const double& sigma,
@@ -1508,9 +1630,7 @@ void GluonFusion::NLO_event_kinematics(const double& sigma,
           }
      else
           {
-          FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-          FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-          FourMomentum* p4 = new FourMomentum(0.0,0.0,0.0,0.0);
+          
 
           
           //     ----------------- Higgs and gluon momenta ----------------------
@@ -1527,11 +1647,12 @@ void GluonFusion::NLO_event_kinematics(const double& sigma,
           
           const double sinphi = sin(2.0*consts::Pi*ISP.phi);
           const double cosphi = cos(2.0*consts::Pi*ISP.phi);
-          FourMomentum* pH = new FourMomentum(En,pt3*sinphi,pt3*cosphi,pZ);
-          FourMomentum* p3 = new FourMomentum(En3,-pt3*sinphi,-pt3*cosphi,pz3);
-
-          production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH)); 
-          
+          event_box.AddNewEvent(sigma);
+          event_box.SetP(1,x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+          event_box.SetP(2,x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
+          event_box.SetP(3,En3,-pt3*sinphi,-pt3*cosphi,pz3);
+          event_box.SetP(4,0.0,0.0,0.0,0.0);
+          event_box.SetP(5,En,pt3*sinphi,pt3*cosphi,pZ);
           }
 
 }
@@ -1556,12 +1677,9 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
     const double s2H = shat-s23-s24;
     const double s3H = s13+s23-s34;
     //const double s4H = s14+s24-s34;
-     
-    FourMomentum* p1 = new FourMomentum(x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
-    FourMomentum* p2 = new FourMomentum(x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
-    FourMomentum* p3;
-    FourMomentum* p4;
-    FourMomentum* pH;
+    event_box.AddNewEvent(sigma);
+    event_box.SetP(1,x1*Etot/2.0,0.0,0.0,x1*Etot/2.0);
+    event_box.SetP(2,x2*Etot/2.0,0.0,0.0,-x2*Etot/2.0);
     //     ----------------- Higgs and gluon momenta ----------------------
      
     double ptsq=s1H*s2H/shat-pow(Model.higgs.m(),2.0);
@@ -1583,9 +1701,10 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
     if ((pt3<=ptbuf and pt4<=ptbuf) )
         {
         // icase="only Higgs";
-        pH = new FourMomentum(En,0.0,0.0,pZ);
-        p3 = new FourMomentum(En3,0.0,0.0,pz3);
-        p4 = new FourMomentum(En4,0.0,0.0,pz4);
+        event_box.SetP(3,En3,0.0,0.0,pz3);
+        event_box.SetP(4,En4,0.0,0.0,pz4);
+        event_box.SetP(5,En,0.0,0.0,pZ);
+
         }
      //: NLO real kinematics : H + hard parton
      else if (pt3>ptbuf and pt4<ptbuf)
@@ -1594,9 +1713,10 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
         const double sinphi = sin(2.0*consts::Pi*ISP.phi);
         const double cosphi = cos(2.0*consts::Pi*ISP.phi);
         
-        pH = new FourMomentum(En,pT*sinphi,pT*cosphi,pZ);
-        p3 = new FourMomentum(En3,-pt3*sinphi,-pt3*cosphi,pz3);
-        p4 = new FourMomentum(En4,0.0,0.0,pz4);
+        event_box.SetP(3,En3,-pt3*sinphi,-pt3*cosphi,pz3);
+        event_box.SetP(4,En4,0.0,0.0,pz4);
+        event_box.SetP(5,En,pT*sinphi,pT*cosphi,pZ);
+
         }
      else if (pt4>ptbuf and pt3<ptbuf)
         {
@@ -1604,9 +1724,10 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
         const double sinphi = sin(2.0*consts::Pi*ISP.phi);
         const double cosphi = cos(2.0*consts::Pi*ISP.phi);
         
-        pH = new FourMomentum(En,pT*sinphi,pT*cosphi,pZ);
-        p4 = new FourMomentum(En4,-pt4*sinphi,-pt4*cosphi,pz4);
-        p3 = new FourMomentum(En3,0.0,0.0,pz3);
+        event_box.SetP(3,En3,0.0,0.0,pz3);
+        event_box.SetP(4,En4,-pt4*sinphi,-pt4*cosphi,pz4);
+        event_box.SetP(5,En,pT*sinphi,pT*cosphi,pZ);
+
         }
      //: NNLO double real kinematics : H + 2 hard partons
      else if (pt3>ptbuf and pt4>ptbuf)
@@ -1628,17 +1749,17 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
             const double cosphi = cos(2.0*consts::Pi*ISP.phi);
             
             
-            p3 = new FourMomentum(
-                                    En3,
-                                    pt3*cos(phi3)*sinphi + pt3*sin(phi3)*cosphi,
-                                    pt3*cos(phi3)*cosphi + pt3*sin(phi3)*sinphi,
-                                    pz3);
-            p4 = new FourMomentum(
+            event_box.SetP(3,
+                            En3,
+                            pt3*cos(phi3)*sinphi + pt3*sin(phi3)*cosphi,
+                            pt3*cos(phi3)*cosphi + pt3*sin(phi3)*sinphi,
+                            pz3);
+            event_box.SetP(4,
                             -En-En3,
                             -pt3*cos(phi3)*sinphi - pt3*sin(phi3)*cosphi -pT*sinphi,
                             -pt3*cos(phi3)*cosphi - pt3*sin(phi3)*sinphi-pT*cosphi,
                             -pZ-pz3);
-            pH = new FourMomentum(En,pT*sinphi,pT*cosphi,pZ);
+            event_box.SetP(5,En,pT*sinphi,pT*cosphi,pZ);
                }
         else if (pT<0.1*ptbuf)
         //: soft Higgs accidentally, two jets back to back
@@ -1647,9 +1768,9 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
             //: p3 is the phi-reference along the x-axis
             const double sinphi = sin(2.0*consts::Pi*ISP.phi);
             const double cosphi = cos(2.0*consts::Pi*ISP.phi);
-            p3 = new FourMomentum(En3,pt3*sinphi,pt3*cosphi,pz3);
-            p4 = new FourMomentum(En4,pt4*sinphi,pt4*cosphi,pz4);
-            pH = new FourMomentum(En,0.0,0.0,pZ);
+            event_box.SetP(3,En3,pt3*sinphi,pt3*cosphi,pz3);
+            event_box.SetP(4,En4,pt4*sinphi,pt4*cosphi,pz4);
+            event_box.SetP(5,En,0.0,0.0,pZ);
             }
         else
             {
@@ -1665,10 +1786,7 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
           <<"\t"<<s1H<<" "<<s2H<<" x1="<<x1<<" x2="<<x2;
         }
     
-    production_events.push_back(new GluonFusionEvent(sigma,p1,p2,p3,p4,pH));
-    
-    
-     //: momentum conservation check
+        //: momentum conservation check
      //
      // fvector PM = p1+p2-p3-p4-pH;
      //for (int i=0;i<4;i++) 
@@ -2004,6 +2122,7 @@ void GluonFusion::NNLO_hard_no_subtraction()
           //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
           *pow(WC.c0,2.0)
           ;
+          
           //z=0.1;x2=tau/z/x1;shat=pow(Model.higgs.m,2.0)/z; weight=1.0;//: franz's test point
           if (the_sector->ME->is_franz_topology())
                {
@@ -2061,7 +2180,7 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                          *1.0/(1.0-ISP.z)
                          *pow(WC.c0,2.0)
                          ;
-          //z=0.1;x2=tau/z/x1;shat=pow(Model.higgs.m,2.0)/z; weight=1.0;//: franz's test point
+          
           if (the_sector->ME->is_franz_topology())
                {
                for (int m=-3;m<the_sector->ME->epsilon_power()+1;m++)
@@ -2084,12 +2203,17 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                          }
                     for (int i=0;i<the_sector->ME->number_of_sectors_in_this_topology();i++)
                          {
+                         dummyres=0.0;
                          pointer_to_Franz_gluon_fusion the_func = the_sector->ME->franz_func();
+                         
+                         
                          (* the_func)
                          (i+1,//:franz counts from one
                           m,
                           shat,x1,x2,  z,-log_muf_sq_over_mh_sq, weight*thelog,consts::nf,
                           lambda1,lambda2,lambda3,lambda4,dummyres);
+                         
+                         dummyres=0.0;
                          (*the_func)
                          (i+1,//:franz counts from one
                           m,
@@ -2358,6 +2482,38 @@ void GluonFusion::qqbar_NLO_hard_exact()
         }
     
 }
+
+//: ewk matrix elements below
+void GluonFusion::NLO_ewk_soft()
+{
+    if (the_sector->ME->epsilon_power()==0)
+        {
+        double sigma_central =   pref_sgg
+        *ISP.measLO
+        *lumi->LL_LO(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *electroweak_coefficients->LO();
+        JLO(sigma_central);
+        }
+}
+
+
+void GluonFusion::NLO_ewk_soft_exact()
+{
+    if (the_sector->ME->epsilon_power()==0)
+        {
+        double sigma_central =   pref_sgg
+        *ISP.measLO
+        *lumi->LL_LO(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *exact_coefficients -> LO_epsilon(0)
+        *electroweak_coefficients->LO();
+        JLO(sigma_central);
+        }
+}
+
+
+
 
 
 

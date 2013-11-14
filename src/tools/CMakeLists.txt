@@ -1,0 +1,10 @@
+add_library(tools  
+                    hub.cpp
+                    vegas_adaptor.cpp
+                    histogram.cpp
+                    cut.cpp
+                    event.cpp
+                    bin.cpp
+                    convolutions.cpp
+                    user_interface.cpp
+                    )

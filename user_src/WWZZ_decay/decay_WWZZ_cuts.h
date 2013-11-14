@@ -18,16 +18,17 @@ public:
     : CCut("LeptonPairInvariantMass",cutvalue){};
     bool operator()(Event* the_event)
     {
-    HiggsTo4LeptonsEvent* my_event = (HiggsTo4LeptonsEvent*)(the_event);
-    FourMomentum* lep1 = my_event->lept1();
-    FourMomentum* lep2 = my_event->lept2();
+    double* lep1 = the_event->ParticleMomentum(1);
+    double* lep2 = the_event->ParticleMomentum(2);
     
-    FourMomentum lep12(lep1->E()+lep2->E(),
-                       lep1->px()+lep2->px(),
-                       lep1->py()+lep2->py(),
-                       lep1->pz()+lep2->pz());
-    const double invariant_mass = sqrt(lep12.square());
+    double e = lep1[0]+lep2[0];
+    double x = lep1[1]+lep2[1];
+    double y = lep1[2]+lep2[2];
+    double z =   lep1[3]+lep2[3];
+    const double invariant_mass = sqrt(e*e-x*x-y*y-z*z);
     if (invariant_mass > min) return true;
     return false;
     }
+    
+    
 };

@@ -8,7 +8,7 @@
 // Topology subtraction
 //#include "subtraction.hpp"
 #include "interface_to_amplitudes.h"
-#include "sector.h"
+//#include "sector.h"
 
 
 typedef void (*pointer_to_Franz)(const int&, const int&, 

@@ -1,0 +1,1 @@
+add_library(decay_z_gamma decay_z_gamma.cpp)

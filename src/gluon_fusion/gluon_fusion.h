@@ -6,6 +6,8 @@
 #include "fortran_interface_for_ggf_amplitudes.h"
 #include "chaplin.h"
 #include "convolutions.h"
+#include <fstream>
+using namespace std;
 
 typedef void (*pointer_to_Franz_gluon_fusion)(  const int&,
                                                 const int&,
@@ -32,12 +34,13 @@ class MeExternalInfo
 public:
     MeExternalInfo(const string & _pi,const string & _pj,const string& _pord,
                    const string & _name, int _epower,
-                   const string & _me_approximation);
+                   const string & _me_approximation,int alpha_ew_pow=0);
 public:
     string name;
     string parton_i;
     string parton_j;
     int alpha_power;
+    int alpha_ew_power;
     int epsilon_power;
     string me_approximation;
 };
@@ -77,6 +80,7 @@ public:
         stream<<*this;
         return (stream.str());}
     int alpha_power()const {return _info->alpha_power;}
+    int alpha_ew_power()const {return _info->alpha_ew_power;}
     int epsilon_power()const {return _info->epsilon_power;}
     string parton_i()const {return _info->parton_i;}
     string parton_j()const {return _info->parton_j;}
@@ -208,10 +212,48 @@ private://emthods
     double LO_exact_e0();
 };
 
+struct EwData{
+    EwData(const double&m,const double& w){mass=m;deltaew=w;}
+    double mass;
+    double deltaew;
+};
+
+class GluonFusionEWCoefficients
+{
+public:
+    GluonFusionEWCoefficients(const CModel&);
+    double LO(){return NLO_ew_coeff_;}
+private:
+    double NLO_ew_coeff_;
+    vector<EwData*> ew_data;
+private://methods
+    vector<double> givecoeff(double x[3],double y[3]);
+
+};
 
 
 
-
+class GluonFusionEvent : public Event
+{
+public:
+    GluonFusionEvent(const double& weight,FourMomentum* p1,FourMomentum* p2,
+                     FourMomentum* p3,FourMomentum* p4, FourMomentum* pH)
+    :Event(weight){p1_=*p1;p2_=*p2;p3_=*p3;p4_=*p4;pH_=*pH;}
+    //~GluonFusionEvent(){cout<<"\nevent destroyed";}
+    FourMomentum* p1(){return &p1_;}
+    FourMomentum* p2(){return &p2_;}
+    FourMomentum* p3(){return &p3_;}
+    FourMomentum* p4(){return &p4_;}
+    FourMomentum* pH(){return &pH_;}
+    FourMomentum* DecayParticleFourMomentum(){return &pH_;}
+private:
+    FourMomentum p1_;
+    FourMomentum p2_;
+    FourMomentum p3_;
+    FourMomentum p4_;
+    FourMomentum pH_;
+    
+};
 
 
 
@@ -229,7 +271,10 @@ public://methods
     
 
     void evaluate_sector();
-    void clear_previously_allocated_events_and_free_memory();
+    
+    void SetNumberOfParticles() {event_box.SetNumberOfParticles(5);}
+    void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(5);}
+    
     //: public because of weird structure
     void LO_parametrization_only();
     void NLO_parametrization();
@@ -259,6 +304,9 @@ public://methods
     void gq_NLO_hard_exact();
     void qqbar_NLO_hard_exact();
     
+    void NLO_ewk_soft();
+    void NLO_ewk_soft_exact();
+    
     string sector_name(){return the_sector->name;}
     int number_of_necessary_sectors(){return number_of_necessary_sectors_;}
 private://data
@@ -270,8 +318,10 @@ private://data
     WilsonCoefficients WC;
     BetaConstants beta;
     GluonFusionExactCoefficients * exact_coefficients;
+    GluonFusionEWCoefficients* electroweak_coefficients;
     int number_of_necessary_sectors_;
     //int vegas_point_counter;
+    vector<FourMomentum*> momenta_pointers_;
 private://methods
     void update_smaxmin(int,double);
     void check_which_sectors_can_be_run_together(const vector<SimpleSector*>&);
@@ -329,6 +379,7 @@ private://methods
     void gq2qh_exact_Q_fin(const double& weight,const double& z,
                            const double& x1,const double&x2,
                            const double& lambda);
+    
     
 };
 

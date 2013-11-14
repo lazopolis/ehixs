@@ -17,3 +17,98 @@ cmake ../src/
 make
 
 
+--------------------------------------------------------------------------------
+
+Running guidelines:
+
+1. edit the runcard
+
+The runcard is a file called (by default) "runcard" in the directory cmake_build.
+To change the filename you have to run 
+
+./ehixs --input_filename myfilename
+
+In the runcard any line starting with # is a comment. All other lines have to
+have the structure:
+
+parameter = value
+
+A list of available parameters, along with some explanation is provided with 
+
+ehixs --help
+
+All these parameters can be set in the runcard (or in command line, which 
+overwrites the runcard), and can be used to define a single run (i.e. one sector)
+or a set of sectors. 
+
+ehixs --info 
+
+gives a list of the sectors that fit the selection criteria of the runcard
+
+2. Add cuts or histograms in the runcard 
+
+The structure is 
+
+histogram = [histogram_name, number_of_bins, lowend, highend]
+
+cut = [cut_name, value1, value2,...]
+
+To see what histograms and cuts are defined for your process run 
+
+./ehixs --histogram_info
+
+./ehixs --cut_info
+
+In order to add new cuts you need to 
+(a) define them: edit the file in user_src/subprocess/subprocess_cuts.h
+where subprocess is the production or decay mode the cut is for. 
+For example, to add a new cut at the WW/ZZ decay mode you need to edit 
+user_src/WWZZ_decay/decay_WWZZ_cuts.h
+
+(b) add them as available cuts: edit the file 
+user_src/subprocess/subprocess_cut_initialization.h
+
+where you have to set a default value for your cut.
+
+3. Run the code 
+Here you have two options 
+a) single sector run: 
+
+./ehixs -s XX    
+
+where XX is your sector number (it needs to be a number from 0 to N in the set
+ defined by the runcard criteria - you can see that set with ./ehixs --info).
+ 
+b) all runs with the python script:
+The script (run_all_sectors.py) is found in cmake_build. In the first few lines
+there is a variable "directory_name" which you should edit. This directory 
+(which will be created if it doesn't exist already) will contain all the result 
+files for the run, all the log files (the vegas output and all single sector 
+ehixs output) and a file containing information on how many and which sectors 
+were run (in xml form). 
+
+After editing the directory_name variable in the python script you can run
+
+run_all_sectors.py
+ 
+4. read the results  (currently in standard output)
+
+They consist of a table with lines like 
+
+ 35 |  -1.33e-03 |   1.02e-04 |     7.7% |    49995 |    41.08s | 8.22e-04s/point
+
+where the numbers are :
+
+sector id # | signa | error | error% | #of points | cpu time needed | cpu time/point
+
+Then there is the total xsection with its error, the probability that the error 
+is wrong for the most problematic sector, together with its id number, and then
+ information about the histograms that were requested in runcard.
+
+You can rerun the run_all_sectors.py script as many times as you like (e.g. 
+to redirect the output): the script will not run sectors for which the ouput 
+file already exists!
+
+We have to think about whether this is a good strategy!
+
+

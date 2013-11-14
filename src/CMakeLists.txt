@@ -45,15 +45,13 @@ endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
 set (CMAKE_CXX_FLAGS "-Wno-return-type-c-linkage -Wno-deprecated-writable-strings -Wno-delete-non-virtual-dtor -DGTEST_HAS_PTHREAD=0 -pthread")
 
+
+#debug
+#set (CMAKE_CXX_FLAGS "-Wno-return-type-c-linkage -Wno-deprecated-writable-strings -g -O0")
+
 SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
 SET(CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
-
-
-
-
-
-
 
 include_directories(${EHIXS_SRC_DIR}
                     ${CHAPLIN_SOURCES}
@@ -62,11 +60,22 @@ include_directories(${EHIXS_SRC_DIR}
                     ${CUBA_DIR}
                     ${EHIXS_SRC_DIR}/bottom_fusion
                     ${EHIXS_SRC_DIR}/gluon_fusion
+                    ${EHIXS_SRC_DIR}/gluon_fusion_inclusive
+                    ${EHIXS_SRC_DIR}/decay_z_gamma
+                    ${EHIXS_SRC_DIR}/decay_h_to_gamma_gamma
+                    ${EHIXS_SRC_DIR}/decay_wwzz
                     ${EHIXS_SRC_DIR}/gtests
                     ${EHIXS_SRC_DIR}/decay_bb
+                    ${EHIXS_SRC_DIR}/tools
+                    ${EHIXS_SRC_DIR}/models
+                    ${EHIXS_SRC_DIR}/core
+                    ${EHIXS_SRC_DIR}/pdf
+                    ${EHIXS_SRC_DIR}/chaplin
                     ${EHIXS_SRC_DIR}/../user_src/ggf_production
                     ${EHIXS_SRC_DIR}/../user_src/WWZZ_decay
-
+                    ${EHIXS_SRC_DIR}/../user_src/decay_z_gamma
+                    ${EHIXS_SRC_DIR}/../user_src/decay_gamma_gamma
+                    ${EHIXS_SRC_DIR}/../user_src/
                     )
 
 link_directories(
@@ -76,269 +85,26 @@ link_directories(
                 ${LHAPDFDIR}
                )
 
-add_library(chaplin STATIC    ${CHAPLIN_SOURCES}/HPL1.f         
-                              ${CHAPLIN_SOURCES}/HPL2ar1.f     
-                              ${CHAPLIN_SOURCES}/HPL2atm1.f     
-                              ${CHAPLIN_SOURCES}/HPL3ar0.f      
-                              ${CHAPLIN_SOURCES}/HPL3at1.f      
-                              ${CHAPLIN_SOURCES}/HPL4.f         
-                              ${CHAPLIN_SOURCES}/HPL4arm1.f     
-                              ${CHAPLIN_SOURCES}/HPL4else.f     
-                              ${CHAPLIN_SOURCES}/basisexp.f
-                              ${CHAPLIN_SOURCES}/HPL2.f         
-                              ${CHAPLIN_SOURCES}/HPL2arm1.f     
-                              ${CHAPLIN_SOURCES}/HPL2else.f     
-                              ${CHAPLIN_SOURCES}/HPL3ar1.f      
-                              ${CHAPLIN_SOURCES}/HPL3atm1.f     
-                              ${CHAPLIN_SOURCES}/HPL4ar0.f      
-                              ${CHAPLIN_SOURCES}/HPL4at1.f      
-                              ${CHAPLIN_SOURCES}/aux.f          
-                              ${CHAPLIN_SOURCES}/basisfct.f
-                              ${CHAPLIN_SOURCES}/HPL2ar0.f      
-                              ${CHAPLIN_SOURCES}/HPL2at1.f      
-                              ${CHAPLIN_SOURCES}/HPL3.f         
-                              ${CHAPLIN_SOURCES}/HPL3arm1.f     
-                              ${CHAPLIN_SOURCES}/HPL3else.f     
-                              ${CHAPLIN_SOURCES}/HPL4ar1.f      
-                              ${CHAPLIN_SOURCES}/HPL4atm1.f     
-                              ${CHAPLIN_SOURCES}/basis.f        
-                              ${CHAPLIN_SOURCES}/coefficients.f
-                              )
 
-#add_library(decay_bb
-#                    ${EHIXS_SRC_DIR}/decay_bb/Decay_bb.cpp
-#                    )
+#-------------------------------------------------------------------------------
 
-add_library(test_utils ${EHIXS_SRC_DIR}/gtests/test_utils.cpp)
+add_subdirectory(gluon_fusion)
+add_subdirectory(gluon_fusion_inclusive)
+add_subdirectory(bottom_fusion)
+#add_subdirectory(gamma_star_gamma_star)
+add_subdirectory(chaplin)
+#add_subdirectory(decay_bb)
+add_subdirectory(decay_z_gamma)
+add_subdirectory(decay_h_to_gamma_gamma)
+add_subdirectory(decay_wwzz)
 
-add_library(tools  
-                    ${EHIXS_SRC_DIR}/hub.cpp
-                    ${EHIXS_SRC_DIR}/vegas_adaptor.cpp
-                    ${EHIXS_SRC_DIR}/histogram.cpp
-                    ${EHIXS_SRC_DIR}/cut.cpp
-                    ${EHIXS_SRC_DIR}/bin.cpp
-                    ${EHIXS_SRC_DIR}/convolutions.cpp
-                    ${EHIXS_SRC_DIR}/user_interface.cpp
-                    )
+add_subdirectory(tools)
+add_subdirectory(models)
+add_subdirectory(core)
+add_subdirectory(pdf)
 
-add_library(models 
-                    ${EHIXS_SRC_DIR}/model.cpp
-                    ${EHIXS_SRC_DIR}/particle.cpp
-            )
-
-add_library(gluon_fusion 
-                        # ${EHIXS_SRC_DIR}/gluon_fusion_inclusive/GluonFusionInclusive.cpp
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion.cpp
-     
-                        )
-
-add_library(main
-                    ${EHIXS_SRC_DIR}/production.cpp
-                    ${EHIXS_SRC_DIR}/process.cpp
-                    ${EHIXS_SRC_DIR}/decay.cpp
-                )
-
-add_library(pdf ${EHIXS_SRC_DIR}/luminosity.cpp
-                ${EHIXS_SRC_DIR}/pdf.cpp
-                ${EHIXS_SRC_DIR}/interpolator.cpp 
-                ${EHIXS_SRC_DIR}/cached_interpolator.cpp
-                ${EHIXS_SRC_DIR}/splitting_kernels.cpp
-                ${EHIXS_SRC_DIR}/one_d_interpolator.cpp
-               )
-
-
-
-
-add_library(fortran_bbh 
-                 #   ${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/kappa.f 
-                    ${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh1n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh2n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh3n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh4n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh5n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh6n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh7n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh8n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbggH/bbggh9n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH6n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH7n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH8n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarbbarH/bbarbbarH9n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarqqbarH/bbarqqbarH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarqqbarH/bbarqqbarH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbarqqbarH/bbarqqbarH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH6n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH7n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bbbbH/bbbbH8n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH6n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH7n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH8n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/bggbH9n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH6n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH7n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH8n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/gbgbH9n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bqqbH/bqqbH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bqqbH/bqqbH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bqqbH/bqqbH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bqqbH/bqqbH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bqqbH/bqqbH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bqqbH/bqqbH6n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qbqbH/qbqbH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qbqbH/qbqbH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qbqbH/qbqbH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qbqbH/qbqbH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qbqbH/qbqbH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qbqbH/qbqbH6n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/ggbbH/ggbbH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/ggbbH/ggbbH2n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/ggbbH/ggbbH3n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/ggbbH/ggbbH4n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/ggbbH/ggbbH5n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/qqbarbbarH/qqbarbbarH1n.f
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/RVbbargH/RVbbargH1n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/RVbbargH/RVbbargH2n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/RVbbargH/RVbbargH3n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/RVbbargH/RVbbargH4n.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/RVbbargH/polylog.f 
-				${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/RVbbargH/functions.f 
-                ${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/gbgbH/sigma_gbbH_RV.f 
-                ${EHIXS_SRC_DIR}/bottom_fusion/nnlo_double_real/bggbH/RVbgbH1n.f 
-                ${EHIXS_SRC_DIR}/bottom_fusion/RVbbargHren0n.f )
-
-
-add_library(nlo_exact_matrix_elements  
-                ${EHIXS_SRC_DIR}/gluon_fusion/nlo_exact_matrix_elements.cpp)
-
-
-SET(FORTRAN_FAST_GGF_DIR ${EHIXS_SRC_DIR}/gluon_fusion/fast_rgg2ggh)
-  
-
-add_library(fortran_ggf ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rgg2ght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rqg2qht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rgq2qht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rqqbar2ght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrq1q22q1q2Ht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrq1q22q1q2Ht2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqq2qqHt1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqq2qqHt2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqq2qqHt3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2qqbarht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2qqbarht2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2qqbarht3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2qqbarht4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2qqbarht5.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2qqbarht6.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2gght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2gght2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2gght3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2gght4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2gght5.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqqbar2gght6.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvqqbar2ght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrq1q1bar2q2q2barht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrq1q1bar2q2q2barht2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght5.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght6.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght7.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght8.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght9.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght10.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght11.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght12.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght13.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght14.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgq2qght15.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvgq2qht1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght5.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght6.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght7.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght8.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght9.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght10.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght11.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght12.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght13.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght14.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrqg2qght15.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvqg2qht1.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght1.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght2.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght3.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght4.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght5.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght6.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght7.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght8.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght9.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght10.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght11.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght12.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght13.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght14.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght15.f
-                         ${FORTRAN_FAST_GGF_DIR}/rrgg2gght16.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht1.f                         
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht2.f                         
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht3.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht5.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht6.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht7.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht8.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht9.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht10.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht11.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht12.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rrgg2qqbarht13.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvgg2ght1.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvgg2ght2.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/rvgg2ght4.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/gluon_fusion_matrix_elements/kappa.f
-                         ${EHIXS_SRC_DIR}/gluon_fusion/exact_nlo_matrix_elements/massive_ampls.F
-                         ${EHIXS_SRC_DIR}/gluon_fusion/exact_nlo_matrix_elements/masters.F
-          )
-
-
-add_library(avh_olo      ${EHIXS_SRC_DIR}/avh_olo/avh_olo_3div.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_3fin.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_4div.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_4fin.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_b11.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_cd0.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_cmplx.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_func.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_hello.f
-                         ${EHIXS_SRC_DIR}/avh_olo/avh_olo_real.f
-          )
+add_subdirectory(avh_olo)
+add_subdirectory(gtests)
 
 
 #find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
@@ -347,288 +113,127 @@ add_library(avh_olo      ${EHIXS_SRC_DIR}/avh_olo/avh_olo_3div.f
 #target_link_libraries(mytarget ${LHAPDF})
 #If it does not, it can be set through the CMake GUI.
 
-
-
-add_executable(tests  ${EHIXS_SRC_DIR}/gtests/tests.cpp)
-target_link_libraries(tests  
-                        main 
-                        decay_zzww
-                        cuba
-                        gtest 
-                        gfortran 
-                        chaplin tools   
-                        #decay_bb
-                        fortran_bbh 
-                        fortran_ggf  
-                        pdf 
-                        avh_olo 
-                        LHAPDF 
-                        ${LHAPDF})
-
-
-
-#add_executable(pdf_test  ${EHIXS_SRC_DIR}/gtests/pdf_test.cpp)
-#target_link_libraries(pdf_test  
-#                      cuba gtest gfortran  tools pdf avh_olo LHAPDF ${LHAPDF})
-
-#add_executable(integration_tests  ${EHIXS_SRC_DIR}/gtests/integration_tests.cpp)
-#target_link_libraries(integration_tests  
-#               cuba gtest gfortran chaplin tools  decay_bb
-#               main decay_zzww fortran_bbh fortran_ggf pdf avh_olo LHAPDF ${LHAPDF})
-
-add_executable(nlo_poles_test  
-                ${EHIXS_SRC_DIR}/gtests/ggf_pole_cancelation_nlo_test.cpp)
-target_link_libraries(nlo_poles_test
-			test_utils
-            #decay_bb
-            main  decay_zzww
+SET(LIBRARIES_FOR_GLOBAL_TESTS core  decay_zzww decay_z_gamma higgs_zerfal 
+            decay_h_to_gamma_gamma
             models
             gluon_fusion tools
-            nlo_exact_matrix_elements
-            fortran_ggf
+            fortran_ggf fortran_ggf_RR
             fortran_bbh
             chaplin
             pdf
             avh_olo
             cuba
-            gtest
+            gtest test_utils
             LHAPDF
-            ${LHAPDF})  
+            ${LHAPDF})
+
+SET(TEST_DIR ${EHIXS_SRC_DIR}/gtests)
+
+#add_executable(tests  ${TEST_DIR}/tests.cpp)
+#target_link_libraries(tests LIBRARIES_FOR_GLOBAL_TESTS)
+
+#add_executable(pdf_test  ${TEST_DIR}/pdf_test.cpp)
+#target_link_libraries(pdf_test  
+#                      cuba gtest gfortran  tools pdf avh_olo LHAPDF ${LHAPDF})
+
+#add_executable(integration_tests  ${TEST_DIR}/integration_tests.cpp)
+#target_link_libraries(integration_tests  
+#               cuba gtest gfortran chaplin tools  decay_bb
+#               core decay_zzww fortran_bbh fortran_ggf fortran_ggf_RR pdf avh_olo LHAPDF ${LHAPDF})
+
+add_executable(nlo_poles_test  ${TEST_DIR}/ggf_pole_cancelation_nlo_test.cpp)
+target_link_libraries(nlo_poles_test ${LIBRARIES_FOR_GLOBAL_TESTS})  
 
 
-add_executable(nlo_gg_xs_test  ${EHIXS_SRC_DIR}/gtests/ggf_nlo_gg_channel_xsection_test.cpp)
-target_link_libraries(nlo_gg_xs_test
-			test_utils
-                        #decay_bb
-                        main  models
-                        decay_zzww
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF})
+add_executable(nlo_gg_xs_test ${TEST_DIR}/ggf_nlo_gg_channel_xsection_test.cpp)
+target_link_libraries(nlo_gg_xs_test ${LIBRARIES_FOR_GLOBAL_TESTS})
   
 
-add_executable(nnlo_q1q2_pole_test ${EHIXS_SRC_DIR}/gtests/ggf_NNLO_q1q2_pole_cancelation_test.cpp)
+add_executable(nnlo_q1q2_pole_test 
+            ${TEST_DIR}/ggf_NNLO_q1q2_pole_cancelation_test.cpp)
 target_link_libraries(nnlo_q1q2_pole_test
-			test_utils
-                        #decay_bb
-                        main  models
-                        decay_zzww
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF})
+			${LIBRARIES_FOR_GLOBAL_TESTS})
   
-
-add_executable(nnlo_qq_test ${EHIXS_SRC_DIR}/gtests/ggf_nnlo_qq_test.cpp)
+add_executable(nnlo_qq_test 
+            ${TEST_DIR}/ggf_nnlo_qq_test.cpp)
 target_link_libraries(nnlo_qq_test
-			test_utils
-                        #decay_bb
-                        main  decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF})  
+			${LIBRARIES_FOR_GLOBAL_TESTS})  
 
-add_executable(nnlo_qqbar_test ${EHIXS_SRC_DIR}/gtests/ggf_nnlo_qqbar_test.cpp)
+add_executable(nnlo_qqbar_test 
+            ${TEST_DIR}/ggf_nnlo_qqbar_test.cpp)
 target_link_libraries(nnlo_qqbar_test
-			test_utils
-                        #decay_bb
-                        main  decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF})
+			${LIBRARIES_FOR_GLOBAL_TESTS})
  
 
-add_executable(nnlo_qg_test ${EHIXS_SRC_DIR}/gtests/quark_gluon_nnlo_test.cpp)
+add_executable(nnlo_qg_test 
+            ${TEST_DIR}/quark_gluon_nnlo_test.cpp)
 target_link_libraries(nnlo_qg_test
-			test_utils
-                        #decay_bb
-                        main  decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF})  
+			${LIBRARIES_FOR_GLOBAL_TESTS})  
 
-add_executable(nnlo_gg_test ${EHIXS_SRC_DIR}/gtests/gluon_gluon_nnlo_test.cpp)
+add_executable(nnlo_gg_test 
+            ${TEST_DIR}/gluon_gluon_nnlo_test.cpp)
 target_link_libraries(nnlo_gg_test
-			test_utils
-                        #decay_bb
-                        main  decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF})  
+			${LIBRARIES_FOR_GLOBAL_TESTS})  
 
-add_executable(nnlo_gq_test ${EHIXS_SRC_DIR}/gtests/gluon_quark_nnlo_test.cpp)
+add_executable(nnlo_gq_test 
+            ${TEST_DIR}/gluon_quark_nnlo_test.cpp)
 target_link_libraries(nnlo_gq_test
-			test_utils
-                        #decay_bb
-                        main decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-                        gtest
-                        LHAPDF
-                        ${LHAPDF}) 
+			${LIBRARIES_FOR_GLOBAL_TESTS}) 
 
-add_executable(nlo_exact_test ${EHIXS_SRC_DIR}/gtests/nlo_exact_test.cpp)
-target_link_libraries(nlo_exact_test
-			test_utils 
-			#decay_bb
-                        main  decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements
-                        fortran_ggf
-                        fortran_bbh
-                        chaplin
-                        pdf
-                        avh_olo
-                        cuba
-			gtest
-                        LHAPDF
-                        ${LHAPDF}
-			)
+add_executable(nlo_exact_test 
+            ${TEST_DIR}/nlo_exact_test.cpp)
+target_link_libraries(nlo_exact_test 
+            ${LIBRARIES_FOR_GLOBAL_TESTS})
 			
 
-add_executable(one_d_interpolator_test ${EHIXS_SRC_DIR}/gtests/one_d_interpolator_test.cpp)
+add_executable(one_d_interpolator_test 
+            ${TEST_DIR}/one_d_interpolator_test.cpp)
 target_link_libraries(one_d_interpolator_test 
-                                        tools pdf gtest avh_olo LHAPDF ${LHAPDF})
+            tools pdf gtest avh_olo LHAPDF ${LHAPDF})
 
 
 #add_executable(iggf_test  ${EHIXS_SRC_DIR}/iggf.cpp)
 #target_link_libraries(iggf_test  
-#                                        ggf_inclusive tools chaplin gluon_fusion nlo_exact_matrix_elements gfortran gtest)
+#                   ggf_inclusive tools chaplin gluon_fusion  gfortran gtest)
 
 
-add_executable(UI_test ${EHIXS_SRC_DIR}/gtests/test_UI.cpp)
+add_executable(UI_test 
+            ${TEST_DIR}/test_UI.cpp)
 target_link_libraries(UI_test 
-                                        tools gtest)
+                        tools gtest)
 
-add_executable(nlo_exact_virtual ${EHIXS_SRC_DIR}/gtests/exact_virtual_test.cpp)
-target_link_libraries(nlo_exact_virtual 
-                                        nlo_exact_matrix_elements 
-                                        fortran_ggf
-                                        models
-                                        avh_olo
-                                        chaplin
-                                        tools
-                                        cuba
-                                        gtest)
+add_executable(nlo_exact_virtual 
+            ${TEST_DIR}/exact_virtual_test.cpp)
+target_link_libraries(nlo_exact_virtual
+                    fortran_ggf fortran_ggf_RR gluon_fusion
+                    models avh_olo chaplin tools
+                    cuba gtest)
 
 
-add_executable(off_line_histograming ${EHIXS_SRC_DIR}/gtests/off_line_histograming.cpp)
+add_executable(off_line_histograming 
+            ${TEST_DIR}/off_line_histograming.cpp)
 target_link_libraries(off_line_histograming
-                                        tools gtest)
+            tools gtest)
 
-#add_executable(model_test ${EHIXS_SRC_DIR}/gtests/iggf.cpp)
-#target_link_libraries(model_test
-#         		gtest
-#			models
-#			)
 
-add_library(ggf_inclusive      ${EHIXS_SRC_DIR}/exact_lo_inclusive.cpp
-          )
-
-add_executable(iggf ${EHIXS_SRC_DIR}/gtests/iggf.cpp)
+add_executable(iggf 
+            ${TEST_DIR}/iggf.cpp)
 target_link_libraries(iggf
-         		gtest
-			ggf_inclusive
-			chaplin
-			tools
-			models
-			cuba
-			pdf
-			LHAPDF ${LHAPDF} 
+            gtest ggf_inclusive
+			chaplin tools models cuba pdf LHAPDF ${LHAPDF}
 			)
 
 
-add_executable(ihixs++ ${EHIXS_SRC_DIR}/ihixs.cpp)
+add_executable(ihixs++ 
+            ${EHIXS_SRC_DIR}/ihixs.cpp)
 target_link_libraries(ihixs++
-			ggf_inclusive
-			chaplin
-			tools
-			models
-			cuba
-			pdf
-			LHAPDF ${LHAPDF} 
+			ggf_inclusive chaplin tools models cuba pdf LHAPDF ${LHAPDF}
 			)
 
-
-
-
-
-
-add_executable(ehixs  ${EHIXS_SRC_DIR}/ehixs.cpp)
-
-
-add_library(decay_zzww
-                    ${EHIXS_SRC_DIR}/higgs_zerfall/higgs_zerfall.f
-                    ${EHIXS_SRC_DIR}/higgs_zerfall/higgs_zerfall_amplitudes.f
-                    )
-target_link_libraries(ehixs    
-                       # decay_bb
-                        main  decay_zzww models
-                        gluon_fusion tools
-                        nlo_exact_matrix_elements 
-                        fortran_ggf 
-			fortran_bbh
-			chaplin
-                        pdf 
-                        avh_olo 
-			cuba
-                        LHAPDF
-                        ${LHAPDF}  
-			)
-
+add_executable(ehixs  
+            ${EHIXS_SRC_DIR}/ehixs.cpp)
+target_link_libraries(ehixs 
+            ${LIBRARIES_FOR_GLOBAL_TESTS})
 
 set(CMAKE_BUILD_TYPE Release)
 

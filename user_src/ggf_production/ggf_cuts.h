@@ -23,10 +23,14 @@ public:
     : CCut("CutHiggsPT",cutvalue){};
     bool operator()(Event* the_event)
         {
-        GluonFusionEvent* my_event = (GluonFusionEvent*)(the_event);
-        FourMomentum* ph = my_event->pH();
-        const double pth = sqrt(ph->px() * ph->px() + ph->py()*ph->py());
-        if (pth>min) return true;
+        double* ph = the_event->ParticleMomentum(5);
+        const double pth = sqrt(ph[1] * ph[1] + ph[2]*ph[2]);
+        if (pth>min)
+            {
+            //cout<<"\n event accepted with ptH = "<<pth;
+            return true;
+            }
+
         return false;
         }
 };
