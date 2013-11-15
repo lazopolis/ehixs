@@ -23,10 +23,8 @@ ostream& operator<<(ostream& stream, const NewMatrixElement& ME)
 NewSimpleSector::NewSimpleSector(const FFF& _f1,const FFF& _f2,
                            const vector<ExpansionTerm*>& _factors,
                            NewMatrixElement* _ME,
-                                 int ep_pow,
-                                 Luminosity* lumi,
-                                 double* xx_vegas)
-    :F1(_f1),F2(_f2),factors(_factors),ME(_ME), lumi_(lumi), xx_vegas_(xx_vegas)
+                                 int ep_pow)
+    :F1(_f1),F2(_f2),factors(_factors),ME(_ME)
 {
     
     alpha_power= F1.order+F2.order+ME->alpha_power();
@@ -50,26 +48,19 @@ NewSimpleSector::NewSimpleSector(const FFF& _f1,const FFF& _f2,
     initial_state_jacobian_ = 1.0;
 }
 
-void NewSimpleSector::Evaluate()
+
+void NewSimpleSector::Evaluate(double* xx_vegas)
 {
-    SetInitialStateVars();
-    lumi_->set_cur_lumi(x_[0],x_[1]);
+    //SetInitialStateVars();
+
+    lumi_->set_cur_lumi(xx_vegas[0],xx_vegas[1]);
     double factor_for_ME =   initial_state_jacobian_
                             *lumi_->LL(0)
                             *prefactor_;
-    ME->Evaluate(factor_for_ME,x_,lambda_);
+    ME->Evaluate(factor_for_ME,xx_vegas);
     
 }
 
-void NewSimpleSector::SetInitialStateVars()
-{
-    x_[0] = xx_vegas_[0];
-    x_[1] = xx_vegas_[1];
-    for (int i=0;i<ME->dimension()-2;i++)
-        {
-        lambda_[i] = xx_vegas_[i+2];
-        }
-}
 
 void NewSimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
 {
@@ -157,12 +148,10 @@ GammaStarGammaStarMatrixElementBox::GammaStarGammaStarMatrixElementBox(EventBox&
 //------------------------------------------------------------------------------
 
 GammaStarGammaStarSectorBox::GammaStarGammaStarSectorBox
-        (EventBox& event_box,const double& log_mur_sq_over_muf_sq,
-         double* xx_vegas,Luminosity* lumi)
+        (EventBox& event_box,const double& log_mur_sq_over_muf_sq)
 {
     log_mur_sq_over_muf_sq_ = log_mur_sq_over_muf_sq;
-    xx_vegas_ = xx_vegas;
-    lumi_ = lumi;
+
     available_matrix_elements = new GammaStarGammaStarMatrixElementBox(event_box);
     
     _av_partons.push_back("quark");
@@ -244,7 +233,6 @@ vector<FFF> GammaStarGammaStarSectorBox::give_possible_F(const string & parton,i
 
 void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_and_pdfs(const FFF & F1,const FFF & F2,int Sorder)
 {
-    cout<<"\n*** Sorder = "<<Sorder<<endl;
     vector<NewMatrixElement*> matching_mes;
     for (int ime=0;ime<available_matrix_elements->size();ime++)
         {
@@ -279,9 +267,6 @@ void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_e_order_and_p
              int Sorder,int Eorder,
              const vector<NewMatrixElement*> & matching_mes)
 {
-    cout<<"\n arrived at core sector construction site "<<endl;
-    cout<<"with Sorder = "<<Sorder<<" and Eorder = "<<Eorder<<endl;
-    cout<<"number of matching matrix elements "<<matching_mes.size()<<endl;
     
     vector<ExpansionTerm*> AREN_vector;
     vector<ExpansionTerm*> AREN_vector_trivial;
@@ -318,19 +303,15 @@ void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_e_order_and_p
                             {
                             vector<ExpansionTerm*> factors;
                             factors.push_back(cur_aren[iaren]);
-                            available_sectors.push_back(new NewSimpleSector(F1,F2,factors,cur_me,me_epsilon_power,lumi_,xx_vegas_));
+                            available_sectors.push_back(new NewSimpleSector(F1,F2,factors,cur_me,me_epsilon_power));
                             }
                         else
                             {
-                            cout<<"total_epsilon_order  = "<<total_epsilon_order
-                            <<" failed"<<endl;
                             }
                         }
                     }
                 else
                     {
-                    cout<<"total_alpha_order  = "<<total_alpha_order
-                    <<" failed"<<endl;
                     }
                 }
             }
@@ -407,9 +388,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 {
     SetNumberOfParticles();
     all_sectors = new GammaStarGammaStarSectorBox(event_box,
-                                                  log_mur_sq_over_muf_sq,
-                                                  xx_vegas,
-                                                  lumi);
+                                                  log_mur_sq_over_muf_sq);
         
     if (UI.info)
         {
@@ -436,7 +415,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
         exit(0);
         }
     
-    cout<<"\n[GluonFusion] : finding sector"<<endl;
+    cout<<"\n[Gamma* Gamma*] : finding sector"<<endl;
     find_topology(UI); //: finding topology and setting all appropriate pointers to Channel, Convolution, PartonicMode, PartonicXS, Topology etc.
     if (UI.dummy_process == false)
         {
@@ -448,7 +427,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
             <<the_sector->name
             <<"\"\n----------------------------------\n"<<endl;
             
-            
+            the_sector->SetLuminosity(lumi);
                         
             the_sector -> setUpPrefactor(Model.alpha_strong()/consts::Pi);
             
@@ -464,7 +443,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 void GammaStarGammaStar::evaluate_sector()
 {
     event_box.CleanUp();
-    the_sector->Evaluate();
+    the_sector->Evaluate(xx_vegas);
 
 }
 

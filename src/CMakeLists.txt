@@ -128,6 +128,21 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS core  decay_zzww decay_z_gamma higgs_zerfal
             LHAPDF
             ${LHAPDF})
 
+SET(LIBRARIES_FOR_GSTAR_ONLY core     
+            
+            models
+             gamma_star_gamma_star tools
+             
+            
+            
+            pdf
+            
+            cuba
+             
+            LHAPDF
+            ${LHAPDF})
+
+
 SET(TEST_DIR ${EHIXS_SRC_DIR}/gtests)
 
 #add_executable(tests  ${TEST_DIR}/tests.cpp)
@@ -235,6 +250,8 @@ add_executable(ehixs
             ${EHIXS_SRC_DIR}/ehixs.cpp)
 target_link_libraries(ehixs 
             ${LIBRARIES_FOR_GLOBAL_TESTS})
+
+
 
 set(CMAKE_BUILD_TYPE Release)
 
