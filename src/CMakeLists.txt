@@ -43,7 +43,7 @@ endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
 
 
-set (CMAKE_CXX_FLAGS "-Wno-return-type-c-linkage -Wno-deprecated-writable-strings -Wno-delete-non-virtual-dtor -DGTEST_HAS_PTHREAD=0 -pthread")
+set (CMAKE_CXX_FLAGS "  -DGTEST_HAS_PTHREAD=0 -pthread")
 
 
 #debug
@@ -60,6 +60,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${CUBA_DIR}
                     ${EHIXS_SRC_DIR}/bottom_fusion
                     ${EHIXS_SRC_DIR}/gluon_fusion
+                    ${EHIXS_SRC_DIR}/gamma_star_gamma_star
                     ${EHIXS_SRC_DIR}/gluon_fusion_inclusive
                     ${EHIXS_SRC_DIR}/decay_z_gamma
                     ${EHIXS_SRC_DIR}/decay_h_to_gamma_gamma
@@ -91,7 +92,7 @@ link_directories(
 add_subdirectory(gluon_fusion)
 add_subdirectory(gluon_fusion_inclusive)
 add_subdirectory(bottom_fusion)
-#add_subdirectory(gamma_star_gamma_star)
+add_subdirectory(gamma_star_gamma_star)
 add_subdirectory(chaplin)
 #add_subdirectory(decay_bb)
 add_subdirectory(decay_z_gamma)
@@ -116,7 +117,7 @@ add_subdirectory(gtests)
 SET(LIBRARIES_FOR_GLOBAL_TESTS core  decay_zzww decay_z_gamma higgs_zerfal 
             decay_h_to_gamma_gamma
             models
-            gluon_fusion tools
+            gluon_fusion gamma_star_gamma_star tools
             fortran_ggf fortran_ggf_RR
             fortran_bbh
             chaplin

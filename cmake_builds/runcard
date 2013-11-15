@@ -20,4 +20,4 @@ nstart = 10000
 nincrease = 0
 maxeval = 50000
 sector_for_production = 30
-ew_soft = true
+#ew_soft = true

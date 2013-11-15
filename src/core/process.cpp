@@ -1,5 +1,6 @@
 #include "process.h"
 #include "gluon_fusion.h"
+#include "gamma_star_gamma_star.h"
 #include "bottom_fusion.h"
 
 //#include "histograms.hpp" //: particular available histograms are defined here. The base class for histograms is at CHistogram.h
@@ -157,44 +158,51 @@ Process::Process(const UserInterface & UI)
 Vegas(UI)
 {
     decay_particle_id_=-1;
-        cout<<"\n------------------------ new Process"<<endl;
+    cout<<"\n------------------------ new Process"<<endl;
     UI.PrintAllOptions();
-        //: DEFAULT SETTINGS
-        Vegas.number_of_components=1;
-        Vegas.set_ptr_to_the_hatch(&the_hatch);
-        Vegas.set_ptr_to_integrand(&Integrand);
-        _histograms = new HistogramBox(UI);
-        //_cuts = new CutBox(UI);
-        if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
+    //: DEFAULT SETTINGS
+    Vegas.number_of_components=1;
+    Vegas.set_ptr_to_the_hatch(&the_hatch);
+    Vegas.set_ptr_to_integrand(&Integrand);
+    _histograms = new HistogramBox(UI);
+    //_cuts = new CutBox(UI);
+    
+    if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
         
-        if (UI.number_of_flavours!=5)
+    if (UI.number_of_flavours!=5)
+        {
+        cout<<"\n\nerror in constructor of ExclusiveClass: during refactoring the nf became a global variable consts::nf and we don't want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
+        }
+    my_UI=UI;
+    ptr_to_process=this;
+    production_is_defined=false;
+    decay_is_defined=false;
+    //: setting production
+    // process forking
+    if( UI.production == "" || UI.production == "1" )
+        {
+        std::cout << "No process specified" << endl;
+        }
+    else
+        {
+        if (UI.production=="ggF")
             {
-            cout<<"\n\nerror in constructor of ExclusiveClass: during refactoring the nf became a global variable consts::nf and we don't want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
+            std::cout<<"\nProcess initiated with production "
+            <<UI.production<<endl;
+            set_production(new GluonFusion(UI));
             }
-        my_UI=UI;
-        ptr_to_process=this;
-        production_is_defined=false;
-        decay_is_defined=false;
-        //: setting production
-        // process forking
-        if( UI.production == "" || UI.production == "1" )
+        else if (UI.production=="GammaStarGammaStar")
             {
-            std::cout << "No process specified" << endl;
+            std::cout<<"\nProcess initiated with production "<<UI.production;
+            set_production(new GammaStarGammaStar(UI));
             }
         else
             {
-            if (UI.production=="ggF")
-                {
-                std::cout<<"\nProcess initiated with production "<<UI.production;
-                set_production(new GluonFusion(UI));
-                }
-            else
-                {
-                cout<<endl<<"Process "<<UI.production<<" not implemented";
-                throw "non-implemented process";
-                }
+            cout<<endl<<"Process "<<UI.production<<" not implemented";
+            throw "non-implemented process";
             }
-        // setting decay here!!
+        }
+    // setting decay here!!
     if( UI.decay == "" || UI.decay == "1" )
         {
         std::cout << "No decay specified" << endl;

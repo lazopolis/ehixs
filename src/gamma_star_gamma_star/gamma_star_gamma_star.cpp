@@ -1,54 +1,18 @@
+#include <iostream>
+using namespace std;
+#include "gamma_star_gamma_star.h"
 
-
-
-
-//
-////: ------- gluon fusion LO
-//void GammaStarGammaStar::LO()
-//{
-//    //: the_sector->ME->epsilon_power doesn't matter here
-//    //: because LO has the structure 1+e+e^2
-//    if (the_sector->ME->epsilon_power()>=0)
-//        {
-//        double sigma_central =   pref_sgg
-//        *ISP.measLO
-//        *lumi->LL_LO(0)
-//        *the_sector->sector_specific_prefactors_from_a_e_expansion();
-//        
-//        JLO(sigma_central);
-//        }
-//}
-//
-
-
-
-
-MeExternalInfo::MeExternalInfo(const string & _pi,const string & _pj,const string& _pord,
-                               const string & _name, int _epower,
-                               const string & _me_approximation)
-{
-    parton_i=_pi;
-    parton_j=_pj;
-    name=_name;
-    epsilon_power=_epower;
-    if (_pord=="LO") alpha_power=0;
-    else if (_pord=="NLO") alpha_power=1;
-    else if (_pord=="NNLO") alpha_power=2;
-    else if (_pord=="N3LO") alpha_power=3;
-    else {cout<<"\n unrecognized pord when constructing MatrixElement"<<endl;exit(1);}
-    me_approximation=_me_approximation;
-}
 
 //------------------------------------------------------------------------------
 
 
 
 
-ostream& operator<<(ostream& stream, const MatrixElement& ME)
+ostream& operator<<(ostream& stream, const NewMatrixElement& ME)
 {
     stream<<"S("<<ME.parton_i()<<","<<ME.parton_j()<<","<< ME.name()
     <<",a^"<<ME.alpha_power()<<",e^"<<ME.epsilon_power()
-    <<" ,dim="<<ME.dimension<<")";
+    <<" ,dim="<<ME.dimension()<<")";
     
     return stream;
 }
@@ -58,12 +22,16 @@ ostream& operator<<(ostream& stream, const MatrixElement& ME)
 
 NewSimpleSector::NewSimpleSector(const FFF& _f1,const FFF& _f2,
                            const vector<ExpansionTerm*>& _factors,
-                           MatrixElement* _ME,Luminosity* lumi)
-    :F1(_f1),F2(_f2),factors(_factors),ME(_ME), lumi_(lumi)
+                           NewMatrixElement* _ME,
+                                 int ep_pow,
+                                 Luminosity* lumi,
+                                 double* xx_vegas)
+    :F1(_f1),F2(_f2),factors(_factors),ME(_ME), lumi_(lumi), xx_vegas_(xx_vegas)
 {
     
     alpha_power= F1.order+F2.order+ME->alpha_power();
     //: the minus below: FFF has an epsilon order defined positive (otherwise the pdf complain)
+    ME->set_epsilon_power(ep_pow);
     epsilon_power = -F1.epsilon_order-F2.epsilon_order+ME->epsilon_power();
     for (int i=0;i<factors.size();i++)
         {
@@ -79,23 +47,28 @@ NewSimpleSector::NewSimpleSector(const FFF& _f1,const FFF& _f2,
     stream<<*ME;
     stream<<" : a^"<<alpha_power<<",e^"<<epsilon_power;
     name=stream.str();
+    initial_state_jacobian_ = 1.0;
 }
 
 void NewSimpleSector::Evaluate()
 {
     SetInitialStateVars();
-    lumi->set_cur_lumi(x1,x2);
-    double factor_for_ME =   pref_sgg
-                            *ISP.measLO
-                            *lumi->LL(0)
+    lumi_->set_cur_lumi(x_[0],x_[1]);
+    double factor_for_ME =   initial_state_jacobian_
+                            *lumi_->LL(0)
                             *prefactor_;
-    ME->Evaluate(factor_for_ME);
+    ME->Evaluate(factor_for_ME,x_,lambda_);
     
 }
 
 void NewSimpleSector::SetInitialStateVars()
 {
-    
+    x_[0] = xx_vegas_[0];
+    x_[1] = xx_vegas_[1];
+    for (int i=0;i<ME->dimension()-2;i++)
+        {
+        lambda_[i] = xx_vegas_[i+2];
+        }
 }
 
 void NewSimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
@@ -162,55 +135,53 @@ pdf_pair_list NewSimpleSector::give_list_of_pdf_pairs()
 
 void NewSimpleSector::setUpPrefactor(const double & a_s_over_pi)
 {
-    _prefactor =1.0;
+    prefactor_ =1.0;
     for (unsigned i=0;i<factors.size();i++)
         {
-        _prefactor = _prefactor * factors[i]->give_value();
+        prefactor_ = prefactor_ * factors[i]->give_value();
         }
-    _prefactor = _prefactor * pow(a_s_over_pi,alpha_power);
+    prefactor_ = prefactor_ * pow(a_s_over_pi,alpha_power);
 }
 
 
 //------------------------------------------------------------------------------
 
 
-GammaStarGammaStarMatrixElementBox::GammaStarGammaStarMatrixElementBox()
+GammaStarGammaStarMatrixElementBox::GammaStarGammaStarMatrixElementBox(EventBox& event_box)
 {
     //: linking the matrix elements
-    available_matrix_elements.push_back(new GstarGstarMeLO); 
+    available_matrix_elements.push_back(new GstarGstarMeLO(event_box));
 }
 
 
 //------------------------------------------------------------------------------
 
-GammaStarGammaStarSectorBox::GammaStarGammaStarSectorBox(const WilsonCoefficients& WC, const BetaConstants& beta,const double& log_mur_sq_over_muf_sq)
+GammaStarGammaStarSectorBox::GammaStarGammaStarSectorBox
+        (EventBox& event_box,const double& log_mur_sq_over_muf_sq,
+         double* xx_vegas,Luminosity* lumi)
 {
-    _WC = WC;
-    _beta = beta;
-    _log_mur_sq_over_muf_sq = log_mur_sq_over_muf_sq;
+    log_mur_sq_over_muf_sq_ = log_mur_sq_over_muf_sq;
+    xx_vegas_ = xx_vegas;
+    lumi_ = lumi;
+    available_matrix_elements = new GammaStarGammaStarMatrixElementBox(event_box);
     
-    available_matrix_elements = new GluonFusionMatrixElementBox;
+    _av_partons.push_back("quark");
+    _av_partons.push_back("antiquark");
+    build_sectors("quark","antiquark");
+
+    build_sectors("quark","gluon");
+    build_sectors("gluon","quark");
     
     _av_partons.push_back("gluon");
     build_sectors("gluon","gluon");
-    // cout<<"\n[GluonFusionSectorBox] : after gg, "<<available_sectors.size()
-    //    <<" sectors"<<endl;
-    _av_partons.push_back("quark");
-    _av_partons.push_back("antiquark");
-    build_sectors("quark","gluon");
-    build_sectors("gluon","quark");
-    //cout<<"\n[GluonFusionSectorBox] : after qg, "<<available_sectors.size()
-    //<<" sectors"<<endl;
-    build_sectors("quark","antiquark");
-    //cout<<"\n[GluonFusionSectorBox] : after q qbar, "<<available_sectors.size()
-    //<<" sectors"<<endl;
+    
     build_sectors("quark","quark");
-    //cout<<"\n[GluonFusionSectorBox] : after qq, "<<available_sectors.size()
-    //<<" sectors"<<endl;
+    
     _av_partons.push_back("quark2");
     build_sectors("quark","quark2");
-    //cout<<"\n[GluonFusionSectorBox] : after q1q2, "<<available_sectors.size()
-    //<<" sectors"<<endl;
+    
+    cout<<"\nSectors built: there are "<<available_sectors.size()<<" available"
+        <<endl;
 }
 
 void GammaStarGammaStarSectorBox::build_sectors(const string &parton_left, const string &parton_right)
@@ -249,7 +220,7 @@ void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order(int f1order,i
                     {
                     
                     
-                    build_sectors_with_fixed_a_order_and_pdfs(possible_f1[i],possible_f2[j],Sorder+2);
+                    build_sectors_with_fixed_a_order_and_pdfs(possible_f1[i],possible_f2[j],Sorder);
                     }
                 }
             }
@@ -273,7 +244,8 @@ vector<FFF> GammaStarGammaStarSectorBox::give_possible_F(const string & parton,i
 
 void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_and_pdfs(const FFF & F1,const FFF & F2,int Sorder)
 {
-    vector<MatrixElement*> matching_mes;
+    cout<<"\n*** Sorder = "<<Sorder<<endl;
+    vector<NewMatrixElement*> matching_mes;
     for (int ime=0;ime<available_matrix_elements->size();ime++)
         {
         //:checking whether the pdfs' partons match with the ME's
@@ -301,84 +273,64 @@ void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_and_pdfs(cons
         }
 }
 
-void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs(const FFF & F1,const FFF & F2,int Sorder,int Eorder,const vector<MatrixElement*> & matching_mes)
+void GammaStarGammaStarSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs
+            (const FFF & F1,
+             const FFF & F2,
+             int Sorder,int Eorder,
+             const vector<NewMatrixElement*> & matching_mes)
 {
-    //cout<<"\n specified pdfs "<<F1<<" , "<<F2<<" and e-order = "<<Eorder<<endl;
-    vector<ExpansionTerm*> WCET_vector;
-    vector<ExpansionTerm*> ZREN_vector;
+    cout<<"\n arrived at core sector construction site "<<endl;
+    cout<<"with Sorder = "<<Sorder<<" and Eorder = "<<Eorder<<endl;
+    cout<<"number of matching matrix elements "<<matching_mes.size()<<endl;
     
     vector<ExpansionTerm*> AREN_vector;
     vector<ExpansionTerm*> AREN_vector_trivial;
-    //: constructing the wilson coefficient factor [a*(c0+a*c1+a^2*c2)]^2
-    //vector<ExpansionTerm*> WCET_vector;
-    WCET_vector.push_back(new ExpansionTerm("(c0^2 a^2)",pow(_WC.c0,2.0),2,0));
-    WCET_vector.push_back(new ExpansionTerm("(2*c0*c1* a^3)",2.0*_WC.c0*_WC.c1,3,0));
-    WCET_vector.push_back(new ExpansionTerm("[(c1^2 + 2*c0*c2)*a^4]",
-                                            pow(_WC.c1,2.0) + 2.0*_WC.c0*_WC.c2,4,0));
-    
-    //: a^2 * Z^2 = { a * (1+a*b0*L + a^2*b1*L + a^2*b0^2*L^2) * ( 1 - a*b0/e + a^2 * b0^2/e^2-a^2*b1/e) }^2
-    ZREN_vector.push_back(new ExpansionTerm("(1)",1.0,0,0));
-    ZREN_vector.push_back(new ExpansionTerm("(a)*(-2*b0/e)",-2.0*_beta.zero,1,-1));
-    ZREN_vector.push_back(new ExpansionTerm("(a)*(2*b0*L)",2.0*_beta.zero*_log_mur_sq_over_muf_sq,1,0));
-    
-    ZREN_vector.push_back(new ExpansionTerm("(a^2)*(3*b0^2/e^2)",3.0*pow(_beta.zero,2.0),2,-2));
-    ZREN_vector.push_back(new ExpansionTerm("(a^2)*(-2*b1/e)",-2.0*_beta.one,2,-1));
-    ZREN_vector.push_back(new ExpansionTerm("(a^2)*(-4*b0^2*L/e)",-4.0*pow(_beta.zero,2.0)*_log_mur_sq_over_muf_sq,2,-1));
-    ZREN_vector.push_back(new ExpansionTerm("(a^2)*(3*b0^2*L^2)",3.0*pow(_beta.zero,2.0)*pow(_log_mur_sq_over_muf_sq,2),2,0));
-    ZREN_vector.push_back(new ExpansionTerm("(a^2)*(2*b1*L)",2.0*_beta.one*_log_mur_sq_over_muf_sq,2,0));
-    
+       
     AREN_vector_trivial.push_back(new ExpansionTerm("(1)",1.0,0,0));
     
     AREN_vector.push_back(new ExpansionTerm("(1)",1.0,0,0));
-    AREN_vector.push_back(new ExpansionTerm("(a)*(-b0/e)",-_beta.zero,1,-1));
-    AREN_vector.push_back(new ExpansionTerm("(a)*b0*L)",_beta.zero*_log_mur_sq_over_muf_sq,1,0));
+    AREN_vector.push_back(new ExpansionTerm("(a)*(-b0/e)",-consts::beta_zero,1,-1));
+    AREN_vector.push_back(new ExpansionTerm("(a)*b0*L)",consts::beta_zero*log_mur_sq_over_muf_sq_,1,0));
     
     for (int ime=0;ime<matching_mes.size();ime++)
         {
         if (matching_mes[ime]->alpha_power()<=Sorder)
             {
-            MatrixElement* cur_me=matching_mes[ime];
-            // if the me_approximation of the cur_me is "exact", trivialize WC
-            if (cur_me->me_approximation() == "exact")
-                {
-                WCET_vector.clear();
-                WCET_vector.push_back(new ExpansionTerm("(a^2)",1.0,2,0));
-                }
+            NewMatrixElement* cur_me=matching_mes[ime];
+            
             //: assigning trivial renormalization factor (1)
             vector<ExpansionTerm*> cur_aren=AREN_vector_trivial;
-            if (cur_me->alpha_power()==1) cur_aren=AREN_vector;
-            for (int iwc=0;iwc<WCET_vector.size();iwc++)
+            if (cur_me->alpha_power()==0) cur_aren=AREN_vector;
+            for (int iaren=0;iaren<cur_aren.size();iaren++)
                 {
-                for (int izren=0;izren<ZREN_vector.size();izren++)
+                int total_alpha_order = cur_aren[iaren]->give_a_power()
+                                    +cur_me->alpha_power();
+                
+                if (total_alpha_order==Sorder)
                     {
-                    for (int iaren=0;iaren<cur_aren.size();iaren++)
+                    for (int me_epsilon_power = cur_me->epsilon_power_min();
+                        me_epsilon_power<cur_me->epsilon_power_max()+1;
+                         me_epsilon_power++)
                         {
-                        
-                        int total_alpha_order = WCET_vector[iwc]->give_a_power()
-                        +ZREN_vector[izren]->give_a_power()
-                        +cur_aren[iaren]->give_a_power()
-                        +cur_me->alpha_power();
-                        int total_epsilon_order = WCET_vector[iwc]->give_e_power()
-                        +ZREN_vector[izren]->give_e_power()
-                        +cur_aren[iaren]->give_e_power()
-                        +cur_me->epsilon_power();
-                        if (total_alpha_order==Sorder)
+                        int total_epsilon_order = cur_aren[iaren]->give_e_power()
+                        +me_epsilon_power;
+                        if (total_epsilon_order == Eorder)
                             {
-                            for (int me_epsilon_power = cur_me->info_->epsilon_power_min;
-                                 me_epsilon_power<cur_me->info_->epsilon_power_max+1; me_epsilon_power++)
-                                {
-                                if (total_epsilon_order+me_epsilon_power == Eorder)
-                                    {
-                                    vector<ExpansionTerm*> factors;
-                                    factors.push_back(WCET_vector[iwc]);
-                                    factors.push_back(ZREN_vector[izren]);
-                                    factors.push_back(cur_aren[iaren]);
-                                    
-                                    available_sectors.push_back(new SimpleSector(F1,F2,factors,cur_me,me_epsilon_power));
-                                    }
-                                }
+                            vector<ExpansionTerm*> factors;
+                            factors.push_back(cur_aren[iaren]);
+                            available_sectors.push_back(new NewSimpleSector(F1,F2,factors,cur_me,me_epsilon_power,lumi_,xx_vegas_));
+                            }
+                        else
+                            {
+                            cout<<"total_epsilon_order  = "<<total_epsilon_order
+                            <<" failed"<<endl;
                             }
                         }
+                    }
+                else
+                    {
+                    cout<<"total_alpha_order  = "<<total_alpha_order
+                    <<" failed"<<endl;
                     }
                 }
             }
@@ -399,12 +351,9 @@ vector<string> GammaStarGammaStarSectorBox::give_sector_names(const string & ple
         if (pleft==available_sectors[i]->F1.parton_from and pright==available_sectors[i]->F2.parton_from and
             available_sectors[i]->alpha_power==requested_alpha_power
             and available_sectors[i]->epsilon_power==requested_epsilon_power
-            and available_sectors[i]->ME->me_approximation()==me_approx
             )
             {
-            cout<<"\n\t\t\t***** me_approx = "
-            <<available_sectors[i]->ME->me_approximation()
-            <<" for sector "<<available_sectors[i]->name<<endl;
+            
             all_names.push_back(available_sectors[i]->name);
             }
         /* else if (pleft==available_sectors[i]->F1.parton_from and pright==available_sectors[i]->F2.parton_from)
@@ -417,10 +366,11 @@ vector<string> GammaStarGammaStarSectorBox::give_sector_names(const string & ple
 }
 
 
-vector<SimpleSector*> GammaStarGammaStarSectorBox::give_necessary_sectors(const UserInterface & UI)
+vector<NewSimpleSector*> GammaStarGammaStarSectorBox::give_necessary_sectors(const UserInterface & UI)
 {
-    cout<<"\n[GluonFusionSectorBox] : looking for necessary sectors"<<endl;
-    vector<SimpleSector*> necessary_sectors;
+    cout<<"\n[Gamma* Gamma* SectorBox] : looking for necessary sectors"<<endl;
+    cout<<"There are "<<available_sectors.size()<<" sectors available"<<endl;
+    vector<NewSimpleSector*> necessary_sectors;
     for (int i=0;i<available_sectors.size();i++)
         {
         bool initial_state_partons_fit=(UI.Fleft==available_sectors[i]->F1.parton_from
@@ -430,8 +380,8 @@ vector<SimpleSector*> GammaStarGammaStarSectorBox::give_necessary_sectors(const 
         (UI.Fleft=="none" and UI.Fright=="none");
         bool a_power_fits=available_sectors[i]->alpha_power==UI.alpha_s_power;
         bool e_power_fits = available_sectors[i]->epsilon_power==UI.pole;
-        bool me_approx_fits = available_sectors[i]->ME->me_approximation()==UI.matrix_element_approximation;
-        if (initial_state_partons_fit and a_power_fits and e_power_fits and me_approx_fits)
+        
+        if (initial_state_partons_fit and a_power_fits and e_power_fits)
             {
             
             necessary_sectors.push_back(available_sectors[i]);
@@ -455,15 +405,16 @@ vector<SimpleSector*> GammaStarGammaStarSectorBox::give_necessary_sectors(const 
 
 GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI)
 {
-    ptr_to_GGF = this;
     SetNumberOfParticles();
-    set_up_beta_constants();
-    all_sectors = new GammaStarGammaStarSectorBox(WC,beta,log_mur_sq_over_muf_sq);
+    all_sectors = new GammaStarGammaStarSectorBox(event_box,
+                                                  log_mur_sq_over_muf_sq,
+                                                  xx_vegas,
+                                                  lumi);
         
     if (UI.info)
         {
         
-        vector<SimpleSector*> necessary_sectors=
+        vector<NewSimpleSector*> necessary_sectors=
         all_sectors->give_necessary_sectors(UI);
         cout<<"\n Sectors that fit your selection criteria:\n";
         for (int i=0;i<necessary_sectors.size();i++)
@@ -471,7 +422,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
             cout<<"\n"<<i<<" : "<<necessary_sectors[i]->name;
             }
         cout<<"\n\n number of Sectors defined : "<<necessary_sectors.size()<<endl;
-        check_which_sectors_can_be_run_together(necessary_sectors);
+
         exit(0);
         }
     
@@ -498,15 +449,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
             <<"\"\n----------------------------------\n"<<endl;
             
             
-            //:after init_base is called (where Etot is set)
-            tau = pow(Model.higgs.m(),2.0)/pow(Etot,2.0);
-            
-            
                         
-            //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
-            //: Gf = 1.16637*10^{-5} * 0.389379*10^9
-            pref_sgg = 35.0309;
-            
             the_sector -> setUpPrefactor(Model.alpha_strong()/consts::Pi);
             
             }
@@ -521,25 +464,93 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 void GammaStarGammaStar::evaluate_sector()
 {
     event_box.CleanUp();
-    prepare_phase_space_dependent_quantities();
-    (this->*(the_sector->ME->the_ggf_func))();
+    the_sector->Evaluate();
+
 }
 
-void GluonFusion:: prepare_phase_space_dependent_quantities()
+
+
+void GammaStarGammaStar::find_topology(const UserInterface & UI)
 {
-    //cout<<"\n[GluonFusion::prepare_phase_space_dependent_quantities] "
-    //    <<"calling the parametrization function"<<endl;
+    bool found=false;
+    //: searching by sector_name (has priority)
+    if (UI.sector_name!="none")
+        {
+        
+        for (int i=0;i<all_sectors->size();i++)
+            {
+            if (all_sectors->give(i)->name==UI.sector_name)
+                {
+                found=true;
+                sector_defined=true;
+                the_sector=all_sectors->give(i);
+                dim_of_integration=the_sector->ME->dimension();
+                }
+            }
+        // if a sector name was provided and didn;t match we have an error
+        if (not(found))
+            {
+            cout<<"\nI couldn't match the sector/topology you asked for.";
+            cout<<"\n You asked for sector with the name "<<UI.sector_name;
+            cout<<"\n which was not found in the list."
+            <<" Please run with UI.info=true"
+            <<" or --info to get the list of sector names"<<endl;
+            throw "\n Can't proceed!\n";
+            
+            }
+        }
+    else if (UI.sector_for_production!="none")
+        {
+        int sector_id=atoi(UI.sector_for_production.c_str());
+        vector<NewSimpleSector*> necessary_sectors =
+                                        all_sectors->give_necessary_sectors(UI);
+        number_of_necessary_sectors_ = necessary_sectors.size();
+        if (sector_id>-1 and sector_id<necessary_sectors.size())
+            {
+            found=true;
+            sector_defined=true;
+            the_sector=necessary_sectors[sector_id];
+            dim_of_integration=the_sector->ME->dimension();
+            cout<<"===> dim_of_integration = "<<dim_of_integration;
+            }
+        else
+            {
+            cout<<"\n The sector id number you asked for, "<<sector_id
+            <<", was outside the bounds [0,"
+            << necessary_sectors.size()<<"]";
+            cout<<"\n Please run with UI.info=true"
+            <<" or --info to get the list of sector names"<<endl;
+            throw "\n Can't proceed!\n";
+            }
+        }
+    else if (UI.dummy_process == false)
+        {
+        cout<<"\n You didn't specify a sector name or a sector id number";
+        cout<<"\n Please run with UI.info=true"
+        <<" or --info to get the list of sector names"<<endl;
+        throw "\n Can't proceed!\n";
+        }
+    else
+        {
+        cout<<"\n dummy process - no sector name provided"<<endl;
+        }
     
-    //(this->*pointer_to_function_for_parametrization)();
-    (this->*(the_sector->ME->parametrization))();
-    //cout<<"\n[GluonFusion::prepare_phase_space_dependent_quantities] "
-    //<<"setting LO lumi"<<endl;
-    lumi->set_cur_lumiLO(ISP.x1LO,ISP.x2LO);
-    //cout<<"\n[GluonFusion::prepare_phase_space_dependent_quantities] "
-    //<<"setting normal lumi"<<endl;
-    //:sets the cur_lumi_LO according to the luminosity initialized in the constructor for this sector
-    lumi->set_cur_lumi(ISP.x1,ISP.x2);
-    //:sets the cur_lumi according to the luminosity initialized in the constructor for this sector
 }
+
+
+void GammaStarGammaStar::allocate_luminosity()
+{
+    pdf_pair_list list_of_pdf_pairs=the_sector->give_list_of_pdf_pairs();
+    
+    for (unsigned i=0;i<list_of_pdf_pairs.size();i++)
+        {
+        //cout<<"\n pair #"<<i+1;
+        pair<pdf_desc,pdf_desc> cur_pair=list_of_pdf_pairs.give_one_pair(i);
+        lumi->add_pair(cur_pair.first,cur_pair.second);
+        }
+}
+
+
+
 
 

@@ -18,7 +18,16 @@ namespace consts
      const double z3=1.202056903159594;
      const double z4=1.082323233711138;  
      const double nf=5.0;
-     
+    
+    const double beta_zero = 11.0/4.0-consts::nf/6.0;
+    const double beta_one =  51.0/8.0-19.0/24.0*consts::nf;
+    const double beta_two = 2857.0/128.0-(5033.0/1152.0)*consts::nf
+                            +(325.0/3456.0)*pow(consts::nf,2.0);
+    const double beta_three = 1.0/256.0*( 149753.0/6.0+3564.0*consts::z3
+                            +(-1078361.0/162.0-6508.0/27.0*consts::z3)*consts::nf
+                            +(50065.0/162.0+6472.0/81.0*consts::z3)*pow(consts::nf,2.0)
+                            +(1093.0/729.0)*pow(consts::nf,3.0));
+    
 }
 
 #endif // CONSTANTS_H

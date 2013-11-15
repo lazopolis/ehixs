@@ -485,7 +485,7 @@ C
 
 C------- In the following we define the functions Aq1,Aq2a,Aq2b,Aq2c
 C-------- ampl1      
-      double complex function Aq1(z,lambda,Mqu,QQQ)
+      double complex function aq1(z,lambda,Mqu,QQQ)
       implicit none
 c      implicit double precision (c)
       double precision s,t,u,z,lambda,QQQ
@@ -570,7 +570,7 @@ c      implicit double precision (c)
       END
 
 
-      double complex function Aq2a(z,lambda,Mqu,QQQ)
+      double complex function aq2a(z,lambda,Mqu,QQQ)
       implicit none 
       double complex ampl2,Mqu
       double precision s,t,u,z,lambda,QQQ
@@ -583,7 +583,7 @@ c      implicit double precision (c)
       Aq2a=ampl2(s,t,u,Mqu)
       end
       
-      double complex function Aq2b(z,lambda,Mqu,QQQ)
+      double complex function aq2b(z,lambda,Mqu,QQQ)
       implicit none
       double complex ampl2,Mqu
       double precision s,t,u,z,lambda,QQQ
@@ -596,7 +596,7 @@ c      implicit double precision (c)
       Aq2b=ampl2(t,u,s,Mqu)
       end
       
-      double complex function Aq2c(z,lambda,Mqu,QQQ)
+      double complex function aq2c(z,lambda,Mqu,QQQ)
       implicit none
       double complex ampl2,Mqu
       double precision s,t,u,z,lambda,QQQ
@@ -668,7 +668,7 @@ c      implicit double precision (c)
 
 c------------------- kernel Aqqgh for NLO qq->gh and qg->qh
 
-	double complex function Aqqgh(z,mH,tau,Mq)
+	double complex function aqqgh(z,mH,tau,Mq)
 	implicit none
 	double complex tau,Mq,x,brn_q_ep0,bubf,triaf,TS,TH
 	double precision y,mH,s12,z
