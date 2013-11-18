@@ -2,7 +2,7 @@
 #define GLUON_FUSION_H 
 
 #include "production.h"
-#include "interface_to_amplitudes.h"
+//#include "interface_to_amplitudes.h"
 #include "fortran_interface_for_ggf_amplitudes.h"
 #include "chaplin.h"
 #include "convolutions.h"

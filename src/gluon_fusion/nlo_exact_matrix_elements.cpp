@@ -1,11 +1,48 @@
 #include<complex>
 #include "constants.h"
 #include "chaplin.h"
-#include "interface_to_amplitudes.h"
+//#include "interface_to_amplitudes.h"
 #include "model.h"
 #include "nlo_exact_matrix_elements.h"
 #include <iostream>
 using namespace std;
+
+
+#include <complex>
+#define complex_double std::complex<double>
+
+
+/* Fortran declarations
+ ! gfortran external symbols convention */
+extern "C" {    
+    complex_double aq1_( double*, double*, complex_double*,double*);
+    complex_double aq2a_( double*, double*, complex_double*,double*);
+    complex_double aq2b_( double*, double*, complex_double*,double*);
+    complex_double aq2c_( double*, double*, complex_double*,double*);
+    complex_double aqqgh_( double*, double*, complex_double*,complex_double*);
+    
+    //void ffjet_(double*);
+    double fjet_(double*,double*,double *s12,double *s13,double *s23,double *s14,double *s24,double *s34,double *w);
+    
+}
+
+/* C declarations */
+
+
+inline complex_double Aq1(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
+{ return aq1_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
+
+inline complex_double Aq2a(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
+{ return aq2a_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
+
+inline complex_double Aq2b(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
+{ return aq2b_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
+
+inline complex_double Aq2c(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
+{ return aq2c_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
+
+inline complex_double Aqqgh(const double& z, const double& mh,  const complex_double& tau,const complex_double& mq)
+{ return aqqgh_((double*)&z, (double*)&mh,  (complex_double*)&tau,(complex_double*)&mq); }
 
 
 

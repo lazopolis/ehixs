@@ -83,7 +83,7 @@ link_directories(
                 ${CUBA_DIR}/
                 ${GTEST_DIR}/build/
                 ${LHAPDF_DIR}/lib/
-                ${LHAPDFDIR}
+                ${LHAPDF_DIR}
                )
 
 

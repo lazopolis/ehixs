@@ -498,7 +498,7 @@ c      implicit double precision (c)
       t = -s*(1d0-z)*lambda
       u = -s*(1d0-z)*(1d0-lambda)
       
-      Aq1 = 2d0 * (2d0 * s * t + t * u + s * u) / u * 
+      aq1 = 2d0 * (2d0 * s * t + t * u + s * u) / u *
      #boxf(Mqu, s, t, u) + 2d0
      # * (2d0 * t * u + s * t + s * u) / s * boxf(Mqu, t, u, s) 
      #+ 2d0 * (2d0 *
@@ -580,7 +580,7 @@ c      implicit double precision (c)
       t = -s*(1d0-z)*lambda
       u = -s*(1d0-z)*(1d0-lambda)
       
-      Aq2a=ampl2(s,t,u,Mqu)
+      aq2a=ampl2(s,t,u,Mqu)
       end
       
       double complex function aq2b(z,lambda,Mqu,QQQ)
@@ -593,7 +593,7 @@ c      implicit double precision (c)
       t = -s*(1d0-z)*lambda
       u = -s*(1d0-z)*(1d0-lambda)
       
-      Aq2b=ampl2(t,u,s,Mqu)
+      aq2b=ampl2(t,u,s,Mqu)
       end
       
       double complex function aq2c(z,lambda,Mqu,QQQ)
@@ -606,7 +606,7 @@ c      implicit double precision (c)
       t = -s*(1d0-z)*lambda
       u = -s*(1d0-z)*(1d0-lambda)
       
-      Aq2c=ampl2(u,s,t,Mqu)
+      aq2c=ampl2(u,s,t,Mqu)
       end
 
       double complex function ampl2(s,t,u,Mqu)
@@ -680,12 +680,12 @@ c------------------- kernel Aqqgh for NLO qq->gh and qg->qh
 	TH = triaf(Mq,mH**2)
 	x = (sqrt(1d0-tau)-1d0) / (sqrt(1d0-tau)+1d0)
 	
-	Aqqgh = 1d0/(1d0-y) * tau/64d0 * brn_q_ep0(x)
+	aqqgh = 1d0/(1d0-y) * tau/64d0 * brn_q_ep0(x)
      $	+ y/(1d0-y)**2 * 2d0* bubf(Mq,s12,mH**2)
      $	+y*tau/(1d0-y)**2 * 
      $		(TS/y-TH)
      &	- 1d0/(1d0-y) * TS
-      Aqqgh = -Aqqgh
+      aqqgh = -aqqgh
 	!the minus sign makes a diffference only in ewk interferences
 	!With this minus sign the heavy mass limit 
 	! tau->infinity => 3/4*tau*Aqqgh -> 1

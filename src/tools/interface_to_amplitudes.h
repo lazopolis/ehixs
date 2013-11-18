@@ -31,14 +31,6 @@ the NLO amplitudes  in C/C++ programs.
   extern "C" {
 #endif
 
-
-complex_double aq1_( double*, double*, complex_double*,double*);
-complex_double aq2a_( double*, double*, complex_double*,double*);
-complex_double aq2b_( double*, double*, complex_double*,double*);
-complex_double aq2c_( double*, double*, complex_double*,double*);
-complex_double aqqgh_( double*, double*, complex_double*,complex_double*);
-
-//void ffjet_(double*);
 double fjet_(double*,double*,double *s12,double *s13,double *s23,double *s14,double *s24,double *s34,double *w);
 
 #ifdef __cplusplus
@@ -46,23 +38,6 @@ double fjet_(double*,double*,double *s12,double *s13,double *s23,double *s14,dou
 #endif
 
 /* C declarations */
-
-
-inline complex_double Aq1(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
-{ return aq1_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
-
-inline complex_double Aq2a(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
-{ return aq2a_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
-
-inline complex_double Aq2b(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
-{ return aq2b_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
-
-inline complex_double Aq2c(const double& z, const double& lambda,  const complex_double& M,const double& QQQ)
-{ return aq2c_((double*)&z, (double*)&lambda,  (complex_double*)&M,(double*)&QQQ); }
-
-inline complex_double Aqqgh(const double& z, const double& mh,  const complex_double& tau,const complex_double& mq)
-{ return aqqgh_((double*)&z, (double*)&mh,  (complex_double*)&tau,(complex_double*)&mq); }
-
 
 
 
@@ -78,8 +53,6 @@ inline complex_double Aqqgh(const double& z, const double& mh,  const complex_do
 #ifdef __cplusplus
   extern "C" {
 #endif
-
-//void bbggh1n_(int*,int*,double*,double*, double*,double*,double*, double*, double*, double*, double*,double*, double*);
 
 fortran_definition_macro(bbggh1n_);
 fortran_definition_macro(bbggh2n_);
