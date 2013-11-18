@@ -114,7 +114,7 @@ add_subdirectory(gtests)
 #target_link_libraries(mytarget ${LHAPDF})
 #If it does not, it can be set through the CMake GUI.
 
-SET(LIBRARIES_FOR_GLOBAL_TESTS core  decay_zzww decay_z_gamma higgs_zerfal 
+SET(LIBRARIES_FOR_GLOBAL_TESTS test_utils core  decay_zzww decay_z_gamma higgs_zerfal 
             decay_h_to_gamma_gamma
             models
             gluon_fusion gamma_star_gamma_star tools
@@ -124,7 +124,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS core  decay_zzww decay_z_gamma higgs_zerfal
             pdf
             avh_olo
             cuba
-            gtest test_utils
+            gtest 
             LHAPDF
             ${LHAPDF})
 
@@ -221,9 +221,11 @@ target_link_libraries(UI_test
 add_executable(nlo_exact_virtual 
             ${TEST_DIR}/exact_virtual_test.cpp)
 target_link_libraries(nlo_exact_virtual
-                    fortran_ggf fortran_ggf_RR gluon_fusion
+                    gluon_fusion fortran_ggf fortran_ggf_RR 
                     models avh_olo chaplin tools
                     cuba gtest)
+
+
 
 
 add_executable(off_line_histograming 
