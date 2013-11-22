@@ -3,24 +3,52 @@
 #define CONVOLUTIONS_H
 #include<string>
 #include<vector>
+#include<complex>
 //#include "splitting_kernels.h"
 using namespace std;
 
 
 typedef  pair<string,string> stringpair;
 
+// monomial in a,e
 class ExpansionTerm
 {
 public:
      ExpansionTerm(const string& _name,const double & _value,int _a_power,int _e_power){name=_name;value=_value;a_power=_a_power;e_power=_e_power;}
-     int give_a_power(){return a_power;}
-     int give_e_power(){return e_power;}
-     string give_name(){return name;}
-     double give_value(){return value;}
+     int give_a_power()const {return a_power;}
+     int give_e_power() const {return e_power;}
+     string give_name() const {return name;}
+     double give_value() const {return value;}
+    void set_name(const string& _name){name=_name;}
+    void set_value(const double& v){value = v;}
+    friend ExpansionTerm operator*(const ExpansionTerm&,const ExpansionTerm&);
+    friend ostream& operator<<(ostream& stream, const ExpansionTerm& P);
+
 private:
      string name;
      double value;
      int a_power,e_power;
+};
+
+//polynomial in a,e
+class Polynomial{
+public:
+    Polynomial(){};
+    Polynomial(const string& name,const double & value,int a_pow,int e_pow){add_term(ExpansionTerm(name,value,a_pow,e_pow));}
+    void truncate_in_alpha_up_to_power(int);
+    void collect();
+    vector<ExpansionTerm> coeff(int,int);
+    friend Polynomial operator+(const Polynomial& p1,const Polynomial& p2);
+    friend Polynomial operator+(const Polynomial& p1,const ExpansionTerm& p2);
+    friend Polynomial operator+(const ExpansionTerm& p2,const Polynomial& p1);
+    friend Polynomial operator*(const Polynomial& p1,const Polynomial& p2);
+    friend ostream& operator<<(ostream&, const Polynomial&);
+
+    int size() const {return terms.size();}
+    ExpansionTerm operator[](int i)const {return terms[i];}
+    void add_term(const ExpansionTerm& newterm){terms.push_back(newterm);}
+private:
+    vector<ExpansionTerm> terms;
 };
 
 /*
@@ -71,7 +99,14 @@ public:
 };
 
 struct WilsonCoefficients{
-     double c0,c1,c2;
+    complex<double> c0;
+    complex<double> c1;
+    complex<double> c2;
+    complex<double> c0_qcd_only;
+    complex<double> c1_qcd_only;
+    complex<double> c2_qcd_only;
+    bool exact;
+    bool ew_soft;
 };
 
 struct BetaConstants{

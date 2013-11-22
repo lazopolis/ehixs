@@ -191,7 +191,7 @@ TEST(ggf_nlo_exact_real, limit_z_to_1)
     CModel* Model = new CModel();
     Model->quarks[1]->set_Y(0.0);
 
-    Model->consolidate(0.117, 0.5, 1);
+    Model->consolidate(0.117, 0.5, 1,125.0);
 
     
     cout<<"\n---------\n"<<"mh = "<<Model->higgs.m()<<endl;
@@ -233,7 +233,7 @@ TEST(ggf_nlo_exact_real, limit_lambda_to_1)
     CModel* Model = new CModel();
     Model->quarks[1]->set_Y(0.0);
 
-    Model->consolidate(0.117, 0.5, 1);
+    Model->consolidate(0.117, 0.5, 1,125.0);
 
     
     cout<<"\n---------\n"<<"mh = "<<Model->higgs.m()<<endl;
@@ -274,7 +274,7 @@ TEST(ggf_nlo_exact_real, limit_lambda_to_0)
     double z = 0.655;
     CModel* Model = new CModel();
     Model->quarks[1]->set_Y(0.0);
-    Model->consolidate(0.117, 0.5, 1);
+    Model->consolidate(0.117, 0.5, 1,125.0);
 
     
     cout<<"\n---------\n"<<"mh = "<<Model->higgs.m()<<endl;
@@ -341,7 +341,7 @@ TEST(ggf_nlo_exact_real, DISABLED_large_mt_limit)
     Model->quarks[0]->set_pole_mass(2000.0);
     Model->quarks[1]->set_Y(0.0);
 
-    Model->consolidate(0.117, 1.0, 1);
+    Model->consolidate(0.117, 1.0, 1,125.0);
 
     
     TestingNloReal my_dude;
@@ -406,7 +406,7 @@ TEST(Aqqgh,bottom_quark)
 TEST(sum_Aqqgh,StandardModel)
 {
     CModel* model = new CModel;
-    model->consolidate(0.120180436153365,0.4567,1);//: a_s@mz, mur/mh, porder
+    model->consolidate(0.120180436153365,0.4567,1,125.0);//: a_s@mz, mur/mh, porder
     double z = -706.168901481198;
 
     complex<double> expected_cplx(0.996067101904021,3.97271052284643E-002);
@@ -419,7 +419,7 @@ TEST(sum_Aqqgh,StandardModel)
 TEST(sum_Aqqgh,StandardModel2)
 {
     CModel* model = new CModel;
-    model->consolidate(0.120180436153365,0.4567,1);//: a_s@mz, mur/mh, porder
+    model->consolidate(0.120180436153365,0.4567,1,125.0);//: a_s@mz, mur/mh, porder
     double z = -4.88975870452380;
     
     complex<double> expected_cplx(1.01600912524306,3.157339729178606E-002);

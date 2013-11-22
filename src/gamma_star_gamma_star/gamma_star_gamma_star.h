@@ -40,14 +40,18 @@ public:
     string parton_j()const {return info_->parton_j;}
     string name()const {return info_->name;}
 
-    virtual void Evaluate(const double&,double*)=0;
+    virtual void Evaluate(double*)=0;
     
     int dimension() const {return dimension_;}
-
+    void SetLuminosity(Luminosity* lumi){lumi_ = lumi;}
+    void SetUpPrefactor(const double & prefactor){prefactor_ = prefactor;}
 protected:
     NewMeExternalInfo* info_;
     int dimension_;
     EventBox* event_box_;
+    Luminosity* lumi_;
+    double prefactor_;
+    double initial_state_jacobian_;
     
 };
 
@@ -65,9 +69,14 @@ public:
         info_->epsilon_power_min = 0;
         info_->epsilon_power_max = 2;
         }
-    void Evaluate(const double& w,double* xx_vegas)
+    void Evaluate(double* xx_vegas)
         {
-        event_box_->AddNewEvent(w);
+        lumi_->set_cur_lumi(xx_vegas[0],xx_vegas[1]);
+        double factor_for_ME =   initial_state_jacobian_
+        *lumi_->LL(0)
+        *prefactor_;
+        
+        event_box_->AddNewEvent(factor_for_ME);
 //        event_box_->SetP(1,x[0]*Etot/2.0,0.0,0.0,x[0]*Etot/2.0);
 //        event_box_->SetP(2,x[1]*Etot/2.0,0.0,0.0,-x[1]*Etot/2.0);
 //        event_box_->SetP(3,0.0,0.0,0.0,0.0);
@@ -107,14 +116,11 @@ public:
     void double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
     int give_pid(const string & name);
     pdf_pair_list give_list_of_pdf_pairs();
-    void SetLuminosity(Luminosity* lumi){lumi_ = lumi;}
+    void SetLuminosity(Luminosity* lumi){ME->SetLuminosity(lumi);}
 
-    void setUpPrefactor(const double & a_s_over_pi);
+    void SetUpPrefactor(const double & a_s_over_pi);
     void Evaluate(double* xx_vegas);
-private:
-    double prefactor_;
-    Luminosity* lumi_;
-    double initial_state_jacobian_;
+    
 };
 
 

@@ -17,7 +17,7 @@ public:
 //     vector<double> alpha_strong_at_mz;//: a_s @ m_z (not over Pi)!!
      
      void consolidate(const double& a_at_mz,const double & mur_over_mh,
-                      int porder);
+                      int porder,const double& mh);
     double alpha_strong(){return alpha_s->v();}
 //    void evolve_quark_masses(const double & mur,int porder);
 //     void evolve_as_to_mur(const double & mur,int porder);
@@ -29,8 +29,8 @@ public:
     vector<Particle*> leptons;
     vector<Particle*> vector_bosons;
     Particle top;
-    Particle W;
-    Particle Z;
+    VectorBoson W;
+    VectorBoson Z;
     
     Particle bottom;
 private:

@@ -78,7 +78,7 @@ Exact_LO_Inclusive:: Exact_LO_Inclusive(CModel * imodel, UserInterface* iui)
     Model = imodel;
     UI = iui;
     set_up_gg_lumi();
-    Model->consolidate(lumi->alpha_s_at_mz_vector()[0], UI->mur_over_mhiggs, UI->perturbative_order);
+    Model->consolidate(lumi->alpha_s_at_mz_vector()[0], UI->mur_over_mhiggs, UI->perturbative_order,UI->m_higgs);
     
     //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
     //: Gf = 1.16637*10^{-5} * 0.389379*10^9

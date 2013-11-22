@@ -902,8 +902,8 @@ c     &     ,' and dd=bb'
           xx = xx/2
           yy = -1d0+dexp(dlog(1d0+xx))
         enddo
-        if (avh_olo_un_get().gt.0) write(avh_olo_un_get(),*)
-     &    'MESSAGE from avh_olo_prec: precision set to',prec
+c        if (avh_olo_un_get().gt.0) write(avh_olo_un_get(),*)
+c     &    'MESSAGE from avh_olo_prec: precision set to',prec
       endif
       avh_olo_prec = prec
       end

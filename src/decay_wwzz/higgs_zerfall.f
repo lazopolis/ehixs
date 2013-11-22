@@ -9,7 +9,7 @@ C---------------------------------------------------------------------------
       implicit none      
 C     Input/Output variables
       integer imode
-      doubleprecision mh,mw,mz,mt,GF,gamw,gamz,x(5),GAMMA,alpha
+      doubleprecision mh,mw,mz,mt,GF,gamw,gamz,x(8),GAMMA,alpha
       character*20 decaymode,topology
       doubleprecision p1(4),p2(4),p3(4),p4(4),pH(4)
 C     Internal
@@ -120,19 +120,20 @@ c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          GAMMA=Jac*Msq/(2*mh)        
 c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       else if(decaymode.eq.'HphotonZ')then
-         call PS2(mH,0d0,mZ,Jac,p1,p2)
+         call PS2(mH,0d0,mZ,x(1),x(2),Jac,p1,p2)
          Msq=HphotonZ(GF,mW,GamW,mZ,GamZ,alpha,mh,mt,mz)
          GAMMA=Jac*Msq/(2d0*mh)   
 c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       else if(decaymode.eq.'Hphotonll')then
          bwmap=.true.
-         call PS3(MH,Mz,Gamz,x(1),x(2),bwmap,Jac,p2,p3,p1)
+         call PS3(MH,Mz,Gamz,x(1),x(2),x(3),x(4),x(5),bwmap,
+     &        Jac,p2,p3,p1)
          call invars3(p1,p2,p3,s12,s13,s23)
          Msq=Hphotonll(GF,mW,GamW,mZ,GamZ,alpha,MH,MT,s12,s13,s23)
          GAMMA=Jac*Msq/(2d0*mh)   
 c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       else if(decaymode.eq.'Hdiphoton')then
-         call PS2(mH,0d0,0d0,Jac,p1,p2)
+         call PS2(mH,0d0,0d0,x(1),x(2),Jac,p1,p2)
          Msq=Hdiphoton(GF,mW,alpha,MH,MT)
          GAMMA=Jac*Msq/(2d0*mh)
 
@@ -165,7 +166,7 @@ c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
       subroutine PS4(MH,Mv1,Mv2,Gam1,Gam2,x,bwmap,Jac,p1,p2,p3,p4)
       implicit none
-      doubleprecision MH,Mv1,Mv2,Gam1,Gam2,x(5),Jac
+      doubleprecision MH,Mv1,Mv2,Gam1,Gam2,x(8),Jac
       doubleprecision p1(4),p2(4),p3(4),p4(4),Q1(4),Q2(4)
       doubleprecision pi,s1,s2,cos1,sin1,cos2,sin2,phi,ps1,ps2,es1,es2
       doubleprecision Jac1,Jac2
@@ -230,21 +231,23 @@ c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CCC   The following are random rotations which are symmetries of the amplitude CCC
  
 c     rotate moenta around z: flat 0<psi<2 Pi
-      theta=rand()*2*Pi
+      
+      theta=x(6)*2*Pi
+  
       call rotate(p1,theta,3)
       call rotate(p2,theta,3)
       call rotate(p3,theta,3)
       call rotate(p4,theta,3)
 
 c     rotate moenta around x: flat -1<cos theta<1
-      theta=acos(2*rand()-1)
+      theta=acos(2*x(7)-1)
       call rotate(p1,theta,1)
       call rotate(p2,theta,1)
       call rotate(p3,theta,1)
       call rotate(p4,theta,1)
 
 c     rotate moenta around y: flat 0<phi<2 Pi
-      theta=rand()*2*Pi
+      theta=x(8)*2*Pi
       call rotate(p1,theta,2)
       call rotate(p2,theta,2)
       call rotate(p3,theta,2)
@@ -263,9 +266,10 @@ c
 c
 c     A 3-particle massless phase-space with Breit Wigner adaptation:
 c
-      subroutine PS3(MH,Mv1,Gam1,x1,x2,bwmap,Jac,p1,p2,p3)
+
+      subroutine PS3(MH,Mv1,Gam1,x1,x2,x3,x4,x5,bwmap,Jac,p1,p2,p3)
       implicit none
-      doubleprecision MH,Mv1,Mv2,Gam1,x1,x2,Jac
+      doubleprecision MH,Mv1,Mv2,Gam1,x1,x2,x3,x4,x5,Jac
       doubleprecision p1(4),p2(4),p3(4),p4(4),Q1(4),Q2(4)
       doubleprecision pi,s1,s2,cos1,sin1,cos2,sin2,phi,ps1,ps2,es1,es2
       doubleprecision Jac1,Jac2
@@ -317,19 +321,19 @@ c
 CCC   The following are random rotations which are symmetries of the amplitude CCC
  
 c     rotate moenta around z: flat 0<psi<2 Pi
-      theta=rand()*2*Pi
+      theta=x3*2*Pi
       call rotate(p1,theta,3)
       call rotate(p2,theta,3)
       call rotate(p3,theta,3)
 
 c     rotate moenta around x: flat -1<cos theta<1
-      theta=acos(2*rand()-1)
+      theta=acos(2*x4-1)
       call rotate(p1,theta,1)
       call rotate(p2,theta,1)
       call rotate(p3,theta,1)
 
 c     rotate moenta around y: flat 0<phi<2 Pi
-      theta=rand()*2*Pi
+      theta=x5*2*Pi
       call rotate(p1,theta,2)
       call rotate(p2,theta,2)
       call rotate(p3,theta,2)
@@ -344,15 +348,16 @@ c     rotate moenta around y: flat 0<phi<2 Pi
 c
 c     A simple 1->2 phase space generator:
 c
-      subroutine PS2(MH,M1,M2,Jac,Q1,Q2)
+      subroutine PS2(MH,M1,M2,x1,x2,Jac,Q1,Q2)
       implicit none
-      doubleprecision MH,Jac,m1,m2
+      doubleprecision MH,Jac,m1,m2,x1,x2
       doubleprecision Q1(4),Q2(4)
       doubleprecision pi,s1,s2,ps1,es1,es2
       doubleprecision kaellen,dot
       doubleprecision theta
       logical bwmap
       parameter(pi=3.141592653589793d0)
+
 
       s1=m1**2
       s2=m2**2
@@ -377,11 +382,11 @@ c
 
 CCC   The following are random rotations which are symmetries of the amplitude CCC
 c     rotate moenta around x: flat -1<cos theta<1
-      theta=acos(2*rand()-1)
+      theta=acos(2*x1-1)
       call rotate(Q1,theta,1)
       call rotate(Q2,theta,1)
 c     rotate moenta around z: flat 0<psi<2 Pi
-      theta=rand()*2*Pi
+      theta=x2*2*Pi
       call rotate(Q1,theta,3)
       call rotate(Q2,theta,3)
 
@@ -515,7 +520,7 @@ C     A rotation routine
       if(n.eq.1)then
          rr(2)=r(2)
          rr(3)=c*r(3)-s*r(4)
-         rr(4)=s*r(4)+c*r(4)
+         rr(4)=s*r(3)+c*r(4)
       else if(n.eq.2)then
          rr(2)=s*r(4)+c*r(2)        
          rr(3)=r(3)

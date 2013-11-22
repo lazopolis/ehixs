@@ -71,7 +71,8 @@ Production::Production(const UserInterface & UI)
     
         Model.consolidate(lumi->alpha_s_at_mz_vector()[0],
                           UI.mur_over_mhiggs,
-                          UI.perturbative_order);
+                          UI.perturbative_order,
+                          UI.m_higgs);
         mu_r=UI.mur_over_mhiggs * Model.higgs.m();
         mu_f=UI.muf_over_mhiggs * Model.higgs.m();
         //: this depends on m_higgs which we take to be the nominal higgs mass

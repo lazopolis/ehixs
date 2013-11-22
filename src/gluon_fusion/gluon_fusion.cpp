@@ -57,7 +57,9 @@ MatrixElement::MatrixElement( MeExternalInfo* info,const string & _kin,
 ostream& operator<<(ostream& stream, const MatrixElement& ME)
 {
     stream<<"S("<<ME.parton_i()<<","<<ME.parton_j()<<","<< ME.name()
-    <<",a^"<<ME.alpha_power()<<",e^"<<ME.epsilon_power()
+    <<",a_s^"<<ME.alpha_power()
+    <<",a_w^"<<ME.alpha_ew_power()
+    <<",e^"<<ME.epsilon_power()
     <<" ,dim="<<ME.dimension<<")";
     
     return stream;
@@ -83,7 +85,9 @@ SimpleSector::SimpleSector(const FFF& _f1,const FFF& _f2,const vector<ExpansionT
           stream<<factors[i]->give_name()<<"(*)";
           }
      stream<<*ME;
-     stream<<" : a^"<<alpha_power<<",e^"<<epsilon_power;
+     stream<<" : a_s^"<<alpha_power
+            <<",a_w^"<<ME->alpha_ew_power()
+            <<",e^"<<epsilon_power;
      name=stream.str();
 }
 
@@ -122,16 +126,50 @@ void SimpleSector::double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
           }
 }
 
+void SimpleSector::uubar(pdf_pair_list& curlumi)
+{
+    // lhapdf id numbers for cbar, ubar, u, c
+    int upflavors[4] = {-4,-2,2,4};
+    
+    for (int s=0;s<4;s++)
+        {
+        int qq = upflavors[s];
+        // the pdf combination for u ubar is always LO
+        add_pair(qq,qq,-qq,-qq,curlumi);
+        }
+
+}
+
+void SimpleSector::ddbar(pdf_pair_list& curlumi)
+{
+    // lhapdf id numbers for bbar,sbar,dbar,d,s,b
+    int downflavors[6] = {-5,-3,-1,1,3,5};
+    
+    for (int s=0;s<6;s++)
+        {
+        int qq = downflavors[s];
+        // the pdf combination for u ubar is always LO
+        add_pair(qq,qq,-qq,-qq,curlumi);
+        }
+    
+}
+
 int SimpleSector::give_pid(const string & name)
 {
      if (name=="gluon") return 0;
      if (name=="quark") return 1;
      if (name=="antiquark") return -1;
      if (name=="quark2") return 2;
+    if (name=="up") return 3;
+    if (name=="upbar") return -3;
+    if (name=="down") return 4;
+    if (name=="downbar") return -4;
      cout<<"\nSimpleSector::give_pid doesn't recognize parton name: "<<name;
      exit(1);
      return 0;
 }
+
+
 
 pdf_pair_list SimpleSector::give_list_of_pdf_pairs()
 {
@@ -146,7 +184,12 @@ pdf_pair_list SimpleSector::give_list_of_pdf_pairs()
      //: case with no second quark flavor, so single sum over flavors
      else if (abs(pid1)<2 and abs(pid2)<2 and abs(pid3)<2 and abs(pid4)<2) single_quark(pid1,pid2,pid3,pid4,curlumi);
      //: case with two different quark flavors
-     else double_quark(pid1, pid2, pid3, pid4, curlumi);
+     else if (abs(pid1)<3 and abs(pid2)<3 and abs(pid3)<3 and abs(pid4)<3)double_quark(pid1, pid2, pid3, pid4, curlumi);
+    // case with restricted up and down quark flavors
+    else if (F1.parton_i == "up" and F2.parton_i == "upbar")
+        uubar(curlumi);
+    else if (F1.parton_i == "down" and F2.parton_i == "downbar")
+        ddbar(curlumi);
      
      return curlumi;
 }
@@ -215,6 +258,18 @@ void GluonFusionMatrixElementBox::add_qqbar_sectors()
         }
     
     push_me("quark","antiquark","NLO","NLO hard exact","kinematics:NLO","param:NLO",&GluonFusion::qqbar_NLO_hard_exact,0,0,new FranzBinder,"exact",0.0);
+    //: electoweak q qbar-> h g
+    available_matrix_elements.push_back(
+    new MatrixElement(
+        new MeExternalInfo("up","upbar","LO","NLO_EWK h+g exact",0,"exact",1),
+    "kinematics:NLO","param:NLO",&GluonFusion::NLO_ewk_uubar_h_plus_jet,
+    new FranzBinder,0.0));
+    
+    available_matrix_elements.push_back(
+    new MatrixElement(
+    new MeExternalInfo("down","downbar","LO","NLO_EWK h+g exact",0,"exact",1),
+    "kinematics:NLO","param:NLO",&GluonFusion::NLO_ewk_ddbar_h_plus_jet,
+                                                          new FranzBinder,0.0));
 }
 
 
@@ -336,16 +391,20 @@ void GluonFusionMatrixElementBox::add_gg_sectors()
     push_me("gluon","gluon","NLO","NLO hard exact","kinematics:NLO","param:NLO",&GluonFusion::gg_NLO_hard_exact,-2,0,new FranzBinder,"exact",0.0);
     
     //: nlo ew
-    available_matrix_elements.push_back(
-    new MatrixElement(
-    new MeExternalInfo("gluon","gluon","LO","NLO_EWK_S effective",0,"effective",1),
-                "kinematics:LO","param:LO",&GluonFusion::NLO_ewk_soft,
-                      new FranzBinder,0.0));
-    available_matrix_elements.push_back(
-    new MatrixElement(
-    new MeExternalInfo("gluon","gluon","LO","NLO_EWK_S exact",0,"exact",1),
-                "kinematics:LO","param:LO",&GluonFusion::NLO_ewk_soft_exact,
-                      new FranzBinder,0.0));
+//    available_matrix_elements.push_back(
+//    new MatrixElement(
+//    new MeExternalInfo("gluon","gluon","LO","NLO_EWK_S effective",0,"effective",1),
+//                "kinematics:LO","param:LO",&GluonFusion::NLO_ewk_soft,
+//                      new FranzBinder,0.0));
+//    available_matrix_elements.push_back(
+//    new MatrixElement(
+//    new MeExternalInfo("gluon","gluon","LO","NLO_EWK_S exact",0,"exact",1),
+//                "kinematics:LO","param:LO",&GluonFusion::NLO_ewk_soft_exact,
+//                      new FranzBinder,0.0));
+    
+    
+    
+    
 }
 
 void GluonFusionMatrixElementBox::add_qg_sectors()
@@ -388,6 +447,19 @@ void GluonFusionMatrixElementBox::add_qg_sectors()
     // qg exact
     push_me("quark","gluon","NLO","NLO hard exact","kinematics:NLO","param:NLO",&GluonFusion::qg_NLO_hard_exact,-1,0,new FranzBinder,"exact",0.0);
     
+    //ewk corrections to h+j
+    // u g -> u+h
+    available_matrix_elements.push_back(
+    new MatrixElement(
+    new MeExternalInfo("up","gluon","LO","NLO_EWK h+g exact",0,"exact",1),
+    "kinematics:NLO","param:NLO",&GluonFusion::NLO_ewk_ug_h_plus_jet,
+                                                          new FranzBinder,0.0));
+    // d g -> d+h
+    available_matrix_elements.push_back(
+    new MatrixElement(
+    new MeExternalInfo("down","gluon","LO","NLO_EWK h+g exact",0,"exact",1),
+    "kinematics:NLO","param:NLO",&GluonFusion::NLO_ewk_dg_h_plus_jet,
+                                                          new FranzBinder,0.0));
     
 }
 
@@ -432,7 +504,19 @@ void GluonFusionMatrixElementBox::add_gq_sectors()
     // gq exact
     push_me("gluon","quark","NLO","NLO hard exact","kinematics:NLO","param:NLO",&GluonFusion::gq_NLO_hard_exact,-1,0,new FranzBinder,"exact",0.0);
     
-    
+    //ewk corrections to h+j
+    //  g  u -> u+h
+    available_matrix_elements.push_back(
+                                        new MatrixElement(
+        new MeExternalInfo("gluon","up","LO","NLO_EWK h+g exact",0,"exact",1),
+                                                          "kinematics:NLO","param:NLO",&GluonFusion::NLO_ewk_gu_h_plus_jet,
+                                                          new FranzBinder,0.0));
+    // g d -> d+h
+    available_matrix_elements.push_back(
+                                        new MatrixElement(
+        new MeExternalInfo("gluon","down","LO","NLO_EWK h+g exact",0,"exact",1),
+                                                          "kinematics:NLO","param:NLO",&GluonFusion::NLO_ewk_gd_h_plus_jet,
+                                                          new FranzBinder,0.0));
     
 }
 
@@ -496,6 +580,18 @@ GluonFusionSectorBox::GluonFusionSectorBox(const WilsonCoefficients& WC, const B
     build_sectors("quark","quark2");
     //cout<<"\n[GluonFusionSectorBox] : after q1q2, "<<available_sectors.size()
     //<<" sectors"<<endl;
+    _av_partons.push_back("up");
+    _av_partons.push_back("upbar");
+    build_sectors("up","upbar");
+    build_sectors("up","gluon");
+    build_sectors("gluon","up");
+    _av_partons.push_back("down");
+    _av_partons.push_back("downbar");
+    build_sectors("down","downbar");
+    build_sectors("down","gluon");
+    build_sectors("gluon","down");
+
+
 }
 
 void GluonFusionSectorBox::build_sectors(const string &parton_left, const string &parton_right)
@@ -570,10 +666,21 @@ void GluonFusionSectorBox::build_sectors_with_fixed_a_order_and_pdfs(const FFF &
         if (pleft=="gluon" and pright=="quark2") pright="quark";
         if (pleft=="quark2" and pright=="gluon") pleft="quark";
         if (pleft=="antiquark" and pright=="quark") {pleft="quark"; pright="antiquark";}
+        if (pleft=="upbar" and pright=="up") {pleft="up"; pright="upbar";}
         //: the check
-        if (pleft==available_matrix_elements->give_me(ime)->parton_i() and pright==available_matrix_elements->give_me(ime)->parton_j())
+        if (pleft==available_matrix_elements->give_me(ime)->parton_i()
+            and pright==available_matrix_elements->give_me(ime)->parton_j()
+            )
             {
-            matching_mes.push_back(available_matrix_elements->give_me(ime));
+            // for electroweak matrix elements we do not want to have collinear
+            // counterterms
+            bool is_ewk = available_matrix_elements->give_me(ime)->alpha_ew_power()>0;
+            bool the_pdfs_are_not_LO = F1.order + F2.order >0;
+            bool no_counterterm_case = is_ewk and the_pdfs_are_not_LO;
+            if (not(no_counterterm_case))
+                {
+                matching_mes.push_back(available_matrix_elements->give_me(ime));
+                }
             }
         }
     if (matching_mes.size()>0)
@@ -585,20 +692,99 @@ void GluonFusionSectorBox::build_sectors_with_fixed_a_order_and_pdfs(const FFF &
         }
 }
 
-void GluonFusionSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs(const FFF & F1,const FFF & F2,int Sorder,int Eorder,const vector<MatrixElement*> & matching_mes)
+void GluonFusionSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs(
+                    const FFF & F1,
+                    const FFF & F2,
+                    int Sorder,int Eorder,
+                    const vector<MatrixElement*> & matching_mes)
 {
     //cout<<"\n specified pdfs "<<F1<<" , "<<F2<<" and e-order = "<<Eorder<<endl;
-    vector<ExpansionTerm*> WCET_vector;
+    
+    /*Polynomial WCET;
+    WCET = WCET + Polynomial("(c0^2)",pow(abs(_WC.c0),2.0),0,0)
+                + Polynomial("(2*c0*c1)",2.0*real(_WC.c0*conj(_WC.c1)),1,0)
+                + Polynomial("(c1^2 + 2*c0*c2)",
+                         pow(abs(_WC.c1),2.0) + 2.0*real(_WC.c0*conj(_WC.c2)),
+                         2,0);
+    
+    
+    const double L=_log_mur_sq_over_muf_sq;
+    Polynomial A("1",1.0,1,0);
+    Polynomial AL("1",1.0,0,0);
+    
+    AL = AL + Polynomial("b0*L",_beta.zero*L,1,0)
+            + Polynomial("b1*L",_beta.zero*L,2,0)
+            + Polynomial("b0^2*L^2",pow(_beta.zero*L,2.0),2,0);
+    Polynomial AR("1",1.0,0,0);
+    AR = AR + Polynomial("(-b0)",-_beta.zero,1,-1)
+            + Polynomial("b0^2",pow(_beta.zero,2.0),2,-2)
+            + Polynomial("(-b1)",-_beta.one,2,-1);
+    
+    
+    Polynomial ZZZ;
+    ZZZ = (A*AL*AR)*(A*AL*AR);
+    
+
+    
+    for (int ime=0;ime<matching_mes.size();ime++)
+        {
+        if (matching_mes[ime]->alpha_power()<=Sorder)
+            {
+            MatrixElement* cur_me=matching_mes[ime];
+            if (cur_me->me_approximation() == "exact")
+                {
+                WCET=Polynomial("(a^2)",1.0,2,0);
+                }
+            Polynomial cur_aren;
+            if (cur_me->alpha_power()==1) cur_aren = A * AL * AR;
+            Polynomial TotalFactor;
+            TotalFactor = WCET * ZZZ * cur_aren;
+            int factor_alpha_order = Sorder - cur_me->alpha_power();
+            int total_epsilon_order = Eorder - cur_me->epsilon_power();
+            vector<ExpansionTerm> factors = TotalFactor.coeff(factor_alpha_order,total_epsilon_order);
+            
+            for (int i=0;i<factors.size();i++)
+                {
+                //available_sectors.push_back(new SimpleSector(F1,F2,factors[i],cur_me));
+                cout<<"\n new sector with coeff "<<factors[i]
+                    <<" for ME "<<cur_me->give_name();
+                }
+                
+            }
+        }
+    */
+    
+    // *** here starts the operating version
+    vector<ExpansionTerm*> WCET_vector_original;
     vector<ExpansionTerm*> ZREN_vector;
     
     vector<ExpansionTerm*> AREN_vector;
     vector<ExpansionTerm*> AREN_vector_trivial;
     //: constructing the wilson coefficient factor [a*(c0+a*c1+a^2*c2)]^2
-    //vector<ExpansionTerm*> WCET_vector;
-    WCET_vector.push_back(new ExpansionTerm("(c0^2 a^2)",pow(_WC.c0,2.0),2,0));
-    WCET_vector.push_back(new ExpansionTerm("(2*c0*c1* a^3)",2.0*_WC.c0*_WC.c1,3,0));
-    WCET_vector.push_back(new ExpansionTerm("[(c1^2 + 2*c0*c2)*a^4]",
-                                            pow(_WC.c1,2.0) + 2.0*_WC.c0*_WC.c2,4,0));
+    WCET_vector_original.push_back(new ExpansionTerm("(c0^2 a^2)",
+                                    pow(abs(_WC.c0),2.0),
+                                            2,0));
+    WCET_vector_original.push_back(new ExpansionTerm("(2*c0*c1* a^3)",
+                                            2.0*real(_WC.c0*conj(_WC.c1)),
+                                            3,0));
+    WCET_vector_original.push_back(new ExpansionTerm("[(c1^2 + 2*c0*c2)*a^4]",
+                            pow(abs(_WC.c1),2.0) + 2.0*real(_WC.c0*conj(_WC.c2)),
+                                            4,0));
+    vector<ExpansionTerm*> WCET_vectorEW;
+    WCET_vectorEW.push_back(new ExpansionTerm("(cm0^2 a^2)",
+                                            pow(abs(_WC.c0),2.0)
+                                            -pow(abs(_WC.c0_qcd_only),2.0),
+                                            2,0));
+    WCET_vectorEW.push_back(new ExpansionTerm("(2*cm0*cm1* a^3)",
+                                            2.0*real(_WC.c0*conj(_WC.c1))
+                                            -2.0*real(_WC.c0_qcd_only*conj(_WC.c1_qcd_only)),
+                                            3,0));
+    WCET_vectorEW.push_back(new ExpansionTerm("[(cm1^2 + 2*cm0*cm2)*a^4]",
+                                            pow(abs(_WC.c1),2.0) + 2.0*real(_WC.c0*conj(_WC.c2))
+                                            -pow(abs(_WC.c1_qcd_only),2.0) + 2.0*real(_WC.c0_qcd_only*conj(_WC.c2_qcd_only)),
+                                            4,0));
+    
+    
     
     //: a^2 * Z^2 = { a * (1+a*b0*L + a^2*b1*L + a^2*b0^2*L^2) * ( 1 - a*b0/e + a^2 * b0^2/e^2-a^2*b1/e) }^2
     ZREN_vector.push_back(new ExpansionTerm("(1)",1.0,0,0));
@@ -619,14 +805,42 @@ void GluonFusionSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs(con
     
     for (int ime=0;ime<matching_mes.size();ime++)
         {
+        
         if (matching_mes[ime]->alpha_power()<=Sorder)
             {
+            vector<ExpansionTerm*> WCET_vector = WCET_vector_original;
             MatrixElement* cur_me=matching_mes[ime];
             // if the me_approximation of the cur_me is "exact", trivialize WC
             if (cur_me->me_approximation() == "exact")
                 {
                 WCET_vector.clear();
+                //exact matrix element: the WCs should be set to 1.0
                 WCET_vector.push_back(new ExpansionTerm("(a^2)",1.0,2,0));
+                }
+            else
+                {
+                // effective matrix element:
+                // if the WC.exact = true it means we are in
+                // a run with exact matrix elements
+                // so we need to do the LO and NLO effective sectors only if
+                // if WC.ew_soft = true. Then there are ew soft
+                // contributions
+                // so we need to keep the non-pure QCD pieces
+                
+                if (_WC.exact and cur_me->alpha_power()<2)
+                    {
+                    
+                    // if there are no ew soft, we kill
+                    // the matrix element alltogether
+                    WCET_vector.clear();
+                    // if there are ew soft contributions then we modify the
+                    // WCET vector as follows
+                    if (_WC.ew_soft)
+                        {
+                        WCET_vector = WCET_vectorEW;
+                        }
+                    }
+
                 }
             //: assigning trivial renormalization factor (1)
             vector<ExpansionTerm*> cur_aren=AREN_vector_trivial;
@@ -646,14 +860,28 @@ void GluonFusionSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs(con
                         +ZREN_vector[izren]->give_e_power()
                         +cur_aren[iaren]->give_e_power()
                         +cur_me->epsilon_power();
-                        if (total_alpha_order==Sorder and total_epsilon_order==Eorder)
+                        
+                        if (total_alpha_order==Sorder
+                            and total_epsilon_order==Eorder)
                             {
+                            // ew corrections to h+j shouldn't be multiplied
+                            // by a*b0*L
+                            if (cur_me->alpha_ew_power()>0
+                                and (cur_aren[iaren]->give_a_power()
+                                     +ZREN_vector[izren]->give_a_power()
+                                     +WCET_vector[iwc]->give_a_power())>2)
+                                {
+                                continue;
+                                }
+                            else
+                                {
                             vector<ExpansionTerm*> factors;
                             factors.push_back(WCET_vector[iwc]);
                             factors.push_back(ZREN_vector[izren]);
                             factors.push_back(cur_aren[iaren]);
                             
                             available_sectors.push_back(new SimpleSector(F1,F2,factors,cur_me));
+                                }
                             //cout<<" : success";
                             }
                         else
@@ -702,35 +930,111 @@ vector<string> GluonFusionSectorBox::give_sector_names(const string & pleft,cons
 
 vector<SimpleSector*> GluonFusionSectorBox::give_necessary_sectors(const UserInterface & UI)
 {
+    // this is where the runcard semantics are resolved
+    // qcd_perturbative_order
+    int min_a_power_requested,max_a_power_requested;
+    // default  option: qcd_perturbative_order
+    if (UI.qcd_perturbative_order == "LO")
+        {
+        min_a_power_requested = 2;
+        max_a_power_requested = 2;
+        }
+    if (UI.qcd_perturbative_order == "NLO")
+        {
+        min_a_power_requested = 2;
+        max_a_power_requested = 3;
+        }
+    if (UI.qcd_perturbative_order == "NNLO")
+        {
+        min_a_power_requested = 2;
+        max_a_power_requested = 4;
+        }
+    // advanced  : alpha_s_power. If defined by user it fixes the a_s order
+    if (UI.alpha_s_power != -1)
+        {
+        min_a_power_requested = UI.alpha_s_power;
+        max_a_power_requested = UI.alpha_s_power;
+        }
+    // default  option ew_h_plus_j
+    int min_aw_power_requested = 0;
+    int max_aw_power_requested = 0;
+    if (UI.ew_h_plus_j)
+        {
+        max_aw_power_requested = 1;
+        }
+    // advanced option ew_h_plus_j_only
+    if (UI.only_ew_h_j)
+        {
+        min_aw_power_requested = 1;
+        max_aw_power_requested = 1;
+        }
+    
     cout<<"\n[GluonFusionSectorBox] : looking for necessary sectors"<<endl;
     vector<SimpleSector*> necessary_sectors;
+    
     for (int i=0;i<available_sectors.size();i++)
         {
-        bool initial_state_partons_fit=(UI.Fleft==available_sectors[i]->F1.parton_from
-                                        and UI.Fright==available_sectors[i]->F2.parton_from
+        SimpleSector* the_sector = available_sectors[i];
+        bool a_power_fits = the_sector->alpha_power>=min_a_power_requested
+                        and the_sector->alpha_power<=max_a_power_requested;
+        if (not(a_power_fits)) continue;
+        
+        bool initial_state_partons_fit=(
+                                        UI.Fleft==the_sector->F1.parton_from
+                                    and UI.Fright==the_sector->F2.parton_from
                                         )
-        or
-        (UI.Fleft=="none" and UI.Fright=="none");
-        bool a_power_fits=available_sectors[i]->alpha_power==UI.alpha_s_power or UI.alpha_s_power == -1;
-        bool e_power_fits = available_sectors[i]->epsilon_power==UI.pole;
+                                    or
+                                        (UI.Fleft=="none" and UI.Fright=="none");
+        if (not(initial_state_partons_fit)) continue;
+        
+        bool e_power_fits = the_sector->epsilon_power==UI.pole;
+        if (not(e_power_fits)) continue;
+        
+        bool aw_fits = the_sector->ME->alpha_ew_power() >= min_aw_power_requested
+        and
+        the_sector->ME->alpha_ew_power() <= max_aw_power_requested;
+        if (not(aw_fits)) continue;
+        
         string real_life_ME_approx = UI.matrix_element_approximation;
-        if (available_sectors[i]->alpha_power == 4)
-            real_life_ME_approx = "effective";
-        bool me_approx_fits = available_sectors[i]->ME->me_approximation()==real_life_ME_approx;
-        bool a_weak_power_fits = available_sectors[i]->ME->alpha_ew_power()==0;
-        if (UI.ew_soft) a_weak_power_fits = available_sectors[i]->ME->alpha_ew_power()==UI.alpha_ew_power or UI.alpha_ew_power == -1;
-        if (initial_state_partons_fit and a_power_fits and e_power_fits and me_approx_fits and a_weak_power_fits)
+        // electroweak h+j sector
+        if (the_sector->ME->alpha_ew_power()==1)
             {
-            
-            necessary_sectors.push_back(available_sectors[i]);
+            real_life_ME_approx == "exact";
+            }
+        // qcd sector
+        else
+            {
+            if (UI.matrix_element_approximation == "effective")
+                real_life_ME_approx = "effective";
+            if (UI.matrix_element_approximation == "effective_enhanced")
+                real_life_ME_approx = "effective";
+            if (UI.matrix_element_approximation == "exact")
+                {
+                if (the_sector->alpha_power == 4)
+                            real_life_ME_approx = "effective";
+                else
+                    {
+                    if (UI.ew_soft) real_life_ME_approx = "any";
+                    else real_life_ME_approx = "exact";
+                        }
+                }
             }
         
-        /* else if (pleft==available_sectors[i]->F1.parton_from and pright==available_sectors[i]->F2.parton_from)
-         {
-         cout<<"\n-- sector failed "<<available_sectors[i]->name;
-         }
-         */
+        // trying to match matrix_element_approximation
+        // nnlo MEs all have matrix_element_approximation = effective
+        
+        
+        
+        // in an exact run we might have effective LO and NLO MEs if there
+        // are ew corrections
+        bool me_approx_fits =
+                        the_sector->ME->me_approximation()==real_life_ME_approx
+                        or real_life_ME_approx == "any";
+        if (not(me_approx_fits)) continue;
+        necessary_sectors.push_back(the_sector);
         }
+        
+        
     cout<<"\n[GluonFusionSectorBox] : "<<necessary_sectors.size()
         <<" sectors matched"<<endl;
     return necessary_sectors;
@@ -915,7 +1219,8 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
     
     if (eff_mh<100.0 or eff_mh>500.0)
         {
-        cout<<"\nSoft ew corrections not available (mh<100 or mh>500). They are set to zero";
+        cout<<"\nSoft ew corrections not available (mh<100 or mh>500). They are set to zero since mh = "<<eff_mh
+            <<" mtop_pass/ mtop = "<< mtop_pass/model.top.m();
         NLO_ew_coeff_ = 0.0;
         }
     else
@@ -953,7 +1258,12 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
                      ew_data[iafter]->deltaew};
         vector<double> c = givecoeff(x,y);
         double res = (c[2] + c[1] * eff_mh + c[0] * eff_mh*eff_mh)/100.0;
-        NLO_ew_coeff_ = sqrt(1.0+res)-1.0 ;
+        // calculating born for top only with mtop = 170.9 GeV
+        // which was the choice of the authors of 0809.3667
+        complex<double> Wt(4.0*170.9*170.9/pow(eff_mh,2.0),0.0);
+        complex<double> xt = -Wt/pow(sqrt(1.0-Wt)+1.0,2.0);
+        complex<double> born_special = born(xt);
+        NLO_ew_coeff_ = (sqrt(1.0+res)-1.0 ) * born_special;
         cout<<"\n NLO ew coeff = "<<NLO_ew_coeff_;
         }
 }
@@ -988,7 +1298,27 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
     SetNumberOfParticles();
     SetDecayParticleIdInEventBox();
     for (int i=0;i<7;i++){smax[i]=0.0;smin[i]=1000.0;}
+    
     set_up_wilson_coefficients();
+    
+    if (UI.matrix_element_approximation=="effective_enhanced")
+        {
+        readjust_wilson_coefficient_for_enhanced_effective();
+        }
+    // exact: the |WC|^2 terms must have no pure qcd component
+    // so we adjust the WC.c*_qcd_only coefficients
+    if (UI.matrix_element_approximation=="exact")
+        {
+        //by default in exact mode the qcd wilson coeffs of NNLO are "enhanced"
+        readjust_wilson_coefficient_for_enhanced_effective();
+        //arrange so that the LO and NLO effective
+        //pure qcd contributions are removed
+        readjust_wilson_coefficient_for_exact();
+        }
+    if (UI.ew_soft)
+        {
+        readjust_wilson_coefficient_for_electroweak_effective();
+        }
     set_up_beta_constants();
     cout<<"\n[GluonFusion] : setting up sectors"<<endl;
     all_sectors = new GluonFusionSectorBox(WC,beta,log_mur_sq_over_muf_sq);
@@ -1075,10 +1405,8 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
                 {
                 exact_coefficients = new GluonFusionExactCoefficients(Model);
                 }
-            if (UI.ew_soft)
-                {
-                electroweak_coefficients = new GluonFusionEWCoefficients(Model);
-                }
+            
+            
             //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
             //: Gf = 1.16637*10^{-5} * 0.389379*10^9
             pref_sgg = 35.0309;
@@ -1265,16 +1593,64 @@ void GluonFusion::allocate_luminosity()
 
 void GluonFusion::set_up_wilson_coefficients()
 {
-     //: QCD plain:
-     WC.c0 = 1.0;
-     WC.c1 = 11.0/4.0;
-     WC.c2 = 2777.0/288.0
+     //: QCD plain, in MSBar scheme :
+     WC.c0 = complex<double>(1.0,0.0);
+     WC.c1 = complex<double>(11.0/4.0,0.0);
+     WC.c2 = complex<double>(2777.0/288.0
                               +(19.0/16.0)*log_muf_sq_over_mt_sq
                               +consts::nf*(
                                              (1.0/3.0)*log_muf_sq_over_mt_sq
                                            -67.0/96.0
-                                           );
+                                           ),0.0);
+    WC.c0_qcd_only = 0.0;
+    WC.c1_qcd_only = 0.0;
+    WC.c2_qcd_only = 0.0;
+    WC.exact = false;
+    WC.ew_soft = false;
 }
+
+
+void GluonFusion::readjust_wilson_coefficient_for_enhanced_effective()
+{
+    complex<double> LO_top_only_exact_coeff(0.0,0.0);
+    for (int i=0;i<Model.quarks.size();i++)
+        {
+        //defeinition of heavy quark: m > 100 GeV
+        if (Model.quarks[i]->m() > 100.0)
+            {
+            cout<<"\n quark contributing: "<<Model.quarks[i]->name()<<endl;
+            LO_top_only_exact_coeff += Model.quarks[i]->Y() * born(Model.quarks[i]->X());
+            }
+        }
+    
+    WC.c0 = WC.c0 * LO_top_only_exact_coeff;
+    WC.c1 = WC.c1 * LO_top_only_exact_coeff;
+    WC.c2 = WC.c2 * LO_top_only_exact_coeff;
+    cout<<"\n enhanced WC0! abs(WC0)^2 = "<<pow(abs(WC.c0),2.0)<<endl;
+    
+}
+
+void GluonFusion::readjust_wilson_coefficient_for_electroweak_effective()
+{
+    GluonFusionEWCoefficients electroweak_coefficients(Model);
+    
+    WC.c0 = WC.c0 + electroweak_coefficients.LO() * 1.0;
+    WC.c1 = WC.c1 + electroweak_coefficients.LO() * 7.0/6.0;
+    WC.c2 = WC.c2 + electroweak_coefficients.LO() * 10.0;
+    cout<<"\n[electroweak corrections to WCs] WC0 |WC0|^2 = "
+        <<pow(abs(WC.c0),2.0)<<endl;
+    
+    WC.ew_soft = true;
+}
+
+void GluonFusion::readjust_wilson_coefficient_for_exact()
+{
+    WC.c0_qcd_only = WC.c0;
+    WC.c1_qcd_only = WC.c1;
+    WC.c2_qcd_only = WC.c2;
+    WC.exact = true;
+}
+
 
 void GluonFusion::set_up_beta_constants()
 {
@@ -2120,7 +2496,7 @@ void GluonFusion::NNLO_hard_no_subtraction()
           *lumi->LL(0)
           *the_sector->sector_specific_prefactors_from_a_e_expansion()
           //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
-          *pow(WC.c0,2.0)
+          //*pow(WC.c0,2.0)
           ;
           
           //z=0.1;x2=tau/z/x1;shat=pow(Model.higgs.m,2.0)/z; weight=1.0;//: franz's test point
@@ -2170,7 +2546,7 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                          *the_sector->sector_specific_prefactors_from_a_e_expansion()
                          //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
                          *1.0/(1.0-ISP.z)
-                         *pow(WC.c0,2.0)
+                         //*pow(WC.c0,2.0)
                          ;
           double weightLO = pref_sgg
                          *ISP.measLO
@@ -2178,7 +2554,7 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                          *the_sector->sector_specific_prefactors_from_a_e_expansion()
                          //*pow(alpha_s_vector[0]/consts::Pi,the_sector->alpha_power)
                          *1.0/(1.0-ISP.z)
-                         *pow(WC.c0,2.0)
+                         //*pow(WC.c0,2.0)
                          ;
           
           if (the_sector->ME->is_franz_topology())
@@ -2484,34 +2860,283 @@ void GluonFusion::qqbar_NLO_hard_exact()
 }
 
 //: ewk matrix elements below
-void GluonFusion::NLO_ewk_soft()
+//void GluonFusion::NLO_ewk_soft()
+//{
+//    if (the_sector->ME->epsilon_power()==0)
+//        {
+//        double sigma_central =   pref_sgg
+//        *ISP.measLO
+//        *lumi->LL_LO(0)
+//        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+//        *electroweak_coefficients->LO();
+//        JLO(sigma_central);
+//        }
+//}
+//
+//
+//void GluonFusion::NLO_ewk_soft_exact()
+//{
+//    if (the_sector->ME->epsilon_power()==0)
+//        {
+//        double sigma_central =   pref_sgg
+//        *ISP.measLO
+//        *lumi->LL_LO(0)
+//        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+//        *exact_coefficients -> LO_epsilon(0)
+//        *electroweak_coefficients->LO();
+//        JLO(sigma_central);
+//        }
+//}
+
+//: ewk corrections to h+j (a_s^2 * m_t/v * a_w * m_v/v)
+//
+//
+//      ------>---- ~~~~~~~~ - - - - -  - - - - - ---- ggggggggggg
+//                |        }                      | /
+//                |        {                      |/
+//                |        }                      g
+//                |        {                      g
+//      gggggggggg------>-------------- ------->----------->------
+
+
+void GluonFusion::NLO_ewk_uubar_h_plus_jet()
 {
     if (the_sector->ME->epsilon_power()==0)
         {
-        double sigma_central =   pref_sgg
-        *ISP.measLO
-        *lumi->LL_LO(0)
+        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+        else
+            {
+        double sigma =   pref_sgg
+                        *ISP.meas
+                        *lumi->LL(0)
+            *the_sector->sector_specific_prefactors_from_a_e_expansion()
+            *EwkUUbar(ISP.z,ISP.lambda);
+        
+        if (ISP.meas==0.0) cout<<"\n* "<<sigma;
+        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+            }
+        }
+}
+
+void GluonFusion::NLO_ewk_ddbar_h_plus_jet()
+{
+    if (the_sector->ME->epsilon_power()==0)
+        {
+        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+        else
+            {
+        double sigma =   pref_sgg
+        *ISP.meas
+        *lumi->LL(0)
         *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *electroweak_coefficients->LO();
-        JLO(sigma_central);
+        *EwkDDbar(ISP.z,ISP.lambda);
+        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+            }
         }
 }
 
 
-void GluonFusion::NLO_ewk_soft_exact()
+void GluonFusion::NLO_ewk_ug_h_plus_jet()
 {
     if (the_sector->ME->epsilon_power()==0)
         {
-        double sigma_central =   pref_sgg
-        *ISP.measLO
-        *lumi->LL_LO(0)
+        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+        else
+            {
+        double sigma =   pref_sgg
+        *ISP.meas
+        *lumi->LL(0)
         *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *exact_coefficients -> LO_epsilon(0)
-        *electroweak_coefficients->LO();
-        JLO(sigma_central);
+        *EwkUG(ISP.z,ISP.lambda);
+        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+            }
         }
 }
 
+void GluonFusion::NLO_ewk_dg_h_plus_jet()
+{
+    if (the_sector->ME->epsilon_power()==0)
+        {
+        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+        else
+            {
+        double sigma =   pref_sgg
+        *ISP.meas
+        *lumi->LL(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *EwkDG(ISP.z,ISP.lambda);
+        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+            }
+        }
+}
+
+
+void GluonFusion::NLO_ewk_gu_h_plus_jet()
+{
+    if (the_sector->ME->epsilon_power()==0)
+        {
+        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+        else
+            {
+        double sigma =   pref_sgg
+        *ISP.meas
+        *lumi->LL(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *EwkUG(ISP.z,ISP.lambda);
+        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   1.0-ISP.lambda);
+            }
+        }
+}
+
+void GluonFusion::NLO_ewk_gd_h_plus_jet()
+{
+    if (the_sector->ME->epsilon_power()==0)
+        {
+        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
+        else
+            {
+        double sigma =   pref_sgg
+        *ISP.meas
+        *lumi->LL(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *EwkDG(ISP.z,ISP.lambda);
+        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   1.0-ISP.lambda);
+            }
+        }
+}
+
+
+extern "C" {
+    // electroweak form factors
+    complex_double fa_massless_(double*,double*, double*,
+                                complex_double*,complex_double*);
+    
+}
+
+inline complex_double FA_massless(const double& s, const double& t, const double& u, const complex_double& mhsq,const complex_double& mvsq)
+{ return fa_massless_((double*)&s, (double*)&t, (double*)&u,
+                      (complex_double*)&mhsq,(complex_double*)&mvsq); }
+
+double GluonFusion::EwkUUbar(const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double s = ISP.curs;
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
+    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(ISP.z,&Model) / s;
+    complex<double> Mewk(0.0);
+    
+    
+    double mhsq = Model.higgs.m()*Model.higgs.m();
+    
+    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
+        {
+        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_up = pow(V->cv_up,2.0) + pow(V->ca_up,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<"\n"<<gw_up;
+        Mewk += - mv_sq * gw_up * lambda_v
+                    * (  t*t * FA_massless(t,u,s,mhsq,mv_sq)
+                       + u*u * FA_massless(u,t,s,mhsq,mv_sq));
+        }
+  
+    
+    
+    double res = prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    if (abs(s+t+u - mhsq)>1e-4)
+        {
+        cout<<s<<" "<<t<<" "<<u<<" "<<mhsq<<" "<<s+t+u
+        <<"\tx1 = "<<ISP.x1<<" x2 = "<<ISP.x2<<"\t res= "<<res*ISP.meas<<endl;
+        }
+    return res;
+}
+
+double GluonFusion::EwkDDbar(const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double s = ISP.curs;
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
+    complex<double> Mqcd = sum_of_Aqqgh(ISP.z,&Model) / s;
+    complex<double> Mewk(0.0);
+    
+    double mhsq = Model.higgs.m()*Model.higgs.m();
+    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
+        {
+        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_down = pow(V->cv_down,2.0) + pow(V->ca_down,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
+        Mewk += - mv_sq * gw_down * lambda_v
+        * (  t*t * FA_massless(t,u,s,mhsq,mv_sq)
+           + u*u * FA_massless(u,t,s,mhsq,mv_sq));
+        }
+    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    
+}
+
+
+double GluonFusion::EwkUG(const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double s = ISP.curs;
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
+                    * 9.0/64.0*u/s;
+    complex<double> Mqcd = sum_of_Aqqgh(ISP.z,&Model) / s;
+    complex<double> Mewk(0.0);
+    
+    double mhsq = Model.higgs.m()*Model.higgs.m();
+    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
+        {
+        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_up = pow(V->cv_up,2.0) + pow(V->ca_up,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
+        Mewk += - mv_sq * gw_up * lambda_v
+        * (  s*s * FA_massless(s,t,u,mhsq,mv_sq)
+           + t*t * FA_massless(t,s,u,mhsq,mv_sq));
+        }
+    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    
+}
+
+double GluonFusion::EwkDG(const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double s = ISP.curs;
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
+                        *9.0/64.0*u/s;
+    complex<double> Mqcd = sum_of_Aqqgh(ISP.z,&Model) / s;
+    complex<double> Mewk(0.0);
+    
+    double mhsq = Model.higgs.m()*Model.higgs.m();
+    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
+        {
+        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_down = pow(V->cv_down,2.0) + pow(V->ca_down,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
+        Mewk += - mv_sq * gw_down * lambda_v
+        * (  s*s * FA_massless(s,t,u,mhsq,mv_sq)
+           + t*t * FA_massless(t,s,u,mhsq,mv_sq));
+        }
+    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    
+}
 
 
 

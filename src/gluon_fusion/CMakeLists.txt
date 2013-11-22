@@ -35,6 +35,8 @@ add_library(fortran_ggf gluon_fusion_matrix_elements/rgg2ght1.f
                          gluon_fusion_matrix_elements/kappa.f
                          exact_nlo_matrix_elements/massive_ampls.F
                          exact_nlo_matrix_elements/masters.F
+                         
+                         electroweak_h_plus_jet.f
           )
 
 

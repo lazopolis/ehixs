@@ -25,7 +25,7 @@ int Option::get_type()
 
 UserInterface::UserInterface()
 {
-     options.push_back(new DoublePrecisionOption("Etot",0,"COM energy of the collider","Required",&Etot,7000.0));
+     options.push_back(new DoublePrecisionOption("Etot",0,"COM energy of the collider in GeV","Required",&Etot,7000.0));
      options.push_back(new DoublePrecisionOption("m_higgs",0,"higgs mass in GeV","Required",&m_higgs,125.0));
      options.push_back(new DoublePrecisionOption("epsrel",0,"vegas argument: target relative error","Required",&epsrel,0.01));
      options.push_back(new DoublePrecisionOption("epsabs",0,"vegas argument: target absolute error","Required",&epsabs,1e-10));
@@ -45,6 +45,12 @@ UserInterface::UserInterface()
      options.push_back(new StringOption("Fright",0,"specifies the flavor of the parton on right beam","Required",&Fright, "none"));
      options.push_back(new StringOption("leptonic_decay_mode_in_wwzz",0,"specifies the decay mode in WWZZ decay: eemumu,llll, lvlv, lvlv_interference","Required",&leptonic_decay_mode_in_wwzz, "none"));
     options.push_back(new StringOption("xml_info",0,"file for xml-formatted info (only active with --info) ","Required",&xml_info, "none"));
+    options.push_back(new StringOption(
+            "qcd_perturbative_order",0,
+            "LO, NLO, NNLO : ehixs will compute up to this order in a_s",
+            "Required",
+            &qcd_perturbative_order,
+            "none"));
     
      options.push_back(new IntOption("verbose",0,"level of verbosity","Required",&verbose,2));
      options.push_back(new IntOption("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,200000));
@@ -79,6 +85,14 @@ UserInterface::UserInterface()
                                      "Soft NLO ew corrections: true/false (default false)",
                                      "Optional",
                                      &ew_soft,false));
+    options.push_back(new BoolOption("ew_h_plus_j",0,
+                                     "Include real mixed QCD-ew corrections to h+j: true/false (default false)",
+                                     "Optional",
+                                     &ew_h_plus_j,false));
+    options.push_back(new BoolOption("only_ew_h_j",0,
+                                     "Only compute real mixed QCD-ew corrections to h+j: true/false (default false)",
+                                     "Optional",
+                                     &only_ew_h_j,false));
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
     vector<string>empty_vector;
     options.push_back(new CutOption("cut",0,"generic cut option","Required",my_generic_cut, empty_vector));

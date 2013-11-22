@@ -121,6 +121,10 @@ public:
     double sector_specific_prefactors_from_a_e_expansion(){return _prefactor;}
 private:
     double _prefactor;
+private://methods
+    void uubar(pdf_pair_list& curlumi);
+    void ddbar(pdf_pair_list& curlumi);
+
 };
 
 struct ISparams{
@@ -222,9 +226,9 @@ class GluonFusionEWCoefficients
 {
 public:
     GluonFusionEWCoefficients(const CModel&);
-    double LO(){return NLO_ew_coeff_;}
+    complex<double> LO(){return NLO_ew_coeff_;}
 private:
-    double NLO_ew_coeff_;
+    complex<double> NLO_ew_coeff_;
     vector<EwData*> ew_data;
 private://methods
     vector<double> givecoeff(double x[3],double y[3]);
@@ -304,9 +308,16 @@ public://methods
     void gq_NLO_hard_exact();
     void qqbar_NLO_hard_exact();
     
-    void NLO_ewk_soft();
-    void NLO_ewk_soft_exact();
-    
+//    void NLO_ewk_soft();
+//    void NLO_ewk_soft_exact();
+    void NLO_ewk_uubar_h_plus_jet();
+    void NLO_ewk_ddbar_h_plus_jet();
+    void NLO_ewk_ug_h_plus_jet();
+    void NLO_ewk_dg_h_plus_jet();
+    void NLO_ewk_gu_h_plus_jet();
+    void NLO_ewk_gd_h_plus_jet();
+
+
     string sector_name(){return the_sector->name;}
     int number_of_necessary_sectors(){return number_of_necessary_sectors_;}
 private://data
@@ -327,6 +338,10 @@ private://methods
     void check_which_sectors_can_be_run_together(const vector<SimpleSector*>&);
     bool sectors_are_compatible(SimpleSector* s1,SimpleSector* s2);
     void set_up_wilson_coefficients();
+    void readjust_wilson_coefficient_for_enhanced_effective();
+    void readjust_wilson_coefficient_for_electroweak_effective();
+    void readjust_wilson_coefficient_for_exact();
+    
     void set_up_beta_constants();
     void prepare_phase_space_dependent_quantities();
     
@@ -379,8 +394,10 @@ private://methods
     void gq2qh_exact_Q_fin(const double& weight,const double& z,
                            const double& x1,const double&x2,
                            const double& lambda);
-    
-    
+    double EwkUUbar(const double& z, const double& lambda);
+    double EwkDDbar(const double& z, const double& lambda);
+    double EwkUG(const double& z, const double& lambda);
+    double EwkDG(const double& z, const double& lambda);
 };
 
 

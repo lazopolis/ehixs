@@ -21,7 +21,7 @@
 
 Decay_WWZZ::Decay_WWZZ(const UserInterface & UI)
 {
-    dimension_of_integration_for_decay=5;
+    dimension_of_integration_for_decay=8;
 #include "decay_WWZZ_cut_initialization.h"
     cuts_->ParseCuts(UI);
     if (UI.leptonic_decay_mode_in_wwzz=="none")

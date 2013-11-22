@@ -4,7 +4,7 @@
 
 Decay_gammagamma::Decay_gammagamma(const UserInterface & UI)
 {
-    dimension_of_integration_for_decay=0;
+    dimension_of_integration_for_decay=2;
 #include "decay_gamma_gamma_cut_initialization.h"
     cuts_->ParseCuts(UI);
     decay_mode_ = 7;

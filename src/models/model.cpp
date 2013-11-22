@@ -22,13 +22,14 @@ CModel::CModel()
     bottom.set_Y(1.0);
     bottom.set_width(0.0);
     //
-    W=Particle("W");
+    W=VectorBoson("W");
     W.set_pole_mass(80.403);
     W.set_charge(1.0);
     W.set_Y(1.0);
     W.set_width(2.141);
+    
     //
-    Z=Particle("Z");
+    Z=VectorBoson("Z");
     Z.set_pole_mass(91.1876);
     Z.set_charge(0.0);
     Z.set_Y(1.0);
@@ -54,13 +55,47 @@ CModel::CModel()
 
 
 void CModel::consolidate(const double & a_at_mz,
-                         const double & mur_over_mh, int porder)
+                         const double & mur_over_mh, int porder,
+                         const double& mh)
 {
+    higgs.set_pole_mass(mh);
     mu_r_ = mur_over_mh * higgs.m();
     alpha_s = new CouplingConstant(a_at_mz,Z.m());
     for (int i=0;i<quarks.size();i++)
         quarks[i]->consolidate(*alpha_s,mu_r_,porder,higgs.m(),Z.m());
+    for (int i=0;i<vector_bosons.size();i++)
+        vector_bosons[i]->consolidate(*alpha_s,mu_r_,porder,higgs.m(),Z.m());
     alpha_s->evolve(mu_r_,porder,Z.m());
+    
+    // complex masses in gw,sw,cw
+    complex<double> gw = sqrt(4.0*sqrt(2.0)*consts::G_fermi * W.cm_sq());
+    complex<double> cw_sq = W.cm_sq()/Z.cm_sq();
+    complex<double> cw = sqrt(cw_sq);
+    complex<double> sw_sq = 1.0-cw_sq;
+    //real masses in gw, sw, cw
+    gw = sqrt(4.0*sqrt(2.0)*consts::G_fermi * pow(W.m(),2.0));
+    cw_sq = pow(W.m()/Z.m(),2.0);
+    cw = sqrt(cw_sq);
+    sw_sq = 1.0-cw_sq;
+    
+    W.cv_up = gw / sqrt(2.0);
+    W.cv_down = gw / sqrt(2.0);
+    W.ca_up = gw / sqrt(2.0);
+    W.ca_down = gw / sqrt(2.0);
+    W.lamda = 2.0;
+    
+    
+    Z.cv_up = gw/cw*(1.0/2.0 - 4.0/3.0 * sw_sq);
+    Z.cv_down = gw/cw*(-1.0/2.0 + 2.0/3.0 * sw_sq);
+    Z.ca_up = gw/cw*1.0/2.0;
+    Z.ca_down = gw/cw*1.0/2.0;
+    Z.lamda = 2.0;
+    cout<<"\n[model] gw, sw^2, cw: "<<gw<<" "<< sw_sq<<" "<< cw<<" "<<consts::G_fermi;
+    cout<<"\n[model] mw = "<<W.m();
+
+    cout<<"\n[model] gw_up for W "<<pow(W.cv_up,2.0) + pow(W.ca_up,2.0);
+    cout<<"\n[model] gw_up for Z "<<pow(Z.cv_up,2.0) + pow(Z.ca_up,2.0);
+    
 }
 
 

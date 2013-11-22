@@ -8,8 +8,9 @@
 using namespace std;
 
 
-#include <complex>
 #define complex_double std::complex<double>
+
+
 
 
 /* Fortran declarations
@@ -23,6 +24,10 @@ extern "C" {
     
     //void ffjet_(double*);
     double fjet_(double*,double*,double *s12,double *s13,double *s23,double *s14,double *s24,double *s34,double *w);
+    
+    // electroweak form factors
+    complex_double fa_massless_(double*,double*, double*,
+                                complex_double*,complex_double*);
     
 }
 
@@ -208,6 +213,23 @@ double sum_of_abs_sq_of_Aqi(const double &z,const double & lambda,CModel* Model)
                 + pow(abs(A2),2.0)
                 + pow(abs(A3),2.0)
                 + pow(abs(A4),2.0));
+}
+
+
+complex<double> sum_of_Aqqgh(const double& y,CModel* Model)
+{
+    complex<double> sum_of_Aqqgh(0.0,0.0);
+    for (int i=0;i<Model->quarks.size();i++)
+        {
+        double Yq = Model->quarks[i]->Y();
+        if (Yq!=0.0)
+            {
+            complex<double> Wq = Model->quarks[i]->Wq();
+            complex<double> factor = Yq * Wq * 3.0 / 4.0;
+            sum_of_Aqqgh += Aqqgh_cpp(y,Model->quarks[i]->X()) * factor;
+            }
+        }
+    return sum_of_Aqqgh;
 }
 
 

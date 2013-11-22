@@ -4,6 +4,7 @@
 #include<complex>
 #include<string>
 #include "constants.h"
+#include <iostream>
 using namespace std;
 
 class CouplingConstant{
@@ -79,5 +80,27 @@ private://methods
     void set_Xq(double);
 };
 
+class VectorBoson: public Particle
+{
+public:
+    VectorBoson(){};
+    VectorBoson(const string& name): Particle(name){};
+    complex<double> cv_up;
+    complex<double> cv_down;
+    complex<double> ca_up;
+    complex<double> ca_down;
+    complex<double> lamda;
+};
+
+
 
 #endif
+
+
+
+
+
+
+
+
+

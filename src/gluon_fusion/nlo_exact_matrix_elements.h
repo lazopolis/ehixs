@@ -21,6 +21,7 @@ complex<double> born(complex<double> x);
 
 
 double sum_of_abs_sq_of_Aqqgh(const double& z,CModel* Model);
+complex<double> sum_of_Aqqgh(const double& y,CModel* Model);
 
 complex<double> bubble(const complex<double>& x);
 complex<double> bubf(const complex<double>& x1,const complex<double>& x2);

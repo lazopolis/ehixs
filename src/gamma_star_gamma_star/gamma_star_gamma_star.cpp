@@ -45,7 +45,6 @@ NewSimpleSector::NewSimpleSector(const FFF& _f1,const FFF& _f2,
     stream<<*ME;
     stream<<" : a^"<<alpha_power<<",e^"<<epsilon_power;
     name=stream.str();
-    initial_state_jacobian_ = 1.0;
 }
 
 
@@ -53,11 +52,8 @@ void NewSimpleSector::Evaluate(double* xx_vegas)
 {
     //SetInitialStateVars();
 
-    lumi_->set_cur_lumi(xx_vegas[0],xx_vegas[1]);
-    double factor_for_ME =   initial_state_jacobian_
-                            *lumi_->LL(0)
-                            *prefactor_;
-    ME->Evaluate(factor_for_ME,xx_vegas);
+    
+    ME->Evaluate(xx_vegas);
     
 }
 
@@ -124,14 +120,15 @@ pdf_pair_list NewSimpleSector::give_list_of_pdf_pairs()
     return curlumi;
 }
 
-void NewSimpleSector::setUpPrefactor(const double & a_s_over_pi)
+void NewSimpleSector::SetUpPrefactor(const double& a_s_over_pi)
 {
-    prefactor_ =1.0;
+    double prefactor =1.0;
     for (unsigned i=0;i<factors.size();i++)
         {
-        prefactor_ = prefactor_ * factors[i]->give_value();
+        prefactor = prefactor * factors[i]->give_value();
         }
-    prefactor_ = prefactor_ * pow(a_s_over_pi,alpha_power);
+    prefactor = prefactor * pow(a_s_over_pi,alpha_power);
+    ME->SetUpPrefactor(prefactor);
 }
 
 
@@ -429,7 +426,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
             
             the_sector->SetLuminosity(lumi);
                         
-            the_sector -> setUpPrefactor(Model.alpha_strong()/consts::Pi);
+            the_sector -> SetUpPrefactor(Model.alpha_strong()/consts::Pi);
             
             }
         
