@@ -3,12 +3,78 @@
 #define CONVOLUTIONS_H
 #include<string>
 #include<vector>
+#include<list>
 #include<complex>
 //#include "splitting_kernels.h"
 using namespace std;
+#include "event.h"
+#include "luminosity.h"
 
 
 typedef  pair<string,string> stringpair;
+
+
+class InitialStateFlavors
+{
+public:
+    InitialStateFlavors(){};
+    InitialStateFlavors(const string& lef,const string& rig)
+    {left = lef;right=rig;}
+    string left;
+    string right;
+};
+
+class NewMeExternalInfo
+{
+public:
+    NewMeExternalInfo(){};
+public:
+    string name;
+    InitialStateFlavors ISF;
+    int alpha_power;
+    int epsilon_power_min;
+    int epsilon_power_max;
+    int epsilon_power;
+};
+
+
+class NewMatrixElement
+{
+public:
+    NewMatrixElement(EventBox& event_box): dimension_(0)
+    {event_box_ = &event_box;}
+    
+public:
+    friend ostream& operator<<(ostream&, const NewMatrixElement&);
+    string give_name(){ostringstream  stream;
+        stream<<*this;
+        return (stream.str());}
+    int alpha_power()const {return info_->alpha_power;}
+    int epsilon_power()const {return info_->epsilon_power;}
+    void set_epsilon_power(int ep) {info_->epsilon_power = ep;}
+    int epsilon_power_min()const {return info_->epsilon_power_min;}
+    int epsilon_power_max()const {return info_->epsilon_power_max;}
+    
+    string parton_i()const {return info_->ISF.left;}
+    string parton_j()const {return info_->ISF.right;}
+    string name()const {return info_->name;}
+    
+    virtual void Evaluate(double*)=0;
+    
+    int dimension() const {return dimension_;}
+    void SetLuminosity(Luminosity* lumi){lumi_ = lumi;}
+    void SetUpPrefactor(const double & prefactor){prefactor_ = prefactor;}
+protected:
+    NewMeExternalInfo* info_;
+    int dimension_;
+    EventBox* event_box_;
+    Luminosity* lumi_;
+    double prefactor_;
+    double initial_state_jacobian_;
+    
+};
+
+
 
 // monomial in a,e
 class ExpansionTerm
@@ -22,6 +88,7 @@ public:
     void set_name(const string& _name){name=_name;}
     void set_value(const double& v){value = v;}
     friend ExpansionTerm operator*(const ExpansionTerm&,const ExpansionTerm&);
+    
     friend ostream& operator<<(ostream& stream, const ExpansionTerm& P);
 
 private:
@@ -30,61 +97,28 @@ private:
      int a_power,e_power;
 };
 
+
 //polynomial in a,e
 class Polynomial{
 public:
     Polynomial(){};
-    Polynomial(const string& name,const double & value,int a_pow,int e_pow){add_term(ExpansionTerm(name,value,a_pow,e_pow));}
+    Polynomial(const string& name,const double & value,int a_pow,int e_pow){terms.push_back(new ExpansionTerm(name,value,a_pow,e_pow));}
     void truncate_in_alpha_up_to_power(int);
     void collect();
-    vector<ExpansionTerm> coeff(int,int);
+    vector<ExpansionTerm*> coeff(int,int);
     friend Polynomial operator+(const Polynomial& p1,const Polynomial& p2);
     friend Polynomial operator+(const Polynomial& p1,const ExpansionTerm& p2);
     friend Polynomial operator+(const ExpansionTerm& p2,const Polynomial& p1);
     friend Polynomial operator*(const Polynomial& p1,const Polynomial& p2);
     friend ostream& operator<<(ostream&, const Polynomial&);
-
+    Polynomial pow(int k);
     int size() const {return terms.size();}
-    ExpansionTerm operator[](int i)const {return terms[i];}
-    void add_term(const ExpansionTerm& newterm){terms.push_back(newterm);}
+    ExpansionTerm* operator[](int i)const {return terms[i];}
+    void add_term(ExpansionTerm* newterm){terms.push_back(newterm);}
 private:
-    vector<ExpansionTerm> terms;
+    vector<ExpansionTerm*> terms;
 };
 
-/*
-class Coefficient{
-public:
-    Coefficient(const string& name,const double& val): name_(name),val_(val){};
-    friend Coefficient operator*(const Coefficient&,const Coefficient&);
-private:
-    string name_;
-    double val;
-};
-
-
-template<class T>
-fvector_decl<T> operator*(const fvector_decl<T>& v, const T& t)
-{
-    fvector_decl<T> r;
-    for(unsigned i=0; i<4; ++i)
-        r[i] = t*v[i];
-        return r;
-}
-
-
-
-class AEMonomial{
-public:
-    AEMonomial(int a_power,int e_power)
-            : a_power_(a_power),e_power_(e_power),coefficient_(1.0){};
-    friend AEMonomial operator*(const AEMonomial&,const double& c);
-    friend AEMonomial operator*(const AEMonomial&,const double& c);
-private:
-    int a_power_;
-    int e_power_;
-    Coefficient coefficient_;
-};
-*/
 class FFF
 {
 public:
@@ -97,6 +131,136 @@ public:
      friend ostream& operator<<(ostream&, const FFF&);
      string name();
 };
+
+
+//------------------------------------------------------------------------------
+
+
+
+class FSingle
+{
+public:
+    FSingle(int parton_i,int parton_from,int as_order,int e_order)
+        :parton_i_(parton_i),parton_from_(parton_from),
+        as_order_(as_order),e_order_(e_order){construct_name();}
+    bool init_flavor_matches(const string& fname)
+    {
+    if (fname==name_from_) return true;
+    else return false;
+    }
+    int alpha_power(){return as_order_;}
+    int epsilon_power(){return -e_order_;}
+private:
+    int parton_i_;
+    int parton_from_;
+    int as_order_;
+    int e_order_;
+    void construct_name();
+    string name_from_;
+};
+
+class ListOfSingleF
+{
+public:
+    ListOfSingleF(int parton_to);
+    FSingle* give(int i){return f_[i];}
+    int size(){return f_.size();}
+private:
+    vector<FSingle*> f_;
+};
+
+
+
+class FxF
+{
+public:
+    FxF(FSingle* fleft,FSingle* fright){fleft_=fleft;fright_=fright;}
+    bool initial_flavor_is(const string& left,const string& right)
+    {
+    if (
+        fleft_->init_flavor_matches(left)
+        and fright_->init_flavor_matches(right)
+        )
+        {return true;}
+    else return false;
+    }
+    int alpha_power(){return fleft_->alpha_power()+fright_->alpha_power();}
+    int epsilon_power(){return fleft_->epsilon_power()+fright_->epsilon_power();}
+private:
+    FSingle* fleft_;
+    FSingle* fright_;
+};
+
+class ListOfFF
+{
+public:
+    ListOfFF(const string& fleft,const string& fright);
+    FxF* operator[](int i){return ff_[i];}
+    int size(){return ff_.size();}
+private:
+    vector<FxF*> ff_;
+private:
+    bool flavors_match(int i,int j,const string& left, const string& right);
+};
+
+
+class FxFxA
+{
+public:
+    FxFxA(FxF* ff,ExpansionTerm* term,int pole)
+        {ff_=ff;term_=term;pole_for_me_ = pole;}
+    bool initial_flavor_is(const string& left,const string& right)
+        {return ff_->initial_flavor_is(left,right);}
+    int alpha_power(){return ff_->alpha_power()+term_->give_a_power();}
+    int epsilon_power(){return ff_->epsilon_power()+term_->give_e_power();}
+
+private:
+    FxF* ff_;
+    ExpansionTerm* term_;
+    int pole_for_me_;
+};
+
+class Sector
+{
+public:
+    Sector(NewMatrixElement* ME);
+    friend ostream& operator<<(ostream&, const Sector&);
+//    void add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi);
+//    void single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
+//    void double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
+//    int give_pid(const string & name);
+    pdf_pair_list give_list_of_pdf_pairs();
+    void AllocateLuminosity(Luminosity* lumi);
+    void SetUpPrefactor(const double & a_s_over_pi){};
+    void Evaluate(double* xx_vegas){};
+    void restrict_as(int min_a_power_requested,int max_a_power_requested);
+    void restrict_epsilon(int pole);
+    void restrict_flavor(const string& left,const string& right);
+    string name(){return name_;}
+    int dimension(){return me_->dimension();}
+private:
+    NewMatrixElement* me_;
+    list<FxFxA*> FFA_;
+    string name_;
+};
+
+
+
+
+
+class SectorBox{
+public:
+    SectorBox(const vector<NewMatrixElement*>&, const UserInterface&);
+    int size(){return available_sectors.size();}
+    Sector* give(int i){return available_sectors[i];}
+private://data
+    vector<Sector*> available_sectors;
+};
+
+
+
+
+
 
 struct WilsonCoefficients{
     complex<double> c0;

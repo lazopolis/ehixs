@@ -17,7 +17,8 @@ using namespace std;
 #include "splitting_kernels.h"
 #include "cached_interpolator.h"
 
-#define TRAPEZIUM 50000
+#define TRAPEZIUM 100000
+#define NUMBER_OF_POINTS_IN_INTERPOLATION 2000
 //#define TRAPEZIUM 5
 
 
@@ -42,7 +43,7 @@ member(member_)
 void CashedInterpolator::set_up_fgrid_and_coefficients()
 {
      my_cashing_status = "CachedInterpolator: no cashing attempted";
-     NumberOfPoints = 2000;
+     NumberOfPoints = NUMBER_OF_POINTS_IN_INTERPOLATION;
      //NumberOfPoints=5;
      xmin = 1e-6; // !!! seems to be quite generally the default value for any lhapdf set
      
@@ -53,6 +54,7 @@ void CashedInterpolator::set_up_fgrid_and_coefficients()
      
      for(int ix=0;ix<NumberOfPoints;ix++)
           {
+          
           int i1,i2,i3;
           if(ix==0)
                {

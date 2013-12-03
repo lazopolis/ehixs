@@ -23,14 +23,14 @@ typedef void (BottomFusion::*ptr_to_BottomFusion_function)();
 
 
 
-class Sector
+class BSector
 {
 public:
-     Sector(const pdf_pair_list &pdfs,const ptr_to_BottomFusion_function ptr, int dim_int,string nm)
+     BSector(const pdf_pair_list &pdfs,const ptr_to_BottomFusion_function ptr, int dim_int,string nm)
      {my_dim_int=dim_int;myptr=ptr;mypdfs=pdfs;myname=nm;}
-     Sector(const pdf_pair_list &pdfs,const ptr_to_BottomFusion_function ptr, int dim_int,pointer_to_Franz FR,int si,int sf,string nm)
+     BSector(const pdf_pair_list &pdfs,const ptr_to_BottomFusion_function ptr, int dim_int,pointer_to_Franz FR,int si,int sf,string nm)
      {my_dim_int=dim_int;myptr=ptr;mypdfs=pdfs;myFR=FR;sec_in=si;sec_fi=sf;myname=nm;}
-     ~Sector(){};
+     ~BSector(){};
      int dim(){return my_dim_int;}
      int pdfsize(){return mypdfs.size();}
      ptr_to_BottomFusion_function ptr(){return myptr;}
@@ -116,7 +116,7 @@ class BottomFusion:public Production
      ~BottomFusion(){};
 
      void init(const UserInterface&,TheHatch* the_hatch);
-     vector<Sector*> sectors;
+     vector<BSector*> sectors;
      void evaluate_sector();
       
      void prepare_phase_space_dependent_quantities();
