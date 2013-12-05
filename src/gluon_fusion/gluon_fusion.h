@@ -370,7 +370,12 @@ private://methods
     void JLO(const double &);
     void find_topology(const UserInterface & );
     void allocate_luminosity();
-     
+    
+    bool vars_too_close_to_edges(const double&z,const double&lambda1
+                                              ,const double&lambda2
+                                              ,const double&lambda3
+                                              ,const double&lambda4);
+    
     void push_back_event(const double & sigma);
     void writeEventToFile(const double &,const double &,
                           const double &,const double &);

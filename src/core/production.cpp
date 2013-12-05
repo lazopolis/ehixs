@@ -22,6 +22,7 @@ double fjet_(double* x1,double *x2,double *s12,double *s13,double *s23,double *s
      
      if ((*w)!=(*w))
           {
+          cout<<setprecision(16);
           cout<<"\n Nan found coming from franz: "<<(*w)
                <<"\t kinematics: "
                <<"x1="<<*x1<<" "
@@ -33,6 +34,7 @@ double fjet_(double* x1,double *x2,double *s12,double *s13,double *s23,double *s
           <<"s14="<<ns14<<" "
           <<"s24="<<ns24<<" "
           <<"s34="<<ns34<<endl;
+          cout<<setprecision(8);
           exit(1);
           }
      

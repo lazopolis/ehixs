@@ -337,13 +337,20 @@ void Process::proceed_to_production_phase()
      if (production_is_defined) 
         {
         my_production->evaluate_sector();
-        for (int i=0;i<my_production->event_box.size();i++)
+        int number_of_prod_events = my_production->event_box.size();
+        if (number_of_prod_events==0) book_null_event();
+        else
             {
-            if (my_production->this_event_passes_cuts(i))
+            for (int i=0;i<number_of_prod_events;i++)
                 {
-                Event* production_event=my_production->event_box.ptr_to_event(i);
+                if (my_production->this_event_passes_cuts(i))
+                    {
+                    Event* production_event=my_production->event_box.ptr_to_event(i);
                 //cout<<"\nIn Process, event weight = "<<production_event->weight();
-                proceed_to_decay_phase(production_event);
+                    proceed_to_decay_phase(production_event);
+                    }
+                else book_null_event();
+                    
                 }
             }
         }
@@ -362,12 +369,18 @@ void Process::proceed_to_decay_phase(Event* production_event)
         {
         //cout<<"\n$$$ decay_particle id = "<<decay_particle_id_<<endl;
         my_decay->do_decay(production_event->ParticleMomentum(decay_particle_id_));
-        for (int j=0;j<my_decay->event_box.size();j++)
+        int number_of_decay_events = my_decay->event_box.size();
+        if (number_of_decay_events==0) book_null_event();
+        else
             {
-            if (my_decay->this_event_passes_cuts(j))
+            for (int j=0;j<number_of_decay_events;j++)
                 {
-                CombinedEvent the_event(production_event,my_decay->event_box.ptr_to_event(j));
-                book_event(the_event);
+                if (my_decay->this_event_passes_cuts(j))
+                    {
+                    CombinedEvent the_event(production_event,my_decay->event_box.ptr_to_event(j));
+                    book_event(the_event);
+                    }
+                else book_null_event();
                 }
             }
         }
@@ -413,7 +426,8 @@ void Process::book_event(const CombinedEvent& the_event)
 
 void Process::book_null_event()
 {
-     Vegas.set_up_vegas_ff(0.0);
+    Vegas.set_up_vegas_ff(0.0);
+//    cout<<"\t null event booked";
 }
 
 void Process::open_event_filename()

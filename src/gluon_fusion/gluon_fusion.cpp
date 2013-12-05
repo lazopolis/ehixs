@@ -2284,7 +2284,7 @@ void GluonFusion::gg_NLO_SOFT()
 //: HARD
 void GluonFusion::gg_NLO_HARD()
 {
-     if (abs(the_sector->ME->epsilon_power())>2 or 1.0-ISP.z<1e-8)
+     if (abs(the_sector->ME->epsilon_power())>2 or 1.0-ISP.z<1e-14)
           {
           book_production_event();
           }
@@ -2510,7 +2510,13 @@ void GluonFusion::NNLO_rv_with_subtraction()
 
 void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4)
 {
-     if (the_sector->ME->epsilon_power()<-3 or the_sector->ME->epsilon_power()>1){book_production_event();}
+     if (the_sector->ME->epsilon_power()<-3
+         or the_sector->ME->epsilon_power()>1
+         or vars_too_close_to_edges(ISP.z,lambda1,lambda2,lambda3,lambda4))
+         {
+         //cout<<"\n cut::::::::::::::::::::::::::::::::::::::::::::::::::::::";
+         book_production_event();
+         }
      else
           {
           double dummyres;
@@ -2534,7 +2540,18 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                          *1.0/(1.0-ISP.z)
                          //*pow(WC.c0,2.0)
                          ;
-          
+//          if (weightLO==0.0 and weight==0.0)
+//              {
+//              //cout<<"\noooooooooooooooooooooooooooooooooooooooooooooooooooooo";
+//              }
+//          else
+//              {
+//              cout<<"\n"<<setprecision(16)<<setw(40)<<ISP.z
+//                    <<setw(40)<<ISP.x1<<setw(40)<<ISP.x2
+//                    <<setw(40)<<lambda1<<setw(40)<<lambda2
+//                    <<setw(40)<<lambda3<<setw(40)<<lambda4
+//                ;
+//              }
           if (the_sector->ME->is_franz_topology())
                {
                for (int m=-3;m<the_sector->ME->epsilon_power()+1;m++)
@@ -2579,6 +2596,41 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
           }
 }
 
+bool GluonFusion::vars_too_close_to_edges(const double&z,const double&lambda1
+                                          ,const double&lambda2
+                                          ,const double&lambda3
+                                          ,const double&lambda4)
+{
+    const double tc = 1e-10;
+    if (z<tc or 1.0-z<tc)
+        {
+        //cout<<"\n cut z="<<z;
+        return true;
+        }
+    if (lambda1<tc or 1.0-lambda1<tc)
+        {
+        //cout<<"\n cut lambda1="<<lambda1;
+        return true;
+        }
+    if (lambda2<tc or 1.0-lambda2<tc)
+        {
+        //cout<<"\n cut lambda2="<<lambda2;
+        return true;
+        }
+    if (lambda3<tc or 1.0-lambda3<tc)
+        {
+        //cout<<"\n cut lambda3="<<lambda3;
+        return true;
+        }
+    if (lambda4<tc or 1.0-lambda4<tc)
+        {
+        //cout<<"\n cut lambda4="<<lambda4;
+        return true;
+        }
+    
+    return false;
+
+}
 
 
 //: exact MEs below
