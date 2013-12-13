@@ -10,7 +10,7 @@ mur_over_mhiggs = 0.5
 #Fright = gluon 
 #the order at which 
 matrix_element_approximation = exact
-qcd_perturbative_order = NNLO
+qcd_perturbative_order = LO
 perturbative_order = 0
 ew_soft = true
 ew_h_plus_j = true

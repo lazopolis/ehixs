@@ -386,6 +386,9 @@ void UserInterface::PrintAllOptions() const
 
 vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, bool locverbose)
 {
+    cout<<"\n[ehixs] command line args: ";
+    for (int i=0;i<argc;i++) cout<<argv[i]<<" ";
+    cout<<endl;
      // getopt quirckiness:
      char * const * argv_for_getopt = argv;
      // create the long_option array

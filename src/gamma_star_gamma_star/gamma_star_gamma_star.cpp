@@ -24,7 +24,7 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
         cout<<"\n Sectors that fit your selection criteria:\n";
         for (int i=0;i<all_sectors->size();i++)
             {
-            cout<<"\n"<<i<<" : "<<all_sectors->give(i)->name();
+            cout<<"\n"<<i<<" : "<<*all_sectors->give(i);
             }
         cout<<"\n\n number of Sectors defined : "<<all_sectors->size()<<endl;
 

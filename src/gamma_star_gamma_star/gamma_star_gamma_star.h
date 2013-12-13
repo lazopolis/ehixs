@@ -13,7 +13,8 @@ public:
         info_ = new NewMeExternalInfo;
         dimension_ = 3;
         info_->name = "Born";
-        info_->ISF = InitialStateFlavors("u","dbar");
+        info_->ISF = InitialStateFlavors("up","upbar");
+        pdf_selection_ = "same flavor";
         info_->alpha_power = 0;
         info_->epsilon_power_min = 0;
         info_->epsilon_power_max = 2;

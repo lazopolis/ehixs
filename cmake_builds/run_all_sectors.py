@@ -1,14 +1,19 @@
 #! /usr/bin/env python
 #-------------------------------------------------------------------------------
 
-directory_name = "python_script_test"
-
+directory_name = "python_script_test2"
+running_mode = "parallel" # or "serial"
+waiting_time_before_checking_for_status = 2.0 # in secs
+verbosity_level_for_checking_reports = "moderate" # or "moderate" or "zero"
+number_of_cores = 2 # the script will be firing this number of jobs if in parallel
 #-------------------------------------------------------------------------------
 
 import os
+import subprocess,shlex
 import math
 import StringIO
 import xml.etree.ElementTree as ET
+from time import sleep
 
 class Sector:
     """holds results for sector"""
@@ -20,8 +25,22 @@ class Sector:
         self.int_attributes = ['total_number_of_points']
         self.ehixs_name = "noname"
     def run(self):
-        print "[ehixs] Running sector "+self.ehixs_name
+        print "[python script] Running sector "+self.ehixs_name
         os.system('./ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename + ' > '+self.output_filename+'.log')
+    def run_in_the_background(self):
+        print "[python script] Running sector "+self.ehixs_name
+        command_line = './ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename
+        args = shlex.split(command_line)
+        with open('./'+self.output_filename+'.log','w') as logfile:
+            self.proc = subprocess.Popen(command_line,shell=True,stdout=logfile,stderr=logfile)
+    def check_status(self):
+        returncode = self.proc.poll()
+        if returncode==None:
+            return "still running"
+        elif returncode==0:
+            return "finished"
+        else:
+            return "abnormally terminated"
     def print_command(self):
         print './ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename 
     def read_results(self):
@@ -119,6 +138,15 @@ class Histogram:
         print '------'
 
 
+class JobManager:
+    def __init__(self,sectors,ncores):
+        self.sectors=sectors
+        self.cores=ncores
+        self.cores_used = 0
+
+    def run(self):
+        for i in range(ncores):
+            
 
 
 
@@ -149,15 +177,77 @@ for xml_sector in run_root.iter('sector'):
     #retrieve name
     cs.ehixs_name = xml_sector.get('name')
     all_sectors.append(cs)
-total_time_needed = 0.0
-print "[python script] Start running necessary sectors"
-for cs in all_sectors:
-    if not(os.path.isfile(cs.output_filename)):
-        cs.run()
-    #print "would run "+cs.ehixs_name
-    cs.read_results()
-    total_time_needed = total_time_needed + cs.give('time')
-print "total time necessary : "+str(total_time_needed)
+#-------------------------------------------------------------------------------
+#
+#
+#
+#
+#
+
+def process_is_still_running(proc):
+    returncode = proc.poll()
+    if returncode==None:
+        return False
+    elif returncode==0:
+        return True
+    else:
+        print "[python script] one of the sectors exited abruptly"
+        return True
+
+
+
+if running_mode=="serial":
+    total_time_needed = 0.0
+    print "[python script] Start running necessary sectors"
+    for cs in all_sectors:
+        if not(os.path.isfile(cs.output_filename)):
+            cs.run()
+        #print "would run "+cs.ehixs_name
+        cs.read_results()
+        total_time_needed = total_time_needed + cs.give('time')
+    print "total time necessary : "+str(total_time_needed)
+elif running_mode=="parallel":
+    all_processes = []
+    for cs in all_sectors:
+        #we don't run sectors that already have a result filename
+        if not(os.path.isfile(cs.output_filename)):
+            all_processes.append(cs.run_in_the_background())
+                #print '..sleeping'
+                #sleep(2.0)
+    #print 'waking up...'
+    all_sectors_status = "still running"
+    while (all_sectors_status=="still running"):
+        sleep(waiting_time_before_checking_for_status) # Time in seconds.
+        if verbosity_level_for_checking_reports == "moderate" or verbosity_level_for_checking_reports=="complete":
+            print ''
+            print ''
+            print '[python script] checking status...'
+        all_sectors_status = "finished"
+        number_of_secs_still_running = 0
+        for cs in all_sectors:
+            
+            if cs.check_status()=="still running":
+                all_sectors_status = "still running"
+                number_of_secs_still_running = number_of_secs_still_running + 1
+                if verbosity_level_for_checking_reports == "complete":
+                    print cs.ehixs_name+' is still running'
+            #break
+        if verbosity_level_for_checking_reports== "moderate" or verbosity_level_for_checking_reports == "complete":
+            print '[python script] still running '+str(number_of_secs_still_running)+'/'+str(len(all_sectors))
+        print ''
+    for cs in all_sectors:
+        print cs.ehixs_name + ' : '+cs.check_status()
+    for cs in all_sectors:
+        cs.read_results()
+
+
+
+#
+#
+#
+#
+#
+#-------------------------------------------------------------------------------
 #total cross section and related quantities
 total_xs = 0.0
 total_err_sq = 0.0

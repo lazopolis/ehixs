@@ -6,19 +6,6 @@ using namespace std;
 
 
 
-//------------------------------------------------------------------------------
-
-
-
-
-ostream& operator<<(ostream& stream, const NewMatrixElement& ME)
-{
-    stream<<"S("<<ME.parton_i()<<","<<ME.parton_j()<<","<< ME.name()
-    <<",a^"<<ME.alpha_power()<<",e^"<<ME.epsilon_power()
-    <<" ,dim="<<ME.dimension()<<")";
-    
-    return stream;
-}
 
 
 //------------------------------------------------------------------------------
@@ -154,11 +141,11 @@ Polynomial operator+(const Polynomial& p1,const ExpansionTerm& p2)
 Polynomial operator+(const ExpansionTerm& p2,const Polynomial& p1)
 {return p1+p2;}
 
-
+// pow including P^0 case
 Polynomial ppow(const Polynomial& p,int k)
 {
-    Polynomial res = p;
-    for (int i=0;i<k-1;i++) res = res * p;
+    Polynomial res("1",1.0,0,0);
+    for (int i=0;i<k;i++) res = res * p;
     return res;
     
 }
@@ -192,152 +179,70 @@ ostream& operator<<(ostream& stream, const Polynomial& P)
 //------------------------------------------------------------------------------
 
 // defines a map from integer parton id numbers to keywords like gluon or upbar
-// which are ued as placeholders in defining matrix elements
+// which are used as placeholders in defining matrix elements
 // This has to change, presumably, for each new process
-void FSingle::construct_name()
+void FSingle::construct_names()
 {
-if (parton_from_==0) name_from_ = "gluon";
-else
-    {
-    if (parton_from_>0)
-        {
-        if (parton_from_ % 2 ==1) name_from_ = "down";
-        else name_from_ = "up";
-        }
+    set_name(name_from_,parton_from_);
+    set_name(name_i_,parton_i_);
+}
+
+void FSingle::set_name(string& pname,int pid)
+{
+    if (pid==0) pname = "gluon";
     else
         {
-        if (-parton_from_ % 2 ==1) name_from_ = "downbar";
-        else name_from_ = "upbar";
-        }
-    }
-}
-
-ListOfSingleF::ListOfSingleF(int parton_i)
-{
-    f_.push_back(new FSingle(parton_i,parton_i,0,0));
-    for (int j=-5;j<6;j++)
-        {
-        if (parton_i==0 or parton_i==j)
+        if (pid>0)
             {
-            f_.push_back(new FSingle(parton_i,j,1,1));
+            if (pid % 2 ==1) pname = "down";
+            else pname = "up";
             }
-        f_.push_back(new FSingle(parton_i,j,2,1));
-        f_.push_back(new FSingle(parton_i,j,2,2));
-        }
-        
-}
-
-ListOfFF::ListOfFF(const string& fleft,const string& fright)
-{
-    for (int i=-5;i<6;i++)
-        {
-        for (int j=-5;j<6;j++)
+        else
             {
-            if (flavors_match(i,j,fleft,fright))
-                {
-                ListOfSingleF* Fleft = new ListOfSingleF(i);
-                ListOfSingleF* Fright = new ListOfSingleF(j);
-                for (int k=0;k<Fleft->size();k++)
-                    {
-                    for (int m=0;m<Fright->size();m++)
-                        {
-                        ff_.push_back(new FxF(Fleft->give(i),Fright->give(j)));
-                        }
-                    }
-                }
+            if (-pid % 2 ==1) pname = "downbar";
+            else pname = "upbar";
             }
         }
 }
 
-// checks wether keyword(i)==left and keyword(j)==right
-//  where keyword(int) is a map from the integer id numbers of partons to
-// user defined keywords used in the definition of matrix elements
-// note: by construction here gluon,quark matches to (0,1), but not to (0,-1),
-// or (1,0) or (-1,0) : initial state crossing and charge conjugation are not
-// implied!
-bool ListOfFF::flavors_match(int i,int j,
-                             const string& left, const string& right)
-{
-    FSingle Fi(i,i,0,0);
-    FSingle Fj(j,j,0,0);
-    if (Fi.init_flavor_matches(left) and Fj.init_flavor_matches(right))
-        {
-        return true;
-        }
-    else return false;
-}
+//------------------------------------------------------------------------------
 
 
-Sector::Sector(NewMatrixElement* me)
+
+
+ostream& operator<<(ostream& stream, const NewMatrixElement& ME)
 {
-    // we need to get the log(mur/muf) from somewhere or set it through the
-    // coefficients later on!
-    double L = 0.0;
-    me_ = me;
-    ListOfFF FF(me->parton_i(),me->parton_j());
-    // a_renorm = a_bare
-    Polynomial a_renorm("1",1.0,1,0);
-    Polynomial one("1",1.0,0,0);
-    // a_renorm = a_bare * exp(-a*e*L) (1 - b0/e*a + (b0^2/e^2-b_1/e) * a)
-    a_renorm = a_renorm * ( one + Polynomial("-b0",-consts::beta_zero,1,-1)
-                           + Polynomial("b1",consts::beta_one,2,-1)
-                           + Polynomial("b0^2",pow(consts::beta_zero,2.0),2,-2))
-    * ( one + Polynomial("-L",-L,1,1)
-       + Polynomial("L^2/2",L*L/2.0,2,2));
+    stream<<ME.name()<<"("<<ME.parton_i()<<","<<ME.parton_j()
+    <<"): a^"<<ME.alpha_power()
+    <<" ,dim="<<ME.dimension();
     
-    a_renorm = ppow(a_renorm,me->alpha_power());
-    a_renorm.truncate_in_alpha_up_to_power(2);
-    
-    for (int i=0;i<FF.size();i++)
-        {
-        for (int j=0;j<a_renorm.size();i++)
-            {
-            for (int k = me->epsilon_power_min();k<me->epsilon_power_max()+1;k++ )
-            FFA_.push_back(new FxFxA(FF[i],a_renorm[i],k));
-            }
-        }
-    
+    return stream;
 }
 
 
-void Sector::restrict_as(int min_a_power_requested,int max_a_power_requested)
+
+ ostream& operator<<(ostream& stream, const FxF& P)
 {
-    int min_a_rest = min_a_power_requested - me_->alpha_power();
-    int max_a_rest = max_a_power_requested - me_->alpha_power();
-    for (std::list<FxFxA*>::iterator it1 = FFA_.begin();it1!=FFA_.end();++it1)
-        {
-        if ((*it1)->alpha_power()<min_a_rest or (*it1)->alpha_power()>max_a_rest)
-            {
-            it1 = FFA_.erase(it1);
-            it1--;
-            }
-        }
+    stream<<P.fleft_->complete_name()<<"."<<P.fright_->complete_name();
+    return stream;
 }
 
-void Sector::restrict_epsilon(int pole)
+
+ ostream& operator<<(ostream& stream, const FxFxA& P)
 {
-    for (std::list<FxFxA*>::iterator it1 = FFA_.begin();it1!=FFA_.end();++it1)
-        {
-        if ((*it1)->epsilon_power()!=pole)
-            {
-            it1 = FFA_.erase(it1);
-            it1--;
-            }
-        }
+    stream<<*(P.ff_)<<"."<<*(P.term_);
+    return stream;
 }
 
-void Sector::restrict_flavor(const string& left,const string& right)
+ostream& operator<<(ostream& stream, const Sector& P)
 {
-    for (std::list<FxFxA*>::iterator it1 = FFA_.begin();it1!=FFA_.end();++it1)
-        {
-        if (not((*it1)->initial_flavor_is(left,right)))
-            {
-            it1 = FFA_.erase(it1);
-            it1--;
-            }
-        }
-}
+    stream<<"{";
+    int N=P.FFA_.size();
+    for (int i=0;i<N-1;i++) stream<<" "<<*(P.FFA_[i])<<" + ";
+    stream<<" "<<*(P.FFA_[N-1])<<" } * "<<*(P.me_)<<",e^"<<P.e_pow_of_matrix_element_;
 
+    return stream;
+}
 
 // this can be moved to production
 void Sector::AllocateLuminosity(Luminosity* lumi)
@@ -358,32 +263,30 @@ void Sector::AllocateLuminosity(Luminosity* lumi)
 
 //------------------------------------------------------------------------------
 
-
-
-
 SectorBox::SectorBox(const vector<NewMatrixElement*>& mes,
                           const UserInterface& UI)
 {
     
-    
+    set_up_pdfs();
+    set_up_polynomial();
     // this is where the runcard semantics are resolved
     // qcd_perturbative_order
     int min_a_power_requested,max_a_power_requested;
     // default  option: qcd_perturbative_order
     if (UI.qcd_perturbative_order == "LO")
         {
-        min_a_power_requested = 2;
-        max_a_power_requested = 2;
+        min_a_power_requested = 0;
+        max_a_power_requested = 0;
         }
     if (UI.qcd_perturbative_order == "NLO")
         {
-        min_a_power_requested = 2;
-        max_a_power_requested = 3;
+        min_a_power_requested = 0;
+        max_a_power_requested = 1;
         }
     if (UI.qcd_perturbative_order == "NNLO")
         {
-        min_a_power_requested = 2;
-        max_a_power_requested = 4;
+        min_a_power_requested = 0;
+        max_a_power_requested = 2;
         }
     // advanced  : alpha_s_power. If defined by user it fixes the a_s order
     if (UI.alpha_s_power != -1)
@@ -391,113 +294,170 @@ SectorBox::SectorBox(const vector<NewMatrixElement*>& mes,
         min_a_power_requested = UI.alpha_s_power;
         max_a_power_requested = UI.alpha_s_power;
         }
-    
-    
+    cout<<"[SectorBox] there are "<<mes.size()<<" matrix elements defined"<<endl;
     for (int ime = 0; ime<mes.size();ime++)
         {
         NewMatrixElement* me = mes[ime];
-        Sector* newsector = new Sector(me);
-        newsector->restrict_as(min_a_power_requested,max_a_power_requested);
-        newsector->restrict_epsilon(UI.pole);
-        newsector->restrict_flavor(UI.Fleft,UI.Fright);
-        available_sectors.push_back(newsector);
-        }
-}
-
-
-
-
-
-/*
-NewSimpleSector::filter_initial_state_flavor(const string& left,
-                                             const string& right)
-{
-    if ((left != "none") and (right != "none"))
-        {
-        
-        }
-}
-
-void NewSimpleSector::Evaluate(double* xx_vegas)
-{
-    //SetInitialStateVars();
-    
-    
-    ME->Evaluate(xx_vegas);
-    
-}
-
-
-void NewSimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
-{
-    curlumi.add_pair(
-                     pdf_desc(i,j,F1.order,F1.epsilon_order),
-                     pdf_desc(k,m,F2.order,F2.epsilon_order)
-                     );
-}
-
-void NewSimpleSector::single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
-{
-    for (int s=-5;s<6;s++) {if (s!=0) add_pair(i*s,j*s,k*s,m*s,curlumi);}
-}
-
-void NewSimpleSector::double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
-{
-    for (int s=-5;s<6;s++)
-        {
-        for (int r=-5;r<6;r++)
+        // checking whether the ME is of too high an order in a_s
+        if (me->alpha_power()>max_a_power_requested)
             {
-            if (s!=0 and r!=0 and s!=r and s!=-r)
+            cout<<" ** ME of power a_s^"<<me->alpha_power()<<" : too high"<<endl;
+            continue;
+            }
+        Polynomial loc_a_renorm = ppow(a_renorm,me->alpha_power());
+        loc_a_renorm.truncate_in_alpha_up_to_power(2);
+        vector<FxF*> FF_pairs_that_fit_=DeterminePdfs(me,
+                                                      UI.Fleft,UI.Fright,
+                                                      max_a_power_requested);
+        
+        for (int me_e_pow=me->epsilon_power_min();me_e_pow<me->epsilon_power_max()+1;me_e_pow++)
+            {
+            vector<FxFxA*> FFA;
+            for (int i=0;i<FF_pairs_that_fit_.size();i++)
                 {
-                int ii,jj,kk,mm;
-                if (abs(i)==1){ii=s*i;} else if (i==2){ii=r;} else {ii=0;}
-                if (abs(j)==1){jj=s*j;} else if (j==2){jj=r;} else {jj=0;}
-                if (abs(k)==1){kk=s*k;} else if (k==2){kk=r;} else {kk=0;}
-                if (abs(m)==1){mm=s*m;} else if (m==2){mm=r;} else {mm=0;}
-                
-                add_pair(ii,jj,kk,mm,curlumi);
+                for (int j=0;j<loc_a_renorm.size();j++)
+                    {
+                    cout<<"n-- "<<i<<" "<<j<<endl;
+                    cout<<"\n checking "<<*FF_pairs_that_fit_[i];
+                    int alpha_tot = FF_pairs_that_fit_[i]->alpha_power()
+                                    + loc_a_renorm[j]->give_a_power()
+                                    + me->alpha_power();
+                    cout<<"\n alpha_tot = "<<alpha_tot
+                        <<FF_pairs_that_fit_[i]->alpha_power()
+                        << loc_a_renorm[j]->give_a_power()
+                        << me->alpha_power()<<endl;
+                    bool alpha_ok = alpha_tot>=min_a_power_requested
+                                and alpha_tot<=max_a_power_requested;
+                int etot = FF_pairs_that_fit_[i]->epsilon_power()
+                    + loc_a_renorm[j]->give_e_power()
+                    +me_e_pow;
+                    bool pole_ok = etot == UI.pole;
+                    if (alpha_ok and pole_ok)
+                        {
+                        FxFxA* newffa = new FxFxA(FF_pairs_that_fit_[i],loc_a_renorm[j]);
+                        cout<<"\n[SectorBox] new FxFxA "<<*newffa<<endl;
+                        FFA.push_back(newffa);
+                        }
+                    }
                 }
+            if (FFA.size()>0) available_sectors.push_back(new Sector(FFA,me,me_e_pow));
             }
         }
 }
 
-int NewSimpleSector::give_pid(const string & name)
+void SectorBox::set_up_pdfs()
 {
-    if (name=="gluon") return 0;
-    if (name=="quark") return 1;
-    if (name=="antiquark") return -1;
-    if (name=="quark2") return 2;
-    cout<<"\nSimpleSector::give_pid doesn't recognize parton name: "<<name;
-    exit(1);
-    return 0;
-}
-
-pdf_pair_list NewSimpleSector::give_list_of_pdf_pairs()
-{
-    pdf_pair_list curlumi;
-    //: mapping glion,quark,antiquark,quark2 to 0,1,-1,2
-    int pid1=give_pid(F1.parton_i);
-    int pid2=give_pid(F1.parton_from);
-    int pid3=give_pid(F2.parton_i);
-    int pid4=give_pid(F2.parton_from);
-    //: case g_from_g g_from_g
-    if (abs(pid1)==0 and abs(pid2)==0 and abs(pid3)==0 and abs(pid4)==0) add_pair(0,0,0,0,curlumi);
-    //: case with no second quark flavor, so single sum over flavors
-    else if (abs(pid1)<2 and abs(pid2)<2 and abs(pid3)<2 and abs(pid4)<2) single_quark(pid1,pid2,pid3,pid4,curlumi);
-    //: case with two different quark flavors
-    else double_quark(pid1, pid2, pid3, pid4, curlumi);
-    
-    return curlumi;
-}
-
-void NewSimpleSector::SetUpPrefactor(const double& a_s_over_pi)
-{
-    double prefactor =1.0;
-    for (unsigned i=0;i<factors.size();i++)
+    for (int i=-5;i<6;i++)
         {
-        prefactor = prefactor * factors[i]->give_value();
+        all_pdfs.push_back(new FSingle(i,i,0,0));
+        // 11 pdfs
+        //gluon case F11[x->gluon] for all x
+        if (i==0)
+            {
+            for (int j=-5;j<6;j++)
+                {
+                all_pdfs.push_back(new FSingle(0,j,1,1));
+                }
+            }
+        //quark case F11[g->q] and F11[q->q] only
+        else
+            {
+            all_pdfs.push_back(new FSingle(i,0,1,1));
+            all_pdfs.push_back(new FSingle(i,i,1,1));
+            }
+        for (int j=-5;j<6;j++)
+            {
+            all_pdfs.push_back(new FSingle(i,j,2,1));
+            all_pdfs.push_back(new FSingle(i,j,2,2));
+            }
         }
-    prefactor = prefactor * pow(a_s_over_pi,alpha_power);
-    ME->SetUpPrefactor(prefactor);
+    cout<<"\n[SectorBox] total number of pdfs : "<<all_pdfs.size()<<endl;
 }
-*/
+
+void SectorBox::set_up_polynomial()
+{
+    double L=0.0;
+    // a_renorm = a_bare
+    a_renorm = Polynomial("1",1.0,1,0);
+    Polynomial one("1",1.0,0,0);
+    // a_renorm = a_bare * exp(-a*e*L) (1 - b0/e*a + (b0^2/e^2-b_1/e) * a)
+    a_renorm = a_renorm * ( one + Polynomial("-b0",-consts::beta_zero,1,-1)
+                           + Polynomial("b1",consts::beta_one,2,-1)
+                           + Polynomial("b0^2",pow(consts::beta_zero,2.0),2,-2))
+    * ( one + Polynomial("-L",-L,1,1)
+       + Polynomial("L^2/2",L*L/2.0,2,2));
+    
+    //a_renorm = ppow(a_renorm,me->alpha_power());
+    //a_renorm.truncate_in_alpha_up_to_power(2);
+    cout<<"\n[SectorBox] a_renorm constructed"<<endl;
+    
+}
+
+
+vector<FxF*>  SectorBox::DeterminePdfs(NewMatrixElement* me,
+                                       const string& Fleft,const string& Fright,int max_a_power_requested)
+{
+    vector<FxF*> FF_pairs_that_fit_;
+    for (int i=0;i<all_pdfs.size();i++)
+        {
+        if (all_pdfs[i]->flavor_matches(me->parton_i())
+            and all_pdfs[i]->init_flavor_matches(Fleft))
+            {
+            for (int j=0;j<all_pdfs.size();j++)
+                {
+                if (all_pdfs[j]->flavor_matches(me->parton_j())
+                    and all_pdfs[j]->init_flavor_matches(Fright))
+                    {
+                    bool a_s_ok = all_pdfs[i]->alpha_power()
+                            +all_pdfs[j]->alpha_power()<= max_a_power_requested;
+                    if (
+                        pdfs_match(all_pdfs[i],all_pdfs[j],me->pdf_selection())
+                        and a_s_ok)
+                        {
+                        FF_pairs_that_fit_.push_back(new FxF(all_pdfs[i],all_pdfs[j]));
+                        }
+                    }
+                
+                }
+            }
+        }
+    cout<<"\n[SectorBox] pdf pairs that match: "<<FF_pairs_that_fit_.size()<<endl;
+
+    return FF_pairs_that_fit_;
+}
+
+
+    
+bool SectorBox::pdfs_match(FSingle* f1, FSingle* f2,const string& selection)
+{
+    if (selection=="none") return true;
+    if (selection=="same flavor")
+        {
+        if (abs(f1->parton_i()) == abs(f2->parton_i()))
+            {
+            return true;
+            }
+        else
+            return false;
+        }
+    if (selection=="different flavor")
+        {
+        if (abs(f1->parton_i()) == abs(f2->parton_i()))
+            {
+            return false;
+            }
+        else
+            return true;
+        }
+    return false;
+}
+    
+
+
+
+
+
+
+
+
+
