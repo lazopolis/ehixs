@@ -1657,8 +1657,9 @@ void GluonFusion::NLO_parametrization()
 void GluonFusion::parametrization_for_LO_kinematics()
 {
      
-     int parametrization_switch=1;
-     
+     int parametrization_switch=2;
+    // parametrization 3 creates weird instabilities when nlo pdfs
+    // are convoluted with a sector that needs z-subtraction
      
      if (parametrization_switch==0)
           {
@@ -2303,15 +2304,22 @@ void GluonFusion::gg_NLO_HARD()
                          *1.0/(1.0-ISP.z)
                          *the_sector->sector_specific_prefactors_from_a_e_expansion()
                          ;
-//          cout<<setprecision(16)<<"\n***";
+          
+          double weightFancy = pref_sgg
+          *ISP.measLO
+          *lumi->LL_LO(0)
+          //*1.0/(1.0-ISP.z)
+          *the_sector->sector_specific_prefactors_from_a_e_expansion()
+          ;
+//         cout<<setprecision(16)<<"\n***";
 //          cout<<" x1="<<setw(20)<<ISP.x1
-//                <<" x2="<<setw(20)<<ISP.x2
-//                <<" lambda="<<setw(20)<<ISP.lambda
-//                <<" z="<<setw(20)<<ISP.z<<setprecision(4);
-
-//          cout<<"\nmeas="<<ISP.meas<<" measLO="<<ISP.measLO
-//          <<"\nlumi="<<lumi->LL(0)<<" lumiLO="<<lumi->LL_LO(0)
-//          <<"\nw="<<weight<<" wLO="<<weightLO;
+//              <<" x2="<<setw(20)<<ISP.x2
+//              <<" lambda="<<setw(20)<<ISP.lambda
+//              <<" z="<<setw(20)<<ISP.z<<setprecision(4);
+//
+//          cout<<" : meas="<<ISP.meas<<" measLO="<<ISP.measLO
+//          <<" lumi="<<lumi->LL(0)<<" lumiLO="<<lumi->LL_LO(0)
+//          <<" w="<<weight<<" wLO="<<weightLO;
           if (the_sector->ME->epsilon_power()== -1)
                {
                for (int ts=1;ts<3;ts++) //: ts=topology sector (there are 2 in rgg2ght1)
@@ -2332,6 +2340,7 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq, weight,consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                     rgg2ght1(ts,0,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
                              -log_muf_sq_over_mh_sq,-weightLO,consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
+                    
                     //: contribution from pole coefficient times logs of (1-z) and muf/mh
                     //: see documentation for explanation of extra_weight
                     double extra_weight = -2.0*ISP.Log_1mz ;
@@ -2343,6 +2352,7 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO*extra_weight,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
+                    
                     }
                }
           else if (the_sector->ME->epsilon_power()==1)
@@ -2359,7 +2369,10 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-                    
+//                    rgg2ght1(ts,1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
+//                             -log_muf_sq_over_mh_sq,
+//                             +2.0*weightFancy,
+//                             consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                      //e^0 * (-2*log(1-z))
                     
                     
@@ -2372,7 +2385,10 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO*extra_weight,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-                    
+//                    rgg2ght1(ts,0,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
+//                             -log_muf_sq_over_mh_sq,
+//                             2.0*weightFancy*extra_weight,
+//                             consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                      // 1/e * 2 * (log(1-z))^2
                     
                      double extra_weight2 = 2.0*pow(ISP.Log_1mz,2.0);
@@ -2384,6 +2400,10 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO*extra_weight2,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
+//                    rgg2ght1(ts,-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
+//                             -log_muf_sq_over_mh_sq,
+//                              2.0*weightFancy*extra_weight2,
+//                             consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                     
                     }
 

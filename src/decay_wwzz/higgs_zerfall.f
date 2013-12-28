@@ -3,6 +3,7 @@ C     All leptonic and photonic Higgs decays in one routine:
 c     written by Franz Herzog
 C---------------------------------------------------------------------------      
 
+
       subroutine HiggsZerfall(
      &     pH,mw,mz,mt,gamW,gamZ,GF,alpha,imode,x  !Input
      &     ,GAMMA,p1,p2,p3,p4)                     !Output
@@ -19,9 +20,26 @@ C     Internal
       doubleprecision HphotonZ,Hphotonll, Hdiphoton
       parameter(pi=3.141592653589793d0)
       logical bwmap
+C     Higgs zerfall remembers!
+      doubleprecision xo(8),p1o(4),p2o(4),p3o(4),p4o(4),pHo(4),GAMMAo
+c      common /memory/ xo,pHo,p1o,p2o,p3o,p4o,GAMMAo
+      integer dummy
 
+      if(x(1).eq.xo(1).and.x(2).eq.xo(2).and.x(3).eq.xo(3)
+     -     .and.x(4).eq.xo(4).and.x(5).eq.xo(5).and.x(6).eq.xo(6)
+     -     .and.x(7).eq.xo(7).and.x(8).eq.xo(8))then
+c         dummy=dummy+1
+c         print *,"old",dummy
+         Gamma=Gammao
+         p1=p1o
+         p2=p2o
+         p3=p3o
+         p4=p4o
 
-
+      else
+c         dummy=0
+c         print *, "new"
+         
 c==================================================================
 c     !The imode brancher, notation is hopefully self explanatory!
 c=================================================================
@@ -142,13 +160,31 @@ c~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          write(6,*)"channel",decaymode,"is not yet implemented"
       end if
 
-C     Boost decay moenta into Higgs lab frame:
+c     Save into memory:
+      xo=x
+      p1o=p1
+      p2o=p2
+      p3o=p3
+      p4o=p4
+      Gammao=Gamma
+      end if
+      
+
+C     Boost decay momenta into Higgs lab frame:
       call vec3(pH/pH(1),v)
- 
-      call boost(v,p1)      
-      call boost(v,p2)      
-      call boost(v,p3)      
-      call boost(v,p4)      
+      if(imode.eq.5.or.imode.eq.7)then
+         call boost(v,p1)      
+         call boost(v,p2)      
+      else if(imode.eq.6)then
+         call boost(v,p1)      
+         call boost(v,p2)      
+         call boost(v,p3)      
+      else
+         call boost(v,p1)      
+         call boost(v,p2)      
+         call boost(v,p3)      
+         call boost(v,p4)      
+      end if
 
       end subroutine
 
@@ -240,7 +276,7 @@ c     rotate moenta around z: flat 0<psi<2 Pi
       call rotate(p4,theta,3)
 
 c     rotate moenta around x: flat -1<cos theta<1
-      theta=acos(2*x(7)-1)
+      theta=acos(2*x(7)-1d0)
       call rotate(p1,theta,1)
       call rotate(p2,theta,1)
       call rotate(p3,theta,1)
@@ -507,6 +543,31 @@ C     A general boost routine:
       end if
       p=pb
       end subroutine
+
+
+C     A general boost routine:
+      subroutine boostoptimised(v,p)
+      implicit none
+      doubleprecision p(4),v(3),pb(4),pb3(3)
+      doubleprecision p3(3),gam,dot3,vv,pv
+      vv=v(1)*v(1)+v(2)*v(2)+v(3)*v(3)
+      if(vv.eq.0d0)then
+         pb=p
+      else
+         pv=p(2)*v(1)+p(3)*v(2)+p(4)*v(3) 
+         gam=1d0/sqrt(1d0-vv)
+         pb(1)=gam*(p(1)-pv)
+         pb(2)  =p(2)+((gam-1d0)*pv/vv-gam*p(1))*v(1)
+         pb(3)  =p(3)+((gam-1d0)*pv/vv-gam*p(1))*v(2)
+         pb(4)  =p(4)+((gam-1d0)*pv/vv-gam*p(1))*v(3)
+      end if
+      p=pb
+      end subroutine
+
+
+
+
+
 
 C     A rotation routine 
       subroutine rotate(r,theta,n)

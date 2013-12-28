@@ -13,6 +13,94 @@ using namespace std;
 
 #include "pdf.h"
 
+//------------------------------------------------------------------------------
+
+CPDF::~CPDF()
+{
+//    cout<<"\n@@@@destructor called"<<endl;
+//    for(unsigned i=0; i<my_cached_interpolators.size(); ++i)
+//        delete my_cached_interpolators[i];
+}
+
+double CPDF::give_f(const double& x, unsigned i)
+{
+    return my_cached_interpolators[i]->give_f(x);
+    
+}
+
+double CPDF::give_f(const vector<double>& xx, unsigned i)
+{
+    
+    return my_convolutions[i]->give_f(xx);
+    
+}
+
+
+CPDF::CPDF(const PDFGrid& the_grid,const pdf_desc& my_desc,
+           double NF, double muf, double mur)
+:_my_desc(my_desc),interpolation_on_(true)
+{
+    // Print friendly message
+    cout << "\n[CPDF::" << __func__
+    << "] interpolating pdf ('"<< _my_desc.i<<","<<_my_desc.j<<","
+    <<" n_as = "<<_my_desc.n_as<<" n_eps = "<<_my_desc.n_eps<<endl;
+    for(unsigned k=0; k<the_grid.size(); k++)
+        {
+        LHAPDF::usePDFMember(the_grid.grid_id(k),the_grid.member_id(k));
+        my_cached_interpolators.push_back(
+                                          new CashedInterpolator(
+                                                                 NF, muf, mur,
+                                                                 my_desc.i, my_desc.j,my_desc.n_as, my_desc.n_eps,
+                                                                 true,
+                                                                 the_grid.gridname(k),the_grid.member_id(k))
+                                          );
+        }
+}
+
+CPDF::CPDF(const PDFGrid& the_grid,const pdf_desc& my_desc,
+           double NF, double muf, double mur,bool interpolation_on)
+:_my_desc(my_desc),interpolation_on_(interpolation_on)
+{
+    if (interpolation_on_ or _my_desc.n_as==0)
+        {
+        cout << "\n[CPDF] interpolating pdf "<< _my_desc.i<<","<<_my_desc.j
+            <<", n_as = "<<_my_desc.n_as<<" n_eps = "<<_my_desc.n_eps<<endl;
+        for(unsigned k=0; k<the_grid.size(); k++)
+            {
+            LHAPDF::usePDFMember(the_grid.grid_id(k),the_grid.member_id(k));
+            my_cached_interpolators.push_back(
+                    new CashedInterpolator(
+                                            NF, muf, mur,
+                                            my_desc.i, my_desc.j,
+                                            my_desc.n_as, my_desc.n_eps,
+                                            true,
+                                            the_grid.gridname(k),
+                                            the_grid.member_id(k))
+                                          );
+            }
+        }
+    else
+        {
+        cout<<"\n[CPDF] LIVE n*lo pdf "<< _my_desc.i<<","<<_my_desc.j
+            <<", n_as = "<<_my_desc.n_as<<" n_eps = "<<_my_desc.n_eps<<endl;
+        for(unsigned k=0; k<the_grid.size(); k++)
+            {
+            LHAPDF::usePDFMember(the_grid.grid_id(k),the_grid.member_id(k));
+            my_convolutions.push_back(
+                new LivePDFConvolution(
+                                    NF, muf, mur,
+                                    my_desc.i, my_desc.j,
+                                    my_desc.n_as, my_desc.n_eps,
+                                    the_grid.gridname(k),
+                                    the_grid.member_id(k))
+                                              );
+            }
+        }
+}
+
+
+
+//------------------------------------------------------------------------------
 
 
 PDFHub::PDFHub(const UserInterface& UI)
@@ -71,7 +159,6 @@ PDFHub::PDFHub(const UserInterface& UI)
         }
     
     cout << ": Success [" << _grids->size() << "] sets!";
-    //cout<<"\n*****\t my interpolators size:"<<my_interpolators.size()<<endl;
     
 
 }
@@ -377,277 +464,6 @@ vector<double> PDFHub::NNPDF_pdferror(const vector<double>& result)
     
     return ris;
 }
-
-//------------------------------------------------------------------------------
-
-CPDF::~CPDF()
-{
-     cout<<"\n@@@@destructor called"<<endl;
-  for(unsigned i=0; i<my_interpolators.size(); ++i)
-    delete my_interpolators[i];
-}
-
-double CPDF::give_f(const double& x, unsigned i)
-{
-    return my_cached_interpolators[i]->give_f(x);
-    
-}
-
-
-CPDF::CPDF(const PDFGrid& the_grid,const pdf_desc& my_desc,
-           double NF, double muf, double mur)
-    :_my_desc(my_desc)
-{
-    // Print friendly message
-     cout << "\n[CPDF::" << __func__
-            << "] interpolating pdf ('"<< _my_desc.i<<","<<_my_desc.j<<","
-            <<" n_as = "<<_my_desc.n_as<<" n_eps = "<<_my_desc.n_eps<<endl;
-     for(unsigned k=0; k<the_grid.size(); k++)
-          {
-          LHAPDF::usePDFMember(the_grid.grid_id(k),the_grid.member_id(k));
-          my_cached_interpolators.push_back(
-                    new CashedInterpolator(
-                        NF, muf, mur,
-                        my_desc.i, my_desc.j,my_desc.n_as, my_desc.n_eps,
-                                           true,
-                        the_grid.gridname(k),the_grid.member_id(k))
-                                            );
-          }
-}
-
-
-//------------------------------------------------------------------------------
-
-//
-//
-//
-////: PDF_on_the_fly
-//
-//
-//double SinglePDFMemberInterpolator::f_value(const double & x)
-//     {
-//     return LHAPDF::xfx(x,muf,parton)/x;
-//     }
-//
-//
-//
-//
-//
-//PDF_on_the_fly::PDF_on_the_fly(int parton, const string& provider_,
-//                               double muf, int pert_order_,  bool pdf_error_)
-//:  provider(provider_),
-//pdf_error(pdf_error_),
-//pert_order(pert_order_)
-//{
-//     // Print friendly message
-//     cout << "\n[CPDF::" << __func__ << "] Attempting init of '" << provider << "' pdf at O(as^" << pert_order ;//<< ") ,error='" << pdf_error << "'";
-//          
-//     // from "provider", "pdferror" and "pert_order", we can determine the exact grid(s) we want to use.
-//     // This is done in the function "determine_grids" which has to be modified if
-//     // one wants to change / include new pdf sets.
-//     determine_grids();
-//     
-//     NumberOfMembers = 0;
-//     LHAPDF::setVerbosity(LHAPDF::SILENT);
-//     
-//     for(unsigned grid=0; grid<gridnames.size(); ++grid)
-//          {
-//          // initialise the LHAPDF set corresponding to grids[grid]
-//          LHAPDF::initPDFSet(gridnames[grid], LHAPDF::LHGRID, 0);
-//          
-//          // Using the LHAPDF-routine numberPDF, we can determine the number of members of the currently loaded set
-//          unsigned membernum = (pdf_error ? (LHAPDF::numberPDF()+1) : 1);
-//          
-//          // thank you, GJR, for this additional line of code
-//          if((provider == "GJR") && (pert_order == 0)) membernum=1;
-//          
-//          NumberOfMembers += membernum;
-//          
-//          // loop over members:
-//          for (int member=0; member<membernum; member++)
-//               {
-//               // thank you, GJR, for this additional 2 lines of code
-//               if((provider == "GJR") && (pert_order == 0)) ++member;
-//               
-//               // initialise the correct member set
-//               LHAPDF::usePDFMember(member);
-//               
-//               // retrieve the alpha_s of this member !!! hardcoded m_z ok?
-//               alpha_s_at_mz.push_back(LHAPDF::alphasPDF(91.1876));
-//               
-//               // perform the interpolation
-//               my_interpolators.push_back(new SinglePDFMemberInterpolator(parton,muf));
-//               }
-//          }
-//     
-//     cout << ": Success [" << NumberOfMembers << "] sets!";
-//     //     cout<<"\n*****\t my interpolators size:"<<my_interpolators.size()<<endl;
-//     
-//}
-//
-//
-//
-//
-//void PDF_on_the_fly::determine_grids()
-//{
-//     bool ef = false;
-//     
-//     if (provider == "MSTW")
-//          {
-//          switch(pert_order)
-//               {
-//                    case 0:
-//                    gridnames.push_back("MSTW2008lo68cl");
-//                    break;
-//                    case 1:
-//                    gridnames.push_back("MSTW2008nlo68cl");
-//                    if(pdf_error)
-//                         {
-//                         gridnames.push_back("MSTW2008nlo68cl_asmz+68cl");
-//                         gridnames.push_back("MSTW2008nlo68cl_asmz-68cl");
-//                         }
-//                    break;
-//                    case 2:
-//                    gridnames.push_back("MSTW2008nnlo68cl");
-//                    if(pdf_error)
-//                         {
-//                         gridnames.push_back("MSTW2008nnlo68cl_asmz+68cl");
-//                         gridnames.push_back("MSTW2008nnlo68cl_asmz-68cl");
-//                         }
-//                    break;
-//                    default:
-//                    ef=true;
-//               }
-//          }
-//     else if (provider == "ABKM")
-//          {
-//          switch(pert_order)
-//               {
-//                    case 0:
-//                    gridnames.push_back("a02m_lo");
-//                    break;
-//                    case 1:
-//                    gridnames.push_back("abkm09_5_nlo");
-//                    break;
-//                    case 2:
-//                    gridnames.push_back("abkm09_5_nnlo");
-//                    break;
-//                    default:
-//                    ef = true;
-//               }
-//          }
-//     else if (provider == "GJR")
-//          {
-//          switch(pert_order)
-//               {
-//                    case 0:
-//                    gridnames.push_back("GJR08lo");
-//                    break;
-//                    case 1:
-//                    gridnames.push_back("GJR08VFnloE");
-//                    break;
-//                    case 2:
-//                    gridnames.push_back("JR09VFnnloE");
-//                    break;
-//                    default:
-//                    ef = true;
-//               }
-//          }
-//     else if (provider == "NNPDF")
-//          {
-//          switch(pert_order)
-//               {
-//                    case 0:
-//                    gridnames.push_back("NNPDF21_lo_as_0119_100");
-//                    break;
-//                    case 1:
-//                    gridnames.push_back("NNPDF21_100");
-//                    break;
-//                    case 2:
-//                    gridnames.push_back("NNPDF21_nnlo_100");
-//                    break;
-//                    default:
-//                    ef = 0;
-//               }
-//          }
-//     else {
-//          std::cerr << "Error: PDF-provider '" << provider << "' is not supported.";
-//          exit(1);
-//     }
-//     
-//     // If error flag ef have set then quit.
-//     if(ef)
-//          {
-//          std::cerr << "Error: PDF-provider '" << provider << "' does not support perturbative order " << pert_order << ".";
-//          exit(1);
-//          }
-//     
-//}
-//
-//PDF_on_the_fly::~PDF_on_the_fly()
-//{
-//     for (unsigned i=0;i<my_interpolators.size();i++) delete my_interpolators[i];
-//}
-//
-//
-//DPDF::DPDF( int _iparton, int _n_as, int _n_eps,  int _from_parton)
-//{
-//     iparton = _iparton;
-//     from_parton=_from_parton;
-//     a_power = _n_as;
-//     e_power= _n_eps;
-//}
-//
-//
-//
-//
-//
-//
-//void DPDF::init(const string& _provider,const double& _muf,int _pert_order, bool _pdf_error)
-//{
-//     
-//     my_pdf=new PDF_on_the_fly(from_parton,_provider,_muf,_pert_order,_pdf_error);
-//     my_kernel = new Kernel(iparton,from_parton,a_power,e_power);
-//
-//}
-//
-//double DPDF::give_f(const double & x, int i)
-//{
-//     if (e_power!=0) print_error_message_and_exit();
-//     else
-//          {
-//          return my_pdf->give_f(x,i);
-//          }
-//}
-//
-//double DPDF::give_f(const double & x, const double & y, int i)
-//{
-//     if (e_power!=-1 or e_power!=-2) print_error_message_and_exit();
-//     else
-//          {
-//          if (y<x) return 0.0; //: implementing theta(y>x)
-//          else
-//               {
-//               double f_of_x_over_y = my_pdf->give_f(x/y,i);
-//               double f_of_x = my_pdf->give_f(x,i);
-//               double res=1.0/(1.0-x)*f_of_x
-//                                   * (my_kernel->delta()+my_kernel->DDB())
-//                         + f_of_x_over_y / y * my_kernel->reg(y)
-//                         + (f_of_x_over_y/y - f_of_x)*my_kernel->DD(y)
-//                    ;
-//               return res;
-//               }
-//          }
-//     
-//}
-//
-//void DPDF::print_error_message_and_exit()
-//{
-//     cout<<"\nError in DPDF: you called give_f with the wrong number of arguments for a PDF of order e^("<<e_power<<"). I exit and you should debug!";
-//     exit(1);
-//}
-//
-//
 
 
 

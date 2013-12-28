@@ -9,9 +9,7 @@
 #define CASHED_INTERPOLATOR_H
 
 #define PDF_GRID_PREFIX "../pdf_cache/"
-// ###################################
-// BASE CLASS
-// ###################################
+
 
 class CashedInterpolator;
 
@@ -90,6 +88,33 @@ protected:
      void ffgrid_NNLO_22_gluon_from_X();
      
 
+};
+
+
+
+class LivePDFConvolution{
+public:
+    LivePDFConvolution(const double& , const double& ,const double&,
+                       const int& ,const int& ,
+                       const int& ,const int& ,const string & ,const int& );
+    double give_f(const vector<double>& xx){return (this->*integrand_)(xx);}
+    double nloIntegrand(const vector<double>& xx);
+
+private:
+    CashedInterpolator* parent;
+    double nfl_;
+    int iprtn_;
+    int jprtn_;
+    int n_as_;
+    int n_eps_;
+    double (LivePDFConvolution:: *integrand_)(const vector<double>&);
+    
+private:
+    double (* plus_kernel)(const double& x);
+    double (* reg_kernel)(const double& x);
+    double (* reg_mixed_kernel)(const double& x);
+    double (* delta_kernel)(const double& x);
+    double (* boundary_kernel)(const double& x);
 };
 
 #endif

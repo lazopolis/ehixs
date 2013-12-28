@@ -13,6 +13,7 @@ using namespace std;
 
 typedef  pair<string,string> stringpair;
 
+class FxFxA;
 
 class InitialStateFlavors
 {
@@ -59,18 +60,25 @@ public:
     string name()const {return info_->name;}
     string pdf_selection(){return pdf_selection_;}
     virtual void Evaluate(double*)=0;
-    
+    virtual void consolidate()=0;
+
+    void set_S(const double& s){smax=s;}
+
     int dimension() const {return dimension_;}
-    void SetLuminosity(Luminosity* lumi){lumi_ = lumi;}
-    void SetUpPrefactor(const double & prefactor){prefactor_ = prefactor;}
+    void SetFFA(vector<FxFxA*> ffa){FFA_ = ffa;}
+
 protected:
     NewMeExternalInfo* info_;
     int dimension_;
     EventBox* event_box_;
-    Luminosity* lumi_;
-    double prefactor_;
-    double initial_state_jacobian_;
+
+    double smax;
+    //double initial_state_jacobian_;
     string pdf_selection_;
+    vector<FxFxA*> FFA_;
+
+protected:
+    double LL(const double& x1,const double& x2);
     
 };
 
@@ -163,6 +171,8 @@ public:
         return ss.str();
         }
     int parton_i(){return parton_i_;}
+    pdf_desc description(){return pdf_desc(parton_i_,parton_from_,
+                                           as_order_,e_order_);}
 private:
     int parton_i_;
     int parton_from_;
@@ -197,10 +207,12 @@ public:
     int alpha_power(){return fleft_->alpha_power()+fright_->alpha_power();}
     int epsilon_power(){return fleft_->epsilon_power()+fright_->epsilon_power();}
     friend ostream& operator<<(ostream& stream, const FxF& P);
-
+    void AllocateLuminosity(Luminosity* lumi);
+    double give(const double& x1, const double& x2){return my_lumi_->give(x1,x2);}
 private:
     FSingle* fleft_;
     FSingle* fright_;
+    LuminositySinglePair* my_lumi_;
 };
 
 
@@ -208,16 +220,20 @@ class FxFxA
 {
 public:
     FxFxA(FxF* ff,ExpansionTerm* term)
-        {ff_=ff;term_=term;}
+    {ff_=ff;term_=term;prefactor_=0.0;}
     bool initial_flavor_is(const string& left,const string& right)
         {return ff_->initial_flavor_is(left,right);}
     int alpha_power(){return ff_->alpha_power()+term_->give_a_power();}
     int epsilon_power(){return ff_->epsilon_power()+term_->give_e_power();}
     friend ostream& operator<<(ostream& stream, const FxFxA& P);
+    void AllocateLuminosity(Luminosity* lumi){ff_->AllocateLuminosity(lumi);}
+    double give(const double& x1,const double& x2){return ff_->give(x1,x2)*prefactor_;}
+    void SetUpPrefactor(const double & a_s_over_pi,int me_alpha_power);
 
 private:
     FxF* ff_;
     ExpansionTerm* term_;
+    double prefactor_;
 };
 
 class Sector
@@ -231,10 +247,11 @@ public:
 
     pdf_pair_list give_list_of_pdf_pairs();
     void AllocateLuminosity(Luminosity* lumi);
-    void SetUpPrefactor(const double & a_s_over_pi){};
-    void Evaluate(double* xx_vegas){};
+    void SetUpPrefactor(const double & a_s_over_pi);
+    void Evaluate(double* xx_vegas);
     string name(){return name_;}
     int dimension(){return me_->dimension();}
+    double lumi_and_prefactor(const double& x1,const double& x2);
 private:
     NewMatrixElement* me_;
     vector<FxFxA*> FFA_;

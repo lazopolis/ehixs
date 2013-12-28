@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 #-------------------------------------------------------------------------------
 
-directory_name = "python_script_test2"
+directory_name = "python_script_test4"
 running_mode = "parallel" # or "serial"
 waiting_time_before_checking_for_status = 2.0 # in secs
 verbosity_level_for_checking_reports = "moderate" # or "moderate" or "zero"
-number_of_cores = 2 # the script will be firing this number of jobs if in parallel
+number_of_cores = 6 # the script will be firing this number of jobs if in parallel
 #-------------------------------------------------------------------------------
 
 import os
@@ -24,16 +24,19 @@ class Sector:
         self.string_attributes = ['name','runcard_name']
         self.int_attributes = ['total_number_of_points']
         self.ehixs_name = "noname"
+        self.was_fired = False
     def run(self):
-        print "[python script] Running sector "+self.ehixs_name
+        print "[python script] firing sector "+self.ehixs_name
         os.system('./ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename + ' > '+self.output_filename+'.log')
     def run_in_the_background(self):
-        print "[python script] Running sector "+self.ehixs_name
+        #print "[python script] firing sector "+self.ehixs_name
         command_line = './ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename
         args = shlex.split(command_line)
         with open('./'+self.output_filename+'.log','w') as logfile:
             self.proc = subprocess.Popen(command_line,shell=True,stdout=logfile,stderr=logfile)
+        self.was_fired = True
     def check_status(self):
+        if not(self.was_fired): return "not fired"
         returncode = self.proc.poll()
         if returncode==None:
             return "still running"
@@ -64,11 +67,11 @@ class Sector:
         for hist in self.res.iter('histogram'):
             if hist.get('name')==name:
                 return hist
-    def printme(self):
+    def printme(self,XS,Ttot):
         rel_error = 0.0
         if math.fabs(self.give('sigma'))>0.0:
             rel_error = math.fabs(self.give('error')/self.give('sigma'))
-        print '{0:>3} | {1:>10.2e} | {2:>10.2e} | {3:>8.1%} | {4:>8} | {5:>8.2f}s | {6:8.2e}s/point'.format(self.id_number_in_ehixs,self.give('sigma'), self.give('error'),rel_error,self.give('total_number_of_points'),self.give('time'),self.give('secs_per_point'))
+            print '{0:>3} | {1:>10.2e} | {2:>10.2e} | {3:>8.1%} | {4:>8} | {5:>8.2f} s | {6:8.2e} s/p | {7:>8.1%} | {8:>8.1%}'.format(self.id_number_in_ehixs,self.give('sigma'), self.give('error'),rel_error,self.give('total_number_of_points'),self.give('time'),self.give('secs_per_point'),self.give('sigma')/XS,self.give('time')/Ttot)
 
 
 
@@ -138,15 +141,62 @@ class Histogram:
         print '------'
 
 
+
+def highlight(string, status, face):
+    attr = []
+    if status == "green":
+        # green
+        attr.append('32')
+    elif status == "red":
+        # red
+        attr.append('31')
+    else:
+        return string
+    if face == "bold":
+        attr.append('1')
+    return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), string)
+
+
 class JobManager:
     def __init__(self,sectors,ncores):
         self.sectors=sectors
         self.cores=ncores
-        self.cores_used = 0
-
+        self.sectors_submitted = 0
     def run(self):
-        for i in range(ncores):
-            
+        while self.sectors_submitted<len(self.sectors):
+            self.run_a_batch()
+            self.wait()
+        self.wait_till_all_sectors_finished()
+        for cs in all_sectors:
+            cs.read_results()
+    def check_status(self):
+        my_free_cores = self.cores
+        running_sectors = 0
+        print "---"
+        for cs in all_sectors:
+            if cs.check_status()=="still running":
+                print "[python script] "+highlight("R ","red","normal")+cs.ehixs_name
+                my_free_cores -= 1
+                running_sectors += 1
+        #print "[python script] Status: running sectors "+str(running_sectors)
+        return my_free_cores
+    def run_a_batch(self):
+        free_cores = self.check_status()
+        if (free_cores>0):
+            #print "[python script] Will fire "+str(free_cores)+" jobs"
+            for x in self.sectors[self.sectors_submitted:self.sectors_submitted+free_cores]:
+                print "[python script]"+highlight(" F "+str(self.sectors_submitted+1)+"/"+str(len(self.sectors)),"green","normal") +" : "+ x.ehixs_name
+                x.run_in_the_background()
+                self.sectors_submitted +=1
+    def wait_till_all_sectors_finished(self):
+        while self.check_status()<self.cores:
+            self.wait()
+    def wait(self):
+        #print "[python script] waiting..."
+        sleep(waiting_time_before_checking_for_status)
+
+
+
 
 
 
@@ -207,40 +257,9 @@ if running_mode=="serial":
         total_time_needed = total_time_needed + cs.give('time')
     print "total time necessary : "+str(total_time_needed)
 elif running_mode=="parallel":
-    all_processes = []
-    for cs in all_sectors:
-        #we don't run sectors that already have a result filename
-        if not(os.path.isfile(cs.output_filename)):
-            all_processes.append(cs.run_in_the_background())
-                #print '..sleeping'
-                #sleep(2.0)
-    #print 'waking up...'
-    all_sectors_status = "still running"
-    while (all_sectors_status=="still running"):
-        sleep(waiting_time_before_checking_for_status) # Time in seconds.
-        if verbosity_level_for_checking_reports == "moderate" or verbosity_level_for_checking_reports=="complete":
-            print ''
-            print ''
-            print '[python script] checking status...'
-        all_sectors_status = "finished"
-        number_of_secs_still_running = 0
-        for cs in all_sectors:
-            
-            if cs.check_status()=="still running":
-                all_sectors_status = "still running"
-                number_of_secs_still_running = number_of_secs_still_running + 1
-                if verbosity_level_for_checking_reports == "complete":
-                    print cs.ehixs_name+' is still running'
-            #break
-        if verbosity_level_for_checking_reports== "moderate" or verbosity_level_for_checking_reports == "complete":
-            print '[python script] still running '+str(number_of_secs_still_running)+'/'+str(len(all_sectors))
-        print ''
-    for cs in all_sectors:
-        print cs.ehixs_name + ' : '+cs.check_status()
-    for cs in all_sectors:
-        cs.read_results()
-
-
+    the_manager = JobManager(all_sectors,number_of_cores)
+    the_manager.run()
+    
 
 #
 #
@@ -254,18 +273,21 @@ total_err_sq = 0.0
 highest_prob = 0.0
 highest_prob_sector_id = -1                                                                                                
 total_number_of_points_for_run = 0
+total_time_used = 0
 for cs in all_sectors:
     total_xs = total_xs + cs.give('sigma')
     cur_err = cs.give('error')
     total_err_sq = total_err_sq + cur_err*cur_err
     cur_prob = cs.give('prob')
+    total_time_used += cs.give('time')
     if cur_prob>highest_prob:
         highest_prob = cur_prob
         highest_prob_sector_id = int(cs.id_number_in_ehixs)                                                                                            
     total_number_of_points_for_run = total_number_of_points_for_run + cs.give('total_number_of_points')
-    cs.printme()
+for cs in all_sectors:
+    cs.printme(total_xs,total_time_used)
 print '------------'
-print 'totalxs = {0:.2e} +- {1:.2e} :: highest probability that error is wrong {2:.2e} from sector #{3} :: total number of points for run {4}'.format(total_xs,math.sqrt(total_err_sq),highest_prob,highest_prob_sector_id,total_number_of_points_for_run)
+print 'totalxs = {0:.2e} +- {1:.2e} | T = {5} :: highest probability that error is wrong {2:.2e} from sector #{3} :: total number of points for run {4}'.format(total_xs,math.sqrt(total_err_sq),highest_prob,highest_prob_sector_id,total_number_of_points_for_run, total_time_used)
                                                                                                     
     
 #histogram merging: will this work without histograms?   

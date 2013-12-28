@@ -5,7 +5,17 @@
 using namespace std;
 
 
+double NewMatrixElement::LL(const double& x1,const double& x2)
+{
+    double res=0.0;
+    for (int i=0;i<FFA_.size();i++)
+        {
 
+        res = res + FFA_[i]->give(x1,x2);
+
+        }
+    return res;
+}
 
 
 //------------------------------------------------------------------------------
@@ -205,6 +215,21 @@ void FSingle::set_name(string& pname,int pid)
         }
 }
 
+void FxF::AllocateLuminosity(Luminosity* lumi)
+{
+    my_lumi_ = lumi->give_single_pair_pt(fleft_->description(),
+                                         fright_->description());
+}
+
+void FxFxA::SetUpPrefactor(const double & a_s_over_pi,int me_alpha_power)
+{
+    
+        prefactor_ = term_->give_value()
+                    * pow(a_s_over_pi,alpha_power()+ me_alpha_power);
+    
+}
+
+
 //------------------------------------------------------------------------------
 
 
@@ -243,22 +268,36 @@ ostream& operator<<(ostream& stream, const Sector& P)
 
     return stream;
 }
+//------------------------------------------------------------------------------
 
 // this can be moved to production
 void Sector::AllocateLuminosity(Luminosity* lumi)
 {
     // luminosity allocation to take place here !!!
-    
-//    pdf_pair_list list_of_pdf_pairs=the_sector->give_list_of_pdf_pairs();
-//    
-//    for (unsigned i=0;i<list_of_pdf_pairs.size();i++)
-//        {
-//        //cout<<"\n pair #"<<i+1;
-//        pair<pdf_desc,pdf_desc> cur_pair=list_of_pdf_pairs.give_one_pair(i);
-//        lumi->add_pair(cur_pair.first,cur_pair.second);
-//        }
-    me_->SetLuminosity(lumi);
+    for (int i=0;i<FFA_.size();i++)
+        {
+      
+        FFA_[i]->AllocateLuminosity(lumi);
+        }
+
+    me_->SetFFA(FFA_);
 }
+
+void Sector::SetUpPrefactor(const double & a_s_over_pi)
+{
+    for (int i=0;i<FFA_.size();i++)
+        {
+        FFA_[i]->SetUpPrefactor(a_s_over_pi,me_->alpha_power());
+        }
+}
+
+void Sector::Evaluate(double* xx_vegas)
+{
+    me_->Evaluate(xx_vegas);
+}
+
+
+
 
 
 //------------------------------------------------------------------------------

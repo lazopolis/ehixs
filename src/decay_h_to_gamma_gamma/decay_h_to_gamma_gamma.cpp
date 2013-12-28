@@ -50,7 +50,7 @@ void Decay_gammagamma::do_decay(double* PH)
     //cout<<"\n[decay]: w = "<<decay_weight<<endl;
     
     decay_weight = decay_weight / Model.higgs.width();
-    
+    //decay_weight = 1e-2;
     event_box.AddNewEvent(decay_weight);
     event_box.SetP(1,p1[0],p1[1],p1[2],p1[3]);
     event_box.SetP(2,p2[0],p2[1],p2[2],p2[3]);

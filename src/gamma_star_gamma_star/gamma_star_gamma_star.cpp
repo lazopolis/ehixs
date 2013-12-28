@@ -16,6 +16,9 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
     SetNumberOfParticles();
     // creating matrix elements
     create_matrix_elements();
+    // passing parameters to matrix elements
+    cout<<"\n[sector] passing parameters to matrix elements "<<UI.Etot<<endl;
+    PassParametersToMatrixElements(pow(UI.Etot,2.0));
     // creating sectors
     all_sectors = new SectorBox(available_matrix_elements,UI);
         
@@ -49,14 +52,14 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
             
         //allocate_luminosity();
         cout <<"\n----------------------------------\n\tSECTOR \""
-        <<the_sector->name()
+        <<*the_sector
         <<"\"\n----------------------------------\n"<<endl;
             
         the_sector->AllocateLuminosity(lumi);
-                        
+        cout<<"\n[sector] setting up prefactor"<<endl;
         the_sector -> SetUpPrefactor(Model.alpha_strong()/consts::Pi);
         }
-        
+    cout<<"\n[sector] end of construction phase"<<endl;
 //        cout<<"\na_s used = "<<Model.alpha_strong()
 //        <<"\t^"<<the_sector->alpha_power
 //        <<"(a/Pi)^"<<the_sector->alpha_power<<" = "<<pow(Model.alpha_strong()/consts::Pi,the_sector->alpha_power) ;
@@ -66,6 +69,17 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 void GammaStarGammaStar::create_matrix_elements()
 {
     available_matrix_elements.push_back(new GstarGstarMeLO(event_box));
+}
+
+void GammaStarGammaStar::PassParametersToMatrixElements(const double& s)
+{
+    for (int i=0;i<available_matrix_elements.size();i++)
+        {
+        available_matrix_elements[i]->set_S(s);
+        cout<<"\n[gstar^2] we are gonna consolidate"<<endl;
+        available_matrix_elements[i]->consolidate();
+
+        }
 }
 
 //: this can be moved in production

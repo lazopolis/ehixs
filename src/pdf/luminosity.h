@@ -9,6 +9,16 @@
 #include "user_interface.h"
 using namespace std;
 
+class LuminositySinglePair
+{
+public:
+    LuminositySinglePair(CPDF* left,CPDF* right):left_(left),right_(right){};
+    double give(const double& x1,const double& x2);
+private:
+    CPDF* left_;
+    CPDF* right_;
+};
+
 class Luminosity;
 
 
@@ -20,6 +30,8 @@ public://methods
 
     Luminosity(const UserInterface& UI);
     ~Luminosity(){};
+    LuminositySinglePair* give_single_pair_pt(const pdf_desc & ,
+                                              const pdf_desc &);
     void add_pair(const pdf_desc & , const pdf_desc &);
     void set_cur_lumi(const double &x1,const double &x2);
     void set_cur_lumiLO(const double &x1,const double &x2);
@@ -35,6 +47,7 @@ private://data
     vector<double> _local_current_luminosity;
     vector<double> _local_current_luminosity_LO;
     PDFHub* pdfHub;
+    vector<LuminositySinglePair*> all_single_pairs_;
 private://methods    
 
 };

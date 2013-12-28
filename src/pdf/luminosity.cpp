@@ -9,6 +9,13 @@ using namespace std;
 #include "luminosity.h"
 #include<algorithm>
 
+
+double LuminositySinglePair::give(const double& x1,const double& x2)
+{
+    return left_->give_f(x1,0) * right_->give_f(x2,0) * x1 * x2;
+}
+
+
 Luminosity::Luminosity(const UserInterface& UI)
 {
     cout<<"\nLuminosity : setting up PDFHub";
@@ -17,6 +24,20 @@ Luminosity::Luminosity(const UserInterface& UI)
     _local_current_luminosity = vector<double>(pdfHub->size(),0.0);
     _local_current_luminosity_LO = vector<double>(pdfHub->size(),0.0);
     
+}
+
+
+
+LuminositySinglePair* Luminosity::give_single_pair_pt(const pdf_desc & left,
+                                                      const pdf_desc & right)
+{
+    CPDF* ptr_to_left = pdfHub->construct_or_locate_pdf(left);
+    CPDF* ptr_to_right = pdfHub->construct_or_locate_pdf(right);
+    LuminositySinglePair* new_pair = new LuminositySinglePair(ptr_to_left,
+                                                              ptr_to_right);
+    all_single_pairs_.push_back(new_pair);
+    return new_pair;
+
 }
 
 

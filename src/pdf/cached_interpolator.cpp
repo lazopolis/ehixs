@@ -23,8 +23,15 @@ using namespace std;
 
 
 
+//------------------------------------------------------------------------------
 
-CashedInterpolator::CashedInterpolator(const double& NFl_, const double& muf_,const double & mur_, const int& iprtn_,const int& jprtn_,const int& n_as_,const int& n_eps_,bool cashing_,const string & gridname_,const int& member_):
+
+CashedInterpolator::CashedInterpolator(const double& NFl_,
+                                       const double& muf_,const double & mur_,
+                                       const int& iprtn_,const int& jprtn_,
+                                       const int& n_as_,const int& n_eps_,
+                                       bool cashing_,const string & gridname_,
+                                       const int& member_):
 NFl(NFl_),
 muf(muf_),
 mur(mur_),
@@ -170,7 +177,6 @@ void CashedInterpolator::disambiguateFgrid()
 }
 
 
-
 void CashedInterpolator::fill_FGrid()
 {
      if (cashing and cashed_file_found())
@@ -288,12 +294,13 @@ void CashedInterpolator::givecoeff(const double& x1,const double& x2,const doubl
 double CashedInterpolator::give_f(const double& x){
      //PRE: receives a double x and an int iprtn. calculate_grid must have been executed beforehand.
      //POST: returns the interpolated value of the pdf at x
-     
      if((x <= 0.0) | (x >= 1.0)){
-          cerr << "ERROR in [" << __func__ << "]: x-value out of allowed range! (x = " << x << " )\nAborting...\n\n";
+          cout << "ERROR in [" << __func__ << "]: x-value out of allowed range! (x = " << x << " )\nAborting...\n\n"<<endl;
+         
           exit(1);
      }
-     
+    
+
      double hh = NumberOfPoints*(NumberOfPoints-1)/(1.0-xmin);
      double lambda = hh*(x-xmin);
      
@@ -305,7 +312,8 @@ double CashedInterpolator::give_f(const double& x){
      int L = int(rr);
      if((L<0) | (L>NumberOfPoints)){cout << "\n\n@@@@@@@@@@@@@@@\nZis can't be! L = " << L << " ( x = " << x << " ) !\n@@@@@@@@@@@@@@@\n";}
      //
-     return CoeffGrid[L][2] + CoeffGrid[L][1]*x + CoeffGrid[L][0]*x*x;
+
+    return CoeffGrid[L][2] + CoeffGrid[L][1]*x + CoeffGrid[L][0]*x*x;
 }
 
 // ----------------------------------------------------------------------------
@@ -1359,3 +1367,105 @@ void CashedInterpolator::ffgrid_NNLO_22_gluon_from_X()
           temp=0.0;
           }
 }
+
+//------------------------------------------------------------------------------
+
+
+LivePDFConvolution::LivePDFConvolution(const double& nfl,
+                                       const double& muf,const double & mur,
+                                       const int& iprtn,const int& jprtn,
+                                       const int& n_as,const int& n_eps,
+                                       const string & gridname,
+                                       const int& member):
+nfl_(nfl),
+iprtn_(iprtn),
+jprtn_(jprtn),
+n_as_(n_as),
+n_eps_(n_eps)
+{
+    parent = new CashedInterpolator(nfl,muf,mur,jprtn,jprtn,0,0,
+                                    true,gridname,member);
+    if ((n_as == 1) && (n_eps == 1))//: NLO
+        {
+        integrand_ = &LivePDFConvolution::nloIntegrand;
+        if (iprtn_ == 0 and jprtn_ == 0) // g from g
+            {
+            plus_kernel=&pgg0_DD;
+            reg_kernel=&pgg0_reg;
+            delta_kernel=&pgg0_d1;
+            boundary_kernel=&pgg0_DDb;
+            }
+        if (iprtn_ == 0 and jprtn_ != 0) // g from q
+            {
+            plus_kernel=&no_kernel;
+            reg_kernel=&pgq0_reg;
+            delta_kernel=&no_kernel;
+            boundary_kernel=&no_kernel;
+            }
+        if (iprtn_ != 0 and jprtn_ == 0) // q from g
+            {
+            plus_kernel=&no_kernel;
+            reg_kernel=&pqg0_reg;
+            delta_kernel=&no_kernel;
+            boundary_kernel=&no_kernel;
+            }
+        if (iprtn_ != 0 and jprtn_ != 0 and jprtn_ == iprtn_) // q from q
+            {
+            plus_kernel=&pqq0_DD;
+            reg_kernel=&pqq0_reg;
+            delta_kernel=&pqq0_d1;
+            boundary_kernel=&pqq0_DDb;
+            }
+        }
+    else if((n_as == 2) && ((n_eps == 1)|(n_eps == 2)))//: NNLO
+        {
+        cerr<<"[LivePDFConvolution]: NNLO convs not implemented yet"<<endl;
+        exit(0);
+        //        if (n_eps == 1) //: 1/eps
+        //            {
+        //            if(iprtn == 0) //: gluon
+        //                cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_gluon_from_X;
+        //            else //: quarks
+        //                cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark_from_X;
+        //            }
+        //        else if (n_eps == 2) //: 1/eps^2
+        //            {
+        //            if(iprtn == 0) //: gluon
+        //                cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_gluon_from_X;
+        //            else //: quarks
+        //                cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark_from_X;
+        //            }
+        }
+    else
+        {
+        cerr << "CPDF: (n_as,n_eps) = (" << n_as+"," << n_eps+") not supported!";
+        exit(1);
+        }
+}
+
+
+
+double LivePDFConvolution::nloIntegrand(const vector<double>& xx)
+{
+    const double x = xx[0];
+    const double u = xx[1];
+    const double y = x+(1.0-x)*u;
+    const double Fj_xy = parent->give_f(x/y);
+    double res = (1.0-x) * reg_kernel(y) * Fj_xy / y;
+    
+    if (iprtn_ == jprtn_)
+        {
+        const double Fj_x = parent->give_f(x);
+        res = res + plus_kernel(y) * (Fj_xy / y - Fj_x)
+        / (1.0-u)
+        + ( delta_kernel(nfl_) + boundary_kernel(x) ) * Fj_x;
+        }
+    return res;
+}
+
+
+
+
+
+
+

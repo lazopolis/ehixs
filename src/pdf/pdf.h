@@ -57,8 +57,11 @@ public://methods
 
     CPDF(const PDFGrid&,const pdf_desc& my_desc,double NF, double muf,
          double mur);
+    CPDF(const PDFGrid&,const pdf_desc& my_desc,double NF, double muf,
+         double mur,bool no_interpolation);
    
     double give_f(const double& x, unsigned i);
+    double give_f(const vector<double>& xx, unsigned i);
     /** \brief Computes error
      *
      * The argument result is the final result vector with the length pdf.NumberOfMembers
@@ -69,17 +72,15 @@ public://methods
     vector<double> alpha_s_at_mz;
     bool is(const pdf_desc& ext_desc){return _my_desc==ext_desc;}
 private://data
-    vector<interpolator*> my_interpolators;
+    vector<LivePDFConvolution*> my_convolutions;
     vector<CashedInterpolator*> my_cached_interpolators;
     unsigned NumberOfMembers;
     pdf_desc _my_desc;
+    bool interpolation_on_;
 private://methods
     //: determine grids returns a vector of one element, the name of the grid,
     //: except in the case that pdf_provider = MSTW, when we have three grids
     vector<string> determine_grids();
-
-    
-
 };
 
 
@@ -137,91 +138,7 @@ private://methods
 
 #ifndef PDFONTHEFLY_H
 #define PDFONTHEFLY_H
-//
-//#include "one_d_interpolator.h"
-//
-//
-//class SinglePDFMemberInterpolator: public InterpolatorBase
-//{
-//public:
-//     SinglePDFMemberInterpolator(int _parton, const double& _muf):InterpolatorBase(){parton=_parton;muf=_muf;}
-//private:
-//     double f_value(const double & x);
-//     int parton;
-//     double muf;
-//};
-//
-//
-//class PDF_on_the_fly
-//{
-//public:
-//     /** \brief Destructor */
-//     ~PDF_on_the_fly();
-//     /** \brief Constructor
-//      *  the PDF_on_the_fly is fully determined by the integer parton, the name of the provider, muf, the pert_order and whether or not to calculate pdf errors */
-//     PDF_on_the_fly(int parton, const string& provider_,
-//                    double muf, int pert_order_,  bool pdf_error_);
-//     /** \brief Give f from interpolators */
-//     double give_f(const double& x, unsigned i){return my_interpolators[i]->give_f(x);}
-//     
-//     /** \brief Computes error
-//      *
-//      * The argument result is the final result vector with the length pdf.NumberOfMembers
-//      * The functions then returns a vector with two entries, containing the "+" and "-" pdf-error
-//      */
-//     //vector<double> calculate_pdf_error(const vector<double>& result);
-//     
-//     /** \brief Return NumberOfMembers */
-//     unsigned size() const{ return NumberOfMembers; }
-//     /** \brief holds the a_s(Mz) value of each member */
-//     vector<double> alpha_s_at_mz;
-//     
-//private:
-//     //* \brief Name of the PDF */
-//     string provider;
-//     /** \brief Flag for error computation */
-//     bool pdf_error;
-//     /** \brief Perturbative order */
-//     int pert_order;
-//     /** \brief Number of members */
-//     unsigned NumberOfMembers;
-//     /** \brief vector that holds the names of the grids to be loaded */
-//     vector<string> gridnames;
-//     /** \brief Interpolator list */
-//     vector<SinglePDFMemberInterpolator*> my_interpolators;
-//     
-//     void determine_grids();
-//     
-//     
-//};
 
-
-//
-//class DPDF
-//{
-//public:
-//     /** \brief Constructor needs iparton, from_parton, n_as, n_eps */
-//     DPDF( int _iparton, int _n_as, int _n_eps,  int _from_parton);
-//     ~DPDF(){};
-//     int give_a_power(){return a_power;}
-//     int give_e_power(){return e_power;}
-//     void init(const string& _provider,const double& _muf,int _pert_order, bool _pdf_error);
-//     double give_f(const double & x, int i);
-//     double give_f(const double & x, const double & y, int i);
-//     double give_f(const double & x, const double & y, const double&z, int i);
-//
-//private:
-//     int iparton,from_parton,a_power,e_power;
-//     PDF_on_the_fly * my_pdf;
-//     Kernel * my_kernel;
-//     void allocate_my_kernel();
-//     
-//     void print_error_message_and_exit();
-//
-//     
-//};
-//
-//
 
 
 #endif

@@ -22,6 +22,7 @@ double pqq0_d1(const double&);//: for reasons of uniformity :)
 double pqq0_DD(const double&);
 double pqq0_DDb(const double&);
 double pqq0_reg(const double&);
+double no_kernel(const double&);
 
 // NLO Splitting kernels
 double pgg1_d1(const double& NF);
