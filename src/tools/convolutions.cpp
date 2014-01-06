@@ -193,24 +193,56 @@ ostream& operator<<(ostream& stream, const Polynomial& P)
 // This has to change, presumably, for each new process
 void FSingle::construct_names()
 {
-    set_name(name_from_,parton_from_);
-    set_name(name_i_,parton_i_);
+    set_name(name_from_,name_descriptors_from,parton_from_);
+    set_name(name_i_,name_descriptors_to,parton_i_);
 }
 
-void FSingle::set_name(string& pname,int pid)
+void FSingle::set_name(string& pname,vector<string>& name_descriptor,int pid)
 {
-    if (pid==0) pname = "gluon";
+    string specific_name[6]={"g","d","u","s","c","b"};
+    if (pid==0) 
+        {
+        pname = "gluon";
+        name_descriptor.push_back("gluon");
+        name_descriptor.push_back("g");
+        }
     else
         {
         if (pid>0)
             {
-            if (pid % 2 ==1) pname = "down";
-            else pname = "up";
+            name_descriptor.push_back("quark");
+            name_descriptor.push_back("q");
+
+            if (pid % 2 ==1) 
+                {
+                pname = "down";
+                name_descriptor.push_back("down type");
+
+                }
+            else 
+                {
+                pname = "up";
+                name_descriptor.push_back("up type");
+
+                }
+            name_descriptor.push_back(specific_name[pid]);
             }
         else
             {
-            if (-pid % 2 ==1) pname = "downbar";
-            else pname = "upbar";
+            name_descriptor.push_back("antiquark");
+            name_descriptor.push_back("qbar");
+            if (-pid % 2 ==1) 
+                {
+                pname = "downbar";
+                name_descriptor.push_back("downbar type");
+
+                }
+            else {
+                pname = "upbar";
+                name_descriptor.push_back("upbar type");
+                }
+            name_descriptor.push_back(specific_name[-pid]+"b");
+
             }
         }
 }
@@ -301,44 +333,34 @@ void Sector::Evaluate(double* xx_vegas)
 
 
 //------------------------------------------------------------------------------
+void SectorBox::determine_as_power_requested(const UserInterface& UI)
+{
+    // default  option: qcd_perturbative_order
+    if (UI.qcd_perturbative_order == "LO") as_control_.Set(0,0);
+    if (UI.qcd_perturbative_order == "NLO") as_control_.Set(0,1);
+    if (UI.qcd_perturbative_order == "NNLO") as_control_.Set(0,2);
+    // advanced option : alpha_s_power. 
+    //                  If defined by user it fixes 
+    //                  the a_s order overwriting qcd_perturbative_order
+    if (UI.alpha_s_power != -1) 
+        as_control_.Set(UI.alpha_s_power,UI.alpha_s_power);
+}
 
 SectorBox::SectorBox(const vector<NewMatrixElement*>& mes,
                           const UserInterface& UI)
 {
-    
     set_up_pdfs();
     set_up_polynomial();
     // this is where the runcard semantics are resolved
-    // qcd_perturbative_order
-    int min_a_power_requested,max_a_power_requested;
-    // default  option: qcd_perturbative_order
-    if (UI.qcd_perturbative_order == "LO")
-        {
-        min_a_power_requested = 0;
-        max_a_power_requested = 0;
-        }
-    if (UI.qcd_perturbative_order == "NLO")
-        {
-        min_a_power_requested = 0;
-        max_a_power_requested = 1;
-        }
-    if (UI.qcd_perturbative_order == "NNLO")
-        {
-        min_a_power_requested = 0;
-        max_a_power_requested = 2;
-        }
-    // advanced  : alpha_s_power. If defined by user it fixes the a_s order
-    if (UI.alpha_s_power != -1)
-        {
-        min_a_power_requested = UI.alpha_s_power;
-        max_a_power_requested = UI.alpha_s_power;
-        }
+    determine_as_power_requested(UI);
+    
     cout<<"[SectorBox] there are "<<mes.size()<<" matrix elements defined"<<endl;
     for (int ime = 0; ime<mes.size();ime++)
         {
         NewMatrixElement* me = mes[ime];
+        cout<<"[SectorBox] examining ME: "<<*me;
         // checking whether the ME is of too high an order in a_s
-        if (me->alpha_power()>max_a_power_requested)
+        if (as_control_.IsAboveMaximum(me->alpha_power() ) )
             {
             cout<<" ** ME of power a_s^"<<me->alpha_power()<<" : too high"<<endl;
             continue;
@@ -346,40 +368,42 @@ SectorBox::SectorBox(const vector<NewMatrixElement*>& mes,
         Polynomial loc_a_renorm = ppow(a_renorm,me->alpha_power());
         loc_a_renorm.truncate_in_alpha_up_to_power(2);
         vector<FxF*> FF_pairs_that_fit_=DeterminePdfs(me,
-                                                      UI.Fleft,UI.Fright,
-                                                      max_a_power_requested);
-        
-        for (int me_e_pow=me->epsilon_power_min();me_e_pow<me->epsilon_power_max()+1;me_e_pow++)
+                                                      UI.Fleft,UI.Fright);
+        cout<<"\n[SectorBox] FF pairs that fit :"<<FF_pairs_that_fit_.size();
+        for (int me_e_pow=me->epsilon_power_min();
+                me_e_pow<me->epsilon_power_max()+1;me_e_pow++)
             {
+            cout<<"\n[SectorBox] e^"<<me_e_pow;
             vector<FxFxA*> FFA;
             for (int i=0;i<FF_pairs_that_fit_.size();i++)
                 {
                 for (int j=0;j<loc_a_renorm.size();j++)
                     {
-                    cout<<"n-- "<<i<<" "<<j<<endl;
-                    cout<<"\n checking "<<*FF_pairs_that_fit_[i];
+                    //cout<<"n-- "<<i<<" "<<j<<endl;
+                    //cout<<"\n checking "<<*FF_pairs_that_fit_[i];
                     int alpha_tot = FF_pairs_that_fit_[i]->alpha_power()
                                     + loc_a_renorm[j]->give_a_power()
                                     + me->alpha_power();
-                    cout<<"\n alpha_tot = "<<alpha_tot
-                        <<FF_pairs_that_fit_[i]->alpha_power()
-                        << loc_a_renorm[j]->give_a_power()
-                        << me->alpha_power()<<endl;
-                    bool alpha_ok = alpha_tot>=min_a_power_requested
-                                and alpha_tot<=max_a_power_requested;
-                int etot = FF_pairs_that_fit_[i]->epsilon_power()
-                    + loc_a_renorm[j]->give_e_power()
-                    +me_e_pow;
+                    //cout<<"\n alpha_tot = "<<alpha_tot
+                    //    <<FF_pairs_that_fit_[i]->alpha_power()
+                    //    << loc_a_renorm[j]->give_a_power()
+                    //    << me->alpha_power()<<endl;
+                    
+                    int etot = FF_pairs_that_fit_[i]->epsilon_power()
+                        + loc_a_renorm[j]->give_e_power()
+                        +me_e_pow;
                     bool pole_ok = etot == UI.pole;
-                    if (alpha_ok and pole_ok)
+                    if (as_control_.IsWithinRequestedRange(alpha_tot) and pole_ok)
                         {
                         FxFxA* newffa = new FxFxA(FF_pairs_that_fit_[i],loc_a_renorm[j]);
-                        cout<<"\n[SectorBox] new FxFxA "<<*newffa<<endl;
+                      //  cout<<"\n[SectorBox] new FxFxA "<<*newffa<<endl;
                         FFA.push_back(newffa);
                         }
                     }
                 }
             if (FFA.size()>0) available_sectors.push_back(new Sector(FFA,me,me_e_pow));
+            else
+                {cout<<"\n[SectorBox] no matching luminosity combination";}
             }
         }
 }
@@ -434,7 +458,7 @@ void SectorBox::set_up_polynomial()
 
 
 vector<FxF*>  SectorBox::DeterminePdfs(NewMatrixElement* me,
-                                       const string& Fleft,const string& Fright,int max_a_power_requested)
+                                       const string& Fleft,const string& Fright)
 {
     vector<FxF*> FF_pairs_that_fit_;
     for (int i=0;i<all_pdfs.size();i++)
@@ -447,11 +471,11 @@ vector<FxF*>  SectorBox::DeterminePdfs(NewMatrixElement* me,
                 if (all_pdfs[j]->flavor_matches(me->parton_j())
                     and all_pdfs[j]->init_flavor_matches(Fright))
                     {
-                    bool a_s_ok = all_pdfs[i]->alpha_power()
-                            +all_pdfs[j]->alpha_power()<= max_a_power_requested;
+                        int as_total = all_pdfs[i]->alpha_power()
+                        +all_pdfs[j]->alpha_power();
                     if (
                         pdfs_match(all_pdfs[i],all_pdfs[j],me->pdf_selection())
-                        and a_s_ok)
+                        and not(as_control_.IsAboveMaximum(as_total)))
                         {
                         FF_pairs_that_fit_.push_back(new FxF(all_pdfs[i],all_pdfs[j]));
                         }

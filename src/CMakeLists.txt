@@ -72,6 +72,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/core
                     ${EHIXS_SRC_DIR}/pdf
                     ${EHIXS_SRC_DIR}/chaplin
+                    ${EHIXS_SRC_DIR}/../user_src
                     ${EHIXS_SRC_DIR}/../user_src/ggf_production
                     ${EHIXS_SRC_DIR}/../user_src/WWZZ_decay
                     ${EHIXS_SRC_DIR}/../user_src/decay_z_gamma

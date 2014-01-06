@@ -12,7 +12,18 @@ using namespace std;
 
 double LuminositySinglePair::give(const double& x1,const double& x2)
 {
-    return left_->give_f(x1,0) * right_->give_f(x2,0) * x1 * x2;
+    
+    const double almost_zero =1e-6;// 1e-23;
+    if (x1>1.0-almost_zero or x2>1.0-almost_zero or x1<almost_zero or x2<almost_zero)
+    {
+ //       cout<<"\n**";
+        return 0.0;
+    }
+    else //: calculate lumi
+    {
+        return left_->give_f(x1,0) * right_->give_f(x2,0);
+    }
+
 }
 
 

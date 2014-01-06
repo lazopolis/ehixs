@@ -153,13 +153,18 @@ public:
         as_order_(as_order),e_order_(e_order){construct_names();}
     bool init_flavor_matches(const string& fname)
     {
-    if (fname==name_from_ or fname=="none") return true;
-    else return false;
+    if (fname=="none") return true;
+    for (int i=0;i<name_descriptors_from.size();i++)
+        if (fname==name_descriptors_from[i]) return true;
+    return false;
     }
     bool flavor_matches(const string& fname)
     {
-    if (fname==name_i_) return true;
-    else return false;
+        if (fname=="none") return true;
+        for (int i=0;i<name_descriptors_to.size();i++)
+            if (fname==name_descriptors_to[i]) return true;
+        return false;
+
     }
     int alpha_power(){return as_order_;}
     int epsilon_power(){return -e_order_;}
@@ -179,9 +184,11 @@ private:
     int as_order_;
     int e_order_;
     void construct_names();
-    void set_name(string& parton,int pid);
+    void set_name(string& parton,vector<string>&,int pid);
     string name_from_;
     string name_i_;
+    vector<string> name_descriptors_from;
+    vector<string> name_descriptors_to;
 };
 
 
@@ -261,7 +268,18 @@ private:
 };
 
 
-
+class AlphaSPowerController{
+public:
+    AlphaSPowerController(){min_=0;max_=0;}
+    void Set(int min,int max){min_=min;max_=max;}
+    bool IsWithinRequestedRange(int m)
+        {
+        if (m<=max_ and m>=min_) return true;else return false;}
+    bool IsAboveMaximum(int m){if (m>max_) return true;else return false;}
+private:
+    int min_;
+    int max_;
+};
 
 // composes the sectors from matrix elements, pdfs and a polynomial
 // and constraints it as requested by UserInterface
@@ -274,13 +292,14 @@ private://data
     vector<Sector*> available_sectors;
     vector<FSingle*> all_pdfs;
     Polynomial a_renorm;
+    AlphaSPowerController as_control_;
 private:
+    void determine_as_power_requested(const UserInterface& UI);
     void set_up_pdfs();
     void set_up_polynomial();
     bool pdfs_match(FSingle* f1, FSingle* f2,const string& selection);
     vector<FxF*>  DeterminePdfs(NewMatrixElement* me,
-                                const string& Fleft,const string& Fright,
-                                int max_a);
+                                const string& Fleft,const string& Fright);
 
 };
 

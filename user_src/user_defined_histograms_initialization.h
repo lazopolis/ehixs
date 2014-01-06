@@ -3,3 +3,19 @@ available_histograms.push_back(
 
 available_histograms.push_back(
     new HistogramLeadingPhotonPt(20,0.0,100.0,"HistogramLeadingPhotonPt"));
+    
+available_histograms.push_back(
+                               new HistogramGstarLeadingPhotonPt(20,0.0,100.0,"HistogramGstarLeadingPhotonPt"));
+                               
+                               
+                               
+available_histograms.push_back(
+                               new HistogramGstarPhoton1Pt(20,0.0,100.0,"GstarPhoton1Pt"));
+                               
+available_histograms.push_back(
+                               new HistogramGstarPhoton1Y(20,-5.0,5.0,"GstarPhoton1Y"));
+                               
+available_histograms.push_back(
+                               new HistogramGstarX1(20,-5.0,5.0,"GstarX1"));
+available_histograms.push_back(
+                               new HistogramGstarX2(20,-5.0,5.0,"GstarX2"));

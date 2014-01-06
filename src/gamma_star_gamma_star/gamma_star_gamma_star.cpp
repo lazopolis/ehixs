@@ -8,6 +8,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 
+#include "gstar_2_cuts.h"
 
 
 ////: move everything to Production except the create_matrix_element function
@@ -21,7 +22,10 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
     PassParametersToMatrixElements(pow(UI.Etot,2.0));
     // creating sectors
     all_sectors = new SectorBox(available_matrix_elements,UI);
-        
+    
+    #include "gstar_2_cut_initialization.h"
+    cuts_->ParseCuts(UI);    
+    
     if (UI.info)
         {
         cout<<"\n Sectors that fit your selection criteria:\n";
@@ -69,6 +73,8 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 void GammaStarGammaStar::create_matrix_elements()
 {
     available_matrix_elements.push_back(new GstarGstarMeLO(event_box));
+    available_matrix_elements.push_back(new GstarGstarMeNLOSoft(event_box));
+
 }
 
 void GammaStarGammaStar::PassParametersToMatrixElements(const double& s)
