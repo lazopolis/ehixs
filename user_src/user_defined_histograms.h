@@ -20,7 +20,26 @@ public:
 
 };
 
-
+class HistogramHiggsY : public CHistogram
+{
+public:
+    HistogramHiggsY(unsigned numbins,const double& lowend,
+                           const double& highend,const std::string& name)
+    : CHistogram(numbins,0,lowend,highend,name,false){};
+    
+    double determine_xval(const CombinedEvent& ce)
+    {
+    
+    double* h = ce.production->ParticleMomentum(5);
+    const double E=h[0];
+    const double pz=h[3];
+    //cout<<"\t  "<<pz;
+    double y = 0.5*log((E+pz)/(E-pz));
+    return y;
+    
+    }
+    
+};
 
 
 class HistogramLeadingPhotonPt : public CHistogram

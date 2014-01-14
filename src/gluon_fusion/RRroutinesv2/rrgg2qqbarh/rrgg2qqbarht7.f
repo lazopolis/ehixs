@@ -1,5 +1,20 @@
-  
       subroutine rrgg2qqbarht7
+     &     (sector,pole,s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4,fff)     
+      implicit none  
+      integer sector,pole  
+      doubleprecision x1, x2, x3, x4,fff  
+      doubleprecision s, XB1, XB2, z, lh, wd, nf  
+      if(z.eq.1d0)then
+         call rrgg2qqbarhsoftt7
+     &     (sector,pole,s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4,fff)     
+      else
+         call rrgg2qqbarhhardt7
+     &     (sector,pole,s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4,fff)     
+      end if
+      end subroutine
+
+  
+      subroutine rrgg2qqbarhhardt7
      &(sector,pole,s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4,fff)     
       implicit none  
       integer sector,pole  
@@ -9,124 +24,124 @@
       doubleprecision KAPPA2  
       doubleprecision KAPPAF  
       doubleprecision Log  
-      doubleprecision rrgg2qqbarh71J1  
-      doubleprecision rrgg2qqbarh71J2  
-      doubleprecision rrgg2qqbarh71J3  
-      doubleprecision rrgg2qqbarh71J4  
-      doubleprecision rrgg2qqbarh71J5  
-      doubleprecision rrgg2qqbarh71J6  
-      doubleprecision rrgg2qqbarht7s1e1  
-      doubleprecision rrgg2qqbarht7s1e0  
-      doubleprecision rrgg2qqbarht7s1em1  
-      doubleprecision rrgg2qqbarht7s1em2  
-      doubleprecision rrgg2qqbarht7s1em3  
-      doubleprecision rrgg2qqbarht7s1em4  
-      doubleprecision rrgg2qqbarht7s2e1  
-      doubleprecision rrgg2qqbarht7s2e0  
-      doubleprecision rrgg2qqbarht7s2em1  
-      doubleprecision rrgg2qqbarht7s2em2  
-      doubleprecision rrgg2qqbarht7s2em3  
-      doubleprecision rrgg2qqbarht7s2em4  
-      doubleprecision rrgg2qqbarht7s3e1  
-      doubleprecision rrgg2qqbarht7s3e0  
-      doubleprecision rrgg2qqbarht7s3em1  
-      doubleprecision rrgg2qqbarht7s3em2  
-      doubleprecision rrgg2qqbarht7s3em3  
-      doubleprecision rrgg2qqbarht7s3em4  
-      doubleprecision rrgg2qqbarht7s4e1  
-      doubleprecision rrgg2qqbarht7s4e0  
-      doubleprecision rrgg2qqbarht7s4em1  
-      doubleprecision rrgg2qqbarht7s4em2  
-      doubleprecision rrgg2qqbarht7s4em3  
-      doubleprecision rrgg2qqbarht7s4em4  
+      doubleprecision rrgg2qqbarhhard71J1  
+      doubleprecision rrgg2qqbarhhard71J2  
+      doubleprecision rrgg2qqbarhhard71J3  
+      doubleprecision rrgg2qqbarhhard71J4  
+      doubleprecision rrgg2qqbarhhard71J5  
+      doubleprecision rrgg2qqbarhhard71J6  
+      doubleprecision rrgg2qqbarhhardt7s1e1  
+      doubleprecision rrgg2qqbarhhardt7s1e0  
+      doubleprecision rrgg2qqbarhhardt7s1em1  
+      doubleprecision rrgg2qqbarhhardt7s1em2  
+      doubleprecision rrgg2qqbarhhardt7s1em3  
+      doubleprecision rrgg2qqbarhhardt7s1em4  
+      doubleprecision rrgg2qqbarhhardt7s2e1  
+      doubleprecision rrgg2qqbarhhardt7s2e0  
+      doubleprecision rrgg2qqbarhhardt7s2em1  
+      doubleprecision rrgg2qqbarhhardt7s2em2  
+      doubleprecision rrgg2qqbarhhardt7s2em3  
+      doubleprecision rrgg2qqbarhhardt7s2em4  
+      doubleprecision rrgg2qqbarhhardt7s3e1  
+      doubleprecision rrgg2qqbarhhardt7s3e0  
+      doubleprecision rrgg2qqbarhhardt7s3em1  
+      doubleprecision rrgg2qqbarhhardt7s3em2  
+      doubleprecision rrgg2qqbarhhardt7s3em3  
+      doubleprecision rrgg2qqbarhhardt7s3em4  
+      doubleprecision rrgg2qqbarhhardt7s4e1  
+      doubleprecision rrgg2qqbarhhardt7s4e0  
+      doubleprecision rrgg2qqbarhhardt7s4em1  
+      doubleprecision rrgg2qqbarhhardt7s4em2  
+      doubleprecision rrgg2qqbarhhardt7s4em3  
+      doubleprecision rrgg2qqbarhhardt7s4em4  
       if(pole.eq.1)then  
       if(sector.eq.1)then  
-         fff=rrgg2qqbarht7s1e1  
+         fff=rrgg2qqbarhhardt7s1e1  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.2)then  
-         fff=rrgg2qqbarht7s2e1  
+         fff=rrgg2qqbarhhardt7s2e1  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.3)then  
-         fff=rrgg2qqbarht7s3e1  
+         fff=rrgg2qqbarhhardt7s3e1  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.4)then  
-         fff=rrgg2qqbarht7s4e1  
+         fff=rrgg2qqbarhhardt7s4e1  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       end if  
       else if(pole.eq.0)then  
       if(sector.eq.1)then  
-         fff=rrgg2qqbarht7s1e0  
+         fff=rrgg2qqbarhhardt7s1e0  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.2)then  
-         fff=rrgg2qqbarht7s2e0  
+         fff=rrgg2qqbarhhardt7s2e0  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.3)then  
-         fff=rrgg2qqbarht7s3e0  
+         fff=rrgg2qqbarhhardt7s3e0  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.4)then  
-         fff=rrgg2qqbarht7s4e0  
+         fff=rrgg2qqbarhhardt7s4e0  
      &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       end if  
       else if(pole.eq.-1)then  
       if(sector.eq.1)then  
-         fff=rrgg2qqbarht7s1em1  
+         fff=rrgg2qqbarhhardt7s1em1  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.2)then  
-         fff=rrgg2qqbarht7s2em1  
+         fff=rrgg2qqbarhhardt7s2em1  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.3)then  
-         fff=rrgg2qqbarht7s3em1  
+         fff=rrgg2qqbarhhardt7s3em1  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.4)then  
-         fff=rrgg2qqbarht7s4em1  
+         fff=rrgg2qqbarhhardt7s4em1  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       end if  
       else if(pole.eq.-2)then  
       if(sector.eq.1)then  
-         fff=rrgg2qqbarht7s1em2  
+         fff=rrgg2qqbarhhardt7s1em2  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.2)then  
-         fff=rrgg2qqbarht7s2em2  
+         fff=rrgg2qqbarhhardt7s2em2  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.3)then  
-         fff=rrgg2qqbarht7s3em2  
+         fff=rrgg2qqbarhhardt7s3em2  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.4)then  
-         fff=rrgg2qqbarht7s4em2  
+         fff=rrgg2qqbarhhardt7s4em2  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       end if  
       else if(pole.eq.-3)then  
       if(sector.eq.1)then  
-         fff=rrgg2qqbarht7s1em3  
+         fff=rrgg2qqbarhhardt7s1em3  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.2)then  
-         fff=rrgg2qqbarht7s2em3  
+         fff=rrgg2qqbarhhardt7s2em3  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.3)then  
-         fff=rrgg2qqbarht7s3em3  
+         fff=rrgg2qqbarhhardt7s3em3  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.4)then  
-         fff=rrgg2qqbarht7s4em3  
+         fff=rrgg2qqbarhhardt7s4em3  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       end if  
       else if(pole.eq.-4)then  
       if(sector.eq.1)then  
-         fff=rrgg2qqbarht7s1em4  
+         fff=rrgg2qqbarhhardt7s1em4  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.2)then  
-         fff=rrgg2qqbarht7s2em4  
+         fff=rrgg2qqbarhhardt7s2em4  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.3)then  
-         fff=rrgg2qqbarht7s3em4  
+         fff=rrgg2qqbarhhardt7s3em4  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       else if(sector.eq.4)then  
-         fff=rrgg2qqbarht7s4em4  
+         fff=rrgg2qqbarhhardt7s4em4  
      &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
       end if  
       end if  
       end subroutine
 
-      doubleprecision function rrgg2qqbarht7s1e1
+      doubleprecision function rrgg2qqbarhhardt7s1e1
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -146,12 +161,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -163,358 +178,356 @@
       parameter(zeta7=1.008349277381923d0)
       t1 = -0.1D1 + z
       t2 = t1 * s
-      t3 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.0
-     #D0, 0.0D0, 0.0D0)
-      t4 = t3 * pi
-      t7 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.0
-     #D0, 0.0D0, 0.0D0)
-      t8 = t7 * pi
-      t10 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t11 = t10 * pi
-      t12 = lh ** 2
-      t14 = pi ** 2
-      t16 = -0.180D3 * t12 + 0.30D2 * t14
-      t19 = s ** 2
-      t20 = 0.1D1 / t19
-      t22 = z ** 2
-      t23 = 0.1D1 / t22
-      t24 = x3 * t23
-      t25 = x4 * pi
-      t26 = Sin(t25)
-      t27 = t26 ** 2
-      t30 = log(0.4D1 * t24 * t27)
-      t31 = -0.1D1 + x3
-      t32 = 0.1D1 / t31
-      t36 = log(-0.4D1 * t24 * t27 * t32)
-      t38 = cos(t25)
-      t40 = Sqrt(-x3 * t31)
-      t45 = 0.1D1 / (-z - x3 + 0.2D1 * t38 * t40 * z)
-      t49 = t36 ** 2
-      t53 = t30 ** 2
-      t67 = -0.60D2 * lh * t14 + 0.240D3 * zeta3 + 0.120D3 * t12 * lh
-      t69 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
+      t3 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
+      t6 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
+      t7 = 0.90D2 * t6
+      t8 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
+      t9 = lh ** 2
+      t10 = 0.180D3 * t9
+      t11 = pi ** 2
+      t12 = 0.30D2 * t11
+      t13 = t10 - t12
+      t17 = s ** 2
+      t18 = 0.1D1 / t17
+      t19 = x4 * pi
+      t20 = Sin(t19)
+      t21 = t20 ** 2
+      t22 = x3 * t21
+      t23 = z ** 2
+      t24 = 0.1D1 / t23
+      t25 = -0.1D1 + x3
+      t26 = 0.1D1 / t25
+      t30 = log(-0.4D1 * t22 * t24 * t26)
+      t32 = cos(t19)
+      t34 = Sqrt(-x3 * t25)
+      t39 = 0.1D1 / (-z - x3 + 0.2D1 * t32 * t34 * z)
+      t43 = log(0.4D1 * t22 * t24)
+      t48 = t43 ** 2
+      t50 = t30 ** 2
+      t66 = 0.60D2 * lh * t11 - 0.240D3 * zeta3 - 0.120D3 * t9 * lh
+      t68 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
       t89 = 0.1D1 / x3
-      t92 = t23 * t27
+      t92 = t24 * t21
       t94 = log(0.4D1 * t92)
       t95 = t94 ** 2
       t98 = t95 * t94
-      t118 = t14 ** 2
-      t119 = t12 ** 2
-      t130 = rrgg2qqbarh71J5(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t131 = t95 ** 2
-      t140 = pi * t20
-      t141 = x1 ** 2
-      t142 = x3 * t141
-      t145 = log(0.4D1 * t142 * t92)
-      t147 = t145 ** 2
-      t150 = t92 * t32
-      t153 = log(-0.4D1 * t142 * t150)
-      t154 = t153 * z
-      t156 = t153 ** 2
-      t160 = z * t7
-      t166 = pi * lh
-      t168 = z * t3
-      t176 = pi * t16
-      t180 = t20 * (-z * t10 * t45 - t10)
-      t181 = t176 * t180
-      t184 = 0.1D1 / x1
-      t187 = t141 * t23
-      t188 = t187 * t27
-      t190 = log(0.4D1 * t188)
-      t195 = t190 ** 2
-      t205 = pi * t67
-      t206 = t20 * t10
-      t207 = t205 * t206
-      t218 = x2 ** 2
-      t219 = t218 * x3
-      t220 = t219 * t188
-      t222 = log(0.4D1 * t220)
-      t224 = t219 * t141
-      t227 = log(-0.4D1 * t224 * t150)
-      t239 = 0.1D1 / x2
-      t240 = t239 * t184
-      t243 = t218 * t141
-      t246 = log(0.4D1 * t243 * t92)
-      t248 = t246 ** 2
-      t266 = log(0.4D1 * t219 * t92)
-      t268 = t266 ** 2
-      t273 = log(-0.4D1 * t219 * t150)
-      t274 = t273 * z
-      t276 = t273 ** 2
-      t297 = t218 * t23
-      t300 = log(0.4D1 * t297 * t27)
-      t305 = t300 ** 2
-      t325 = ((0.180D3 * t4 * lh - 0.90D2 * t8 + t11 * t16) * t20 * (-t3
-     #0 - t36 * z * t45) - 0.90D2 * t11 * t20 * (-t49 * t36 * z * t45 / 
-     #0.6D1 - t53 * t30 / 0.6D1) + (0.180D3 * t8 * lh + t11 * t67 - 0.90
-     #D2 * t69 * pi + t4 * t16) * t20 * (0.1D1 + z * t45) + (0.180D3 * t
-     #11 * lh - 0.90D2 * t4) * t20 * (t53 / 0.2D1 + t49 * z * t45 / 0.2D
-     #1)) * t89 / 0.2880D4 + (0.180D3 * (t95 * t3 / 0.2D1 + t69 - t98 * 
-     #t10 / 0.6D1 - t94 * t7) * pi * lh + (-t94 * t3 + t95 * t10 / 0.2D1
-     # + t7) * pi * t16 + (t3 - t94 * t10) * pi * t67 + t11 * (-0.480D3 
-     #* lh * zeta3 - t118 - 0.60D2 * t119 + 0.60D2 * t12 * t14) - 0.90D2
-     # * (-t98 * t3 / 0.6D1 + t95 * t7 / 0.2D1 - t94 * t69 + t130 + t131
-     # * t10 / 0.24D2) * pi) * t20 / 0.2880D4 - (-0.90D2 * t140 * (t145 
-     #* t3 - t147 * t10 / 0.2D1 - t7 - (-t154 * t3 + t156 * z * t10 / 0.
-     #2D1 + t160) * t45) + 0.180D3 * t166 * t20 * (-t3 + t145 * t10 - (t
-     #168 - t154 * t10) * t45) + t181) * t89 * t184 / 0.1440D4 - (t176 *
-     # t20 * (-t3 + t190 * t10) - 0.90D2 * t140 * (-t195 * t3 / 0.2D1 - 
-     #t69 + t195 * t190 * t10 / 0.6D1 + t190 * t7) - t207 + 0.180D3 * t1
-     #66 * t20 * (t190 * t3 - t195 * t10 / 0.2D1 - t7)) * t184 / 0.1440D
-     #4 - (-0.90D2 * t140 * (-t3 + t222 * t10 - (t168 - t227 * z * t10) 
-     #* t45) + 0.180D3 * t166 * t180) * t89 * t240 / 0.720D3 - (-0.90D2 
-     #* t140 * (t246 * t3 - t248 * t10 / 0.2D1 - t7) + 0.180D3 * t166 * 
-     #t20 * (-t3 + t246 * t10) - t176 * t206) * t239 * t184 / 0.720D3 - 
-     #(-0.90D2 * t140 * (t266 * t3 - t268 * t10 / 0.2D1 - t7 - (-t274 * 
-     #t3 + t276 * z * t10 / 0.2D1 + t160) * t45) + 0.180D3 * t166 * t20 
-     #* (-t3 + t266 * t10 - (t168 - t274 * t10) * t45) + t181) * t89 * t
-     #239 / 0.1440D4 + (t176 * t20 * (t3 - t300 * t10) - 0.90D2 * t140 *
-     # (t305 * t3 / 0.2D1 + t69 - t305 * t300 * t10 / 0.6D1 - t300 * t7)
-     # + t207 + 0.180D3 * t166 * t20 * (-t300 * t3 + t305 * t10 / 0.2D1 
-     #+ t7)) * t239 / 0.1440D4
-      t326 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t325)
-      t328 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t325)
-      t330 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t325)
-      t332 = t2 * x1
-      t333 = -0.1D1 + x1
-      t334 = x1 * z
-      t335 = 0.1D1 - x1 + t334
-      t336 = 0.1D1 / t335
-      t338 = t2 * t333 * t336
-      t339 = t1 ** 2
-      t340 = s * t339
-      t342 = x1 * t333 * t336
-      t343 = t340 * t342
-      t344 = t142 * t23
-      t345 = t333 ** 2
-      t346 = t27 * t345
-      t348 = t346 * t336 * t32
-      t351 = log(-0.4D1 * t344 * t348)
-      t352 = t351 * z
-      t353 = t142 * t22
-      t354 = x1 * t22
-      t355 = x3 * t22
-      t356 = t355 * x1
-      t358 = 0.2D1 * t142 * z
-      t359 = x3 * x1
-      t360 = t359 * z
-      t361 = 0.3D1 * t360
-      t362 = x3 * t335
-      t364 = Sqrt(-t362 * t31)
-      t368 = 0.2D1 * t359
-      t369 = -z - t353 - t354 + t356 + t358 + t334 - t361 + 0.2D1 * t38 
-     #* t364 * z - x3 - t142 + t368
-      t370 = 0.1D1 / t369
-      t371 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t338
-     #, t332, 0.0D0, -t343)
-      t374 = t351 ** 2
-      t376 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t338
-     #, t332, 0.0D0, -t343)
-      t377 = t370 * t376
-      t380 = z * t370
-      t381 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t338
-     #, t332, 0.0D0, -t343)
-      t385 = t346 * t336
-      t388 = log(0.4D1 * t344 * t385)
-      t390 = t388 ** 2
-      t396 = t380 * t371
-      t408 = t20 * (t380 * t376 * t335 + t376)
-      t416 = log(0.4D1 * t187 * t385)
-      t421 = t416 ** 2
-      t424 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t338
-     #, t332, 0.0D0, -t343)
-      t432 = t20 * t376
-      t444 = t219 * t187
-      t447 = log(-0.4D1 * t444 * t348)
-      t452 = t345 * t336
-      t456 = log(0.4D1 * t224 * t92 * t452)
-      t467 = t243 * t23
-      t470 = log(0.4D1 * t467 * t385)
-      t472 = t470 ** 2
-      t488 = -(-0.90D2 * t140 * ((-t352 * t370 * t371 + t374 * z * t377 
-     #/ 0.2D1 + t380 * t381) * t335 - t388 * t371 + t390 * t376 / 0.2D1 
-     #+ t381) + 0.180D3 * t166 * t20 * ((t396 - t352 * t377) * t335 + t3
-     #71 - t388 * t376) + t176 * t408) * t89 * t184 / 0.1440D4 - (t176 *
-     # t20 * (t371 - t416 * t376) - 0.90D2 * t140 * (t421 * t371 / 0.2D1
-     # + t424 - t421 * t416 * t376 / 0.6D1 - t416 * t381) + t205 * t432 
-     #+ 0.180D3 * t166 * t20 * (-t416 * t371 + t421 * t376 / 0.2D1 + t38
-     #1)) * t184 / 0.1440D4 - (-0.90D2 * t140 * ((t396 - t447 * z * t377
-     #) * t335 + t371 - t456 * t376) + 0.180D3 * t166 * t408) * t89 * t2
-     #40 / 0.720D3 - (-0.90D2 * t140 * (-t470 * t371 + t472 * t376 / 0.2
-     #D1 + t381) + 0.180D3 * t166 * t20 * (t371 - t470 * t376) + t176 * 
-     #t432) * t239 * t184 / 0.720D3
-      t489 = FJET(XB1, XB2, s, 0.0D0, t332, -t338, 0.0D0, -t343, t488)
-      t492 = x2 * t1 * s
-      t493 = -0.1D1 + x2
-      t495 = t493 * t1 * s
-      t496 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t492, -t495,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t497 = t92 * t493
-      t500 = log(-0.4D1 * t224 * t497)
-      t501 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t492, -t495,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t506 = t20 * t501
-      t512 = (-0.90D2 * t140 * (t496 - t500 * t501) + 0.180D3 * t166 * t
-     #506) * t89 * t240 / 0.720D3
-      t515 = log(-0.4D1 * t243 * t497)
-      t517 = t515 ** 2
-      t520 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t492, -t495,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t529 = t176 * t506
-      t533 = (-0.90D2 * t140 * (-t515 * t496 + t517 * t501 / 0.2D1 + t52
-     #0) + 0.180D3 * t166 * t20 * (t496 - t515 * t501) + t529) * t239 * 
-     #t184 / 0.720D3
-      t536 = log(-0.4D1 * t219 * t497)
-      t538 = t536 ** 2
-      t552 = (-0.90D2 * t140 * (-t536 * t496 + t538 * t501 / 0.2D1 + t52
-     #0) + 0.180D3 * t166 * t20 * (t496 - t536 * t501) + t529) * t89 * t
-     #239 / 0.1440D4
-      t553 = t27 * t493
-      t556 = log(-0.4D1 * t297 * t553)
-      t558 = -t496 + t556 * t501
+      t113 = t11 ** 2
+      t114 = t9 ** 2
+      t128 = rrgg2qqbarhhard71J5(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t
+     #2, 0.0D0, 0.0D0, 0.0D0)
+      t130 = t95 ** 2
+      t137 = pi * t18
+      t138 = x1 ** 2
+      t139 = x3 * t138
+      t142 = log(0.4D1 * t139 * t92)
+      t144 = t142 ** 2
+      t147 = t92 * t26
+      t150 = log(-0.4D1 * t139 * t147)
+      t151 = t150 * z
+      t153 = t150 ** 2
+      t157 = z * t6
+      t163 = lh * pi
+      t165 = z * t3
+      t173 = t13 * pi
+      t177 = t18 * (z * t8 * t39 + t8)
+      t181 = 0.1D1 / x1
+      t184 = t138 * t21
+      t185 = t184 * t24
+      t187 = log(0.4D1 * t185)
+      t192 = t187 ** 2
+      t202 = t66 * pi
+      t203 = t18 * t8
+      t215 = x2 ** 2
+      t216 = x3 * t215
+      t217 = t216 * t138
+      t220 = log(-0.4D1 * t217 * t147)
+      t225 = t216 * t185
+      t227 = log(0.4D1 * t225)
+      t236 = 0.1D1 / x2
+      t237 = t236 * t181
+      t240 = t215 * t138
+      t243 = log(0.4D1 * t240 * t92)
+      t245 = t243 ** 2
+      t261 = 0.180D3 * lh
+      t264 = log(0.4D1 * t216 * t92)
+      t270 = t264 ** 2
+      t276 = log(-0.4D1 * t216 * t147)
+      t283 = t276 ** 2
+      t297 = -t13 * pi
+      t298 = t215 * t21
+      t301 = log(0.4D1 * t298 * t24)
+      t306 = t301 ** 2
+      t317 = -t66 * pi
+      t329 = ((0.180D3 * t3 * lh - t7 - t8 * t13) * pi * t18 * (-t30 * z
+     # * t39 - t43) - 0.90D2 * t8 * pi * t18 * (-t48 * t43 / 0.6D1 - t50
+     # * t30 * z * t39 / 0.6D1) + (0.180D3 * t6 * lh - t8 * t66 - 0.90D2
+     # * t68 - t3 * t13) * pi * t18 * (z * t39 + 0.1D1) + (0.180D3 * t8 
+     #* lh - 0.90D2 * t3) * pi * t18 * (t50 * z * t39 / 0.2D1 + t48 / 0.
+     #2D1)) * t89 / 0.2880D4 + (-0.180D3 * (-t95 * t3 / 0.2D1 - t68 + t9
+     #8 * t8 / 0.6D1 + t94 * t6) * lh + (t94 * t3 - t95 * t8 / 0.2D1 - t
+     #6) * t13 + (-t3 + t94 * t8) * t66 - t8 * (t113 + 0.60D2 * t114 + 0
+     #.480D3 * lh * zeta3 - 0.60D2 * t9 * t11) + 0.15D2 * t98 * t3 - 0.4
+     #5D2 * t95 * t6 + 0.90D2 * t94 * t68 - 0.90D2 * t128 - 0.15D2 / 0.4
+     #D1 * t130 * t8) * pi * t18 / 0.2880D4 - (0.90D2 * t137 * (-t142 * 
+     #t3 + t144 * t8 / 0.2D1 + t6 - (t151 * t3 - t153 * z * t8 / 0.2D1 -
+     # t157) * t39) - 0.180D3 * t163 * t18 * (t3 - t142 * t8 - (-t165 + 
+     #t151 * t8) * t39) + t173 * t177) * t89 * t181 / 0.1440D4 + (t173 *
+     # t18 * (-t3 + t187 * t8) + 0.90D2 * t137 * (-t192 * t3 / 0.2D1 - t
+     #68 + t192 * t187 * t8 / 0.6D1 + t187 * t6) - t202 * t203 - 0.180D3
+     # * t163 * t18 * (t187 * t3 - t192 * t8 / 0.2D1 - t6)) * t181 / 0.1
+     #440D4 - (0.90D2 * t137 * (-(-t165 + t220 * z * t8) * t39 + t3 - t2
+     #27 * t8) - 0.180D3 * t163 * t177) * t89 * t237 / 0.720D3 + (0.90D2
+     # * t137 * (t243 * t3 - t245 * t8 / 0.2D1 - t6) - 0.180D3 * t163 * 
+     #t18 * (-t3 + t243 * t8) - t173 * t203) * t236 * t181 / 0.720D3 - t
+     #137 * (-(t261 + 0.90D2 * t264) * t3 - (-0.180D3 * t264 * lh - 0.45
+     #D2 * t270 - t10 + t12) * t8 + t7 - ((t261 + 0.90D2 * t276) * z * t
+     #3 + (-0.180D3 * t276 * lh - 0.45D2 * t283 - t10 + t12) * z * t8 - 
+     #0.90D2 * t157) * t39) * t89 * t236 / 0.1440D4 + (t297 * t18 * (t3 
+     #- t301 * t8) - 0.90D2 * t137 * (t306 * t3 / 0.2D1 + t68 - t306 * t
+     #301 * t8 / 0.6D1 - t301 * t6) + t317 * t203 + 0.180D3 * t163 * t18
+     # * (-t301 * t3 + t306 * t8 / 0.2D1 + t6)) * t236 / 0.1440D4
+      t330 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t329)
+      t332 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t329)
+      t334 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t329)
+      t336 = t2 * x1
+      t337 = -0.1D1 + x1
+      t338 = x1 * z
+      t339 = 0.1D1 - x1 + t338
+      t340 = 0.1D1 / t339
+      t342 = t2 * t337 * t340
+      t343 = t1 ** 2
+      t344 = s * t343
+      t346 = x1 * t337 * t340
+      t347 = t344 * t346
+      t348 = t139 * t21
+      t349 = t24 * t340
+      t350 = t337 ** 2
+      t352 = t349 * t350 * t26
+      t355 = log(-0.4D1 * t348 * t352)
+      t356 = t355 * t339
+      t357 = x3 * x1
+      t358 = t357 * z
+      t359 = 0.3D1 * t358
+      t360 = 0.2D1 * t357
+      t361 = x1 * t23
+      t362 = x3 * t23
+      t363 = t362 * x1
+      t365 = 0.2D1 * t139 * z
+      t366 = t139 * t23
+      t367 = x3 * t339
+      t369 = Sqrt(-t367 * t25)
+      t373 = -z + t338 - t359 + t360 - x3 - t361 + t363 + t365 - t366 + 
+     #0.2D1 * t32 * t369 * z - t139
+      t374 = 0.1D1 / t373
+      t375 = z * t374
+      t376 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t342, t336, 0.0D0, -t347)
+      t379 = t355 ** 2
+      t381 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t342, t336, 0.0D0, -t347)
+      t382 = t375 * t381
+      t385 = t339 * z
+      t386 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t342, t336, 0.0D0, -t347)
+      t389 = t349 * t350
+      t392 = log(0.4D1 * t348 * t389)
+      t394 = t392 ** 2
+      t401 = t385 * t374 * t376
+      t411 = t18 * (-t385 * t374 * t381 - t381)
+      t419 = log(0.4D1 * t184 * t389)
+      t424 = t419 ** 2
+      t427 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t342, t336, 0.0D0, -t347)
+      t435 = t18 * t381
+      t447 = t216 * t184
+      t450 = log(-0.4D1 * t447 * t352)
+      t453 = t340 * t350
+      t457 = log(0.4D1 * t217 * t92 * t453)
+      t468 = t240 * t21
+      t471 = log(0.4D1 * t468 * t389)
+      t473 = t471 ** 2
+      t489 = -(0.90D2 * t137 * (t356 * t375 * t376 - t379 * t339 * t382 
+     #/ 0.2D1 - t385 * t374 * t386 + t392 * t376 - t394 * t381 / 0.2D1 -
+     # t386) - 0.180D3 * t163 * t18 * (-t401 + t356 * t382 - t376 + t392
+     # * t381) + t173 * t411) * t89 * t181 / 0.1440D4 + (t173 * t18 * (t
+     #376 - t419 * t381) + 0.90D2 * t137 * (t424 * t376 / 0.2D1 + t427 -
+     # t424 * t419 * t381 / 0.6D1 - t419 * t386) + t202 * t435 - 0.180D3
+     # * t163 * t18 * (-t419 * t376 + t424 * t381 / 0.2D1 + t386)) * t18
+     #1 / 0.1440D4 - (0.90D2 * t137 * (-t401 + t450 * t339 * t382 - t376
+     # + t457 * t381) - 0.180D3 * t163 * t411) * t89 * t237 / 0.720D3 + 
+     #(0.90D2 * t137 * (-t471 * t376 + t473 * t381 / 0.2D1 + t386) - 0.1
+     #80D3 * t163 * t18 * (t376 - t471 * t381) + t173 * t435) * t236 * t
+     #181 / 0.720D3
+      t490 = FJET(XB1, XB2, s, 0.0D0, t336, -t342, 0.0D0, -t347, t489)
+      t493 = x2 * t1 * s
+      t494 = -0.1D1 + x2
+      t496 = t494 * t1 * s
+      t497 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t493, -t
+     #496, 0.0D0, 0.0D0, 0.0D0)
+      t498 = t92 * t494
+      t501 = log(-0.4D1 * t217 * t498)
+      t502 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t493, -t
+     #496, 0.0D0, 0.0D0, 0.0D0)
+      t507 = t18 * t502
+      t513 = (0.90D2 * t137 * (-t497 + t501 * t502) + 0.180D3 * t163 * t
+     #507) * t89 * t237 / 0.720D3
+      t516 = log(-0.4D1 * t240 * t498)
+      t518 = t516 ** 2
+      t521 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t493, -t
+     #496, 0.0D0, 0.0D0, 0.0D0)
+      t534 = (0.90D2 * t137 * (-t516 * t497 + t518 * t502 / 0.2D1 + t521
+     #) - 0.180D3 * t163 * t18 * (t497 - t516 * t502) + t173 * t507) * t
+     #236 * t181 / 0.720D3
+      t537 = log(-0.4D1 * t216 * t498)
+      t543 = t537 ** 2
+      t552 = t137 * (-(-t261 - 0.90D2 * t537) * t497 - (0.180D3 * t537 *
+     # lh + 0.45D2 * t543 + t10 - t12) * t502 - 0.90D2 * t521) * t89 * t
+     #236 / 0.1440D4
+      t553 = t24 * t494
+      t556 = log(-0.4D1 * t298 * t553)
+      t558 = -t497 + t556 * t502
       t561 = t556 ** 2
-      t564 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, t492, -t495,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t569 = -t561 * t496 / 0.2D1 - t564 + t561 * t556 * t501 / 0.6D1 + 
-     #t556 * t520
-      t572 = t205 * t506
-      t576 = t556 * t496 - t561 * t501 / 0.2D1 - t520
-      t583 = -t512 - t533 - t552 + (t176 * t20 * t558 - 0.90D2 * t140 * 
-     #t569 - t572 + 0.180D3 * t166 * t20 * t576) * t239 / 0.1440D4
-      t584 = FJET(XB1, XB2, s, 0.0D0, t492, 0.0D0, -t495, 0.0D0, t583)
+      t564 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, t493, -t
+     #496, 0.0D0, 0.0D0, 0.0D0)
+      t569 = -t561 * t497 / 0.2D1 - t564 + t561 * t556 * t502 / 0.6D1 + 
+     #t556 * t521
+      t572 = t317 * t507
+      t576 = t556 * t497 - t561 * t502 / 0.2D1 - t521
+      t583 = -t513 + t534 - t552 + (t297 * t18 * t558 - 0.90D2 * t137 * 
+     #t569 - t572 + 0.180D3 * t163 * t18 * t576) * t236 / 0.1440D4
+      t584 = FJET(XB1, XB2, s, 0.0D0, t493, 0.0D0, -t496, 0.0D0, t583)
       t586 = x2 * x3
-      t589 = Sqrt(x3 * t493 * t31)
-      t590 = t38 * t589
+      t589 = Sqrt(x3 * t494 * t25)
+      t590 = t32 * t589
       t592 = 0.2D1 * t590 * x2
       t594 = 0.1D1 - x3 + t586
       t595 = 0.1D1 / t594
-      t597 = t2 * (0.1D1 - x3 - x2 + t586 + t219 + t592) * t595
+      t597 = t2 * (0.1D1 - x3 - x2 + t586 + t216 + t592) * t595
       t602 = t2 * x2 * (-0.1D1 + t586 + 0.2D1 * t590) * t595
       t603 = x2 * z
-      t604 = -x2 + t603 - z
-      t605 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t602, t597,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t606 = t604 * t605
-      t607 = t594 ** 2
-      t608 = 0.1D1 / t607
-      t610 = t553 * t31 * t608
-      t613 = log(0.4D1 * t444 * t610)
-      t615 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t602, t597,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t618 = t586 * z
-      t619 = t219 * z
-      t625 = 0.1D1 / (x2 - t603 - t618 + t619 + z + x3 - t219 - t592 - 0
-     #.2D1 * t590 * z + 0.2D1 * t590 * t603)
-      t629 = t166 * t20
-      t631 = t604 * t615 * t625
-      t641 = log(0.4D1 * t219 * t23 * t610)
-      t642 = t641 * t604
-      t644 = t641 ** 2
-      t648 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t602, t597,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t666 = -(0.90D2 * t140 * (-t606 + t613 * t604 * t615) * t625 + 0.1
-     #80D3 * t629 * t631) * t89 * t240 / 0.720D3 - (0.90D2 * t140 * (t64
-     #2 * t605 - t644 * t604 * t615 / 0.2D1 - t604 * t648) * t625 - 0.18
-     #0D3 * t166 * t20 * (-t606 + t642 * t615) * t625 + t176 * t20 * t63
-     #1) * t89 * t239 / 0.1440D4
+      t604 = t586 * z
+      t605 = t216 * z
+      t611 = 0.1D1 / (-t603 + z - t216 + x3 + x2 - t604 + t605 - 0.2D1 *
+     # t590 * z + 0.2D1 * t590 * t603 - t592)
+      t612 = t603 - z - x2
+      t613 = t611 * t612
+      t614 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t602, t
+     #597, 0.0D0, 0.0D0, 0.0D0)
+      t616 = t594 ** 2
+      t617 = 0.1D1 / t616
+      t619 = t553 * t25 * t617
+      t622 = log(0.4D1 * t447 * t619)
+      t624 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t602, t
+     #597, 0.0D0, 0.0D0, 0.0D0)
+      t630 = t163 * t18
+      t643 = log(0.4D1 * t216 * t21 * t619)
+      t644 = t643 * t611
+      t649 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t602, t
+     #597, 0.0D0, 0.0D0, 0.0D0)
+      t654 = t643 ** 2
+      t666 = -(0.90D2 * t137 * (-t613 * t614 + t622 * t611 * t612 * t624
+     #) + 0.180D3 * t630 * t613 * t624) * t89 * t237 / 0.720D3 - t137 * 
+     #(-(-0.180D3 * t611 * lh - 0.90D2 * t644) * t612 * t614 - 0.90D2 * 
+     #t613 * t649 - (0.180D3 * t644 * lh + 0.45D2 * t654 * t611 + t611 *
+     # t13) * t612 * t624) * t89 * t236 / 0.1440D4
       t667 = FJET(XB1, XB2, s, 0.0D0, t597, 0.0D0, -t602, 0.0D0, t666)
-      t670 = t1 * t333
-      t672 = t493 * s * t670 * t336
+      t670 = t1 * t337
+      t672 = t494 * s * t670 * t340
       t674 = x2 * s * t670
-      t676 = t340 * t493 * t342
-      t677 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t674, t672,
-     # t332, 0.0D0, t676)
-      t679 = t346 * t336 * t493
-      t682 = log(-0.4D1 * t444 * t679)
-      t683 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t674, t672,
-     # t332, 0.0D0, t676)
-      t688 = t20 * t683
-      t693 = (-0.90D2 * t140 * (-t677 + t682 * t683) - 0.180D3 * t166 * 
-     #t688) * t89 * t240
-      t696 = log(-0.4D1 * t467 * t679)
+      t676 = t344 * t494 * t346
+      t677 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t674, t
+     #672, t336, 0.0D0, t676)
+      t679 = t349 * t350 * t494
+      t682 = log(-0.4D1 * t447 * t679)
+      t683 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t674, t
+     #672, t336, 0.0D0, t676)
+      t688 = t18 * t683
+      t693 = (0.90D2 * t137 * (t677 - t682 * t683) - 0.180D3 * t163 * t6
+     #88) * t89 * t237
+      t696 = log(-0.4D1 * t468 * t679)
       t698 = t696 ** 2
-      t701 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t674, t672,
-     # t332, 0.0D0, t676)
+      t701 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t674, t
+     #672, t336, 0.0D0, t676)
       t702 = t696 * t677 - t698 * t683 / 0.2D1 - t701
       t706 = -t677 + t696 * t683
-      t710 = t176 * t688
-      t715 = -t693 / 0.720D3 - (-0.90D2 * t140 * t702 + 0.180D3 * t166 *
-     # t20 * t706 - t710) * t239 * t184 / 0.720D3
-      t716 = FJET(XB1, XB2, s, 0.0D0, t672, t332, -t674, t676, t715)
-      t718 = FJET(XB1, XB2, s, 0.0D0, -t495, 0.0D0, t492, 0.0D0, t583)
-      t720 = FJET(XB1, XB2, s, 0.0D0, -t338, t332, 0.0D0, -t343, t488)
+      t710 = t173 * t688
+      t715 = -t693 / 0.720D3 + (0.90D2 * t137 * t702 - 0.180D3 * t163 * 
+     #t18 * t706 - t710) * t236 * t181 / 0.720D3
+      t716 = FJET(XB1, XB2, s, 0.0D0, t672, t336, -t674, t676, t715)
+      t718 = FJET(XB1, XB2, s, 0.0D0, -t496, 0.0D0, t493, 0.0D0, t583)
+      t720 = FJET(XB1, XB2, s, 0.0D0, -t342, t336, 0.0D0, -t347, t489)
       t722 = FJET(XB1, XB2, s, 0.0D0, -t602, 0.0D0, t597, 0.0D0, t666)
-      t724 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t325)
-      t726 = FJET(XB1, XB2, s, t332, 0.0D0, 0.0D0, -t338, -t343, t488)
-      t728 = t326 * t325 + t328 * t325 + t330 * t325 + t489 * t488 + t58
-     #4 * t583 + t667 * t666 + t716 * t715 + t718 * t583 + t720 * t488 +
-     # t722 * t666 + t724 * t325 + t726 * t488
-      t729 = FJET(XB1, XB2, s, t332, -t674, 0.0D0, t672, t676, t715)
-      t744 = -t512 - t533 - t552 + (t176 * t20 * t558 - 0.90D2 * t140 * 
-     #t569 - t572 + 0.180D3 * t166 * t20 * t576) * t239 / 0.1440D4
-      t745 = FJET(XB1, XB2, s, t492, 0.0D0, -t495, 0.0D0, 0.0D0, t744)
+      t724 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t329)
+      t726 = FJET(XB1, XB2, s, t336, 0.0D0, 0.0D0, -t342, -t347, t489)
+      t728 = t330 * t329 + t332 * t329 + t334 * t329 + t490 * t489 + t58
+     #4 * t583 + t667 * t666 + t716 * t715 + t718 * t583 + t720 * t489 +
+     # t722 * t666 + t724 * t329 + t726 * t489
+      t729 = FJET(XB1, XB2, s, t336, -t674, 0.0D0, t672, t676, t715)
+      t744 = -t513 + t534 - t552 + (t297 * t18 * t558 - 0.90D2 * t137 * 
+     #t569 - t572 + 0.180D3 * t163 * t18 * t576) * t236 / 0.1440D4
+      t745 = FJET(XB1, XB2, s, t493, 0.0D0, -t496, 0.0D0, 0.0D0, t744)
       t747 = FJET(XB1, XB2, s, t597, 0.0D0, -t602, 0.0D0, 0.0D0, t666)
-      t749 = FJET(XB1, XB2, s, t672, 0.0D0, -t674, t332, t676, t715)
-      t752 = t332 * t586 * t595
-      t753 = t2 * t333
-      t754 = t219 * t334
-      t755 = t219 * x1
-      t756 = t493 * t31
-      t758 = Sqrt(t362 * t756)
-      t759 = t38 * t758
+      t749 = FJET(XB1, XB2, s, t672, 0.0D0, -t674, t336, t676, t715)
+      t752 = t336 * t586 * t595
+      t753 = t2 * t337
+      t754 = t216 * x1
+      t755 = t216 * t338
+      t756 = t494 * t25
+      t758 = Sqrt(t367 * t756)
+      t759 = t32 * t758
       t761 = 0.2D1 * t759 * x2
-      t765 = t753 * (t754 - x2 + t586 - t755 + t761 + 0.1D1 - x3 + t219)
-     # * t336 * t595
-      t769 = t31 * s * t1 * x1 * t595
-      t775 = t753 * x2 * (-0.1D1 + t586 + x1 - t359 - t334 + t360 + 0.2D
-     #1 * t759) * t336 * t595
+      t765 = t753 * (-t754 + t216 - x2 + t586 + t755 + t761 + 0.1D1 - x3
+     #) * t340 * t595
+      t769 = t25 * s * t1 * x1 * t595
+      t775 = t753 * x2 * (-0.1D1 + t586 + x1 - t357 - t338 + t358 + 0.2D
+     #1 * t759) * t340 * t595
       t776 = x2 * x1
-      t777 = t776 * z
-      t778 = z - t603 + t777 + x2 - t776
-      t779 = t778 * t335
-      t783 = t22 * x2
-      t785 = t141 * x2
-      t795 = t618 - t619 - t353 + t356 + t358 - t361 + 0.2D1 * t759 * t7
-     #77 - t755 + t761 - 0.3D1 * t777 + t783 * x1 + 0.2D1 * t785 * z - t
-     #141 * t22 * x2 + 0.2D1 * t759 * z + t142 * x2 - t586 * x1 + 0.2D1 
-     #* t776
-      t806 = -t785 + t219 + t603 + t754 + 0.2D1 * t586 * t334 - 0.2D1 * 
-     #t142 * t603 - t355 * t776 + t142 * t783 - 0.2D1 * t759 * t603 - 0.
-     #2D1 * t759 * t776 - x2 - x3 - z + t334 - t354 - t142 + t368
-      t808 = 0.1D1 / (t795 + t806)
-      t809 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t775, -t765,
-     # -t769, t752, t676)
-      t816 = log(0.4D1 * t220 * t452 * t756 * t608)
-      t819 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t775, -t765,
-     # -t769, t752, t676)
-      t829 = -0.90D2 * t140 * (-t779 * t808 * t809 + t816 * t778 * t335 
-     #* t808 * t819) - 0.180D3 * t629 * t779 * t808 * t819
-      t832 = t829 * t89 * t240 / 0.720D3
-      t833 = FJET(XB1, XB2, s, t752, -t765, -t769, t775, t676, -t832)
-      t836 = t89 * t239 * t184
-      t839 = FJET(XB1, XB2, s, t775, -t769, -t765, t752, t676, -t832)
-      t843 = FJET(XB1, XB2, s, -t495, 0.0D0, t492, 0.0D0, 0.0D0, t744)
-      t845 = FJET(XB1, XB2, s, -t338, 0.0D0, 0.0D0, t332, -t343, t488)
-      t858 = -t693 / 0.720D3 - (-0.90D2 * t140 * t702 + 0.180D3 * t166 *
-     # t20 * t706 - t710) * t239 * t184 / 0.720D3
-      t859 = FJET(XB1, XB2, s, -t674, t332, t672, 0.0D0, t676, t858)
-      t861 = FJET(XB1, XB2, s, -t602, 0.0D0, t597, 0.0D0, 0.0D0, t666)
-      t863 = FJET(XB1, XB2, s, -t769, t775, t752, -t765, t676, -t832)
-      t867 = FJET(XB1, XB2, s, -t765, t752, t775, -t769, t676, -t832)
-      t871 = t729 * t715 + t745 * t744 + t747 * t666 + t749 * t715 - t83
-     #3 * t829 * t836 / 0.720D3 - t839 * t829 * t836 / 0.720D3 + t843 * 
-     #t744 + t845 * t488 + t859 * t858 + t861 * t666 - t863 * t829 * t83
-     #6 / 0.720D3 - t867 * t829 * t836 / 0.720D3
-      rrgg2qqbarht7s1e1 = t728 + t871
+      t778 = x2 * t138
+      t779 = t776 * z
+      t786 = t338 + t360 - t361 - t139 + 0.2D1 * t776 - t778 - z - x3 + 
+     #t604 - t605 - t754 + t761 - 0.3D1 * t779 - t586 * x1 + t139 * x2 +
+     # t776 * t23 + 0.2D1 * t778 * z
+      t803 = -t778 * t23 + 0.2D1 * t759 * z + 0.2D1 * t759 * t779 - t359
+     # + t363 + t365 - t366 + t216 + t603 + t755 + 0.2D1 * t586 * t338 -
+     # t362 * t776 - 0.2D1 * t139 * t603 + t139 * t23 * x2 - 0.2D1 * t75
+     #9 * t603 - 0.2D1 * t759 * t776 - x2
+      t805 = 0.1D1 / (t786 + t803)
+      t806 = t339 * t805
+      t807 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t775, -t
+     #765, -t769, t752, t676)
+      t813 = log(0.4D1 * t225 * t453 * t756 * t617)
+      t815 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t775, -t
+     #765, -t769, t752, t676)
+      t819 = z - t603 + t779 + x2 - t776
+      t827 = 0.90D2 * t137 * (t806 * t807 - t813 * t339 * t805 * t815) *
+     # t819 - 0.180D3 * t630 * t806 * t815 * t819
+      t830 = t827 * t89 * t237 / 0.720D3
+      t831 = FJET(XB1, XB2, s, t752, -t765, -t769, t775, t676, -t830)
+      t834 = t89 * t236 * t181
+      t837 = FJET(XB1, XB2, s, t775, -t769, -t765, t752, t676, -t830)
+      t841 = FJET(XB1, XB2, s, -t496, 0.0D0, t493, 0.0D0, 0.0D0, t744)
+      t843 = FJET(XB1, XB2, s, -t342, 0.0D0, 0.0D0, t336, -t347, t489)
+      t856 = -t693 / 0.720D3 + (0.90D2 * t137 * t702 - 0.180D3 * t163 * 
+     #t18 * t706 - t710) * t236 * t181 / 0.720D3
+      t857 = FJET(XB1, XB2, s, -t674, t336, t672, 0.0D0, t676, t856)
+      t859 = FJET(XB1, XB2, s, -t602, 0.0D0, t597, 0.0D0, 0.0D0, t666)
+      t861 = FJET(XB1, XB2, s, -t769, t775, t752, -t765, t676, -t830)
+      t865 = FJET(XB1, XB2, s, -t765, t752, t775, -t769, t676, -t830)
+      t869 = t729 * t715 + t745 * t744 + t747 * t666 + t749 * t715 - t83
+     #1 * t827 * t834 / 0.720D3 - t837 * t827 * t834 / 0.720D3 + t841 * 
+     #t744 + t843 * t489 + t857 * t856 + t859 * t666 - t861 * t827 * t83
+     #4 / 0.720D3 - t865 * t827 * t834 / 0.720D3
+      rrgg2qqbarhhardt7s1e1 = t728 + t869
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s1e0
+      doubleprecision function rrgg2qqbarhhardt7s1e0
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -534,12 +547,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -551,271 +564,268 @@
       parameter(zeta7=1.008349277381923d0)
       t1 = -0.1D1 + z
       t2 = t1 * s
-      t3 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.0
-     #D0, 0.0D0, 0.0D0)
-      t4 = t3 * pi
+      t3 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
       t5 = s ** 2
       t6 = 0.1D1 / t5
-      t7 = z ** 2
-      t8 = 0.1D1 / t7
-      t9 = x3 * t8
-      t10 = x4 * pi
-      t11 = Sin(t10)
-      t12 = t11 ** 2
-      t15 = log(0.4D1 * t9 * t12)
-      t16 = t15 ** 2
-      t17 = -0.1D1 + x3
-      t18 = 0.1D1 / t17
-      t22 = log(-0.4D1 * t9 * t12 * t18)
-      t23 = t22 ** 2
-      t25 = cos(t10)
-      t27 = Sqrt(-x3 * t17)
-      t32 = 0.1D1 / (-z - x3 + 0.2D1 * t25 * t27 * z)
-      t41 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t42 = t41 * pi
-      t52 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t55 = lh ** 2
-      t57 = pi ** 2
-      t59 = -0.180D3 * t55 + 0.30D2 * t57
+      t7 = x4 * pi
+      t8 = Sin(t7)
+      t9 = t8 ** 2
+      t10 = x3 * t9
+      t11 = z ** 2
+      t12 = 0.1D1 / t11
+      t13 = -0.1D1 + x3
+      t14 = 0.1D1 / t13
+      t18 = log(-0.4D1 * t10 * t12 * t14)
+      t19 = t18 ** 2
+      t21 = cos(t7)
+      t23 = Sqrt(-x3 * t13)
+      t28 = 0.1D1 / (-z - x3 + 0.2D1 * t21 * t23 * z)
+      t32 = log(0.4D1 * t10 * t12)
+      t33 = t32 ** 2
+      t41 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t42 = 0.90D2 * t41
+      t52 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t54 = lh ** 2
+      t56 = pi ** 2
+      t58 = 0.180D3 * t54 - 0.30D2 * t56
       t67 = 0.1D1 / x3
-      t70 = t8 * t12
+      t70 = t12 * t9
       t72 = log(0.4D1 * t70)
       t74 = t72 ** 2
-      t90 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t105 = pi * t6
-      t106 = x2 ** 2
-      t107 = t106 * x3
-      t110 = log(0.4D1 * t107 * t70)
-      t112 = z * t41
-      t113 = t70 * t18
-      t116 = log(-0.4D1 * t107 * t113)
-      t124 = pi * lh
-      t127 = -z * t3 * t32 - t3
-      t130 = 0.180D3 * t124 * t6 * t127
-      t133 = 0.1D1 / x2
-      t136 = t106 * t8
-      t139 = log(0.4D1 * t136 * t12)
-      t141 = t139 ** 2
-      t152 = pi * t59
-      t153 = t6 * t3
-      t154 = t152 * t153
-      t158 = x1 ** 2
-      t159 = x3 * t158
-      t162 = log(0.4D1 * t159 * t70)
-      t166 = log(-0.4D1 * t159 * t113)
-      t176 = 0.1D1 / x1
-      t181 = t67 * t133 * t176
-      t184 = t106 * t158
-      t187 = log(0.4D1 * t184 * t70)
-      t198 = t158 * t8
-      t201 = log(0.4D1 * t198 * t12)
-      t203 = t201 ** 2
-      t217 = (-0.90D2 * t4 * t6 * (t16 / 0.2D1 + t23 * z * t32 / 0.2D1) 
-     #+ (0.180D3 * t4 * lh - 0.90D2 * t42) * t6 * (-t15 - t22 * z * t32)
-     # + (0.180D3 * t42 * lh - 0.90D2 * t52 * pi + t4 * t59) * t6 * (0.1
-     #D1 + z * t32)) * t67 / 0.2880D4 + (0.180D3 * (-t72 * t41 + t74 * t
-     #3 / 0.2D1 + t52) * pi * lh + t4 * (-0.60D2 * lh * t57 + 0.240D3 * 
-     #zeta3 + 0.120D3 * t55 * lh) - 0.90D2 * (t74 * t41 / 0.2D1 + t90 - 
-     #t74 * t72 * t3 / 0.6D1 - t72 * t52) * pi + (t41 - t72 * t3) * pi *
-     # t59) * t6 / 0.2880D4 - (-0.90D2 * t105 * (-t41 + t110 * t3 - (t11
-     #2 - t116 * z * t3) * t32) + t130) * t67 * t133 / 0.1440D4 + (-0.90
-     #D2 * t105 * (-t139 * t41 + t141 * t3 / 0.2D1 + t52) + 0.180D3 * t1
-     #24 * t6 * (t41 - t139 * t3) + t154) * t133 / 0.1440D4 - (-0.90D2 *
-     # t105 * (-t41 + t162 * t3 - (t112 - t166 * z * t3) * t32) + t130) 
-     #* t67 * t176 / 0.1440D4 + t105 * t127 * t181 / 0.8D1 - (-0.90D2 * 
-     #t105 * (-t41 + t187 * t3) - 0.180D3 * t124 * t153) * t133 * t176 /
-     # 0.720D3 - (-0.90D2 * t105 * (t201 * t41 - t203 * t3 / 0.2D1 - t52
-     #) + 0.180D3 * t124 * t6 * (-t41 + t201 * t3) - t154) * t176 / 0.14
-     #40D4
-      t218 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t217)
-      t220 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t217)
-      t222 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t217)
-      t224 = t2 * x1
-      t225 = -0.1D1 + x1
-      t226 = x1 * z
-      t227 = 0.1D1 - x1 + t226
-      t228 = 0.1D1 / t227
-      t230 = t2 * t225 * t228
-      t231 = t1 ** 2
-      t232 = s * t231
-      t234 = x1 * t225 * t228
-      t235 = t232 * t234
-      t236 = t159 * t7
-      t237 = x1 * t7
-      t238 = x3 * t7
-      t239 = t238 * x1
-      t241 = 0.2D1 * t159 * z
+      t89 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t103 = pi * t6
+      t104 = 0.180D3 * lh
+      t105 = x2 ** 2
+      t106 = t105 * x3
+      t109 = log(0.4D1 * t106 * t70)
+      t113 = z * t41
+      t115 = t70 * t14
+      t118 = log(-0.4D1 * t106 * t115)
+      t127 = 0.1D1 / x2
+      t131 = t105 * t9
+      t134 = log(0.4D1 * t131 * t12)
+      t136 = t134 ** 2
+      t142 = lh * pi
+      t149 = -t58 * pi
+      t150 = t6 * t3
+      t155 = x1 ** 2
+      t156 = x3 * t155
+      t159 = log(0.4D1 * t156 * t70)
+      t163 = log(-0.4D1 * t156 * t115)
+      t173 = z * t3 * t28 + t3
+      t179 = 0.1D1 / x1
+      t184 = t67 * t127 * t179
+      t187 = t105 * t155
+      t190 = log(0.4D1 * t187 * t70)
+      t201 = t155 * t9
+      t204 = log(0.4D1 * t201 * t12)
+      t206 = t204 ** 2
+      t217 = t58 * pi
+      t222 = (-0.90D2 * t3 * pi * t6 * (t19 * z * t28 / 0.2D1 + t33 / 0.
+     #2D1) + (0.180D3 * t3 * lh - t42) * pi * t6 * (-t18 * z * t28 - t32
+     #) + (0.180D3 * t41 * lh - 0.90D2 * t52 - t3 * t58) * pi * t6 * (z 
+     #* t28 + 0.1D1)) * t67 / 0.2880D4 + (-0.180D3 * (t72 * t41 - t74 * 
+     #t3 / 0.2D1 - t52) * lh - t3 * (0.60D2 * lh * t56 - 0.240D3 * zeta3
+     # - 0.120D3 * t54 * lh) - 0.45D2 * t74 * t41 - 0.90D2 * t89 + 0.15D
+     #2 * t74 * t72 * t3 + 0.90D2 * t72 * t52 + (-t41 + t72 * t3) * t58)
+     # * pi * t6 / 0.2880D4 - t103 * (t42 - (t104 + 0.90D2 * t109) * t3 
+     #- (-0.90D2 * t113 + (t104 + 0.90D2 * t118) * z * t3) * t28) * t67 
+     #* t127 / 0.1440D4 + (-0.90D2 * t103 * (-t134 * t41 + t136 * t3 / 0
+     #.2D1 + t52) + 0.180D3 * t142 * t6 * (t41 - t134 * t3) + t149 * t15
+     #0) * t127 / 0.1440D4 - (0.90D2 * t103 * (t41 - t159 * t3 - (-t113 
+     #+ t163 * z * t3) * t28) - 0.180D3 * t142 * t6 * t173) * t67 * t179
+     # / 0.1440D4 - t103 * t173 * t184 / 0.8D1 + (0.90D2 * t103 * (-t41 
+     #+ t190 * t3) + 0.180D3 * t142 * t150) * t127 * t179 / 0.720D3 + (0
+     #.90D2 * t103 * (t204 * t41 - t206 * t3 / 0.2D1 - t52) - 0.180D3 * 
+     #t142 * t6 * (-t41 + t204 * t3) - t217 * t150) * t179 / 0.1440D4
+      t223 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t222)
+      t225 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t222)
+      t227 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t222)
+      t229 = t2 * x1
+      t230 = -0.1D1 + x1
+      t231 = x1 * z
+      t232 = 0.1D1 - x1 + t231
+      t233 = 0.1D1 / t232
+      t235 = t2 * t230 * t233
+      t236 = t1 ** 2
+      t237 = s * t236
+      t239 = x1 * t230 * t233
+      t240 = t237 * t239
+      t241 = t232 * z
       t242 = x3 * x1
       t243 = t242 * z
       t244 = 0.3D1 * t243
-      t245 = x3 * t227
-      t247 = Sqrt(-t245 * t17)
-      t251 = 0.2D1 * t242
-      t252 = -z - t236 - t237 + t239 + t241 + t226 - t244 + 0.2D1 * t25 
-     #* t247 * z - x3 - t159 + t251
-      t253 = 0.1D1 / t252
-      t254 = z * t253
-      t255 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t230
-     #, t224, 0.0D0, -t235)
-      t257 = t159 * t8
-      t258 = t225 ** 2
-      t259 = t12 * t258
-      t264 = log(-0.4D1 * t257 * t259 * t228 * t18)
-      t266 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t230
-     #, t224, 0.0D0, -t235)
-      t271 = t259 * t228
-      t274 = log(0.4D1 * t257 * t271)
-      t281 = t254 * t266 * t227 + t266
-      t292 = t184 * t8
-      t295 = log(0.4D1 * t292 * t271)
-      t300 = t6 * t266
-      t309 = log(0.4D1 * t198 * t271)
-      t311 = t309 ** 2
-      t314 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t230
-     #, t224, 0.0D0, -t235)
-      t327 = -(-0.90D2 * t105 * ((t254 * t255 - t264 * z * t253 * t266) 
-     #* t227 + t255 - t274 * t266) + 0.180D3 * t124 * t6 * t281) * t67 *
-     # t176 / 0.1440D4 + t105 * t281 * t181 / 0.8D1 - (-0.90D2 * t105 * 
-     #(t255 - t295 * t266) + 0.180D3 * t124 * t300) * t133 * t176 / 0.72
-     #0D3 - (-0.90D2 * t105 * (-t309 * t255 + t311 * t266 / 0.2D1 + t314
-     #) + 0.180D3 * t124 * t6 * (t255 - t309 * t266) + t152 * t300) * t1
-     #76 / 0.1440D4
-      t328 = FJET(XB1, XB2, s, 0.0D0, t224, -t230, 0.0D0, -t235, t327)
-      t331 = x2 * t1 * s
-      t332 = -0.1D1 + x2
-      t334 = t332 * t1 * s
-      t335 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t331, -t334,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t336 = t70 * t332
-      t339 = log(-0.4D1 * t107 * t336)
-      t340 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t331, -t334,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t345 = t6 * t340
-      t347 = 0.180D3 * t124 * t345
-      t351 = (-0.90D2 * t105 * (t335 - t339 * t340) + t347) * t67 * t133
-     # / 0.1440D4
-      t352 = t12 * t332
-      t355 = log(-0.4D1 * t136 * t352)
-      t357 = t355 ** 2
-      t360 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t331, -t334,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t361 = t355 * t335 - t357 * t340 / 0.2D1 - t360
-      t365 = -t335 + t355 * t340
-      t369 = t152 * t345
-      t375 = t105 * t340 * t181 / 0.8D1
-      t378 = log(-0.4D1 * t184 * t336)
-      t386 = (-0.90D2 * t105 * (t335 - t378 * t340) + t347) * t133 * t17
-     #6 / 0.720D3
-      t387 = -t351 + (-0.90D2 * t105 * t361 + 0.180D3 * t124 * t6 * t365
-     # - t369) * t133 / 0.1440D4 + t375 - t386
-      t388 = FJET(XB1, XB2, s, 0.0D0, t331, 0.0D0, -t334, 0.0D0, t387)
-      t390 = x2 * x3
-      t393 = Sqrt(x3 * t332 * t17)
-      t394 = t25 * t393
-      t396 = 0.2D1 * t394 * x2
-      t398 = 0.1D1 - x3 + t390
-      t399 = 0.1D1 / t398
-      t401 = t2 * (0.1D1 - x3 - x2 + t390 + t107 + t396) * t399
-      t406 = t2 * x2 * (-0.1D1 + t390 + 0.2D1 * t394) * t399
-      t407 = x2 * z
-      t408 = -x2 + t407 - z
-      t409 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t406, t401,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t412 = t398 ** 2
-      t418 = log(0.4D1 * t107 * t8 * t352 * t17 / t412)
-      t420 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t406, t401,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t423 = t390 * z
-      t424 = t107 * z
-      t430 = 0.1D1 / (x2 - t407 - t423 + t424 + z + x3 - t107 - t396 - 0
-     #.2D1 * t394 * z + 0.2D1 * t394 * t407)
-      t435 = t408 * t420
-      t449 = -(0.90D2 * t105 * (-t408 * t409 + t418 * t408 * t420) * t43
-     #0 + 0.180D3 * t124 * t6 * t435 * t430) * t67 * t133 / 0.1440D4 + t
-     #105 * t435 * t430 * t67 * t133 * t176 / 0.8D1
-      t450 = FJET(XB1, XB2, s, 0.0D0, t401, 0.0D0, -t406, 0.0D0, t449)
-      t453 = t1 * t225
-      t455 = t332 * s * t453 * t228
-      t457 = x2 * s * t453
-      t459 = t232 * t332 * t234
-      t460 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t457, t455,
-     # t224, 0.0D0, t459)
-      t463 = t105 * t460 * t181 / 0.8D1
-      t464 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t457, t455,
-     # t224, 0.0D0, t459)
-      t470 = log(-0.4D1 * t292 * t12 * t228 * t258 * t332)
-      t472 = -t464 + t470 * t460
-      t477 = 0.180D3 * t124 * t6 * t460
-      t482 = -t463 - (-0.90D2 * t105 * t472 - t477) * t133 * t176 / 0.72
-     #0D3
-      t483 = FJET(XB1, XB2, s, 0.0D0, t455, t224, -t457, t459, t482)
-      t485 = FJET(XB1, XB2, s, 0.0D0, -t334, 0.0D0, t331, 0.0D0, t387)
-      t487 = FJET(XB1, XB2, s, 0.0D0, -t230, t224, 0.0D0, -t235, t327)
-      t489 = FJET(XB1, XB2, s, 0.0D0, -t406, 0.0D0, t401, 0.0D0, t449)
-      t491 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t217)
-      t493 = FJET(XB1, XB2, s, t224, 0.0D0, 0.0D0, -t230, -t235, t327)
-      t495 = t218 * t217 + t220 * t217 + t222 * t217 + t328 * t327 + t38
-     #8 * t387 + t450 * t449 + t483 * t482 + t485 * t387 + t487 * t327 +
-     # t489 * t449 + t491 * t217 + t493 * t327
-      t496 = FJET(XB1, XB2, s, t224, -t457, 0.0D0, t455, t459, t482)
-      t508 = -t351 + (-0.90D2 * t105 * t361 + 0.180D3 * t124 * t6 * t365
-     # - t369) * t133 / 0.1440D4 + t375 - t386
-      t509 = FJET(XB1, XB2, s, t331, 0.0D0, -t334, 0.0D0, 0.0D0, t508)
-      t511 = FJET(XB1, XB2, s, t401, 0.0D0, -t406, 0.0D0, 0.0D0, t449)
-      t513 = FJET(XB1, XB2, s, t455, 0.0D0, -t457, t224, t459, t482)
-      t516 = t224 * t390 * t399
-      t517 = t2 * t225
-      t518 = t107 * t226
-      t519 = t107 * x1
-      t522 = Sqrt(t245 * t332 * t17)
-      t523 = t25 * t522
-      t525 = 0.2D1 * t523 * x2
-      t529 = t517 * (t518 - x2 + t390 - t519 + t525 + 0.1D1 - x3 + t107)
-     # * t228 * t399
-      t533 = t17 * s * t1 * x1 * t399
-      t539 = t517 * x2 * (-0.1D1 + t390 + x1 - t242 - t226 + t243 + 0.2D
-     #1 * t523) * t228 * t399
-      t540 = x2 * x1
-      t541 = t540 * z
-      t542 = z - t407 + t541 + x2 - t540
-      t546 = t158 * x2
-      t548 = t7 * x2
-      t558 = t423 - t424 - t236 + t239 + t241 - t244 + 0.2D1 * t540 - t5
-     #46 - t519 + t525 - 0.3D1 * t541 + t548 * x1 + 0.2D1 * t546 * z - t
-     #158 * t7 * x2 + 0.2D1 * t523 * z + t159 * x2 - t390 * x1
-      t571 = -x2 - 0.2D1 * t523 * t407 - 0.2D1 * t523 * t540 + t107 + t4
-     #07 + 0.2D1 * t523 * t541 + t518 + 0.2D1 * t390 * t226 - 0.2D1 * t1
-     #59 * t407 - t238 * t540 + t159 * t548 + t226 - t237 - t159 + t251 
-     #- z - x3
-      t574 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t539, -t529,
-     # -t533, t516, t459)
-      t576 = 0.1D1 / (t558 + t571) * t574 * t181
-      t578 = t105 * t542 * t227 * t576 / 0.8D1
-      t579 = FJET(XB1, XB2, s, t516, -t529, -t533, t539, t459, -t578)
-      t582 = t6 * t542 * t227
-      t586 = FJET(XB1, XB2, s, t539, -t533, -t529, t516, t459, -t578)
-      t591 = FJET(XB1, XB2, s, -t334, 0.0D0, t331, 0.0D0, 0.0D0, t508)
-      t593 = FJET(XB1, XB2, s, -t230, 0.0D0, 0.0D0, t224, -t235, t327)
-      t602 = -t463 - (-0.90D2 * t105 * t472 - t477) * t133 * t176 / 0.72
-     #0D3
-      t603 = FJET(XB1, XB2, s, -t457, t224, t455, 0.0D0, t459, t602)
-      t605 = FJET(XB1, XB2, s, -t406, 0.0D0, t401, 0.0D0, 0.0D0, t449)
-      t607 = FJET(XB1, XB2, s, -t533, t539, t516, -t529, t459, -t578)
-      t612 = FJET(XB1, XB2, s, -t529, t516, t539, -t533, t459, -t578)
-      t617 = t496 * t482 + t509 * t508 + t511 * t449 + t513 * t482 - t57
-     #9 * pi * t582 * t576 / 0.8D1 - t586 * pi * t582 * t576 / 0.8D1 + t
-     #591 * t508 + t593 * t327 + t603 * t602 + t605 * t449 - t607 * pi *
-     # t582 * t576 / 0.8D1 - t612 * pi * t582 * t576 / 0.8D1
-      rrgg2qqbarht7s1e0 = t495 + t617
+      t245 = 0.2D1 * t242
+      t246 = x1 * t11
+      t247 = x3 * t11
+      t248 = t247 * x1
+      t250 = 0.2D1 * t156 * z
+      t251 = t156 * t11
+      t252 = x3 * t232
+      t254 = Sqrt(-t252 * t13)
+      t258 = -z + t231 - t244 + t245 - x3 - t246 + t248 + t250 - t251 + 
+     #0.2D1 * t21 * t254 * z - t156
+      t259 = 0.1D1 / t258
+      t260 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t235, t229, 0.0D0, -t240)
+      t263 = t156 * t9
+      t264 = t12 * t233
+      t265 = t230 ** 2
+      t270 = log(-0.4D1 * t263 * t264 * t265 * t14)
+      t273 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t235, t229, 0.0D0, -t240)
+      t276 = t264 * t265
+      t279 = log(0.4D1 * t263 * t276)
+      t286 = -t241 * t259 * t273 - t273
+      t297 = t187 * t9
+      t300 = log(0.4D1 * t297 * t276)
+      t305 = t6 * t273
+      t314 = log(0.4D1 * t201 * t276)
+      t316 = t314 ** 2
+      t319 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t235, t229, 0.0D0, -t240)
+      t332 = -(0.90D2 * t103 * (-t241 * t259 * t260 + t270 * t232 * z * 
+     #t259 * t273 - t260 + t279 * t273) - 0.180D3 * t142 * t6 * t286) * 
+     #t67 * t179 / 0.1440D4 - t103 * t286 * t184 / 0.8D1 + (0.90D2 * t10
+     #3 * (t260 - t300 * t273) - 0.180D3 * t142 * t305) * t127 * t179 / 
+     #0.720D3 + (0.90D2 * t103 * (-t314 * t260 + t316 * t273 / 0.2D1 + t
+     #319) - 0.180D3 * t142 * t6 * (t260 - t314 * t273) + t217 * t305) *
+     # t179 / 0.1440D4
+      t333 = FJET(XB1, XB2, s, 0.0D0, t229, -t235, 0.0D0, -t240, t332)
+      t336 = x2 * t1 * s
+      t337 = -0.1D1 + x2
+      t339 = t337 * t1 * s
+      t340 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t336, -t
+     #339, 0.0D0, 0.0D0, 0.0D0)
+      t342 = t70 * t337
+      t345 = log(-0.4D1 * t106 * t342)
+      t348 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t336, -t
+     #339, 0.0D0, 0.0D0, 0.0D0)
+      t354 = t103 * (-0.90D2 * t340 - (-t104 - 0.90D2 * t345) * t348) * 
+     #t67 * t127 / 0.1440D4
+      t355 = t12 * t337
+      t358 = log(-0.4D1 * t131 * t355)
+      t360 = t358 ** 2
+      t363 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t336, -t
+     #339, 0.0D0, 0.0D0, 0.0D0)
+      t364 = t358 * t340 - t360 * t348 / 0.2D1 - t363
+      t368 = -t340 + t358 * t348
+      t372 = t6 * t348
+      t373 = t149 * t372
+      t379 = t103 * t348 * t184 / 0.8D1
+      t382 = log(-0.4D1 * t187 * t342)
+      t392 = (0.90D2 * t103 * (t340 - t382 * t348) - 0.180D3 * t142 * t3
+     #72) * t127 * t179 / 0.720D3
+      t393 = -t354 + (-0.90D2 * t103 * t364 + 0.180D3 * t142 * t6 * t368
+     # - t373) * t127 / 0.1440D4 + t379 + t392
+      t394 = FJET(XB1, XB2, s, 0.0D0, t336, 0.0D0, -t339, 0.0D0, t393)
+      t396 = x2 * x3
+      t399 = Sqrt(x3 * t337 * t13)
+      t400 = t21 * t399
+      t402 = 0.2D1 * t400 * x2
+      t404 = 0.1D1 - x3 + t396
+      t405 = 0.1D1 / t404
+      t407 = t2 * (0.1D1 - x3 - x2 + t396 + t106 + t402) * t405
+      t412 = t2 * x2 * (-0.1D1 + t396 + 0.2D1 * t400) * t405
+      t413 = x2 * z
+      t414 = t396 * z
+      t415 = t106 * z
+      t421 = 0.1D1 / (-t413 + z - t106 + x3 + x2 - t414 + t415 - 0.2D1 *
+     # t400 * z + 0.2D1 * t400 * t413 - t402)
+      t425 = t404 ** 2
+      t431 = log(0.4D1 * t106 * t9 * t355 * t13 / t425)
+      t435 = t413 - z - x2
+      t437 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t412, t
+     #407, 0.0D0, 0.0D0, 0.0D0)
+      t439 = t421 * t435
+      t440 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t412, t
+     #407, 0.0D0, 0.0D0, 0.0D0)
+      t454 = -t103 * (-(-0.180D3 * t421 * lh - 0.90D2 * t431 * t421) * t
+     #435 * t437 - 0.90D2 * t439 * t440) * t67 * t127 / 0.1440D4 + t103 
+     #* t439 * t437 * t67 * t127 * t179 / 0.8D1
+      t455 = FJET(XB1, XB2, s, 0.0D0, t407, 0.0D0, -t412, 0.0D0, t454)
+      t458 = t1 * t230
+      t460 = t337 * s * t458 * t233
+      t462 = x2 * s * t458
+      t464 = t237 * t337 * t239
+      t465 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t462, t
+     #460, t229, 0.0D0, t464)
+      t468 = t103 * t465 * t184 / 0.8D1
+      t469 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t462, t
+     #460, t229, 0.0D0, t464)
+      t474 = log(-0.4D1 * t297 * t264 * t265 * t337)
+      t476 = -t469 + t474 * t465
+      t481 = 0.180D3 * t142 * t6 * t465
+      t486 = -t468 + (0.90D2 * t103 * t476 + t481) * t127 * t179 / 0.720
+     #D3
+      t487 = FJET(XB1, XB2, s, 0.0D0, t460, t229, -t462, t464, t486)
+      t489 = FJET(XB1, XB2, s, 0.0D0, -t339, 0.0D0, t336, 0.0D0, t393)
+      t491 = FJET(XB1, XB2, s, 0.0D0, -t235, t229, 0.0D0, -t240, t332)
+      t493 = FJET(XB1, XB2, s, 0.0D0, -t412, 0.0D0, t407, 0.0D0, t454)
+      t495 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t222)
+      t497 = FJET(XB1, XB2, s, t229, 0.0D0, 0.0D0, -t235, -t240, t332)
+      t499 = t223 * t222 + t225 * t222 + t227 * t222 + t333 * t332 + t39
+     #4 * t393 + t455 * t454 + t487 * t486 + t489 * t393 + t491 * t332 +
+     # t493 * t454 + t495 * t222 + t497 * t332
+      t500 = FJET(XB1, XB2, s, t229, -t462, 0.0D0, t460, t464, t486)
+      t512 = -t354 + (-0.90D2 * t103 * t364 + 0.180D3 * t142 * t6 * t368
+     # - t373) * t127 / 0.1440D4 + t379 + t392
+      t513 = FJET(XB1, XB2, s, t336, 0.0D0, -t339, 0.0D0, 0.0D0, t512)
+      t515 = FJET(XB1, XB2, s, t407, 0.0D0, -t412, 0.0D0, 0.0D0, t454)
+      t517 = FJET(XB1, XB2, s, t460, 0.0D0, -t462, t229, t464, t486)
+      t520 = t229 * t396 * t405
+      t521 = t2 * t230
+      t522 = t106 * x1
+      t523 = t106 * t231
+      t526 = Sqrt(t252 * t337 * t13)
+      t527 = t21 * t526
+      t529 = 0.2D1 * t527 * x2
+      t533 = t521 * (-t522 + t106 - x2 + t396 + t523 + t529 + 0.1D1 - x3
+     #) * t233 * t405
+      t537 = t13 * s * t1 * x1 * t405
+      t543 = t521 * x2 * (-0.1D1 + t396 + x1 - t242 - t231 + t243 + 0.2D
+     #1 * t527) * t233 * t405
+      t544 = x2 * x1
+      t545 = t544 * z
+      t552 = x2 * t155
+      t560 = t414 - t415 - t244 + t248 + t250 - t251 + 0.2D1 * t527 * t5
+     #45 + t529 - 0.3D1 * t545 - t396 * x1 + t156 * x2 + t544 * t11 + 0.
+     #2D1 * t552 * z - t552 * t11 + 0.2D1 * t527 * z + t523 + 0.2D1 * t3
+     #96 * t231
+      t571 = -t247 * t544 - 0.2D1 * t156 * t413 + t156 * t11 * x2 - 0.2D
+     #1 * t527 * t413 - 0.2D1 * t527 * t544 - t552 + t106 + t413 - t522 
+     #+ 0.2D1 * t544 - x3 + t231 + t245 - t246 - t156 - z - x2
+      t573 = 0.1D1 / (t560 + t571)
+      t576 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t543, -t
+     #533, -t537, t520, t464)
+      t579 = t576 * (z - t413 + t545 + x2 - t544) * t184
+      t581 = t103 * t232 * t573 * t579 / 0.8D1
+      t582 = FJET(XB1, XB2, s, t520, -t533, -t537, t543, t464, -t581)
+      t585 = t6 * t232 * t573
+      t589 = FJET(XB1, XB2, s, t543, -t537, -t533, t520, t464, -t581)
+      t594 = FJET(XB1, XB2, s, -t339, 0.0D0, t336, 0.0D0, 0.0D0, t512)
+      t596 = FJET(XB1, XB2, s, -t235, 0.0D0, 0.0D0, t229, -t240, t332)
+      t605 = -t468 + (0.90D2 * t103 * t476 + t481) * t127 * t179 / 0.720
+     #D3
+      t606 = FJET(XB1, XB2, s, -t462, t229, t460, 0.0D0, t464, t605)
+      t608 = FJET(XB1, XB2, s, -t412, 0.0D0, t407, 0.0D0, 0.0D0, t454)
+      t610 = FJET(XB1, XB2, s, -t537, t543, t520, -t533, t464, -t581)
+      t615 = FJET(XB1, XB2, s, -t533, t520, t543, -t537, t464, -t581)
+      t620 = t500 * t486 + t513 * t512 + t515 * t454 + t517 * t486 - t58
+     #2 * pi * t585 * t579 / 0.8D1 - t589 * pi * t585 * t579 / 0.8D1 + t
+     #594 * t512 + t596 * t332 + t606 * t605 + t608 * t454 - t610 * pi *
+     # t585 * t579 / 0.8D1 - t615 * pi * t585 * t579 / 0.8D1
+      rrgg2qqbarhhardt7s1e0 = t499 + t620
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s1em1
+      doubleprecision function rrgg2qqbarhhardt7s1em1
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -835,12 +845,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -852,150 +862,150 @@
       parameter(zeta7=1.008349277381923d0)
       t1 = -0.1D1 + z
       t2 = t1 * s
-      t3 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.0
-     #D0, 0.0D0, 0.0D0)
+      t3 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
       t4 = t3 * pi
       t5 = s ** 2
       t6 = 0.1D1 / t5
-      t7 = z ** 2
-      t8 = 0.1D1 / t7
-      t9 = x3 * t8
-      t10 = x4 * pi
-      t11 = Sin(t10)
-      t12 = t11 ** 2
-      t15 = log(0.4D1 * t9 * t12)
-      t16 = -0.1D1 + x3
-      t21 = log(-0.4D1 * t9 * t12 / t16)
-      t23 = cos(t10)
-      t25 = Sqrt(-x3 * t16)
-      t30 = 0.1D1 / (-z - x3 + 0.2D1 * t23 * t25 * z)
-      t38 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
+      t7 = x4 * pi
+      t8 = Sin(t7)
+      t9 = t8 ** 2
+      t10 = x3 * t9
+      t11 = z ** 2
+      t12 = 0.1D1 / t11
+      t13 = -0.1D1 + x3
+      t18 = log(-0.4D1 * t10 * t12 / t13)
+      t20 = cos(t7)
+      t22 = Sqrt(-x3 * t13)
+      t27 = 0.1D1 / (-z - x3 + 0.2D1 * t20 * t22 * z)
+      t31 = log(0.4D1 * t10 * t12)
+      t38 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
       t47 = 0.1D1 / x3
-      t52 = log(0.4D1 * t8 * t12)
+      t52 = log(0.4D1 * t12 * t9)
       t59 = t52 ** 2
-      t62 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t66 = lh ** 2
-      t68 = pi ** 2
-      t75 = pi * t6
-      t79 = (-z * t3 * t30 - t3) * t47
+      t62 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t64 = lh ** 2
+      t66 = pi ** 2
+      t74 = pi * t6
+      t77 = z * t3 * t27 + t3
       t80 = 0.1D1 / x2
       t84 = x2 ** 2
-      t85 = t84 * t8
+      t85 = t84 * t9
       t88 = log(0.4D1 * t85 * t12)
-      t93 = pi * lh
+      t93 = lh * pi
       t96 = 0.180D3 * t93 * t6 * t3
       t101 = 0.1D1 / x1
       t105 = x1 ** 2
-      t106 = t105 * t8
+      t106 = t105 * t9
       t109 = log(0.4D1 * t106 * t12)
-      t120 = (-0.90D2 * t4 * t6 * (-t15 - t21 * z * t30) + (0.180D3 * t4
-     # * lh - 0.90D2 * t38 * pi) * t6 * (0.1D1 + z * t30)) * t47 / 0.288
-     #0D4 + (0.180D3 * (t38 - t52 * t3) * pi * lh - 0.90D2 * (-t52 * t38
-     # + t59 * t3 / 0.2D1 + t62) * pi + t4 * (-0.180D3 * t66 + 0.30D2 * 
-     #t68)) * t6 / 0.2880D4 + t75 * t79 * t80 / 0.16D2 + (-0.90D2 * t75 
-     #* (t38 - t88 * t3) + t96) * t80 / 0.1440D4 - t4 * t6 * t80 * t101 
-     #/ 0.8D1 - (-0.90D2 * t75 * (-t38 + t109 * t3) - t96) * t101 / 0.14
-     #40D4 + t75 * t79 * t101 / 0.16D2
-      t121 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t120)
-      t123 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t120)
-      t125 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t120)
-      t127 = t2 * x1
-      t128 = -0.1D1 + x1
-      t129 = x1 * z
-      t130 = 0.1D1 - x1 + t129
-      t131 = 0.1D1 / t130
-      t133 = t2 * t128 * t131
-      t134 = t1 ** 2
-      t135 = s * t134
-      t137 = x1 * t128 * t131
-      t138 = t135 * t137
-      t139 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t133
-     #, t127, 0.0D0, -t138)
-      t144 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t133
-     #, t127, 0.0D0, -t138)
-      t146 = t128 ** 2
-      t150 = log(0.4D1 * t106 * t12 * t131 * t146)
-      t161 = x3 * t105
-      t168 = x3 * x1
-      t173 = Sqrt(-x3 * t130 * t16)
-      t178 = -z - t161 * t7 - x1 * t7 + x3 * t7 * x1 + 0.2D1 * t161 * z 
-     #+ t129 - 0.3D1 * t168 * z + 0.2D1 * t23 * t173 * z - x3 - t161 + 0
-     #.2D1 * t168
-      t188 = t75 * t139 * t80 * t101 / 0.8D1 - (-0.90D2 * t75 * (t144 - 
-     #t150 * t139) + 0.180D3 * t93 * t6 * t139) * t101 / 0.1440D4 + t75 
-     #* (z / t178 * t139 * t130 + t139) * t47 * t101 / 0.16D2
-      t189 = FJET(XB1, XB2, s, 0.0D0, t127, -t133, 0.0D0, -t138, t188)
-      t192 = x2 * t1 * s
-      t193 = -0.1D1 + x2
-      t195 = t193 * t1 * s
-      t196 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t192, -t195,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t200 = t75 * t196 * t47 * t80 / 0.16D2
-      t201 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t192, -t195,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t205 = log(-0.4D1 * t85 * t12 * t193)
-      t207 = -t201 + t205 * t196
-      t212 = 0.180D3 * t93 * t6 * t196
-      t219 = t75 * t196 * t80 * t101 / 0.8D1
-      t220 = t200 + (-0.90D2 * t75 * t207 - t212) * t80 / 0.1440D4 + t21
-     #9
-      t221 = FJET(XB1, XB2, s, 0.0D0, t192, 0.0D0, -t195, 0.0D0, t220)
-      t223 = x2 * x3
-      t224 = t84 * x3
-      t227 = Sqrt(x3 * t193 * t16)
-      t228 = t23 * t227
-      t230 = 0.2D1 * t228 * x2
-      t233 = 0.1D1 / (0.1D1 - x3 + t223)
-      t235 = t2 * (0.1D1 - x3 - x2 + t223 + t224 + t230) * t233
-      t240 = t2 * x2 * (-0.1D1 + t223 + 0.2D1 * t228) * t233
-      t241 = x2 * z
-      t242 = -x2 + t241 - z
-      t244 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t240, t235,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t255 = t244 / (x2 - t241 - t223 * z + t224 * z + z + x3 - t224 - t
-     #230 - 0.2D1 * t228 * z + 0.2D1 * t228 * t241) * t47 * t80
-      t257 = t75 * t242 * t255 / 0.16D2
-      t258 = FJET(XB1, XB2, s, 0.0D0, t235, 0.0D0, -t240, 0.0D0, t257)
-      t260 = t6 * t242
-      t265 = t1 * t128
-      t267 = t193 * s * t265 * t131
-      t269 = x2 * s * t265
-      t271 = t135 * t193 * t137
-      t272 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t269, t267,
-     # t127, 0.0D0, t271)
-      t274 = t272 * t80 * t101
-      t276 = t75 * t274 / 0.8D1
-      t277 = FJET(XB1, XB2, s, 0.0D0, t267, t127, -t269, t271, -t276)
-      t282 = FJET(XB1, XB2, s, 0.0D0, -t195, 0.0D0, t192, 0.0D0, t220)
-      t284 = FJET(XB1, XB2, s, 0.0D0, -t133, t127, 0.0D0, -t138, t188)
-      t286 = FJET(XB1, XB2, s, 0.0D0, -t240, 0.0D0, t235, 0.0D0, t257)
-      t291 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t120)
-      t293 = FJET(XB1, XB2, s, t127, 0.0D0, 0.0D0, -t133, -t138, t188)
-      t295 = FJET(XB1, XB2, s, t127, -t269, 0.0D0, t267, t271, -t276)
-      t306 = t200 + (-0.90D2 * t75 * t207 - t212) * t80 / 0.1440D4 + t21
-     #9
-      t307 = FJET(XB1, XB2, s, t192, 0.0D0, -t195, 0.0D0, 0.0D0, t306)
-      t309 = FJET(XB1, XB2, s, t235, 0.0D0, -t240, 0.0D0, 0.0D0, t257)
-      t314 = FJET(XB1, XB2, s, t267, 0.0D0, -t269, t127, t271, -t276)
-      t319 = FJET(XB1, XB2, s, -t195, 0.0D0, t192, 0.0D0, 0.0D0, t306)
-      t321 = FJET(XB1, XB2, s, -t133, 0.0D0, 0.0D0, t127, -t138, t188)
-      t323 = FJET(XB1, XB2, s, -t269, t127, t267, 0.0D0, t271, -t276)
-      t328 = FJET(XB1, XB2, s, -t240, 0.0D0, t235, 0.0D0, 0.0D0, t257)
-      rrgg2qqbarht7s1em1 = t121 * t120 + t123 * t120 + t125 * t120 + t18
-     #9 * t188 + t221 * t220 + t258 * pi * t260 * t255 / 0.16D2 - t277 *
-     # pi * t6 * t274 / 0.8D1 + t282 * t220 + t284 * t188 + t286 * pi * 
-     #t260 * t255 / 0.16D2 + t291 * t120 + t293 * t188 - t295 * pi * t6 
-     #* t274 / 0.8D1 + t307 * t306 + t309 * pi * t260 * t255 / 0.16D2 - 
-     #t314 * pi * t6 * t274 / 0.8D1 + t319 * t306 + t321 * t188 - t323 *
-     # pi * t6 * t274 / 0.8D1 + t328 * pi * t260 * t255 / 0.16D2
+      t121 = (-0.90D2 * t4 * t6 * (-t18 * z * t27 - t31) + (0.180D3 * t3
+     # * lh - 0.90D2 * t38) * pi * t6 * (z * t27 + 0.1D1)) * t47 / 0.288
+     #0D4 + (-0.180D3 * (-t38 + t52 * t3) * lh + 0.90D2 * t52 * t38 - 0.
+     #45D2 * t59 * t3 - 0.90D2 * t62 - t3 * (0.180D3 * t64 - 0.30D2 * t6
+     #6)) * pi * t6 / 0.2880D4 - t74 * t77 * t47 * t80 / 0.16D2 + (-0.90
+     #D2 * t74 * (t38 - t88 * t3) + t96) * t80 / 0.1440D4 - t4 * t6 * t8
+     #0 * t101 / 0.8D1 + (0.90D2 * t74 * (-t38 + t109 * t3) + t96) * t10
+     #1 / 0.1440D4 - t74 * t77 * t47 * t101 / 0.16D2
+      t122 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t121)
+      t124 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t121)
+      t126 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t121)
+      t128 = t2 * x1
+      t129 = -0.1D1 + x1
+      t130 = x1 * z
+      t131 = 0.1D1 - x1 + t130
+      t132 = 0.1D1 / t131
+      t134 = t2 * t129 * t132
+      t135 = t1 ** 2
+      t136 = s * t135
+      t138 = x1 * t129 * t132
+      t139 = t136 * t138
+      t140 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t134, t128, 0.0D0, -t139)
+      t145 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t134, t128, 0.0D0, -t139)
+      t147 = t129 ** 2
+      t151 = log(0.4D1 * t106 * t12 * t132 * t147)
+      t163 = x3 * x1
+      t170 = t105 * x3
+      t176 = Sqrt(-x3 * t131 * t13)
+      t180 = -z + t130 - 0.3D1 * t163 * z + 0.2D1 * t163 - x3 - x1 * t11
+     # + x3 * t11 * x1 + 0.2D1 * t170 * z - t170 * t11 + 0.2D1 * t20 * t
+     #176 * z - t170
+      t189 = t74 * t140 * t80 * t101 / 0.8D1 + (0.90D2 * t74 * (t145 - t
+     #151 * t140) - 0.180D3 * t93 * t6 * t140) * t101 / 0.1440D4 - t74 *
+     # (-z * t131 / t180 * t140 - t140) * t47 * t101 / 0.16D2
+      t190 = FJET(XB1, XB2, s, 0.0D0, t128, -t134, 0.0D0, -t139, t189)
+      t193 = x2 * t1 * s
+      t194 = -0.1D1 + x2
+      t196 = t194 * t1 * s
+      t197 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t193, -t
+     #196, 0.0D0, 0.0D0, 0.0D0)
+      t201 = t74 * t197 * t47 * t80 / 0.16D2
+      t202 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t193, -t
+     #196, 0.0D0, 0.0D0, 0.0D0)
+      t206 = log(-0.4D1 * t85 * t12 * t194)
+      t208 = -t202 + t206 * t197
+      t213 = 0.180D3 * t93 * t6 * t197
+      t220 = t74 * t197 * t80 * t101 / 0.8D1
+      t221 = t201 + (-0.90D2 * t74 * t208 - t213) * t80 / 0.1440D4 + t22
+     #0
+      t222 = FJET(XB1, XB2, s, 0.0D0, t193, 0.0D0, -t196, 0.0D0, t221)
+      t224 = x2 * x3
+      t225 = t84 * x3
+      t228 = Sqrt(x3 * t194 * t13)
+      t229 = t20 * t228
+      t231 = 0.2D1 * t229 * x2
+      t234 = 0.1D1 / (0.1D1 - x3 + t224)
+      t236 = t2 * (0.1D1 - x3 - x2 + t224 + t225 + t231) * t234
+      t241 = t2 * x2 * (-0.1D1 + t224 + 0.2D1 * t229) * t234
+      t242 = x2 * z
+      t250 = 0.1D1 / (-t242 + z - t225 + x3 + x2 - t224 * z + t225 * z -
+     # 0.2D1 * t229 * z + 0.2D1 * t229 * t242 - t231)
+      t253 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t241, t
+     #236, 0.0D0, 0.0D0, 0.0D0)
+      t256 = (t242 - z - x2) * t253 * t47 * t80
+      t258 = t74 * t250 * t256 / 0.16D2
+      t259 = FJET(XB1, XB2, s, 0.0D0, t236, 0.0D0, -t241, 0.0D0, t258)
+      t261 = t6 * t250
+      t266 = t1 * t129
+      t268 = t194 * s * t266 * t132
+      t270 = x2 * s * t266
+      t272 = t136 * t194 * t138
+      t273 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t270, t
+     #268, t128, 0.0D0, t272)
+      t275 = t273 * t80 * t101
+      t277 = t74 * t275 / 0.8D1
+      t278 = FJET(XB1, XB2, s, 0.0D0, t268, t128, -t270, t272, -t277)
+      t283 = FJET(XB1, XB2, s, 0.0D0, -t196, 0.0D0, t193, 0.0D0, t221)
+      t285 = FJET(XB1, XB2, s, 0.0D0, -t134, t128, 0.0D0, -t139, t189)
+      t287 = FJET(XB1, XB2, s, 0.0D0, -t241, 0.0D0, t236, 0.0D0, t258)
+      t292 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t121)
+      t294 = FJET(XB1, XB2, s, t128, 0.0D0, 0.0D0, -t134, -t139, t189)
+      t296 = FJET(XB1, XB2, s, t128, -t270, 0.0D0, t268, t272, -t277)
+      t307 = t201 + (-0.90D2 * t74 * t208 - t213) * t80 / 0.1440D4 + t22
+     #0
+      t308 = FJET(XB1, XB2, s, t193, 0.0D0, -t196, 0.0D0, 0.0D0, t307)
+      t310 = FJET(XB1, XB2, s, t236, 0.0D0, -t241, 0.0D0, 0.0D0, t258)
+      t315 = FJET(XB1, XB2, s, t268, 0.0D0, -t270, t128, t272, -t277)
+      t320 = FJET(XB1, XB2, s, -t196, 0.0D0, t193, 0.0D0, 0.0D0, t307)
+      t322 = FJET(XB1, XB2, s, -t134, 0.0D0, 0.0D0, t128, -t139, t189)
+      t324 = FJET(XB1, XB2, s, -t270, t128, t268, 0.0D0, t272, -t277)
+      t329 = FJET(XB1, XB2, s, -t241, 0.0D0, t236, 0.0D0, 0.0D0, t258)
+      rrgg2qqbarhhardt7s1em1 = t122 * t121 + t124 * t121 + t126 * t121 +
+     # t190 * t189 + t222 * t221 + t259 * pi * t261 * t256 / 0.16D2 - t2
+     #78 * pi * t6 * t275 / 0.8D1 + t283 * t221 + t285 * t189 + t287 * p
+     #i * t261 * t256 / 0.16D2 + t292 * t121 + t294 * t189 - t296 * pi *
+     # t6 * t275 / 0.8D1 + t308 * t307 + t310 * pi * t261 * t256 / 0.16D
+     #2 - t315 * pi * t6 * t275 / 0.8D1 + t320 * t307 + t322 * t189 - t3
+     #24 * pi * t6 * t275 / 0.8D1 + t329 * pi * t261 * t256 / 0.16D2
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s1em2
+      doubleprecision function rrgg2qqbarhhardt7s1em2
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -1015,12 +1025,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -1032,8 +1042,8 @@
       parameter(zeta7=1.008349277381923d0)
       t1 = -0.1D1 + z
       t2 = t1 * s
-      t3 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.0
-     #D0, 0.0D0, 0.0D0)
+      t3 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
       t4 = t3 * pi
       t5 = s ** 2
       t6 = 0.1D1 / t5
@@ -1042,15 +1052,16 @@
       t11 = Sqrt(-x3 * (-0.1D1 + x3))
       t24 = 0.1D1 / x2
       t28 = 0.1D1 / x1
-      t34 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t35 = z ** 2
-      t37 = Sin(t7)
-      t38 = t37 ** 2
-      t41 = log(0.4D1 / t35 * t38)
-      t49 = -t4 * t6 * (0.1D1 + z / (-z - x3 + 0.2D1 * t8 * t11 * z)) / 
+      t34 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t36 = z ** 2
+      t38 = Sin(t7)
+      t39 = t38 ** 2
+      t42 = log(0.4D1 / t36 * t39)
+      t49 = -t4 * t6 * (z / (-z - x3 + 0.2D1 * t8 * t11 * z) + 0.1D1) / 
      #x3 / 0.32D2 - t4 * t6 * t24 / 0.16D2 - t4 * t6 * t28 / 0.16D2 + (0
-     #.180D3 * t4 * lh - 0.90D2 * (t34 - t41 * t3) * pi) * t6 / 0.2880D4
+     #.180D3 * t3 * lh - 0.90D2 * t34 + 0.90D2 * t42 * t3) * pi * t6 / 0
+     #.2880D4
       t50 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t49)
       t52 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t49)
       t54 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t49)
@@ -1061,15 +1072,15 @@
       t63 = t1 ** 2
       t67 = s * t63 * x1 * t57 * t60
       t68 = pi * t6
-      t69 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t62, 
-     #t56, 0.0D0, -t67)
+      t69 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t
+     #62, t56, 0.0D0, -t67)
       t72 = t68 * t69 * t28 / 0.16D2
       t73 = FJET(XB1, XB2, s, 0.0D0, t56, -t62, 0.0D0, -t67, t72)
       t76 = t6 * t69 * t28
       t80 = x2 * t1 * s
       t83 = (-0.1D1 + x2) * t1 * s
-      t84 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t80, -t83, 0.
-     #0D0, 0.0D0, 0.0D0)
+      t84 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t80, -t83
+     #, 0.0D0, 0.0D0, 0.0D0)
       t87 = t68 * t84 * t24 / 0.16D2
       t88 = FJET(XB1, XB2, s, 0.0D0, t80, 0.0D0, -t83, 0.0D0, t87)
       t91 = t6 * t84 * t24
@@ -1080,17 +1091,17 @@
       t108 = FJET(XB1, XB2, s, t80, 0.0D0, -t83, 0.0D0, 0.0D0, t87)
       t112 = FJET(XB1, XB2, s, -t83, 0.0D0, t80, 0.0D0, 0.0D0, t87)
       t116 = FJET(XB1, XB2, s, -t62, 0.0D0, 0.0D0, t56, -t67, t72)
-      rrgg2qqbarht7s1em2 = t50 * t49 + t52 * t49 + t54 * t49 + t73 * pi 
-     #* t76 / 0.16D2 + t88 * pi * t91 / 0.16D2 + t94 * pi * t91 / 0.16D2
-     # + t98 * pi * t76 / 0.16D2 + t102 * t49 + t104 * pi * t76 / 0.16D2
-     # + t108 * pi * t91 / 0.16D2 + t112 * pi * t91 / 0.16D2 + t116 * pi
-     # * t76 / 0.16D2
+      rrgg2qqbarhhardt7s1em2 = t50 * t49 + t52 * t49 + t54 * t49 + t73 *
+     # pi * t76 / 0.16D2 + t88 * pi * t91 / 0.16D2 + t94 * pi * t91 / 0.
+     #16D2 + t98 * pi * t76 / 0.16D2 + t102 * t49 + t104 * pi * t76 / 0.
+     #16D2 + t108 * pi * t91 / 0.16D2 + t112 * pi * t91 / 0.16D2 + t116 
+     #* pi * t76 / 0.16D2
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s1em3
+      doubleprecision function rrgg2qqbarhhardt7s1em3
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -1110,12 +1121,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -1126,8 +1137,8 @@
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
       t2 = (-0.1D1 + z) * s
-      t3 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2, 0.0
-     #D0, 0.0D0, 0.0D0)
+      t3 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, t2,
+     # 0.0D0, 0.0D0, 0.0D0)
       t5 = s ** 2
       t6 = 0.1D1 / t5
       t8 = t3 * pi * t6 / 0.32D2
@@ -1136,14 +1147,14 @@
       t13 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, -t8)
       t16 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, -t8)
       t19 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, -t8)
-      rrgg2qqbarht7s1em3 = -t9 * t3 * t11 / 0.32D2 - t13 * t3 * t11 / 0.
-     #32D2 - t16 * t3 * t11 / 0.32D2 - t19 * t3 * t11 / 0.32D2
+      rrgg2qqbarhhardt7s1em3 = -t9 * t3 * t11 / 0.32D2 - t13 * t3 * t11 
+     #/ 0.32D2 - t16 * t3 * t11 / 0.32D2 - t19 * t3 * t11 / 0.32D2
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s1em4
+      doubleprecision function rrgg2qqbarhhardt7s1em4
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -1163,12 +1174,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -1178,12 +1189,12 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      rrgg2qqbarht7s1em4 = 0.0D0
+      rrgg2qqbarhhardt7s1em4 = 0.0D0
 
       end function
 
 
-      doubleprecision function rrgg2qqbarht7s2e1
+      doubleprecision function rrgg2qqbarhhardt7s2e1
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -1203,12 +1214,418 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + x3
+      t2 = t1 * s
+      t3 = -0.1D1 + z
+      t4 = t3 * x1
+      t5 = x2 * x3
+      t6 = -0.1D1 + t5
+      t7 = 0.1D1 / t6
+      t9 = t2 * t4 * t7
+      t10 = s * t3
+      t11 = -0.1D1 + x1
+      t12 = t10 * t11
+      t13 = -0.1D1 + x2
+      t14 = x3 * x1
+      t15 = x1 * z
+      t16 = t14 * z
+      t17 = x4 * pi
+      t18 = cos(t17)
+      t19 = 0.1D1 - x1 + t15
+      t23 = Sqrt(-x3 * t19 * x2 * t1)
+      t24 = t18 * t23
+      t25 = 0.2D1 * t24
+      t28 = 0.1D1 / t19
+      t31 = t12 * t13 * (-t5 - 0.1D1 + x3 + x1 - t14 - t15 + t16 + t25) 
+     #* t28 * t7
+      t32 = t10 * x1
+      t35 = t32 * x3 * t13 * t7
+      t36 = t5 * x1
+      t38 = x2 ** 2
+      t39 = t38 * x3
+      t40 = t39 * x1
+      t41 = 0.3D1 * t5
+      t42 = t5 * t15
+      t44 = t39 * t15
+      t46 = 0.2D1 * t24 * x2
+      t47 = -t16 - 0.2D1 * t36 + t40 - t39 + t41 + t14 + 0.2D1 * t42 - t
+     #44 - t25 - x2 - x3 + t46
+      t50 = t12 * t47 * t28 * t7
+      t51 = t3 ** 2
+      t56 = s * t51 * x2 * x1 * t11 * t28
+      t57 = s ** 2
+      t58 = 0.1D1 / t57
+      t59 = pi * t58
+      t60 = x2 * x1
+      t61 = t60 * z
+      t62 = x2 * z
+      t63 = -0.1D1 + t61 - t62 - t60 + x1 + x2 - t15
+      t64 = t19 * t63
+      t67 = x1 ** 2
+      t68 = x3 * t67
+      t69 = t68 * x2
+      t70 = z ** 2
+      t72 = x2 * t67
+      t90 = 0.1D1 - 0.3D1 * t36 + t40 + t46 - 0.3D1 * t61 + t69 + t60 * 
+     #t70 + 0.2D1 * t72 * z - t72 * t70 + 0.2D1 * t24 * x1 - 0.2D1 * t24
+     # * t62 - 0.2D1 * t24 * t15 - 0.2D1 * t24 * t60 - x3 * t70 * t60 - 
+     #0.2D1 * t68 * t62 + t68 * t70 * x2
+      t92 = t39 * z
+      t93 = t5 * z
+      t96 = 0.2D1 * t5
+      t103 = 0.4D1 * t42 - t44 + t92 - t93 + 0.2D1 * t24 * t61 + t96 - t
+     #39 + t62 + t67 + 0.2D1 * t15 - t25 + 0.2D1 * t60 - 0.2D1 * t67 * z
+     # + t67 * t70 - t72 - 0.2D1 * x1 - x2
+      t105 = 0.1D1 / (t90 + t103)
+      t106 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t31, -t5
+     #0, t9, t35, -t56)
+      t109 = t67 * t28
+      t110 = Sin(t17)
+      t111 = t110 ** 2
+      t112 = 0.1D1 / t70
+      t113 = t111 * t112
+      t114 = t6 ** 2
+      t115 = 0.1D1 / t114
+      t118 = t13 ** 2
+      t119 = t11 ** 2
+      t120 = t118 * t119
+      t121 = t5 * t1
+      t125 = log(-0.4D1 * t109 * t113 * t115 * t120 * t121)
+      t128 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t31, -t5
+     #0, t9, t35, -t56)
+      t131 = -t64 * t105 * t106 + t125 * t19 * t63 * t105 * t128
+      t134 = lh * pi
+      t135 = t134 * t58
+      t139 = 0.180D3 * t135 * t64 * t105 * t128
+      t140 = 0.90D2 * t59 * t131 + t139
+      t141 = 0.1D1 / x3
+      t143 = 0.1D1 / x2
+      t144 = 0.1D1 / x1
+      t145 = t143 * t144
+      t147 = t140 * t141 * t145 / 0.720D3
+      t148 = FJET(XB1, XB2, s, t9, t31, t35, -t50, -t56, t147)
+      t151 = t141 * t143 * t144
+      t154 = FJET(XB1, XB2, s, t35, -t50, t9, t31, -t56, t147)
+      t159 = t3 * t11
+      t160 = t13 * s * t159
+      t163 = t10 * t11 * x2 * t28
+      t164 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t160, -t
+     #163, t32, 0.0D0, -t56)
+      t165 = t109 * t113
+      t169 = log(0.4D1 * t165 * t120 * t5)
+      t170 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t160, -t
+     #163, t32, 0.0D0, -t56)
+      t175 = t58 * t170
+      t180 = (0.90D2 * t59 * (-t164 + t169 * t170) + 0.180D3 * t134 * t1
+     #75) * t141 * t145
+      t181 = t72 * t111
+      t182 = t112 * t28
+      t186 = log(0.4D1 * t181 * t182 * t120)
+      t188 = t186 ** 2
+      t191 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t160, -t
+     #163, t32, 0.0D0, -t56)
+      t192 = -t186 * t164 + t188 * t170 / 0.2D1 + t191
+      t196 = t164 - t186 * t170
+      t200 = lh ** 2
+      t201 = 0.180D3 * t200
+      t202 = pi ** 2
+      t203 = 0.30D2 * t202
+      t204 = t201 - t203
+      t205 = t204 * pi
+      t206 = t205 * t175
+      t211 = t180 / 0.720D3 - (0.90D2 * t59 * t192 - 0.180D3 * t134 * t5
+     #8 * t196 + t206) * t143 * t144 / 0.720D3
+      t212 = FJET(XB1, XB2, s, t32, t160, 0.0D0, -t163, -t56, t211)
+      t215 = x3 * s * t159
+      t216 = t10 * t14
+      t217 = t2 * t159
+      t218 = t2 * t4
+      t221 = x3 * t1
+      t225 = log(-0.4D1 * t109 * t111 * t112 * t119 * t221)
+      t226 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t217, -t
+     #215, -t218, t216, 0.0D0)
+      t228 = t225 ** 2
+      t229 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t217, -t
+     #215, -t218, t216, 0.0D0)
+      t232 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t217, -t
+     #215, -t218, t216, 0.0D0)
+      t241 = t58 * t229
+      t250 = log(-0.4D1 * t165 * t119 * x2 * t221)
+      t261 = (0.90D2 * t59 * (t225 * t226 - t228 * t229 / 0.2D1 - t232) 
+     #- 0.180D3 * t134 * t58 * (-t226 + t225 * t229) - t205 * t241) * t1
+     #41 * t144 / 0.720D3 + (0.90D2 * t59 * (-t226 + t250 * t229) + 0.18
+     #0D3 * t134 * t241) * t141 * t145 / 0.720D3
+      t262 = FJET(XB1, XB2, s, -t215, t216, t217, -t218, 0.0D0, t261)
+      t265 = x2 * t3 * s
+      t267 = t13 * t3 * s
+      t268 = t113 * t118
+      t271 = log(0.4D1 * t5 * t268)
+      t272 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t267, t
+     #265, 0.0D0, 0.0D0, 0.0D0)
+      t274 = t271 ** 2
+      t275 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t267, t
+     #265, 0.0D0, 0.0D0, 0.0D0)
+      t278 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t267, t
+     #265, 0.0D0, 0.0D0, 0.0D0)
+      t287 = t58 * t275
+      t288 = t205 * t287
+      t293 = x2 * t111
+      t294 = t112 * t118
+      t297 = log(0.4D1 * t293 * t294)
+      t302 = t297 ** 2
+      t305 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, -t267, t
+     #265, 0.0D0, 0.0D0, 0.0D0)
+      t314 = 0.60D2 * lh * t202
+      t315 = 0.240D3 * zeta3
+      t317 = 0.120D3 * t200 * lh
+      t318 = t314 - t315 - t317
+      t319 = t318 * pi
+      t333 = log(0.4D1 * t69 * t268)
+      t346 = log(0.4D1 * t72 * t268)
+      t348 = t346 ** 2
+      t363 = (0.90D2 * t59 * (-t271 * t272 + t274 * t275 / 0.2D1 + t278)
+     # - 0.180D3 * t134 * t58 * (t272 - t271 * t275) + t288) * t141 * t1
+     #43 / 0.1440D4 + (t205 * t58 * (t272 - t297 * t275) + 0.90D2 * t59 
+     #* (t302 * t272 / 0.2D1 + t305 - t302 * t297 * t275 / 0.6D1 - t297 
+     #* t278) + t319 * t287 - 0.180D3 * t134 * t58 * (-t297 * t272 + t30
+     #2 * t275 / 0.2D1 + t278)) * t143 / 0.1440D4 + (0.90D2 * t59 * (t27
+     #2 - t333 * t275) - 0.180D3 * t134 * t287) * t141 * t145 / 0.720D3 
+     #- (0.90D2 * t59 * (t346 * t272 - t348 * t275 / 0.2D1 - t278) - 0.1
+     #80D3 * t134 * t58 * (-t272 + t346 * t275) - t288) * t143 * t144 / 
+     #0.720D3
+      t364 = FJET(XB1, XB2, s, 0.0D0, t265, 0.0D0, -t267, 0.0D0, t363)
+      t366 = t10 * t1
+      t367 = t10 * x3
+      t368 = t67 * t111
+      t370 = t112 * x3 * t1
+      t373 = log(-0.4D1 * t368 * t370)
+      t374 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t366, t
+     #367, 0.0D0, 0.0D0, 0.0D0)
+      t376 = t373 ** 2
+      t377 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t366, t
+     #367, 0.0D0, 0.0D0, 0.0D0)
+      t380 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t366, t
+     #367, 0.0D0, 0.0D0, 0.0D0)
+      t389 = t58 * t377
+      t390 = t205 * t389
+      t397 = log(-0.4D1 * t181 * t370)
+      t410 = log(-0.4D1 * t113 * t221)
+      t415 = t410 ** 2
+      t418 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, -t366, t
+     #367, 0.0D0, 0.0D0, 0.0D0)
+      t440 = log(-0.4D1 * t5 * t113 * t1)
+      t442 = t440 ** 2
+      t457 = (0.90D2 * t59 * (-t373 * t374 + t376 * t377 / 0.2D1 + t380)
+     # - 0.180D3 * t134 * t58 * (t374 - t373 * t377) + t390) * t141 * t1
+     #44 / 0.720D3 + (0.90D2 * t59 * (t374 - t397 * t377) - 0.180D3 * t1
+     #34 * t389) * t141 * t145 / 0.720D3 + (t205 * t58 * (t374 - t410 * 
+     #t377) + 0.90D2 * t59 * (t415 * t374 / 0.2D1 + t418 - t415 * t410 *
+     # t377 / 0.6D1 - t410 * t380) + t319 * t389 - 0.180D3 * t134 * t58 
+     #* (-t410 * t374 + t415 * t377 / 0.2D1 + t380)) * t141 / 0.1440D4 +
+     # (0.90D2 * t59 * (-t440 * t374 + t442 * t377 / 0.2D1 + t380) - 0.1
+     #80D3 * t134 * t58 * (t374 - t440 * t377) + t390) * t141 * t143 / 0
+     #.1440D4
+      t458 = FJET(XB1, XB2, s, -t366, 0.0D0, t367, 0.0D0, 0.0D0, t457)
+      t461 = t182 * t119
+      t464 = log(0.4D1 * t68 * t111 * t461)
+      t465 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.
+     #0D0, t32, 0.0D0, 0.0D0)
+      t467 = t464 ** 2
+      t468 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.
+     #0D0, t32, 0.0D0, 0.0D0)
+      t471 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.
+     #0D0, t32, 0.0D0, 0.0D0)
+      t480 = t58 * t468
+      t481 = t205 * t480
+      t487 = log(0.4D1 * t368 * t461)
+      t492 = t487 ** 2
+      t495 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.
+     #0D0, t32, 0.0D0, 0.0D0)
+      t517 = log(0.4D1 * t69 * t113 * t28 * t119)
+      t529 = log(0.4D1 * t181 * t461)
+      t531 = t529 ** 2
+      t546 = (0.90D2 * t59 * (-t464 * t465 + t467 * t468 / 0.2D1 + t471)
+     # - 0.180D3 * t134 * t58 * (t465 - t464 * t468) + t481) * t141 * t1
+     #44 / 0.720D3 + (t205 * t58 * (t465 - t487 * t468) + 0.90D2 * t59 *
+     # (t492 * t465 / 0.2D1 + t495 - t492 * t487 * t468 / 0.6D1 - t487 *
+     # t471) + t319 * t480 - 0.180D3 * t134 * t58 * (-t487 * t465 + t492
+     # * t468 / 0.2D1 + t471)) * t144 / 0.720D3 + (0.90D2 * t59 * (t465 
+     #- t517 * t468) - 0.180D3 * t134 * t480) * t141 * t145 / 0.720D3 - 
+     #(0.90D2 * t59 * (t529 * t465 - t531 * t468 / 0.2D1 - t471) - 0.180
+     #D3 * t134 * t58 * (-t465 + t529 * t468) - t481) * t143 * t144 / 0.
+     #720D3
+      t547 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t12, t32, 0.0D0, t546)
+      t549 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t10, 0.0
+     #D0, 0.0D0, 0.0D0, 0.0D0)
+      t553 = log(0.4D1 * x3 * t111 * t112)
+      t554 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t10, 0.0
+     #D0, 0.0D0, 0.0D0, 0.0D0)
+      t559 = t553 ** 2
+      t562 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, t10, 0.0
+     #D0, 0.0D0, 0.0D0, 0.0D0)
+      t566 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t10, 0.0
+     #D0, 0.0D0, 0.0D0, 0.0D0)
+      t571 = t58 * t554
+      t572 = t319 * t571
+      t584 = log(0.4D1 * t113)
+      t585 = t584 ** 2
+      t588 = t585 * t584
+      t611 = rrgg2qqbarhhard71J5(s, XB1, XB2, z, lh, wd, nf, s, t10, 0.0
+     #D0, 0.0D0, 0.0D0, 0.0D0)
+      t619 = t202 ** 2
+      t620 = t200 ** 2
+      t626 = t585 ** 2
+      t634 = log(0.4D1 * t68 * t113)
+      t636 = t634 ** 2
+      t647 = t205 * t571
+      t652 = t368 * t112
+      t654 = log(0.4D1 * t652)
+      t659 = t654 ** 2
+      t681 = log(0.4D1 * t5 * t652)
+      t694 = log(0.4D1 * t72 * t113)
+      t696 = t694 ** 2
+      t713 = log(0.4D1 * t5 * t113)
+      t715 = t713 ** 2
+      t732 = log(0.4D1 * t293 * t112)
+      t737 = t732 ** 2
+      t757 = (t205 * t58 * (-t549 + t553 * t554) + 0.90D2 * t59 * (-t559
+     # * t549 / 0.2D1 - t562 + t559 * t553 * t554 / 0.6D1 + t553 * t566)
+     # - t572 - 0.180D3 * t134 * t58 * (t553 * t549 - t559 * t554 / 0.2D
+     #1 - t566)) * t141 / 0.1440D4 - (-0.90D2 * t585 * lh + t314 - t315 
+     #- t317 - 0.15D2 * t588 - t584 * t204) * pi * t58 * t549 / 0.1440D4
+     # - (0.180D3 * t584 * lh + 0.45D2 * t585 + t201 - t203) * pi * t58 
+     #* t566 / 0.1440D4 - (-0.180D3 * lh - 0.90D2 * t584) * pi * t58 * t
+     #562 / 0.1440D4 - t59 * t611 / 0.16D2 - (0.30D2 * t588 * lh + t585 
+     #* t204 / 0.2D1 - t584 * t318 + t619 + 0.60D2 * t620 + 0.480D3 * lh
+     # * zeta3 - 0.60D2 * t200 * t202 + 0.15D2 / 0.4D1 * t626) * pi * t5
+     #71 / 0.1440D4 + (0.90D2 * t59 * (t634 * t549 - t636 * t554 / 0.2D1
+     # - t566) - 0.180D3 * t134 * t58 * (-t549 + t634 * t554) - t647) * 
+     #t141 * t144 / 0.720D3 + (t205 * t58 * (-t549 + t654 * t554) + 0.90
+     #D2 * t59 * (-t659 * t549 / 0.2D1 - t562 + t659 * t654 * t554 / 0.6
+     #D1 + t654 * t566) - t572 - 0.180D3 * t134 * t58 * (t654 * t549 - t
+     #659 * t554 / 0.2D1 - t566)) * t144 / 0.720D3 + (0.90D2 * t59 * (-t
+     #549 + t681 * t554) + 0.180D3 * t134 * t571) * t141 * t145 / 0.720D
+     #3 - (0.90D2 * t59 * (-t694 * t549 + t696 * t554 / 0.2D1 + t566) - 
+     #0.180D3 * t134 * t58 * (t549 - t694 * t554) + t647) * t143 * t144 
+     #/ 0.720D3 + (0.90D2 * t59 * (t713 * t549 - t715 * t554 / 0.2D1 - t
+     #566) - 0.180D3 * t134 * t58 * (-t549 + t713 * t554) - t647) * t141
+     # * t143 / 0.1440D4 + (t205 * t58 * (-t549 + t732 * t554) + 0.90D2 
+     #* t59 * (-t737 * t549 / 0.2D1 - t562 + t737 * t732 * t554 / 0.6D1 
+     #+ t732 * t566) - t572 - 0.180D3 * t134 * t58 * (t732 * t549 - t737
+     # * t554 / 0.2D1 - t566)) * t143 / 0.1440D4
+      t758 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t10, 0.0D0, 0.0D0, t757)
+      t760 = FJET(XB1, XB2, s, 0.0D0, t10, 0.0D0, 0.0D0, 0.0D0, t757)
+      t762 = FJET(XB1, XB2, s, -t218, t217, t216, -t215, 0.0D0, t261)
+      t764 = FJET(XB1, XB2, s, t367, 0.0D0, -t366, 0.0D0, 0.0D0, t457)
+      t766 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t10, 0.0D0, t757)
+      t768 = Sqrt(-t121)
+      t769 = t18 * t768
+      t770 = 0.2D1 * t769
+      t772 = 0.2D1 * t769 * x2
+      t775 = t10 * (-x2 - x3 + t41 - t39 - t770 + t772) * t7
+      t779 = t10 * t13 * (-t5 - 0.1D1 + x3 + t770) * t7
+      t782 = t294 * t1 * t115
+      t785 = log(-0.4D1 * t5 * t111 * t782)
+      t786 = 0.1D1 + t62 - x2
+      t787 = t785 * t786
+      t791 = 0.1D1 / (t39 - t92 + x2 - t96 - t62 + t93 + 0.2D1 * t769 * 
+     #t62 - t772 + t770 - 0.1D1)
+      t792 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t779, t
+     #775, 0.0D0, 0.0D0, 0.0D0)
+      t795 = t785 ** 2
+      t797 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t779, t
+     #775, 0.0D0, 0.0D0, 0.0D0)
+      t798 = t791 * t797
+      t801 = t786 * t791
+      t802 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t779, t
+     #775, 0.0D0, 0.0D0, 0.0D0)
+      t807 = t801 * t792
+      t814 = t801 * t797
+      t823 = log(-0.4D1 * t5 * t368 * t782)
+      t835 = (0.90D2 * t59 * (-t787 * t791 * t792 + t795 * t786 * t798 /
+     # 0.2D1 + t801 * t802) - 0.180D3 * t134 * t58 * (t807 - t787 * t798
+     #) + t205 * t58 * t814) * t141 * t143 / 0.1440D4 + (0.90D2 * t59 * 
+     #(t807 - t823 * t786 * t798) - 0.180D3 * t135 * t814) * t141 * t145
+     # / 0.720D3
+      t836 = FJET(XB1, XB2, s, 0.0D0, t775, 0.0D0, -t779, 0.0D0, t835)
+      t838 = FJET(XB1, XB2, s, t32, -t12, 0.0D0, 0.0D0, 0.0D0, t546)
+      t840 = FJET(XB1, XB2, s, -t267, 0.0D0, t265, 0.0D0, 0.0D0, t363)
+      t842 = FJET(XB1, XB2, s, t216, -t215, -t218, t217, 0.0D0, t261)
+      t844 = t148 * t140 * t151 / 0.720D3 + t154 * t140 * t151 / 0.720D3
+     # + t212 * t211 + t262 * t261 + t364 * t363 + t458 * t457 + t547 * 
+     #t546 + t758 * t757 + t760 * t757 + t762 * t261 + t764 * t457 + t76
+     #6 * t757 + t836 * t835 + t838 * t546 + t840 * t363 + t842 * t261
+      t845 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t32, -t12, 0.0D0, t546)
+      t847 = FJET(XB1, XB2, s, t265, 0.0D0, -t267, 0.0D0, 0.0D0, t363)
+      t849 = FJET(XB1, XB2, s, 0.0D0, -t163, t32, t160, -t56, t211)
+      t851 = FJET(XB1, XB2, s, 0.0D0, t367, 0.0D0, -t366, 0.0D0, t457)
+      t853 = FJET(XB1, XB2, s, 0.0D0, -t366, 0.0D0, t367, 0.0D0, t457)
+      t866 = t180 / 0.720D3 - (0.90D2 * t59 * t192 - 0.180D3 * t134 * t5
+     #8 * t196 + t206) * t143 * t144 / 0.720D3
+      t867 = FJET(XB1, XB2, s, -t163, 0.0D0, t160, t32, -t56, t866)
+      t869 = FJET(XB1, XB2, s, 0.0D0, -t779, 0.0D0, t775, 0.0D0, t835)
+      t871 = FJET(XB1, XB2, s, t31, t9, -t50, t35, -t56, t147)
+      t878 = 0.90D2 * t59 * t131 + t139
+      t882 = FJET(XB1, XB2, s, -t50, t35, t31, t9, -t56, t878 * t141 * t
+     #145 / 0.720D3)
+      t886 = FJET(XB1, XB2, s, -t12, t32, 0.0D0, 0.0D0, 0.0D0, t546)
+      t888 = FJET(XB1, XB2, s, t775, 0.0D0, -t779, 0.0D0, 0.0D0, t835)
+      t890 = FJET(XB1, XB2, s, t10, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t757)
+      t892 = FJET(XB1, XB2, s, t217, -t218, -t215, t216, 0.0D0, t261)
+      t894 = FJET(XB1, XB2, s, t160, t32, -t163, 0.0D0, -t56, t211)
+      t896 = FJET(XB1, XB2, s, 0.0D0, -t267, 0.0D0, t265, 0.0D0, t363)
+      t898 = FJET(XB1, XB2, s, -t779, 0.0D0, t775, 0.0D0, 0.0D0, t835)
+      t900 = t845 * t546 + t847 * t363 + t849 * t211 + t851 * t457 + t85
+     #3 * t457 + t867 * t866 + t869 * t835 + t871 * t140 * t151 / 0.720D
+     #3 + t882 * t878 * t151 / 0.720D3 + t886 * t546 + t888 * t835 + t89
+     #0 * t757 + t892 * t261 + t894 * t211 + t896 * t363 + t898 * t835
+      rrgg2qqbarhhardt7s2e1 = t844 + t900
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s2e0
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -1219,943 +1636,278 @@
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
       t1 = -0.1D1 + z
-      t2 = s * t1
+      t2 = t1 * s
       t3 = -0.1D1 + x1
       t4 = t2 * t3
-      t5 = -0.1D1 + x2
-      t6 = x2 * x3
-      t7 = x3 * x1
-      t8 = x1 * z
-      t9 = t7 * z
-      t10 = x4 * pi
-      t11 = cos(t10)
-      t12 = 0.1D1 - x1 + t8
-      t14 = -0.1D1 + x3
-      t17 = Sqrt(-x3 * t12 * x2 * t14)
-      t18 = t11 * t17
-      t19 = 0.2D1 * t18
-      t22 = 0.1D1 / t12
-      t23 = -0.1D1 + t6
-      t24 = 0.1D1 / t23
-      t27 = t4 * t5 * (-t6 - 0.1D1 + x3 + x1 - t7 - t8 + t9 + t19) * t22
-     # * t24
-      t28 = t14 * s
-      t29 = t1 * x1
-      t31 = t28 * t29 * t24
-      t32 = t6 * t8
-      t34 = x2 ** 2
-      t35 = t34 * x3
-      t36 = t35 * t8
-      t37 = 0.3D1 * t6
-      t38 = t35 * x1
-      t39 = t6 * x1
-      t42 = 0.2D1 * t18 * x2
-      t43 = 0.2D1 * t32 - t36 + t37 + t38 - t9 - 0.2D1 * t39 - x2 - x3 +
-     # t7 - t35 + t42 - t19
-      t46 = t4 * t43 * t22 * t24
-      t47 = t2 * x1
-      t50 = t47 * x3 * t5 * t24
-      t51 = t1 ** 2
-      t56 = s * t51 * x2 * x1 * t3 * t22
-      t57 = s ** 2
-      t58 = 0.1D1 / t57
-      t59 = pi * t58
-      t60 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t27, -t46, t3
-     #1, t50, -t56)
-      t61 = x1 ** 2
-      t62 = t5 ** 2
-      t64 = Sin(t10)
-      t65 = t64 ** 2
-      t66 = z ** 2
-      t67 = 0.1D1 / t66
-      t68 = t65 * t67
-      t69 = t3 ** 2
-      t72 = t23 ** 2
-      t73 = 0.1D1 / t72
-      t79 = log(-0.4D1 * t61 * t62 * t68 * t69 * t6 * t22 * t73 * t14)
-      t80 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t27, -t46, t3
-     #1, t50, -t56)
-      t84 = t61 * x2
-      t87 = t61 * t66
-      t88 = x2 * x1
-      t95 = x2 * z
-      t98 = x3 * t61
-      t103 = t66 * x2
-      t106 = 0.1D1 - t84 - 0.2D1 * t61 * z + t87 + 0.2D1 * t88 + t42 + t
-     #61 + t38 - 0.3D1 * t39 - 0.2D1 * t18 * t8 - 0.2D1 * t18 * t88 - 0.
-     #2D1 * t18 * t95 - 0.2D1 * t98 * t95 - x3 * t66 * t88 + t98 * t103 
-     #+ 0.4D1 * t32
-      t107 = t88 * z
-      t116 = t98 * x2
-      t120 = t35 * z
-      t121 = t6 * z
-      t122 = 0.2D1 * t6
-      t123 = -t36 - t19 + 0.2D1 * t18 * t107 - 0.2D1 * x1 + 0.2D1 * t8 +
-     # t103 * x1 + 0.2D1 * t84 * z - t87 * x2 + t116 - 0.3D1 * t107 + 0.
-     #2D1 * t18 * x1 + t120 - t121 - x2 + t122 - t35 + t95
-      t125 = 0.1D1 / (t106 + t123)
-      t127 = -0.1D1 - t8 + x1 - t95 - t88 + t107 + x2
-      t131 = pi * lh
-      t132 = t131 * t58
-      t138 = -0.90D2 * t59 * (t60 - t79 * t80) * t125 * t12 * t127 + 0.1
-     #80D3 * t132 * t80 * t125 * t12 * t127
-      t139 = 0.1D1 / x3
-      t141 = 0.1D1 / x2
-      t142 = 0.1D1 / x1
-      t143 = t141 * t142
-      t145 = t138 * t139 * t143 / 0.720D3
-      t146 = FJET(XB1, XB2, s, t27, t31, -t46, t50, -t56, t145)
-      t149 = t139 * t141 * t142
-      t153 = Sqrt(-t6 * t14)
-      t154 = t11 * t153
-      t155 = 0.2D1 * t154
-      t157 = 0.2D1 * t154 * x2
-      t160 = t2 * (-x2 - x3 + t37 - t35 - t155 + t157) * t24
-      t164 = t2 * t5 * (-t6 - 0.1D1 + x3 + t155) * t24
-      t166 = t67 * t62
-      t168 = t166 * t14 * t73
-      t171 = log(-0.4D1 * t6 * t65 * t168)
-      t172 = 0.1D1 - x2 + t95
-      t173 = t171 * t172
-      t174 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t164, t160,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t176 = t171 ** 2
-      t178 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t164, t160,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t181 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t164, t160,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t187 = 0.1D1 / (-t120 + t35 + x2 - t122 - t157 - t95 + t121 + 0.2D
-     #1 * t154 * t95 + t155 - 0.1D1)
-      t191 = t172 * t174
-      t198 = lh ** 2
-      t200 = pi ** 2
-      t202 = -0.180D3 * t198 + 0.30D2 * t200
-      t203 = pi * t202
-      t206 = t172 * t178 * t187
-      t213 = t6 * t61 * t65
-      t216 = log(-0.4D1 * t213 * t168)
-      t229 = (0.90D2 * t59 * (-t173 * t174 + t176 * t172 * t178 / 0.2D1 
-     #+ t172 * t181) * t187 - 0.180D3 * t131 * t58 * (t191 - t173 * t178
-     #) * t187 - t203 * t58 * t206) * t139 * t141 / 0.1440D4 + (0.90D2 *
-     # t59 * (t191 - t216 * t172 * t178) * t187 - 0.180D3 * t132 * t206)
-     # * t139 * t143 / 0.720D3
-      t230 = FJET(XB1, XB2, s, t160, 0.0D0, -t164, 0.0D0, 0.0D0, t229)
-      t232 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t233 = x3 * t67
-      t236 = log(0.4D1 * t233 * t65)
-      t237 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t242 = t236 ** 2
-      t245 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t249 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t259 = -0.60D2 * lh * t200 + 0.240D3 * zeta3 + 0.120D3 * t198 * lh
-      t260 = pi * t259
-      t261 = t58 * t237
-      t262 = t260 * t261
-      t274 = log(0.4D1 * t68)
-      t275 = t274 ** 2
-      t276 = t275 * pi
-      t280 = t275 * t274 * pi
-      t282 = t274 * pi
-      t301 = rrgg2qqbarh71J5(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t311 = t200 ** 2
-      t312 = t198 ** 2
-      t318 = t275 ** 2
-      t327 = log(0.4D1 * t98 * t68)
-      t329 = t327 ** 2
-      t340 = t203 * t261
-      t345 = t61 * t67
-      t346 = t345 * t65
-      t348 = log(0.4D1 * t346)
-      t353 = t348 ** 2
-      t375 = log(0.4D1 * t6 * t346)
-      t386 = t84 * t68
-      t388 = log(0.4D1 * t386)
-      t390 = t388 ** 2
-      t407 = log(0.4D1 * t6 * t68)
-      t409 = t407 ** 2
-      t424 = x2 * t65
-      t427 = log(0.4D1 * t424 * t67)
-      t432 = t427 ** 2
-      t452 = (t203 * t58 * (t232 - t236 * t237) - 0.90D2 * t59 * (t242 *
-     # t232 / 0.2D1 + t245 - t242 * t236 * t237 / 0.6D1 - t236 * t249) +
-     # t262 + 0.180D3 * t131 * t58 * (-t236 * t232 + t242 * t237 / 0.2D1
-     # + t249)) * t139 / 0.1440D4 + (0.90D2 * t276 * lh + t260 + 0.15D2 
-     #* t280 - t282 * t202) * t58 * t232 / 0.1440D4 + (-0.180D3 * t282 *
-     # lh - 0.45D2 * t276 + t203) * t58 * t249 / 0.1440D4 + (0.180D3 * t
-     #131 + 0.90D2 * t282) * t58 * t245 / 0.1440D4 - t59 * t301 / 0.16D2
-     # + (-0.30D2 * t280 * lh + t276 * t202 / 0.2D1 - t282 * t259 + pi *
-     # (-0.480D3 * lh * zeta3 - t311 - 0.60D2 * t312 + 0.60D2 * t198 * t
-     #200) - 0.15D2 / 0.4D1 * t318 * pi) * t58 * t237 / 0.1440D4 + (-0.9
-     #0D2 * t59 * (-t327 * t232 + t329 * t237 / 0.2D1 + t249) + 0.180D3 
-     #* t131 * t58 * (t232 - t327 * t237) + t340) * t139 * t142 / 0.720D
-     #3 + (t203 * t58 * (t232 - t348 * t237) - 0.90D2 * t59 * (t353 * t2
-     #32 / 0.2D1 + t245 - t353 * t348 * t237 / 0.6D1 - t348 * t249) + t2
-     #62 + 0.180D3 * t131 * t58 * (-t348 * t232 + t353 * t237 / 0.2D1 + 
-     #t249)) * t142 / 0.720D3 + (-0.90D2 * t59 * (t232 - t375 * t237) + 
-     #0.180D3 * t131 * t261) * t139 * t143 / 0.720D3 - (-0.90D2 * t59 * 
-     #(t388 * t232 - t390 * t237 / 0.2D1 - t249) + 0.180D3 * t131 * t58 
-     #* (-t232 + t388 * t237) - t340) * t141 * t142 / 0.720D3 + (-0.90D2
-     # * t59 * (-t407 * t232 + t409 * t237 / 0.2D1 + t249) + 0.180D3 * t
-     #131 * t58 * (t232 - t407 * t237) + t340) * t139 * t141 / 0.1440D4 
-     #- (t203 * t58 * (-t232 + t427 * t237) - 0.90D2 * t59 * (-t432 * t2
-     #32 / 0.2D1 - t245 + t432 * t427 * t237 / 0.6D1 + t427 * t249) - t2
-     #62 + 0.180D3 * t131 * t58 * (t427 * t232 - t432 * t237 / 0.2D1 - t
-     #249)) * t141 / 0.1440D4
-      t453 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t452)
-      t455 = FJET(XB1, XB2, s, -t46, t50, t27, t31, -t56, t145)
-      t459 = FJET(XB1, XB2, s, 0.0D0, t160, 0.0D0, -t164, 0.0D0, t229)
-      t462 = x2 * t1 * s
-      t464 = t5 * t1 * s
-      t465 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t464, t462,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t466 = t68 * t62
-      t469 = log(0.4D1 * t116 * t466)
-      t470 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t464, t462,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t475 = t58 * t470
-      t481 = (-0.90D2 * t59 * (-t465 + t469 * t470) - 0.180D3 * t131 * t
-     #475) * t139 * t143 / 0.720D3
-      t484 = log(0.4D1 * t84 * t466)
-      t486 = t484 ** 2
-      t489 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t464, t462,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t498 = t203 * t475
-      t502 = (-0.90D2 * t59 * (-t484 * t465 + t486 * t470 / 0.2D1 + t489
-     #) + 0.180D3 * t131 * t58 * (t465 - t484 * t470) + t498) * t141 * t
-     #142 / 0.720D3
-      t505 = log(0.4D1 * t6 * t466)
-      t507 = t505 ** 2
-      t521 = (-0.90D2 * t59 * (t505 * t465 - t507 * t470 / 0.2D1 - t489)
-     # + 0.180D3 * t131 * t58 * (-t465 + t505 * t470) - t498) * t139 * t
-     #141 / 0.1440D4
-      t524 = log(0.4D1 * t424 * t166)
-      t526 = -t465 + t524 * t470
-      t529 = t524 ** 2
-      t532 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, -t464, t462,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t537 = -t529 * t465 / 0.2D1 - t532 + t529 * t524 * t470 / 0.6D1 + 
-     #t524 * t489
-      t540 = t260 * t475
-      t544 = t524 * t465 - t529 * t470 / 0.2D1 - t489
-      t551 = t481 - t502 + t521 - (-t203 * t58 * t526 + 0.90D2 * t59 * t
-     #537 + t540 - 0.180D3 * t131 * t58 * t544) * t141 / 0.1440D4
-      t552 = FJET(XB1, XB2, s, t462, 0.0D0, -t464, 0.0D0, 0.0D0, t551)
-      t567 = t481 - t502 + t521 - (-t203 * t58 * t526 + 0.90D2 * t59 * t
-     #537 + t540 - 0.180D3 * t131 * t58 * t544) * t141 / 0.1440D4
-      t568 = FJET(XB1, XB2, s, 0.0D0, -t464, 0.0D0, t462, 0.0D0, t567)
-      t570 = FJET(XB1, XB2, s, -t464, 0.0D0, t462, 0.0D0, 0.0D0, t551)
-      t572 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t452)
-      t574 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t452)
-      t578 = t65 * t69 * t22
-      t581 = log(0.4D1 * t98 * t67 * t578)
-      t582 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D0, 
-     #t47, 0.0D0, 0.0D0)
-      t584 = t581 ** 2
-      t585 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D0, 
-     #t47, 0.0D0, 0.0D0)
-      t588 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D0, 
-     #t47, 0.0D0, 0.0D0)
-      t597 = t58 * t585
-      t598 = t203 * t597
-      t601 = (-0.90D2 * t59 * (t581 * t582 - t584 * t585 / 0.2D1 - t588)
-     # + 0.180D3 * t131 * t58 * (-t582 + t581 * t585) - t598) * t139 * t
-     #142
-      t604 = log(0.4D1 * t345 * t578)
-      t606 = t582 - t604 * t585
-      t609 = t604 ** 2
-      t612 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D0, 
-     #t47, 0.0D0, 0.0D0)
-      t617 = t609 * t582 / 0.2D1 + t612 - t609 * t604 * t585 / 0.6D1 - t
-     #604 * t588
-      t620 = t260 * t597
-      t624 = -t604 * t582 + t609 * t585 / 0.2D1 + t588
-      t630 = t22 * t69
-      t634 = log(0.4D1 * t116 * t68 * t630)
-      t643 = (-0.90D2 * t59 * (-t582 + t634 * t585) - 0.180D3 * t131 * t
-     #597) * t139 * t143
-      t644 = t84 * t65
-      t645 = t67 * t22
-      t649 = log(0.4D1 * t644 * t645 * t69)
-      t651 = t649 ** 2
-      t664 = (-0.90D2 * t59 * (-t649 * t582 + t651 * t585 / 0.2D1 + t588
-     #) + 0.180D3 * t131 * t58 * (t582 - t649 * t585) + t598) * t141 * t
-     #142
-      t666 = t601 / 0.720D3 + (-t203 * t58 * t606 + 0.90D2 * t59 * t617 
-     #- t620 - 0.180D3 * t131 * t58 * t624) * t142 / 0.720D3 + t643 / 0.
-     #720D3 - t664 / 0.720D3
-      t667 = FJET(XB1, XB2, s, t47, -t4, 0.0D0, 0.0D0, 0.0D0, t666)
-      t669 = t2 * t7
-      t671 = t1 * t3
-      t672 = x3 * s * t671
-      t673 = t28 * t29
-      t674 = t28 * t671
-      t675 = x3 * t14
-      t676 = t630 * t675
-      t679 = log(-0.4D1 * t346 * t676)
-      t680 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t674, -t672,
-     # -t673, t669, 0.0D0)
-      t682 = t679 ** 2
-      t683 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t674, -t672,
-     # -t673, t669, 0.0D0)
-      t686 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t674, -t672,
-     # -t673, t669, 0.0D0)
-      t687 = -t679 * t680 + t682 * t683 / 0.2D1 + t686
-      t691 = t680 - t679 * t683
-      t695 = t58 * t683
-      t696 = t203 * t695
-      t702 = log(-0.4D1 * t386 * t676)
-      t711 = (-0.90D2 * t59 * (t680 - t702 * t683) + 0.180D3 * t131 * t6
-     #95) * t139 * t143
-      t713 = (-0.90D2 * t59 * t687 + 0.180D3 * t131 * t58 * t691 + t696)
-     # * t139 * t142 / 0.720D3 + t711 / 0.720D3
-      t714 = FJET(XB1, XB2, s, t669, -t672, -t673, t674, 0.0D0, t713)
-      t716 = FJET(XB1, XB2, s, -t4, t47, 0.0D0, 0.0D0, 0.0D0, t666)
-      t719 = t5 * s * t671
-      t722 = t2 * t3 * x2 * t22
-      t723 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t719, -t722,
-     # t47, 0.0D0, -t56)
-      t725 = t645 * t69 * t62
-      t728 = log(0.4D1 * t213 * t725)
-      t729 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t719, -t722,
-     # t47, 0.0D0, -t56)
-      t734 = t58 * t729
-      t739 = (-0.90D2 * t59 * (t723 - t728 * t729) + 0.180D3 * t131 * t7
-     #34) * t139 * t143
-      t742 = log(0.4D1 * t644 * t725)
-      t744 = t742 ** 2
-      t747 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t719, -t722,
-     # t47, 0.0D0, -t56)
-      t748 = t742 * t723 - t744 * t729 / 0.2D1 - t747
-      t752 = -t723 + t742 * t729
-      t756 = t203 * t734
-      t761 = t739 / 0.720D3 - (-0.90D2 * t59 * t748 + 0.180D3 * t131 * t
-     #58 * t752 - t756) * t141 * t142 / 0.720D3
-      t762 = FJET(XB1, XB2, s, t719, t47, -t722, 0.0D0, -t56, t761)
-      t764 = FJET(XB1, XB2, s, t674, -t673, -t672, t669, 0.0D0, t713)
-      t766 = FJET(XB1, XB2, s, t47, t719, 0.0D0, -t722, -t56, t761)
-      t768 = t146 * t138 * t149 / 0.720D3 + t230 * t229 + t453 * t452 + 
-     #t455 * t138 * t149 / 0.720D3 + t459 * t229 + t552 * t551 + t568 * 
-     #t567 + t570 * t551 + t572 * t452 + t574 * t452 + t667 * t666 + t71
-     #4 * t713 + t716 * t666 + t762 * t761 + t764 * t713 + t766 * t761
-      t780 = (-0.90D2 * t59 * t687 + 0.180D3 * t131 * t58 * t691 + t696)
-     # * t139 * t142 / 0.720D3 + t711 / 0.720D3
-      t781 = FJET(XB1, XB2, s, -t673, t674, t669, -t672, 0.0D0, t780)
-      t783 = FJET(XB1, XB2, s, 0.0D0, -t722, t47, t719, -t56, t761)
-      t785 = t2 * t14
-      t786 = t2 * x3
-      t790 = log(-0.4D1 * t98 * t68 * t14)
-      t791 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t785, t786,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t793 = t790 ** 2
-      t794 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t785, t786,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t797 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t785, t786,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t806 = t58 * t794
-      t807 = t203 * t806
-      t811 = (-0.90D2 * t59 * (t790 * t791 - t793 * t794 / 0.2D1 - t797)
-     # + 0.180D3 * t131 * t58 * (-t791 + t790 * t794) - t807) * t139 * t
-     #142 / 0.720D3
-      t812 = t233 * t14
-      t815 = log(-0.4D1 * t644 * t812)
-      t825 = (-0.90D2 * t59 * (-t791 + t815 * t794) - 0.180D3 * t131 * t
-     #806) * t139 * t143 / 0.720D3
-      t828 = log(-0.4D1 * t68 * t675)
-      t830 = -t791 + t828 * t794
-      t833 = t828 ** 2
-      t836 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, -t785, t786,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t841 = -t833 * t791 / 0.2D1 - t836 + t833 * t828 * t794 / 0.6D1 + 
-     #t828 * t797
-      t844 = t260 * t806
-      t848 = t828 * t791 - t833 * t794 / 0.2D1 - t797
-      t857 = log(-0.4D1 * t424 * t812)
-      t859 = t857 ** 2
-      t873 = (-0.90D2 * t59 * (t857 * t791 - t859 * t794 / 0.2D1 - t797)
-     # + 0.180D3 * t131 * t58 * (-t791 + t857 * t794) - t807) * t139 * t
-     #141 / 0.1440D4
-      t874 = t811 + t825 + (t203 * t58 * t830 - 0.90D2 * t59 * t841 - t8
-     #44 + 0.180D3 * t131 * t58 * t848) * t139 / 0.1440D4 + t873
-      t875 = FJET(XB1, XB2, s, 0.0D0, -t785, 0.0D0, t786, 0.0D0, t874)
-      t890 = t811 + t825 + (t203 * t58 * t830 - 0.90D2 * t59 * t841 - t8
-     #44 + 0.180D3 * t131 * t58 * t848) * t139 / 0.1440D4 + t873
-      t891 = FJET(XB1, XB2, s, t786, 0.0D0, -t785, 0.0D0, 0.0D0, t890)
-      t893 = FJET(XB1, XB2, s, -t164, 0.0D0, t160, 0.0D0, 0.0D0, t229)
-      t908 = t601 / 0.720D3 + (-t203 * t58 * t606 + 0.90D2 * t59 * t617 
-     #- t620 - 0.180D3 * t131 * t58 * t624) * t142 / 0.720D3 + t643 / 0.
-     #720D3 - t664 / 0.720D3
-      t909 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t47, -t4, 0.0D0, t908)
-      t911 = FJET(XB1, XB2, s, -t785, 0.0D0, t786, 0.0D0, 0.0D0, t890)
-      t924 = t739 / 0.720D3 - (-0.90D2 * t59 * t748 + 0.180D3 * t131 * t
-     #58 * t752 - t756) * t141 * t142 / 0.720D3
-      t925 = FJET(XB1, XB2, s, -t722, 0.0D0, t719, t47, -t56, t924)
-      t927 = FJET(XB1, XB2, s, 0.0D0, t786, 0.0D0, -t785, 0.0D0, t874)
-      t929 = FJET(XB1, XB2, s, t31, t27, t50, -t46, -t56, t145)
-      t933 = FJET(XB1, XB2, s, t50, -t46, t31, t27, -t56, t145)
-      t937 = FJET(XB1, XB2, s, -t672, t669, t674, -t673, 0.0D0, t780)
-      t939 = FJET(XB1, XB2, s, 0.0D0, t462, 0.0D0, -t464, 0.0D0, t567)
-      t941 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t4, t47, 0.0D0, t908)
-      t943 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t452)
-      t945 = FJET(XB1, XB2, s, 0.0D0, -t164, 0.0D0, t160, 0.0D0, t229)
-      t947 = t781 * t780 + t783 * t761 + t875 * t874 + t891 * t890 + t89
-     #3 * t229 + t909 * t908 + t911 * t890 + t925 * t924 + t927 * t874 +
-     # t929 * t138 * t149 / 0.720D3 + t933 * t138 * t149 / 0.720D3 + t93
-     #7 * t780 + t939 * t567 + t941 * t908 + t943 * t452 + t945 * t229
-      rrgg2qqbarht7s2e1 = t768 + t947
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s2e0
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = s * t1
-      t3 = t2 * x1
-      t4 = -0.1D1 + x2
-      t6 = x2 * x3
-      t7 = -0.1D1 + t6
-      t8 = 0.1D1 / t7
-      t10 = t3 * x3 * t4 * t8
-      t11 = -0.1D1 + x1
-      t12 = t2 * t11
-      t13 = x1 * z
-      t14 = t6 * t13
-      t16 = x2 ** 2
-      t17 = t16 * x3
-      t18 = t17 * t13
-      t19 = 0.3D1 * t6
-      t20 = t17 * x1
-      t21 = x3 * x1
-      t22 = t21 * z
-      t23 = t6 * x1
-      t25 = x4 * pi
-      t26 = cos(t25)
-      t27 = 0.1D1 - x1 + t13
-      t29 = -0.1D1 + x3
-      t32 = Sqrt(-x3 * t27 * x2 * t29)
-      t33 = t26 * t32
-      t35 = 0.2D1 * t33 * x2
-      t36 = 0.2D1 * t33
-      t37 = 0.2D1 * t14 - t18 + t19 + t20 - t22 - 0.2D1 * t23 - x2 - x3 
-     #+ t21 - t17 + t35 - t36
-      t38 = 0.1D1 / t27
-      t41 = t12 * t37 * t38 * t8
-      t42 = t29 * s
-      t43 = t1 * x1
-      t45 = t42 * t43 * t8
-      t50 = t12 * t4 * (-t6 - 0.1D1 + x3 + x1 - t21 - t13 + t22 + t36) *
-     # t38 * t8
-      t51 = t1 ** 2
-      t56 = s * t51 * x2 * x1 * t11 * t38
-      t57 = s ** 2
-      t58 = 0.1D1 / t57
-      t59 = pi * t58
-      t60 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t50, -t41, t4
-     #5, t10, -t56)
-      t62 = x2 * x1
-      t63 = t62 * z
-      t66 = t17 * z
-      t67 = t6 * z
-      t69 = 0.2D1 * t6
-      t70 = x2 * z
-      t71 = x1 ** 2
-      t72 = t71 * x2
-      t75 = z ** 2
-      t76 = t71 * t75
-      t79 = 0.1D1 - 0.2D1 * x1 + 0.2D1 * t33 * t63 + t66 - t67 + 0.2D1 *
-     # t13 + t69 - t17 + t70 - t36 - t72 - 0.2D1 * t71 * z + t76 + 0.2D1
-     # * t62 + t20 - 0.3D1 * t23
-      t80 = t75 * x2
-      t85 = x3 * t71
-      t102 = t35 + t80 * x1 + 0.2D1 * t72 * z - t76 * x2 + t85 * x2 - 0.
-     #3D1 * t63 + 0.2D1 * t33 * x1 - x2 + 0.4D1 * t14 - t18 - 0.2D1 * t8
-     #5 * t70 - x3 * t75 * t62 + t85 * t80 - 0.2D1 * t33 * t13 - 0.2D1 *
-     # t33 * t62 - 0.2D1 * t33 * t70 + t71
-      t104 = 0.1D1 / (t79 + t102)
-      t109 = 0.1D1 / x3
-      t110 = 0.1D1 / x2
-      t112 = 0.1D1 / x1
-      t113 = t109 * t110 * t112
-      t114 = t27 * (-0.1D1 - t13 + x1 - t70 - t62 + t63 + x2) * t113
-      t116 = t59 * t60 * t104 * t114 / 0.8D1
-      t117 = FJET(XB1, XB2, s, t10, -t41, t45, t50, -t56, -t116)
-      t120 = t58 * t60 * t104
-      t124 = 0.1D1 / t75
-      t125 = x3 * t124
-      t126 = Sin(t25)
-      t127 = t126 ** 2
-      t130 = log(0.4D1 * t125 * t127)
-      t131 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t133 = t130 ** 2
-      t134 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t137 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t141 = pi * lh
-      t147 = lh ** 2
-      t149 = pi ** 2
-      t151 = -0.180D3 * t147 + 0.30D2 * t149
-      t152 = pi * t151
-      t153 = t58 * t134
-      t154 = t152 * t153
-      t158 = t124 * t127
-      t160 = log(0.4D1 * t158)
-      t161 = t160 * pi
-      t164 = t160 ** 2
-      t165 = t164 * pi
-      t171 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t199 = log(0.4D1 * t6 * t158)
-      t205 = 0.180D3 * t141 * t153
-      t210 = x2 * t127
-      t213 = log(0.4D1 * t210 * t124)
-      t215 = t213 ** 2
-      t231 = log(0.4D1 * t85 * t158)
-      t245 = log(0.4D1 * t72 * t158)
-      t254 = t71 * t124
-      t255 = t254 * t127
-      t257 = log(0.4D1 * t255)
-      t259 = t257 ** 2
-      t273 = (-0.90D2 * t59 * (-t130 * t131 + t133 * t134 / 0.2D1 + t137
-     #) + 0.180D3 * t141 * t58 * (t131 - t130 * t134) + t154) * t109 / 0
-     #.1440D4 + (-0.180D3 * t161 * lh - 0.45D2 * t165 + t152) * t58 * t1
-     #31 / 0.1440D4 - t59 * t171 / 0.16D2 + (0.90D2 * t165 * lh + pi * (
-     #-0.60D2 * lh * t149 + 0.240D3 * zeta3 + 0.120D3 * t147 * lh) + 0.1
-     #5D2 * t164 * t160 * pi - t161 * t151) * t58 * t134 / 0.1440D4 + (0
-     #.180D3 * t141 + 0.90D2 * t161) * t58 * t137 / 0.1440D4 + (-0.90D2 
-     #* t59 * (t131 - t199 * t134) + t205) * t109 * t110 / 0.1440D4 - (-
-     #0.90D2 * t59 * (t213 * t131 - t215 * t134 / 0.2D1 - t137) + 0.180D
-     #3 * t141 * t58 * (-t131 + t213 * t134) - t154) * t110 / 0.1440D4 +
-     # (-0.90D2 * t59 * (t131 - t231 * t134) + t205) * t109 * t112 / 0.7
-     #20D3 - t59 * t134 * t113 / 0.8D1 - (-0.90D2 * t59 * (-t131 + t245 
-     #* t134) - t205) * t110 * t112 / 0.720D3 + (-0.90D2 * t59 * (-t257 
-     #* t131 + t259 * t134 / 0.2D1 + t137) + 0.180D3 * t141 * t58 * (t13
-     #1 - t257 * t134) + t154) * t112 / 0.720D3
-      t274 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t273)
-      t276 = t2 * t21
-      t278 = t1 * t11
-      t279 = x3 * s * t278
-      t280 = t42 * t43
-      t281 = t42 * t278
-      t282 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t281, -t279,
-     # -t280, t276, 0.0D0)
-      t283 = t11 ** 2
-      t285 = x3 * t29
-      t289 = log(-0.4D1 * t255 * t38 * t283 * t285)
-      t290 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t281, -t279,
-     # -t280, t276, 0.0D0)
-      t292 = t282 - t289 * t290
-      t297 = 0.180D3 * t141 * t58 * t290
-      t304 = t59 * t290 * t113 / 0.8D1
-      t305 = (-0.90D2 * t59 * t292 + t297) * t109 * t112 / 0.720D3 - t30
-     #4
-      t306 = FJET(XB1, XB2, s, t276, -t279, -t280, t281, 0.0D0, t305)
-      t309 = Sqrt(-t6 * t29)
-      t310 = t26 * t309
-      t311 = 0.2D1 * t310
-      t315 = t2 * t4 * (-t6 - 0.1D1 + x3 + t311) * t8
-      t317 = 0.2D1 * t310 * x2
-      t320 = t2 * (-x2 - x3 + t19 - t17 - t311 + t317) * t8
-      t321 = 0.1D1 - x2 + t70
-      t322 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t315, t320,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t323 = t321 * t322
-      t328 = 0.1D1 / (-t66 + t17 + x2 - t69 - t317 - t70 + t67 + 0.2D1 *
-     # t310 * t70 + t311 - 0.1D1)
-      t334 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t315, t320,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t337 = t4 ** 2
-      t338 = t124 * t337
-      t339 = t7 ** 2
-      t345 = log(-0.4D1 * t6 * t127 * t338 * t29 / t339)
-      t360 = t59 * t323 * t328 * t109 * t110 * t112 / 0.8D1 + (0.90D2 * 
-     #t59 * (t321 * t334 - t345 * t321 * t322) * t328 - 0.180D3 * t141 *
-     # t58 * t323 * t328) * t109 * t110 / 0.1440D4
-      t361 = FJET(XB1, XB2, s, -t315, 0.0D0, t320, 0.0D0, 0.0D0, t360)
-      t363 = t2 * t29
-      t364 = t2 * x3
-      t365 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t363, t364,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t369 = log(-0.4D1 * t210 * t125 * t29)
-      t370 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t363, t364,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t375 = t58 * t370
-      t377 = 0.180D3 * t141 * t375
-      t381 = (-0.90D2 * t59 * (-t365 + t369 * t370) - t377) * t109 * t11
-     #0 / 0.1440D4
-      t384 = log(-0.4D1 * t158 * t285)
-      t386 = t384 ** 2
-      t389 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t363, t364,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t390 = t384 * t365 - t386 * t370 / 0.2D1 - t389
-      t394 = -t365 + t384 * t370
-      t398 = t152 * t375
-      t405 = log(-0.4D1 * t85 * t158 * t29)
-      t413 = (-0.90D2 * t59 * (-t365 + t405 * t370) - t377) * t109 * t11
-     #2 / 0.720D3
-      t416 = t59 * t370 * t113 / 0.8D1
-      t417 = t381 + (-0.90D2 * t59 * t390 + 0.180D3 * t141 * t58 * t394 
-     #- t398) * t109 / 0.1440D4 + t413 + t416
-      t418 = FJET(XB1, XB2, s, 0.0D0, -t363, 0.0D0, t364, 0.0D0, t417)
-      t421 = t4 * s * t278
-      t424 = t2 * t11 * x2 * t38
-      t425 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t421, -t424,
-     # t3, 0.0D0, -t56)
-      t428 = t59 * t425 * t113 / 0.8D1
-      t429 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t421, -t424,
-     # t3, 0.0D0, -t56)
-      t430 = t72 * t127
-      t431 = t124 * t38
-      t436 = log(0.4D1 * t430 * t431 * t283 * t337)
-      t438 = -t429 + t436 * t425
-      t443 = 0.180D3 * t141 * t58 * t425
-      t448 = -t428 - (-0.90D2 * t59 * t438 - t443) * t110 * t112 / 0.720
-     #D3
-      t449 = FJET(XB1, XB2, s, t3, t421, 0.0D0, -t424, -t56, t448)
-      t451 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.0D0,
-     # t3, 0.0D0, 0.0D0)
-      t454 = t127 * t283 * t38
-      t457 = log(0.4D1 * t85 * t124 * t454)
-      t458 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.0D0,
-     # t3, 0.0D0, 0.0D0)
-      t463 = t58 * t458
-      t465 = 0.180D3 * t141 * t463
-      t469 = (-0.90D2 * t59 * (-t451 + t457 * t458) - t465) * t109 * t11
-     #2 / 0.720D3
-      t472 = t59 * t458 * t113 / 0.8D1
-      t476 = log(0.4D1 * t430 * t431 * t283)
-      t484 = (-0.90D2 * t59 * (t451 - t476 * t458) + t465) * t110 * t112
-     # / 0.720D3
-      t487 = log(0.4D1 * t254 * t454)
-      t489 = t487 ** 2
-      t492 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t12, 0.0D0,
-     # t3, 0.0D0, 0.0D0)
-      t493 = -t487 * t451 + t489 * t458 / 0.2D1 + t492
-      t497 = t451 - t487 * t458
-      t501 = t152 * t463
-      t505 = t469 + t472 - t484 + (0.90D2 * t59 * t493 - 0.180D3 * t141 
-     #* t58 * t497 - t501) * t112 / 0.720D3
-      t506 = FJET(XB1, XB2, s, t3, -t12, 0.0D0, 0.0D0, 0.0D0, t505)
-      t508 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t273)
-      t520 = t469 + t472 - t484 + (0.90D2 * t59 * t493 - 0.180D3 * t141 
-     #* t58 * t497 - t501) * t112 / 0.720D3
-      t521 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t12, t3, 0.0D0, t520)
-      t524 = t4 * t1 * s
-      t526 = x2 * t1 * s
-      t527 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t524, t526,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t528 = t158 * t337
-      t531 = log(0.4D1 * t6 * t528)
-      t532 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t524, t526,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t537 = t58 * t532
-      t539 = 0.180D3 * t141 * t537
-      t543 = (-0.90D2 * t59 * (-t527 + t531 * t532) - t539) * t109 * t11
-     #0 / 0.1440D4
-      t546 = log(0.4D1 * t210 * t338)
-      t548 = t546 ** 2
-      t551 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t524, t526,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t552 = t546 * t527 - t548 * t532 / 0.2D1 - t551
-      t556 = -t527 + t546 * t532
-      t560 = t152 * t537
-      t566 = t59 * t532 * t113 / 0.8D1
-      t569 = log(0.4D1 * t72 * t528)
-      t577 = (-0.90D2 * t59 * (t527 - t569 * t532) + t539) * t110 * t112
-     # / 0.720D3
-      t578 = t543 - (0.90D2 * t59 * t552 - 0.180D3 * t141 * t58 * t556 +
-     # t560) * t110 / 0.1440D4 + t566 - t577
-      t579 = FJET(XB1, XB2, s, -t524, 0.0D0, t526, 0.0D0, 0.0D0, t578)
-      t581 = FJET(XB1, XB2, s, 0.0D0, t364, 0.0D0, -t363, 0.0D0, t417)
-      t583 = FJET(XB1, XB2, s, t421, t3, -t424, 0.0D0, -t56, t448)
-      t585 = FJET(XB1, XB2, s, t320, 0.0D0, -t315, 0.0D0, 0.0D0, t360)
-      t587 = FJET(XB1, XB2, s, t281, -t280, -t279, t276, 0.0D0, t305)
-      t596 = (-0.90D2 * t59 * t292 + t297) * t109 * t112 / 0.720D3 - t30
-     #4
-      t597 = FJET(XB1, XB2, s, -t279, t276, t281, -t280, 0.0D0, t596)
-      t599 = FJET(XB1, XB2, s, 0.0D0, t320, 0.0D0, -t315, 0.0D0, t360)
-      t601 = -t117 * pi * t120 * t114 / 0.8D1 + t274 * t273 + t306 * t30
-     #5 + t361 * t360 + t418 * t417 + t449 * t448 + t506 * t505 + t508 *
-     # t273 + t521 * t520 + t579 * t578 + t581 * t417 + t583 * t448 + t5
-     #85 * t360 + t587 * t305 + t597 * t596 + t599 * t360
-      t612 = t543 - (0.90D2 * t59 * t552 - 0.180D3 * t141 * t58 * t556 +
-     # t560) * t110 / 0.1440D4 + t566 - t577
-      t613 = FJET(XB1, XB2, s, 0.0D0, t526, 0.0D0, -t524, 0.0D0, t612)
-      t615 = FJET(XB1, XB2, s, 0.0D0, -t315, 0.0D0, t320, 0.0D0, t360)
-      t617 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t273)
-      t629 = t381 + (-0.90D2 * t59 * t390 + 0.180D3 * t141 * t58 * t394 
-     #- t398) * t109 / 0.1440D4 + t413 + t416
-      t630 = FJET(XB1, XB2, s, -t363, 0.0D0, t364, 0.0D0, 0.0D0, t629)
-      t632 = FJET(XB1, XB2, s, -t41, t10, t50, t45, -t56, -t116)
-      t637 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t3, -t12, 0.0D0, t520)
-      t639 = FJET(XB1, XB2, s, -t280, t281, t276, -t279, 0.0D0, t596)
-      t648 = -t428 - (-0.90D2 * t59 * t438 - t443) * t110 * t112 / 0.720
-     #D3
-      t649 = FJET(XB1, XB2, s, -t424, 0.0D0, t421, t3, -t56, t648)
-      t651 = FJET(XB1, XB2, s, t364, 0.0D0, -t363, 0.0D0, 0.0D0, t629)
-      t653 = FJET(XB1, XB2, s, 0.0D0, -t524, 0.0D0, t526, 0.0D0, t612)
-      t655 = FJET(XB1, XB2, s, -t12, t3, 0.0D0, 0.0D0, 0.0D0, t505)
-      t657 = FJET(XB1, XB2, s, t526, 0.0D0, -t524, 0.0D0, 0.0D0, t578)
-      t659 = FJET(XB1, XB2, s, 0.0D0, -t424, t3, t421, -t56, t448)
-      t661 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t273)
-      t663 = FJET(XB1, XB2, s, t45, t50, t10, -t41, -t56, -t116)
-      t668 = FJET(XB1, XB2, s, t50, t45, -t41, t10, -t56, -t116)
-      t673 = t613 * t612 + t615 * t360 + t617 * t273 + t630 * t629 - t63
-     #2 * pi * t120 * t114 / 0.8D1 + t637 * t520 + t639 * t596 + t649 * 
-     #t648 + t651 * t629 + t653 * t612 + t655 * t505 + t657 * t578 + t65
-     #9 * t448 + t661 * t273 - t663 * pi * t120 * t114 / 0.8D1 - t668 * 
-     #pi * t120 * t114 / 0.8D1
-      rrgg2qqbarht7s2e0 = t601 + t673
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s2em1
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = s * t1
-      t3 = t2 * x3
-      t4 = -0.1D1 + x3
-      t5 = t2 * t4
+      t5 = t2 * x1
       t6 = s ** 2
       t7 = 0.1D1 / t6
       t8 = pi * t7
-      t9 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t5, t3, 0.0D0
-     #, 0.0D0, 0.0D0)
-      t10 = z ** 2
-      t11 = 0.1D1 / t10
+      t9 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D0
+     #, t5, 0.0D0, 0.0D0)
+      t10 = x1 ** 2
+      t11 = t10 * x3
       t12 = x4 * pi
       t13 = Sin(t12)
       t14 = t13 ** 2
-      t15 = t11 * t14
-      t19 = log(-0.4D1 * t15 * x3 * t4)
-      t20 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t5, t3, 0.0D
-     #0, 0.0D0, 0.0D0)
-      t22 = t9 - t19 * t20
-      t25 = pi * lh
-      t28 = 0.180D3 * t25 * t7 * t20
-      t30 = 0.1D1 / x3
-      t33 = t20 * t30
-      t34 = 0.1D1 / x2
-      t37 = t8 * t33 * t34 / 0.16D2
-      t38 = 0.1D1 / x1
-      t41 = t8 * t33 * t38 / 0.8D1
-      t42 = (0.90D2 * t8 * t22 - t28) * t30 / 0.1440D4 + t37 + t41
-      t43 = FJET(XB1, XB2, s, t3, 0.0D0, -t5, 0.0D0, 0.0D0, t42)
-      t45 = -0.1D1 + x2
-      t47 = t45 * t1 * s
-      t49 = x2 * t1 * s
-      t50 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t47, t49, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t54 = t8 * t50 * t30 * t34 / 0.16D2
-      t55 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t47, t49, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t56 = x2 * t14
-      t57 = t45 ** 2
-      t61 = log(0.4D1 * t56 * t11 * t57)
-      t63 = -t55 + t61 * t50
-      t68 = 0.180D3 * t25 * t7 * t50
-      t75 = t8 * t50 * t34 * t38 / 0.8D1
-      t76 = t54 - (0.90D2 * t8 * t63 + t68) * t34 / 0.1440D4 + t75
-      t77 = FJET(XB1, XB2, s, -t47, 0.0D0, t49, 0.0D0, 0.0D0, t76)
-      t85 = t54 - (0.90D2 * t8 * t63 + t68) * t34 / 0.1440D4 + t75
-      t86 = FJET(XB1, XB2, s, 0.0D0, t49, 0.0D0, -t47, 0.0D0, t85)
-      t88 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t92 = log(0.4D1 * x3 * t11 * t14)
-      t93 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t100 = 0.180D3 * t25 * t7 * t93
-      t106 = log(0.4D1 * t15)
-      t107 = t106 * pi
-      t115 = t106 ** 2
-      t118 = lh ** 2
-      t120 = pi ** 2
-      t128 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0
-     #.0D0, 0.0D0, 0.0D0)
-      t131 = t93 * t30
-      t137 = log(0.4D1 * t56 * t11)
-      t149 = x1 ** 2
-      t150 = t149 * t11
-      t153 = log(0.4D1 * t150 * t14)
-      t164 = (-0.90D2 * t8 * (t88 - t92 * t93) + t100) * t30 / 0.1440D4 
-     #+ (0.180D3 * t25 + 0.90D2 * t107) * t7 * t88 / 0.1440D4 + (-0.180D
-     #3 * t107 * lh - 0.45D2 * t115 * pi + pi * (-0.180D3 * t118 + 0.30D
-     #2 * t120)) * t7 * t93 / 0.1440D4 - t8 * t128 / 0.16D2 - t8 * t131 
-     #* t34 / 0.16D2 - (-0.90D2 * t8 * (-t88 + t137 * t93) - t100) * t34
-     # / 0.1440D4 - t8 * t93 * t34 * t38 / 0.8D1 + (-0.90D2 * t8 * (t88 
-     #- t153 * t93) + t100) * t38 / 0.720D3 - t8 * t131 * t38 / 0.8D1
-      t165 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t164)
-      t173 = (0.90D2 * t8 * t22 - t28) * t30 / 0.1440D4 + t37 + t41
-      t174 = FJET(XB1, XB2, s, 0.0D0, -t5, 0.0D0, t3, 0.0D0, t173)
-      t176 = FJET(XB1, XB2, s, 0.0D0, -t47, 0.0D0, t49, 0.0D0, t85)
-      t178 = -0.1D1 + x1
-      t179 = t2 * t178
-      t180 = t2 * x1
-      t181 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t179, 0.0D0
-     #, t180, 0.0D0, 0.0D0)
-      t185 = t8 * t181 * t34 * t38 / 0.8D1
-      t186 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t179, 0.0D0
-     #, t180, 0.0D0, 0.0D0)
-      t189 = 0.1D1 / (0.1D1 - x1 + x1 * z)
-      t191 = t178 ** 2
-      t195 = log(0.4D1 * t150 * t14 * t189 * t191)
-      t197 = t186 - t195 * t181
-      t202 = 0.180D3 * t25 * t7 * t181
-      t209 = t8 * t181 * t30 * t38 / 0.8D1
-      t210 = t185 + (0.90D2 * t8 * t197 - t202) * t38 / 0.720D3 + t209
-      t211 = FJET(XB1, XB2, s, -t179, t180, 0.0D0, 0.0D0, 0.0D0, t210)
-      t213 = FJET(XB1, XB2, s, 0.0D0, t3, 0.0D0, -t5, 0.0D0, t173)
-      t215 = x2 * x3
-      t216 = cos(t12)
-      t218 = Sqrt(-t215 * t4)
-      t219 = t216 * t218
-      t220 = 0.2D1 * t219
-      t224 = 0.1D1 / (-0.1D1 + t215)
-      t226 = t2 * t45 * (-t215 - 0.1D1 + x3 + t220) * t224
-      t228 = x2 ** 2
-      t229 = t228 * x3
-      t231 = 0.2D1 * t219 * x2
-      t234 = t2 * (-x2 - x3 + 0.3D1 * t215 - t229 - t220 + t231) * t224
-      t235 = x2 * z
-      t236 = 0.1D1 - x2 + t235
-      t238 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t226, t234,
-     # 0.0D0, 0.0D0, 0.0D0)
-      t248 = t238 / (-t229 * z + t229 + x2 - 0.2D1 * t215 - t231 - t235 
-     #+ t215 * z + 0.2D1 * t219 * t235 + t220 - 0.1D1) * t30 * t34
-      t250 = t8 * t236 * t248 / 0.16D2
-      t251 = FJET(XB1, XB2, s, -t226, 0.0D0, t234, 0.0D0, 0.0D0, t250)
-      t253 = t7 * t236
-      t263 = t185 + (0.90D2 * t8 * t197 - t202) * t38 / 0.720D3 + t209
-      t264 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t179, t180, 0.0D0, t263)
-      t266 = FJET(XB1, XB2, s, t180, -t179, 0.0D0, 0.0D0, 0.0D0, t210)
-      t268 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t180, -t179, 0.0D0, t263)
-      t270 = FJET(XB1, XB2, s, -t5, 0.0D0, t3, 0.0D0, 0.0D0, t42)
-      t272 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t164)
-      t274 = t43 * t42 + t77 * t76 + t86 * t85 + t165 * t164 + t174 * t1
-     #73 + t176 * t85 + t211 * t210 + t213 * t173 + t251 * pi * t253 * t
-     #248 / 0.16D2 + t264 * t263 + t266 * t210 + t268 * t263 + t270 * t4
-     #2 + t272 * t164
-      t275 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t164)
-      t277 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t164)
-      t279 = FJET(XB1, XB2, s, t234, 0.0D0, -t226, 0.0D0, 0.0D0, t250)
-      t285 = t1 * t178
-      t286 = t45 * s * t285
-      t289 = t2 * t178 * x2 * t189
-      t290 = t1 ** 2
-      t295 = s * t290 * x2 * x1 * t178 * t189
-      t296 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t286, -t289,
-     # t180, 0.0D0, -t295)
-      t298 = t296 * t34 * t38
-      t300 = t8 * t298 / 0.8D1
-      t301 = FJET(XB1, XB2, s, t180, t286, 0.0D0, -t289, -t295, -t300)
-      t306 = t4 * s
-      t308 = t306 * t1 * x1
-      t309 = t306 * t285
-      t311 = t2 * x1 * x3
-      t313 = x3 * s * t285
-      t314 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t309, -t313,
-     # -t308, t311, 0.0D0)
-      t316 = t314 * t30 * t38
-      t318 = t8 * t316 / 0.8D1
-      t319 = FJET(XB1, XB2, s, -t308, t309, t311, -t313, 0.0D0, -t318)
-      t324 = FJET(XB1, XB2, s, 0.0D0, -t289, t180, t286, -t295, -t300)
-      t329 = FJET(XB1, XB2, s, t309, -t308, -t313, t311, 0.0D0, -t318)
-      t334 = FJET(XB1, XB2, s, t286, t180, -t289, 0.0D0, -t295, -t300)
-      t339 = FJET(XB1, XB2, s, t311, -t313, -t308, t309, 0.0D0, -t318)
-      t344 = FJET(XB1, XB2, s, -t313, t311, t309, -t308, 0.0D0, -t318)
-      t349 = FJET(XB1, XB2, s, -t289, 0.0D0, t286, t180, -t295, -t300)
-      t354 = FJET(XB1, XB2, s, 0.0D0, t234, 0.0D0, -t226, 0.0D0, t250)
-      t359 = FJET(XB1, XB2, s, t49, 0.0D0, -t47, 0.0D0, 0.0D0, t76)
-      t361 = FJET(XB1, XB2, s, 0.0D0, -t226, 0.0D0, t234, 0.0D0, t250)
-      t366 = t275 * t164 + t277 * t164 + t279 * pi * t253 * t248 / 0.16D
-     #2 - t301 * pi * t7 * t298 / 0.8D1 - t319 * pi * t7 * t316 / 0.8D1 
-     #- t324 * pi * t7 * t298 / 0.8D1 - t329 * pi * t7 * t316 / 0.8D1 - 
-     #t334 * pi * t7 * t298 / 0.8D1 - t339 * pi * t7 * t316 / 0.8D1 - t3
-     #44 * pi * t7 * t316 / 0.8D1 - t349 * pi * t7 * t298 / 0.8D1 + t354
-     # * pi * t253 * t248 / 0.16D2 + t359 * t76 + t361 * pi * t253 * t24
-     #8 / 0.16D2
-      rrgg2qqbarht7s2em1 = t274 + t366
+      t16 = z ** 2
+      t17 = 0.1D1 / t16
+      t18 = x1 * z
+      t19 = 0.1D1 - x1 + t18
+      t20 = 0.1D1 / t19
+      t21 = t17 * t20
+      t22 = t3 ** 2
+      t23 = t21 * t22
+      t26 = log(0.4D1 * t11 * t14 * t23)
+      t27 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D
+     #0, t5, 0.0D0, 0.0D0)
+      t32 = lh * pi
+      t33 = t7 * t27
+      t35 = 0.180D3 * t32 * t33
+      t37 = 0.1D1 / x3
+      t39 = 0.1D1 / x1
+      t43 = 0.1D1 / x2
+      t45 = t37 * t43 * t39
+      t48 = x2 * t10
+      t49 = t48 * t14
+      t52 = log(0.4D1 * t49 * t23)
+      t61 = t10 * t14
+      t64 = log(0.4D1 * t61 * t23)
+      t66 = t64 ** 2
+      t69 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t4, 0.0D
+     #0, t5, 0.0D0, 0.0D0)
+      t78 = lh ** 2
+      t79 = 0.180D3 * t78
+      t80 = pi ** 2
+      t81 = 0.30D2 * t80
+      t82 = t79 - t81
+      t83 = t82 * pi
+      t88 = (0.90D2 * t8 * (t9 - t26 * t27) - t35) * t37 * t39 / 0.720D3
+     # + t8 * t27 * t45 / 0.8D1 - (0.90D2 * t8 * (-t9 + t52 * t27) + t35
+     #) * t43 * t39 / 0.720D3 + (0.90D2 * t8 * (-t64 * t9 + t66 * t27 / 
+     #0.2D1 + t69) - 0.180D3 * t32 * t7 * (t9 - t64 * t27) + t83 * t33) 
+     #* t39 / 0.720D3
+      t89 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t4, t5, 0.0D0, t88)
+      t92 = x2 * t1 * s
+      t93 = -0.1D1 + x2
+      t95 = t93 * t1 * s
+      t96 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t95, t92
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t100 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t95, t9
+     #2, 0.0D0, 0.0D0, 0.0D0)
+      t101 = t14 * t17
+      t102 = t93 ** 2
+      t103 = t101 * t102
+      t106 = log(0.4D1 * t48 * t103)
+      t111 = t7 * t96
+      t113 = 0.180D3 * t32 * t111
+      t118 = x2 * x3
+      t121 = log(0.4D1 * t118 * t103)
+      t130 = x2 * t14
+      t131 = t17 * t102
+      t134 = log(0.4D1 * t130 * t131)
+      t136 = t134 ** 2
+      t139 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t95, t9
+     #2, 0.0D0, 0.0D0, 0.0D0)
+      t152 = t8 * t96 * t45 / 0.8D1 - (0.90D2 * t8 * (-t100 + t106 * t96
+     #) + t113) * t43 * t39 / 0.720D3 + (0.90D2 * t8 * (t100 - t121 * t9
+     #6) - t113) * t37 * t43 / 0.1440D4 + (0.90D2 * t8 * (-t134 * t100 +
+     # t136 * t96 / 0.2D1 + t139) - 0.180D3 * t32 * t7 * (t100 - t134 * 
+     #t96) + t83 * t111) * t43 / 0.1440D4
+      t153 = FJET(XB1, XB2, s, 0.0D0, t92, 0.0D0, -t95, 0.0D0, t152)
+      t157 = t2 * t3 * x2 * t20
+      t159 = t1 * t3
+      t160 = t93 * s * t159
+      t161 = t1 ** 2
+      t166 = s * t161 * x2 * x1 * t3 * t20
+      t167 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t160, -t
+     #157, t5, 0.0D0, -t166)
+      t170 = t8 * t167 * t45 / 0.8D1
+      t171 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t160, -t
+     #157, t5, 0.0D0, -t166)
+      t176 = log(0.4D1 * t49 * t21 * t22 * t102)
+      t178 = -t171 + t176 * t167
+      t183 = 0.180D3 * t32 * t7 * t167
+      t188 = -t170 - (-0.90D2 * t8 * t178 - t183) * t43 * t39 / 0.720D3
+      t189 = FJET(XB1, XB2, s, -t157, 0.0D0, t160, t5, -t166, t188)
+      t191 = -0.1D1 + x3
+      t192 = t2 * t191
+      t193 = t2 * x3
+      t194 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t192, t
+     #193, 0.0D0, 0.0D0, 0.0D0)
+      t198 = log(-0.4D1 * t118 * t101 * t191)
+      t199 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t192, t
+     #193, 0.0D0, 0.0D0, 0.0D0)
+      t204 = t7 * t199
+      t206 = 0.180D3 * t32 * t204
+      t211 = x3 * t191
+      t214 = log(-0.4D1 * t101 * t211)
+      t216 = t214 ** 2
+      t219 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t192, t
+     #193, 0.0D0, 0.0D0, 0.0D0)
+      t236 = log(-0.4D1 * t61 * t17 * x3 * t191)
+      t248 = (0.90D2 * t8 * (t194 - t198 * t199) - t206) * t37 * t43 / 0
+     #.1440D4 + (0.90D2 * t8 * (-t214 * t194 + t216 * t199 / 0.2D1 + t21
+     #9) - 0.180D3 * t32 * t7 * (t194 - t214 * t199) + t83 * t204) * t37
+     # / 0.1440D4 + (0.90D2 * t8 * (t194 - t236 * t199) - t206) * t37 * 
+     #t39 / 0.720D3 + t8 * t199 * t45 / 0.8D1
+      t249 = FJET(XB1, XB2, s, 0.0D0, -t192, 0.0D0, t193, 0.0D0, t248)
+      t254 = log(0.4D1 * x3 * t14 * t17)
+      t255 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D
+     #0, 0.0D0, 0.0D0, 0.0D0)
+      t257 = t254 ** 2
+      t258 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D
+     #0, 0.0D0, 0.0D0, 0.0D0)
+      t261 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D
+     #0, 0.0D0, 0.0D0, 0.0D0)
+      t270 = t7 * t258
+      t271 = t83 * t270
+      t276 = log(0.4D1 * t101)
+      t279 = t276 ** 2
+      t286 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D
+     #0, 0.0D0, 0.0D0, 0.0D0)
+      t312 = log(0.4D1 * t118 * t101)
+      t318 = 0.180D3 * t32 * t270
+      t325 = log(0.4D1 * t130 * t17)
+      t327 = t325 ** 2
+      t343 = log(0.4D1 * t11 * t101)
+      t357 = log(0.4D1 * t48 * t101)
+      t368 = log(0.4D1 * t61 * t17)
+      t370 = t368 ** 2
+      t384 = (0.90D2 * t8 * (t254 * t255 - t257 * t258 / 0.2D1 - t261) -
+     # 0.180D3 * t32 * t7 * (-t255 + t254 * t258) - t271) * t37 / 0.1440
+     #D4 - (0.180D3 * t276 * lh + 0.45D2 * t279 + t79 - t81) * pi * t7 *
+     # t255 / 0.1440D4 - t8 * t286 / 0.16D2 - (-0.90D2 * t279 * lh + 0.6
+     #0D2 * lh * t80 - 0.240D3 * zeta3 - 0.120D3 * t78 * lh - 0.15D2 * t
+     #279 * t276 - t276 * t82) * pi * t270 / 0.1440D4 - (-0.180D3 * lh -
+     # 0.90D2 * t276) * pi * t7 * t261 / 0.1440D4 + (0.90D2 * t8 * (-t25
+     #5 + t312 * t258) + t318) * t37 * t43 / 0.1440D4 + (0.90D2 * t8 * (
+     #t325 * t255 - t327 * t258 / 0.2D1 - t261) - 0.180D3 * t32 * t7 * (
+     #-t255 + t325 * t258) - t271) * t43 / 0.1440D4 + (0.90D2 * t8 * (-t
+     #255 + t343 * t258) + t318) * t37 * t39 / 0.720D3 - t8 * t258 * t45
+     # / 0.8D1 - (0.90D2 * t8 * (t255 - t357 * t258) - t318) * t43 * t39
+     # / 0.720D3 + (0.90D2 * t8 * (t368 * t255 - t370 * t258 / 0.2D1 - t
+     #261) - 0.180D3 * t32 * t7 * (-t255 + t368 * t258) - t271) * t39 / 
+     #0.720D3
+      t385 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t384)
+      t388 = x3 * s * t159
+      t389 = x3 * x1
+      t390 = t2 * t389
+      t391 = t191 * s
+      t392 = t391 * t159
+      t393 = t1 * x1
+      t394 = t391 * t393
+      t395 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t392, -t
+     #388, -t394, t390, 0.0D0)
+      t402 = log(-0.4D1 * t10 * t20 * t14 * t17 * t22 * t211)
+      t403 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t392, -t
+     #388, -t394, t390, 0.0D0)
+      t418 = (0.90D2 * t8 * (-t395 + t402 * t403) + 0.180D3 * t32 * t7 *
+     # t403) * t37 * t39 / 0.720D3 - t8 * t403 * t45 / 0.8D1
+      t419 = FJET(XB1, XB2, s, -t388, t390, t392, -t394, 0.0D0, t418)
+      t421 = FJET(XB1, XB2, s, t390, -t388, -t394, t392, 0.0D0, t418)
+      t423 = FJET(XB1, XB2, s, 0.0D0, -t95, 0.0D0, t92, 0.0D0, t152)
+      t425 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t384)
+      t427 = 0.3D1 * t118
+      t428 = x2 ** 2
+      t429 = t428 * x3
+      t430 = cos(t12)
+      t432 = Sqrt(-t118 * t191)
+      t433 = t430 * t432
+      t434 = 0.2D1 * t433
+      t436 = 0.2D1 * t433 * x2
+      t438 = -0.1D1 + t118
+      t439 = 0.1D1 / t438
+      t441 = t2 * (-x2 - x3 + t427 - t429 - t434 + t436) * t439
+      t445 = t2 * t93 * (-t118 - 0.1D1 + x3 + t434) * t439
+      t446 = x2 * z
+      t447 = 0.1D1 + t446 - x2
+      t448 = t429 * z
+      t449 = 0.2D1 * t118
+      t450 = t118 * z
+      t454 = 0.1D1 / (t429 - t448 + x2 - t449 - t446 + t450 + 0.2D1 * t4
+     #33 * t446 - t436 + t434 - 0.1D1)
+      t455 = t447 * t454
+      t457 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t445, t
+     #441, 0.0D0, 0.0D0, 0.0D0)
+      t463 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t445, t
+     #441, 0.0D0, 0.0D0, 0.0D0)
+      t466 = t438 ** 2
+      t472 = log(-0.4D1 * t118 * t14 * t131 * t191 / t466)
+      t487 = t8 * t455 * t457 * t37 * t43 * t39 / 0.8D1 + (0.90D2 * t8 *
+     # (t455 * t463 - t472 * t447 * t454 * t457) - 0.180D3 * t32 * t7 * 
+     #t455 * t457) * t37 * t43 / 0.1440D4
+      t488 = FJET(XB1, XB2, s, t441, 0.0D0, -t445, 0.0D0, 0.0D0, t487)
+      t490 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t384)
+      t499 = -t170 - (-0.90D2 * t8 * t178 - t183) * t43 * t39 / 0.720D3
+      t500 = FJET(XB1, XB2, s, t5, t160, 0.0D0, -t157, -t166, t499)
+      t502 = FJET(XB1, XB2, s, t5, -t4, 0.0D0, 0.0D0, 0.0D0, t88)
+      t504 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t384)
+      t506 = t389 * z
+      t510 = Sqrt(-x3 * t19 * x2 * t191)
+      t511 = t430 * t510
+      t512 = 0.2D1 * t511
+      t517 = t4 * t93 * (-t118 - 0.1D1 + x3 + x1 - t389 - t18 + t506 + t
+     #512) * t20 * t439
+      t519 = t391 * t393 * t439
+      t520 = t118 * x1
+      t522 = t429 * x1
+      t523 = t118 * t18
+      t525 = t429 * t18
+      t527 = 0.2D1 * t511 * x2
+      t528 = -t506 - 0.2D1 * t520 + t522 - t429 + t427 + t389 + 0.2D1 * 
+     #t523 - t525 - t512 - x2 - x3 + t527
+      t531 = t4 * t528 * t20 * t439
+      t534 = t5 * x3 * t93 * t439
+      t535 = x2 * x1
+      t536 = t535 * z
+      t537 = -0.1D1 + t536 - t446 - t535 + x1 + x2 - t18
+      t551 = 0.1D1 - t512 + 0.2D1 * t535 - 0.2D1 * t10 * z + t10 * t16 -
+     # t48 + t448 - t450 - 0.3D1 * t520 + t522 + t527 - 0.3D1 * t536 + t
+     #11 * x2 + t535 * t16 + 0.2D1 * t48 * z - t48 * t16
+      t571 = 0.2D1 * t511 * x1 + t10 - 0.2D1 * x1 - x2 - 0.2D1 * t511 * 
+     #t446 - 0.2D1 * t511 * t18 - 0.2D1 * t511 * t535 - x3 * t16 * t535 
+     #- 0.2D1 * t11 * t446 + t11 * t16 * x2 + 0.4D1 * t523 - t525 + 0.2D
+     #1 * t511 * t536 + 0.2D1 * t18 + t449 - t429 + t446
+      t574 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t517, -t
+     #531, t519, t534, -t166)
+      t576 = 0.1D1 / (t551 + t571) * t574 * t45
+      t578 = t8 * t19 * t537 * t576 / 0.8D1
+      t579 = FJET(XB1, XB2, s, t517, t519, -t531, t534, -t166, -t578)
+      t582 = t7 * t19 * t537
+      t586 = FJET(XB1, XB2, s, t392, -t394, -t388, t390, 0.0D0, t418)
+      t588 = t89 * t88 + t153 * t152 + t189 * t188 + t249 * t248 + t385 
+     #* t384 + t419 * t418 + t421 * t418 + t423 * t152 + t425 * t384 + t
+     #488 * t487 + t490 * t384 + t500 * t499 + t502 * t88 + t504 * t384 
+     #- t579 * pi * t582 * t576 / 0.8D1 + t586 * t418
+      t589 = FJET(XB1, XB2, s, t160, t5, -t157, 0.0D0, -t166, t499)
+      t591 = FJET(XB1, XB2, s, 0.0D0, -t157, t5, t160, -t166, t499)
+      t593 = FJET(XB1, XB2, s, 0.0D0, t441, 0.0D0, -t445, 0.0D0, t487)
+      t595 = FJET(XB1, XB2, s, 0.0D0, t193, 0.0D0, -t192, 0.0D0, t248)
+      t597 = FJET(XB1, XB2, s, -t531, t534, t517, t519, -t166, -t578)
+      t602 = FJET(XB1, XB2, s, t519, t517, t534, -t531, -t166, -t578)
+      t607 = FJET(XB1, XB2, s, 0.0D0, -t445, 0.0D0, t441, 0.0D0, t487)
+      t609 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t5, -t4, 0.0D0, t88)
+      t611 = FJET(XB1, XB2, s, t92, 0.0D0, -t95, 0.0D0, 0.0D0, t152)
+      t613 = FJET(XB1, XB2, s, -t95, 0.0D0, t92, 0.0D0, 0.0D0, t152)
+      t615 = FJET(XB1, XB2, s, t534, -t531, t519, t517, -t166, -t578)
+      t620 = FJET(XB1, XB2, s, -t4, t5, 0.0D0, 0.0D0, 0.0D0, t88)
+      t622 = FJET(XB1, XB2, s, -t445, 0.0D0, t441, 0.0D0, 0.0D0, t487)
+      t624 = FJET(XB1, XB2, s, -t394, t392, t390, -t388, 0.0D0, t418)
+      t626 = FJET(XB1, XB2, s, -t192, 0.0D0, t193, 0.0D0, 0.0D0, t248)
+      t628 = FJET(XB1, XB2, s, t193, 0.0D0, -t192, 0.0D0, 0.0D0, t248)
+      t630 = t589 * t499 + t591 * t499 + t593 * t487 + t595 * t248 - t59
+     #7 * pi * t582 * t576 / 0.8D1 - t602 * pi * t582 * t576 / 0.8D1 + t
+     #607 * t487 + t609 * t88 + t611 * t152 + t613 * t152 - t615 * pi * 
+     #t582 * t576 / 0.8D1 + t620 * t88 + t622 * t487 + t624 * t418 + t62
+     #6 * t248 + t628 * t248
+      rrgg2qqbarhhardt7s2e0 = t588 + t630
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s2em2
+      doubleprecision function rrgg2qqbarhhardt7s2em1
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -2175,12 +1927,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -2191,70 +1943,166 @@
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
       t1 = -0.1D1 + z
-      t2 = s * t1
+      t2 = t1 * s
       t3 = s ** 2
       t4 = 0.1D1 / t3
       t5 = pi * t4
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0.0
-     #D0, 0.0D0, 0.0D0)
-      t7 = 0.1D1 / x3
-      t11 = 0.1D1 / x2
-      t15 = 0.1D1 / x1
-      t19 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t24 = z ** 2
-      t27 = Sin(x4 * pi)
-      t28 = t27 ** 2
-      t31 = log(0.4D1 / t24 * t28)
-      t38 = -t5 * t6 * t7 / 0.16D2 - t5 * t6 * t11 / 0.16D2 - t5 * t6 * 
-     #t15 / 0.8D1 - t5 * t19 / 0.16D2 + (0.180D3 * pi * lh + 0.90D2 * t3
-     #1 * pi) * t4 * t6 / 0.1440D4
-      t39 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t38)
-      t41 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t38)
-      t43 = t2 * x1
-      t45 = t2 * (-0.1D1 + x1)
-      t46 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t45, 0.0D0, 
-     #t43, 0.0D0, 0.0D0)
-      t49 = t5 * t46 * t15 / 0.8D1
-      t50 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t43, -t45, 0.0D0, t49)
-      t53 = t4 * t46 * t15
-      t56 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t45, t43, 0.0D0, t49)
-      t60 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t38)
-      t62 = t2 * x3
-      t64 = t2 * (-0.1D1 + x3)
-      t65 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t64, t62, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t68 = t5 * t65 * t7 / 0.16D2
-      t69 = FJET(XB1, XB2, s, 0.0D0, t62, 0.0D0, -t64, 0.0D0, t68)
-      t72 = t4 * t65 * t7
-      t76 = x2 * t1 * s
-      t79 = (-0.1D1 + x2) * t1 * s
-      t80 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t79, t76, 0.
-     #0D0, 0.0D0, 0.0D0)
-      t83 = t5 * t80 * t11 / 0.16D2
-      t84 = FJET(XB1, XB2, s, 0.0D0, t76, 0.0D0, -t79, 0.0D0, t83)
-      t87 = t4 * t80 * t11
-      t90 = FJET(XB1, XB2, s, 0.0D0, -t79, 0.0D0, t76, 0.0D0, t83)
-      t94 = FJET(XB1, XB2, s, 0.0D0, -t64, 0.0D0, t62, 0.0D0, t68)
-      t98 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t38)
-      t100 = FJET(XB1, XB2, s, t43, -t45, 0.0D0, 0.0D0, 0.0D0, t49)
-      t104 = FJET(XB1, XB2, s, t62, 0.0D0, -t64, 0.0D0, 0.0D0, t68)
-      t108 = FJET(XB1, XB2, s, t76, 0.0D0, -t79, 0.0D0, 0.0D0, t83)
-      t112 = FJET(XB1, XB2, s, -t64, 0.0D0, t62, 0.0D0, 0.0D0, t68)
-      t116 = FJET(XB1, XB2, s, -t79, 0.0D0, t76, 0.0D0, 0.0D0, t83)
-      t120 = FJET(XB1, XB2, s, -t45, t43, 0.0D0, 0.0D0, 0.0D0, t49)
-      rrgg2qqbarht7s2em2 = t39 * t38 + t41 * t38 + t50 * pi * t53 / 0.8D
-     #1 + t56 * pi * t53 / 0.8D1 + t60 * t38 + t69 * pi * t72 / 0.16D2 +
-     # t84 * pi * t87 / 0.16D2 + t90 * pi * t87 / 0.16D2 + t94 * pi * t7
-     #2 / 0.16D2 + t98 * t38 + t100 * pi * t53 / 0.8D1 + t104 * pi * t72
-     # / 0.16D2 + t108 * pi * t87 / 0.16D2 + t112 * pi * t72 / 0.16D2 + 
-     #t116 * pi * t87 / 0.16D2 + t120 * pi * t53 / 0.8D1
+      t6 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0,
+     # 0.0D0, 0.0D0, 0.0D0)
+      t7 = x4 * pi
+      t8 = Sin(t7)
+      t9 = t8 ** 2
+      t11 = z ** 2
+      t12 = 0.1D1 / t11
+      t15 = log(0.4D1 * x3 * t9 * t12)
+      t16 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t21 = lh * pi
+      t22 = t4 * t16
+      t24 = 0.180D3 * t21 * t22
+      t26 = 0.1D1 / x3
+      t30 = t12 * t9
+      t32 = log(0.4D1 * t30)
+      t41 = t32 ** 2
+      t43 = lh ** 2
+      t45 = pi ** 2
+      t51 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t54 = t16 * t26
+      t55 = 0.1D1 / x2
+      t59 = x2 * t9
+      t62 = log(0.4D1 * t59 * t12)
+      t71 = 0.1D1 / x1
+      t75 = x1 ** 2
+      t76 = t75 * t9
+      t79 = log(0.4D1 * t76 * t12)
+      t90 = (0.90D2 * t5 * (-t6 + t15 * t16) + t24) * t26 / 0.1440D4 - (
+     #-0.180D3 * lh - 0.90D2 * t32) * pi * t4 * t6 / 0.1440D4 - (0.180D3
+     # * t32 * lh + 0.45D2 * t41 + 0.180D3 * t43 - 0.30D2 * t45) * pi * 
+     #t22 / 0.1440D4 - t5 * t51 / 0.16D2 - t5 * t54 * t55 / 0.16D2 + (0.
+     #90D2 * t5 * (-t6 + t62 * t16) + t24) * t55 / 0.1440D4 - t5 * t16 *
+     # t55 * t71 / 0.8D1 + (0.90D2 * t5 * (-t6 + t79 * t16) + t24) * t71
+     # / 0.720D3 - t5 * t54 * t71 / 0.8D1
+      t91 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t90)
+      t93 = -0.1D1 + x3
+      t94 = t2 * t93
+      t95 = t2 * x3
+      t96 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t94, t95
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t97 = t96 * t26
+      t101 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t94, t9
+     #5, 0.0D0, 0.0D0, 0.0D0)
+      t105 = log(-0.4D1 * t30 * x3 * t93)
+      t119 = t5 * t97 * t55 / 0.16D2 + (0.90D2 * t5 * (t101 - t105 * t96
+     #) - 0.180D3 * t21 * t4 * t96) * t26 / 0.1440D4 + t5 * t97 * t71 / 
+     #0.8D1
+      t120 = FJET(XB1, XB2, s, 0.0D0, -t94, 0.0D0, t95, 0.0D0, t119)
+      t123 = x2 * t1 * s
+      t124 = -0.1D1 + x2
+      t126 = t124 * t1 * s
+      t127 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t126, t
+     #123, 0.0D0, 0.0D0, 0.0D0)
+      t136 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t126, t
+     #123, 0.0D0, 0.0D0, 0.0D0)
+      t137 = t124 ** 2
+      t141 = log(0.4D1 * t59 * t12 * t137)
+      t152 = t5 * t127 * t55 * t71 / 0.8D1 + t5 * t127 * t26 * t55 / 0.1
+     #6D2 + (0.90D2 * t5 * (t136 - t141 * t127) - 0.180D3 * t21 * t4 * t
+     #127) * t55 / 0.1440D4
+      t153 = FJET(XB1, XB2, s, 0.0D0, t123, 0.0D0, -t126, 0.0D0, t152)
+      t155 = FJET(XB1, XB2, s, 0.0D0, -t126, 0.0D0, t123, 0.0D0, t152)
+      t157 = FJET(XB1, XB2, s, -t126, 0.0D0, t123, 0.0D0, 0.0D0, t152)
+      t159 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t90)
+      t161 = t2 * x1
+      t162 = -0.1D1 + x1
+      t163 = t2 * t162
+      t164 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t163, 0
+     #.0D0, t161, 0.0D0, 0.0D0)
+      t169 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t163, 0
+     #.0D0, t161, 0.0D0, 0.0D0)
+      t172 = 0.1D1 / (0.1D1 - x1 + x1 * z)
+      t174 = t162 ** 2
+      t178 = log(0.4D1 * t76 * t12 * t172 * t174)
+      t193 = t5 * t164 * t55 * t71 / 0.8D1 + (0.90D2 * t5 * (t169 - t178
+     # * t164) - 0.180D3 * t21 * t4 * t164) * t71 / 0.720D3 + t5 * t164 
+     #* t26 * t71 / 0.8D1
+      t194 = FJET(XB1, XB2, s, t161, -t163, 0.0D0, 0.0D0, 0.0D0, t193)
+      t196 = t93 * s
+      t197 = t1 * t162
+      t198 = t196 * t197
+      t200 = t196 * t1 * x1
+      t202 = x3 * s * t197
+      t204 = t2 * x1 * x3
+      t205 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t198, -t
+     #202, -t200, t204, 0.0D0)
+      t207 = t205 * t26 * t71
+      t209 = t5 * t207 / 0.8D1
+      t210 = FJET(XB1, XB2, s, t198, -t200, -t202, t204, 0.0D0, -t209)
+      t217 = t2 * t162 * x2 * t172
+      t219 = t124 * s * t197
+      t220 = t1 ** 2
+      t225 = s * t220 * x2 * x1 * t162 * t172
+      t226 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t219, -t
+     #217, t161, 0.0D0, -t225)
+      t228 = t226 * t55 * t71
+      t230 = t5 * t228 / 0.8D1
+      t231 = FJET(XB1, XB2, s, -t217, 0.0D0, t219, t161, -t225, -t230)
+      t236 = FJET(XB1, XB2, s, t161, t219, 0.0D0, -t217, -t225, -t230)
+      t241 = FJET(XB1, XB2, s, -t202, t204, t198, -t200, 0.0D0, -t209)
+      t246 = FJET(XB1, XB2, s, t204, -t202, -t200, t198, 0.0D0, -t209)
+      t251 = FJET(XB1, XB2, s, t219, t161, -t217, 0.0D0, -t225, -t230)
+      t256 = FJET(XB1, XB2, s, -t200, t198, t204, -t202, 0.0D0, -t209)
+      t261 = t91 * t90 + t120 * t119 + t153 * t152 + t155 * t152 + t157 
+     #* t152 + t159 * t90 + t194 * t193 - t210 * pi * t4 * t207 / 0.8D1 
+     #- t231 * pi * t4 * t228 / 0.8D1 - t236 * pi * t4 * t228 / 0.8D1 - 
+     #t241 * pi * t4 * t207 / 0.8D1 - t246 * pi * t4 * t207 / 0.8D1 - t2
+     #51 * pi * t4 * t228 / 0.8D1 - t256 * pi * t4 * t207 / 0.8D1
+      t262 = FJET(XB1, XB2, s, 0.0D0, -t217, t161, t219, -t225, -t230)
+      t267 = x2 * x3
+      t268 = cos(t7)
+      t270 = Sqrt(-t267 * t93)
+      t271 = t268 * t270
+      t272 = 0.2D1 * t271
+      t276 = 0.1D1 / (-0.1D1 + t267)
+      t278 = t2 * t124 * (-t267 - 0.1D1 + x3 + t272) * t276
+      t280 = x2 ** 2
+      t281 = t280 * x3
+      t283 = 0.2D1 * t271 * x2
+      t286 = t2 * (-x2 - x3 + 0.3D1 * t267 - t281 - t272 + t283) * t276
+      t287 = x2 * z
+      t288 = 0.1D1 + t287 - x2
+      t297 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t278, t
+     #286, 0.0D0, 0.0D0, 0.0D0)
+      t300 = 0.1D1 / (t281 - t281 * z + x2 - 0.2D1 * t267 - t287 + t267 
+     #* z + 0.2D1 * t271 * t287 - t283 + t272 - 0.1D1) * t297 * t26 * t5
+     #5
+      t302 = t5 * t288 * t300 / 0.16D2
+      t303 = FJET(XB1, XB2, s, 0.0D0, -t278, 0.0D0, t286, 0.0D0, t302)
+      t305 = t4 * t288
+      t309 = FJET(XB1, XB2, s, 0.0D0, t286, 0.0D0, -t278, 0.0D0, t302)
+      t314 = FJET(XB1, XB2, s, -t278, 0.0D0, t286, 0.0D0, 0.0D0, t302)
+      t319 = FJET(XB1, XB2, s, t286, 0.0D0, -t278, 0.0D0, 0.0D0, t302)
+      t324 = FJET(XB1, XB2, s, -t94, 0.0D0, t95, 0.0D0, 0.0D0, t119)
+      t326 = FJET(XB1, XB2, s, t123, 0.0D0, -t126, 0.0D0, 0.0D0, t152)
+      t328 = FJET(XB1, XB2, s, t95, 0.0D0, -t94, 0.0D0, 0.0D0, t119)
+      t330 = FJET(XB1, XB2, s, 0.0D0, t95, 0.0D0, -t94, 0.0D0, t119)
+      t332 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t90)
+      t334 = FJET(XB1, XB2, s, -t163, t161, 0.0D0, 0.0D0, 0.0D0, t193)
+      t336 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t90)
+      t338 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t161, -t163, 0.0D0, t193)
+      t340 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t163, t161, 0.0D0, t193)
+      t342 = -t262 * pi * t4 * t228 / 0.8D1 + t303 * pi * t305 * t300 / 
+     #0.16D2 + t309 * pi * t305 * t300 / 0.16D2 + t314 * pi * t305 * t30
+     #0 / 0.16D2 + t319 * pi * t305 * t300 / 0.16D2 + t324 * t119 + t326
+     # * t152 + t328 * t119 + t330 * t119 + t332 * t90 + t334 * t193 + t
+     #336 * t90 + t338 * t193 + t340 * t193
+      rrgg2qqbarhhardt7s2em1 = t261 + t342
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s2em3
+      doubleprecision function rrgg2qqbarhhardt7s2em2
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -2274,12 +2122,111 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + z
+      t2 = t1 * s
+      t3 = s ** 2
+      t4 = 0.1D1 / t3
+      t5 = pi * t4
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0,
+     # 0.0D0, 0.0D0, 0.0D0)
+      t7 = 0.1D1 / x3
+      t11 = 0.1D1 / x2
+      t15 = 0.1D1 / x1
+      t19 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t23 = z ** 2
+      t26 = Sin(x4 * pi)
+      t27 = t26 ** 2
+      t30 = log(0.4D1 / t23 * t27)
+      t37 = -t5 * t6 * t7 / 0.16D2 - t5 * t6 * t11 / 0.16D2 - t5 * t6 * 
+     #t15 / 0.8D1 - t5 * t19 / 0.16D2 - (-0.180D3 * lh - 0.90D2 * t30) *
+     # pi * t4 * t6 / 0.1440D4
+      t38 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t37)
+      t40 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t37)
+      t42 = t2 * x1
+      t44 = t2 * (-0.1D1 + x1)
+      t45 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t44, 0.0
+     #D0, t42, 0.0D0, 0.0D0)
+      t48 = t5 * t45 * t15 / 0.8D1
+      t49 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t42, -t44, 0.0D0, t48)
+      t52 = t4 * t45 * t15
+      t55 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t44, t42, 0.0D0, t48)
+      t59 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t37)
+      t61 = t2 * x3
+      t63 = t2 * (-0.1D1 + x3)
+      t64 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t63, t61
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t67 = t5 * t64 * t7 / 0.16D2
+      t68 = FJET(XB1, XB2, s, 0.0D0, t61, 0.0D0, -t63, 0.0D0, t67)
+      t71 = t4 * t64 * t7
+      t75 = x2 * t1 * s
+      t78 = (-0.1D1 + x2) * t1 * s
+      t79 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t78, t75
+     #, 0.0D0, 0.0D0, 0.0D0)
+      t82 = t5 * t79 * t11 / 0.16D2
+      t83 = FJET(XB1, XB2, s, 0.0D0, t75, 0.0D0, -t78, 0.0D0, t82)
+      t86 = t4 * t79 * t11
+      t89 = FJET(XB1, XB2, s, 0.0D0, -t63, 0.0D0, t61, 0.0D0, t67)
+      t93 = FJET(XB1, XB2, s, 0.0D0, -t78, 0.0D0, t75, 0.0D0, t82)
+      t97 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t37)
+      t99 = FJET(XB1, XB2, s, t42, -t44, 0.0D0, 0.0D0, 0.0D0, t48)
+      t103 = FJET(XB1, XB2, s, t61, 0.0D0, -t63, 0.0D0, 0.0D0, t67)
+      t107 = FJET(XB1, XB2, s, t75, 0.0D0, -t78, 0.0D0, 0.0D0, t82)
+      t111 = FJET(XB1, XB2, s, -t63, 0.0D0, t61, 0.0D0, 0.0D0, t67)
+      t115 = FJET(XB1, XB2, s, -t78, 0.0D0, t75, 0.0D0, 0.0D0, t82)
+      t119 = FJET(XB1, XB2, s, -t44, t42, 0.0D0, 0.0D0, 0.0D0, t48)
+      rrgg2qqbarhhardt7s2em2 = t38 * t37 + t40 * t37 + t49 * pi * t52 / 
+     #0.8D1 + t55 * pi * t52 / 0.8D1 + t59 * t37 + t68 * pi * t71 / 0.16
+     #D2 + t83 * pi * t86 / 0.16D2 + t89 * pi * t71 / 0.16D2 + t93 * pi 
+     #* t86 / 0.16D2 + t97 * t37 + t99 * pi * t52 / 0.8D1 + t103 * pi * 
+     #t71 / 0.16D2 + t107 * pi * t86 / 0.16D2 + t111 * pi * t71 / 0.16D2
+     # + t115 * pi * t86 / 0.16D2 + t119 * pi * t52 / 0.8D1
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s2em3
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -2292,22 +2239,22 @@
       t2 = (-0.1D1 + z) * s
       t3 = s ** 2
       t4 = 0.1D1 / t3
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0, 0.0
-     #D0, 0.0D0, 0.0D0)
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t2, 0.0D0,
+     # 0.0D0, 0.0D0, 0.0D0)
       t8 = pi * t4 * t6 / 0.16D2
       t9 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, -t8)
       t11 = t4 * t6
       t13 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, -t8)
       t16 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, -t8)
       t19 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, -t8)
-      rrgg2qqbarht7s2em3 = -t9 * pi * t11 / 0.16D2 - t13 * pi * t11 / 0.
-     #16D2 - t16 * pi * t11 / 0.16D2 - t19 * pi * t11 / 0.16D2
+      rrgg2qqbarhhardt7s2em3 = -t9 * pi * t11 / 0.16D2 - t13 * pi * t11 
+     #/ 0.16D2 - t16 * pi * t11 / 0.16D2 - t19 * pi * t11 / 0.16D2
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s2em4
+      doubleprecision function rrgg2qqbarhhardt7s2em4
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -2327,12 +2274,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -2342,12 +2289,12 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      rrgg2qqbarht7s2em4 = 0.0D0
+      rrgg2qqbarhhardt7s2em4 = 0.0D0
 
       end function
 
 
-      doubleprecision function rrgg2qqbarht7s3e1
+      doubleprecision function rrgg2qqbarhhardt7s3e1
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -2367,965 +2314,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = t1 * s
-      t3 = s ** 2
-      t4 = 0.1D1 / t3
-      t5 = pi * t4
-      t6 = x1 ** 2
-      t7 = x3 * t6
-      t8 = z ** 2
-      t10 = 0.1D1 / t8 / z
-      t11 = x4 * pi
-      t12 = Sin(t11)
-      t13 = t12 ** 2
-      t14 = t10 * t13
-      t15 = -0.1D1 + x3
-      t16 = 0.1D1 / t15
-      t17 = t14 * t16
-      t20 = log(-0.4D1 * t7 * t17)
-      t21 = t20 * z
-      t22 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t24 = t20 ** 2
-      t26 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t29 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t30 = z * t29
-      t32 = cos(t11)
-      t33 = x3 * z
-      t35 = Sqrt(-t33 * t15)
-      t39 = 0.1D1 / (-z - x3 + 0.2D1 * t32 * t35)
-      t43 = log(0.4D1 * t7 * t14)
-      t45 = t43 ** 2
-      t51 = pi * lh
-      t52 = z * t22
-      t61 = lh ** 2
-      t63 = pi ** 2
-      t65 = -0.180D3 * t61 + 0.30D2 * t63
-      t66 = pi * t65
-      t68 = z * t26 * t39
-      t73 = 0.1D1 / x3
-      t75 = 0.1D1 / x1
-      t78 = t6 * t10
-      t79 = t78 * t13
-      t81 = log(0.4D1 * t79)
-      t86 = t81 ** 2
-      t89 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t102 = -0.60D2 * lh * t63 + 0.240D3 * zeta3 + 0.120D3 * t61 * lh
-      t103 = pi * t102
-      t104 = t4 * t26
-      t105 = t103 * t104
-      t116 = x2 ** 2
-      t117 = x3 * t116
-      t118 = t117 * t6
-      t121 = log(-0.4D1 * t118 * t17)
-      t126 = -0.1D1 + x2
-      t127 = t14 * t126
-      t130 = log(-0.4D1 * t118 * t127)
-      t134 = log(0.4D1 * t117 * t79)
-      t139 = t51 * t4
-      t144 = 0.1D1 / x2
-      t145 = t144 * t75
-      t148 = t116 * t6
-      t151 = log(0.4D1 * t148 * t14)
-      t153 = t151 ** 2
-      t158 = log(-0.4D1 * t148 * t127)
-      t160 = t158 ** 2
-      t176 = t4 * t22
-      t182 = -0.180D3 * t51 * t176 - t66 * t104 + 0.90D2 * t5 * t29
-      t183 = x3 * t10
-      t186 = log(0.4D1 * t183 * t13)
-      t190 = log(-0.4D1 * t183 * t13 * t16)
-      t195 = t190 ** 2
-      t199 = t186 ** 2
-      t220 = 0.90D2 * t5 * t22 - 0.180D3 * t51 * t104
-      t231 = log(-0.4D1 * t117 * t127)
-      t233 = t231 ** 2
-      t238 = log(0.4D1 * t117 * t14)
-      t240 = t238 ** 2
-      t245 = log(-0.4D1 * t117 * t17)
-      t246 = t245 * z
-      t248 = t245 ** 2
-      t266 = t66 * t4
-      t272 = t10 * t116
-      t273 = t13 * t126
-      t276 = log(-0.4D1 * t272 * t273)
-      t277 = t276 ** 2
-      t280 = log(0.4D1 * t272 * t13)
-      t281 = t280 ** 2
-      t298 = log(0.4D1 * t14)
-      t299 = t298 ** 2
-      t300 = t299 * pi
-      t304 = t299 * t298 * pi
-      t306 = t298 * pi
-      t325 = rrgg2qqbarh71J5(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t335 = t63 ** 2
-      t336 = t61 ** 2
-      t342 = t299 ** 2
-      t349 = -(-0.90D2 * t5 * ((t21 * t22 - t24 * z * t26 / 0.2D1 - t30)
-     # * t39 + t43 * t22 - t45 * t26 / 0.2D1 - t29) + 0.180D3 * t51 * t4
-     # * ((-t52 + t21 * t26) * t39 - t22 + t43 * t26) + t66 * t4 * (-t26
-     # - t68)) * t73 * t75 / 0.1440D4 + (t66 * t4 * (t22 - t81 * t26) - 
-     #0.90D2 * t5 * (t86 * t22 / 0.2D1 + t89 - t86 * t81 * t26 / 0.6D1 -
-     # t81 * t29) + t105 + 0.180D3 * t51 * t4 * (-t81 * t22 + t86 * t26 
-     #/ 0.2D1 + t29)) * t75 / 0.1440D4 - (-0.90D2 * t5 * ((-t52 + t121 *
-     # z * t26) * t39 - t130 * t26 + t134 * t26) - 0.180D3 * t139 * t68)
-     # * t73 * t145 / 0.720D3 + (-0.90D2 * t5 * (-t151 * t22 + t153 * t2
-     #6 / 0.2D1 + t158 * t22 - t160 * t26 / 0.2D1) + 0.180D3 * t51 * t4 
-     #* (-t151 * t26 + t158 * t26)) * t144 * t75 / 0.720D3 - (t182 * (-t
-     #186 - t190 * z * t39) + 0.90D2 * t5 * t26 * (-t195 * t190 * z * t3
-     #9 / 0.6D1 - t199 * t186 / 0.6D1) + (-t66 * t176 + 0.90D2 * t5 * t8
-     #9 - t105 - 0.180D3 * t51 * t4 * t29) * (0.1D1 + z * t39) + t220 * 
-     #(t199 / 0.2D1 + t195 * z * t39 / 0.2D1)) * t73 / 0.2880D4 - (-0.90
-     #D2 * t5 * (-t231 * t22 + t233 * t26 / 0.2D1 + t238 * t22 - t240 * 
-     #t26 / 0.2D1 + (t246 * t22 - t248 * z * t26 / 0.2D1 - t30) * t39) +
-     # 0.180D3 * t51 * t4 * (-t231 * t26 + t238 * t26 + (-t52 + t246 * t
-     #26) * t39) - t266 * t68) * t73 * t144 / 0.1440D4 + (t220 * (t277 /
-     # 0.2D1 - t281 / 0.2D1) + 0.90D2 * t5 * t26 * (t281 * t280 / 0.6D1 
-     #- t277 * t276 / 0.6D1) + t182 * (-t276 + t280)) * t144 / 0.1440D4 
-     #+ (0.90D2 * t300 * lh + t103 + 0.15D2 * t304 - t306 * t65) * t4 * 
-     #t22 / 0.2880D4 + (-0.180D3 * t306 * lh - 0.45D2 * t300 + t66) * t4
-     # * t29 / 0.2880D4 + (0.180D3 * t51 + 0.90D2 * t306) * t4 * t89 / 0
-     #.2880D4 - t5 * t325 / 0.32D2 + (-0.30D2 * t304 * lh + t300 * t65 /
-     # 0.2D1 - t306 * t102 + pi * (-0.480D3 * lh * zeta3 - t335 - 0.60D2
-     # * t336 + 0.60D2 * t61 * t63) - 0.15D2 / 0.4D1 * t342 * pi) * t4 *
-     # t26 / 0.2880D4
-      t350 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t349)
-      t352 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t349)
-      t354 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t349)
-      t356 = x2 * x3
-      t357 = 0.1D1 - x3 + t356
-      t358 = 0.1D1 / t357
-      t359 = t356 * t358
-      t360 = t2 * t359
-      t362 = t2 * t15 * t358
-      t364 = t357 ** 2
-      t365 = 0.1D1 / t364
-      t367 = t273 * t15 * t365
-      t370 = log(0.4D1 * t117 * t10 * t367)
-      t371 = t370 * z
-      t372 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t362, t360, 0.0D0)
-      t374 = t370 ** 2
-      t376 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t362, t360, 0.0D0)
-      t379 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t362, t360, 0.0D0)
-      t382 = t126 * t15
-      t384 = Sqrt(t33 * t382)
-      t388 = 0.1D1 / (-z - x3 + t356 + 0.2D1 * t32 * t384)
-      t392 = z * t372
-      t400 = z * t376 * t388
-      t409 = log(0.4D1 * t117 * t78 * t367)
-      t422 = -(-0.90D2 * t5 * (-t371 * t372 + t374 * z * t376 / 0.2D1 + 
-     #z * t379) * t388 + 0.180D3 * t51 * t4 * (t392 - t371 * t376) * t38
-     #8 + t266 * t400) * t73 * t144 / 0.1440D4 - (-0.90D2 * t5 * (t392 -
-     # t409 * z * t376) * t388 + 0.180D3 * t139 * t400) * t73 * t145 / 0
-     #.720D3
-      t423 = FJET(XB1, XB2, s, 0.0D0, t360, 0.0D0, -t362, 0.0D0, t422)
-      t426 = t1 * x1
-      t427 = x1 * z
-      t428 = -z - x1 + t427
-      t429 = 0.1D1 / t428
-      t431 = t126 * s * t426 * t429
-      t432 = -0.1D1 + x1
-      t433 = t2 * t432
-      t435 = x2 * s * t426
-      t436 = t1 ** 2
-      t437 = s * t436
-      t440 = x1 * t432 * t429
-      t441 = t437 * t126 * t440
-      t442 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t435, t431, 
-     #-t433, 0.0D0, -t441)
-      t443 = 0.1D1 / t8
-      t444 = t6 * t443
-      t445 = t117 * t444
-      t446 = t432 ** 2
-      t447 = t13 * t446
-      t449 = t447 * t429 * t126
-      t452 = log(0.4D1 * t445 * t449)
-      t453 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t435, t431, 
-     #-t433, 0.0D0, -t441)
-      t458 = t4 * t453
-      t464 = t148 * t443
-      t467 = log(0.4D1 * t464 * t449)
-      t469 = t467 ** 2
-      t472 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t435, t431, 
-     #-t433, 0.0D0, -t441)
-      t486 = -(-0.90D2 * t5 * (-t442 + t452 * t453) - 0.180D3 * t51 * t4
-     #58) * t73 * t145 / 0.720D3 + (-0.90D2 * t5 * (-t467 * t442 + t469 
-     #* t453 / 0.2D1 + t472) + 0.180D3 * t51 * t4 * (t442 - t467 * t453)
-     # + t66 * t458) * t144 * t75 / 0.720D3
-      t487 = FJET(XB1, XB2, s, 0.0D0, t431, -t433, t435, -t441, t486)
-      t490 = t2 * x1 * t429
-      t491 = t437 * t440
-      t492 = t7 * t443
-      t494 = t447 * t429 * t16
-      t497 = log(0.4D1 * t492 * t494)
-      t498 = t497 * z
-      t499 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t490
-     #, -t433, 0.0D0, t491)
-      t502 = t497 ** 2
-      t504 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t490
-     #, -t433, 0.0D0, t491)
-      t505 = t428 * t504
-      t508 = z * t428
-      t509 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t490
-     #, -t433, 0.0D0, t491)
-      t512 = x3 * x1
-      t513 = t512 * z
-      t514 = x1 * t8
-      t515 = x3 * t8
-      t516 = t515 * x1
-      t518 = 0.2D1 * t7 * z
-      t519 = t7 * t8
-      t520 = x3 * t428
-      t522 = Sqrt(t520 * t15)
-      t527 = 0.1D1 / (-t427 - t513 + t514 + t516 - t7 - t33 + t518 - t51
-     #9 - t8 + 0.2D1 * t32 * t522 * z)
-      t529 = t447 * t429
-      t532 = log(-0.4D1 * t492 * t529)
-      t534 = t532 ** 2
-      t540 = t508 * t499
-      t552 = t4 * (-t508 * t504 * t527 + t504)
-      t557 = (-0.90D2 * t5 * (-(-t498 * t428 * t499 + t502 * z * t505 / 
-     #0.2D1 + t508 * t509) * t527 - t532 * t499 + t534 * t504 / 0.2D1 + 
-     #t509) + 0.180D3 * t51 * t4 * (-(t540 - t498 * t505) * t527 + t499 
-     #- t532 * t504) + t66 * t552) * t73 * t75 / 0.1440D4
-      t560 = log(-0.4D1 * t444 * t529)
-      t562 = -t499 + t560 * t504
-      t565 = t560 ** 2
-      t568 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t490
-     #, -t433, 0.0D0, t491)
-      t573 = -t565 * t499 / 0.2D1 - t568 + t565 * t560 * t504 / 0.6D1 + 
-     #t560 * t509
-      t576 = t4 * t504
-      t577 = t103 * t576
-      t581 = t560 * t499 - t565 * t504 / 0.2D1 - t509
-      t589 = t446 * t429
-      t593 = log(-0.4D1 * t118 * t443 * t13 * t589)
-      t597 = log(0.4D1 * t445 * t494)
-      t610 = (-0.90D2 * t5 * (t499 - t593 * t504 - (t540 - t597 * z * t5
-     #05) * t527) + 0.180D3 * t51 * t552) * t73 * t145 / 0.720D3
-      t613 = log(-0.4D1 * t464 * t529)
-      t615 = t613 ** 2
-      t618 = t613 * t499 - t615 * t504 / 0.2D1 - t509
-      t622 = -t499 + t613 * t504
-      t626 = t66 * t576
-      t630 = (-0.90D2 * t5 * t618 + 0.180D3 * t51 * t4 * t622 - t626) * 
-     #t144 * t75 / 0.720D3
-      t631 = -t557 + (t66 * t4 * t562 - 0.90D2 * t5 * t573 - t577 + 0.18
-     #0D3 * t51 * t4 * t581) * t75 / 0.1440D4 - t610 + t630
-      t632 = FJET(XB1, XB2, s, 0.0D0, -t433, -t490, 0.0D0, t491, t631)
-      t634 = FJET(XB1, XB2, s, 0.0D0, -t490, -t433, 0.0D0, t491, t631)
-      t636 = FJET(XB1, XB2, s, 0.0D0, -t362, 0.0D0, t360, 0.0D0, t422)
-      t638 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t349)
-      t640 = FJET(XB1, XB2, s, t435, -t433, t431, 0.0D0, -t441, t486)
-      t642 = FJET(XB1, XB2, s, t360, 0.0D0, -t362, 0.0D0, 0.0D0, t422)
-      t644 = FJET(XB1, XB2, s, t431, 0.0D0, t435, -t433, -t441, t486)
-      t649 = t15 * s * t1 * t432 * t358
-      t650 = t2 * x1
-      t652 = Sqrt(-t520 * t382)
-      t653 = t32 * t652
-      t659 = t650 * x2 * (-x3 + t356 - z + t33 - x1 + t512 + t427 - t513
-     # + 0.2D1 * t653) * t429 * t358
-      t660 = t433 * t359
-      t661 = t117 * t427
-      t664 = t117 * x1
-      t669 = t650 * (-t661 - x2 + t356 + 0.2D1 * t653 * x2 + t664 + t117
-     # * z + 0.1D1 - x3) * t429 * t358
-      t670 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t659, -t669,
-     # t649, -t660, -t441)
-      t678 = log(-0.4D1 * t117 * t444 * t13 * t589 * t382 * t365)
-      t680 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t659, -t669,
-     # t649, -t660, -t441)
-      t683 = x2 * x1
-      t684 = t683 * z
-      t685 = -z + t684 - t683
-      t689 = t8 * x2
-      t691 = t6 * x2
-      t701 = t427 - t514 + t7 + t33 + 0.2D1 * t653 * t684 + t684 - t689 
-     #* x1 - 0.2D1 * t691 * z + t6 * t8 * x2 - 0.2D1 * t653 * z - t7 * x
-     #2 - t356 * z + t356 * x1
-      t711 = t8 + t513 - t516 - t518 + t519 + t691 - t664 + t661 - 0.2D1
-     # * t356 * t427 + 0.2D1 * t7 * x2 * z + t515 * t683 - t7 * t689 - 0
-     #.2D1 * t653 * t683
-      t713 = 0.1D1 / (t701 + t711)
-      t722 = -0.90D2 * t5 * (t428 * t670 - t678 * t428 * t680) * t685 * 
-     #t713 + 0.180D3 * t139 * t428 * t680 * t685 * t713
-      t725 = t722 * t73 * t145 / 0.720D3
-      t726 = FJET(XB1, XB2, s, t649, t659, -t660, -t669, -t441, -t725)
-      t729 = t73 * t144 * t75
-      t732 = FJET(XB1, XB2, s, t659, t649, -t669, -t660, -t441, -t725)
-      t748 = (t66 * t4 * t562 - 0.90D2 * t5 * t573 - t577 + 0.180D3 * t5
-     #1 * t4 * t581) * t75 / 0.1440D4
-      t749 = -t557 + t748 - t610 + t630
-      t750 = FJET(XB1, XB2, s, -t433, 0.0D0, 0.0D0, -t490, t491, t749)
-      t752 = FJET(XB1, XB2, s, -t433, t435, 0.0D0, t431, -t441, t486)
-      t765 = -t557 + t748 - t610 + (-0.90D2 * t5 * t618 + 0.180D3 * t51 
-     #* t4 * t622 - t626) * t144 * t75 / 0.720D3
-      t766 = FJET(XB1, XB2, s, -t490, 0.0D0, 0.0D0, -t433, t491, t765)
-      t768 = FJET(XB1, XB2, s, -t362, 0.0D0, t360, 0.0D0, 0.0D0, t422)
-      t770 = FJET(XB1, XB2, s, -t669, -t660, t659, t649, -t441, -t725)
-      t774 = FJET(XB1, XB2, s, -t660, -t669, t649, t659, -t441, -t725)
-      rrgg2qqbarht7s3e1 = t350 * t349 + t352 * t349 + t354 * t349 + t423
-     # * t422 + t487 * t486 + t632 * t631 + t634 * t631 + t636 * t422 + 
-     #t638 * t349 + t640 * t486 + t642 * t422 + t644 * t486 - t726 * t72
-     #2 * t729 / 0.720D3 - t732 * t722 * t729 / 0.720D3 + t750 * t749 + 
-     #t752 * t486 + t766 * t765 + t768 * t422 - t770 * t722 * t729 / 0.7
-     #20D3 - t774 * t722 * t729 / 0.720D3
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s3e0
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = t1 * s
-      t3 = s ** 2
-      t4 = 0.1D1 / t3
-      t5 = pi * t4
-      t6 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
-      t7 = z * t6
-      t8 = x1 ** 2
-      t9 = x3 * t8
-      t10 = z ** 2
-      t12 = 0.1D1 / t10 / z
-      t13 = x4 * pi
-      t14 = Sin(t13)
-      t15 = t14 ** 2
-      t16 = t12 * t15
-      t17 = -0.1D1 + x3
-      t18 = 0.1D1 / t17
-      t19 = t16 * t18
-      t22 = log(-0.4D1 * t9 * t19)
-      t24 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t27 = cos(t13)
-      t28 = x3 * z
-      t30 = Sqrt(-t28 * t17)
-      t34 = 0.1D1 / (-z - x3 + 0.2D1 * t27 * t30)
-      t38 = log(0.4D1 * t9 * t16)
-      t43 = pi * lh
-      t44 = z * t24
-      t45 = t44 * t34
-      t51 = 0.1D1 / x3
-      t53 = 0.1D1 / x1
-      t58 = 0.1D1 / x2
-      t59 = t58 * t53
-      t63 = x2 ** 2
-      t64 = t63 * t8
-      t67 = log(0.4D1 * t64 * t16)
-      t69 = -0.1D1 + x2
-      t70 = t16 * t69
-      t73 = log(-0.4D1 * t64 * t70)
-      t83 = log(0.4D1 * t8 * t12 * t15)
-      t85 = t83 ** 2
-      t88 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t97 = lh ** 2
-      t99 = pi ** 2
-      t101 = -0.180D3 * t97 + 0.30D2 * t99
-      t102 = pi * t101
-      t103 = t4 * t24
-      t104 = t102 * t103
-      t108 = x3 * t12
-      t111 = log(0.4D1 * t108 * t15)
-      t112 = t111 ** 2
-      t116 = log(-0.4D1 * t108 * t15 * t18)
-      t117 = t116 ** 2
-      t129 = 0.90D2 * t5 * t6 - 0.180D3 * t43 * t103
-      t147 = log(0.4D1 * t16)
-      t148 = t147 * pi
-      t151 = t147 ** 2
-      t152 = t151 * pi
-      t158 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t184 = x3 * t63
-      t187 = log(-0.4D1 * t184 * t70)
-      t191 = log(0.4D1 * t184 * t16)
-      t195 = log(-0.4D1 * t184 * t19)
-      t203 = t43 * t4
-      t210 = t12 * t63
-      t211 = t15 * t69
-      t214 = log(-0.4D1 * t210 * t211)
-      t215 = t214 ** 2
-      t218 = log(0.4D1 * t210 * t15)
-      t219 = t218 ** 2
-      t230 = -(-0.90D2 * t5 * ((-t7 + t22 * z * t24) * t34 - t6 + t38 * 
-     #t24) + 0.180D3 * t43 * t4 * (-t24 - t45)) * t51 * t53 / 0.1440D4 -
-     # t5 * t44 * t34 * t51 * t59 / 0.8D1 - t5 * (-t67 * t24 + t73 * t24
-     #) * t58 * t53 / 0.8D1 + (-0.90D2 * t5 * (-t83 * t6 + t85 * t24 / 0
-     #.2D1 + t88) + 0.180D3 * t43 * t4 * (t6 - t83 * t24) + t104) * t53 
-     #/ 0.1440D4 - (0.90D2 * t5 * t24 * (t112 / 0.2D1 + t117 * z * t34 /
-     # 0.2D1) + t129 * (-t111 - t116 * z * t34) + (-0.180D3 * t43 * t4 *
-     # t6 - t104 + 0.90D2 * t5 * t88) * (0.1D1 + z * t34)) * t51 / 0.288
-     #0D4 + (-0.180D3 * t148 * lh - 0.45D2 * t152 + t102) * t4 * t6 / 0.
-     #2880D4 - t5 * t158 / 0.32D2 + (0.90D2 * t152 * lh + pi * (-0.60D2 
-     #* lh * t99 + 0.240D3 * zeta3 + 0.120D3 * t97 * lh) + 0.15D2 * t151
-     # * t147 * pi - t148 * t101) * t4 * t24 / 0.2880D4 + (0.180D3 * t43
-     # + 0.90D2 * t148) * t4 * t88 / 0.2880D4 - (-0.90D2 * t5 * (-t187 *
-     # t24 + t191 * t24 + (-t7 + t195 * z * t24) * t34) - 0.180D3 * t203
-     # * t45) * t51 * t58 / 0.1440D4 + (0.90D2 * t5 * t24 * (t215 / 0.2D
-     #1 - t219 / 0.2D1) + t129 * (-t214 + t218)) * t58 / 0.1440D4
-      t231 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t230)
-      t233 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t230)
-      t235 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t230)
-      t237 = x2 * x3
-      t238 = 0.1D1 - x3 + t237
-      t239 = 0.1D1 / t238
-      t240 = t237 * t239
-      t241 = t2 * t240
-      t243 = t2 * t17 * t239
-      t244 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t243, t241, 0.0D0)
-      t245 = z * t244
-      t247 = t69 * t17
-      t249 = Sqrt(t28 * t247)
-      t253 = 0.1D1 / (-z - x3 + t237 + 0.2D1 * t27 * t249)
-      t258 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t243, t241, 0.0D0)
-      t261 = t238 ** 2
-      t267 = log(0.4D1 * t184 * t12 * t211 * t17 / t261)
-      t281 = t5 * t245 * t253 * t51 * t59 / 0.8D1 - (-0.90D2 * t5 * (z *
-     # t258 - t267 * z * t244) * t253 + 0.180D3 * t203 * t245 * t253) * 
-     #t51 * t58 / 0.1440D4
-      t282 = FJET(XB1, XB2, s, 0.0D0, t241, 0.0D0, -t243, 0.0D0, t281)
-      t285 = t1 * x1
-      t286 = x1 * z
-      t287 = -z - x1 + t286
-      t288 = 0.1D1 / t287
-      t290 = t69 * s * t285 * t288
-      t291 = -0.1D1 + x1
-      t292 = t2 * t291
-      t294 = x2 * s * t285
-      t295 = t1 ** 2
-      t296 = s * t295
-      t299 = x1 * t291 * t288
-      t300 = t296 * t69 * t299
-      t301 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t294, t290, 
-     #-t292, 0.0D0, -t300)
-      t304 = t51 * t58 * t53
-      t307 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t294, t290, 
-     #-t292, 0.0D0, -t300)
-      t308 = 0.1D1 / t10
-      t309 = t64 * t308
-      t311 = t291 ** 2
-      t316 = log(0.4D1 * t309 * t15 * t288 * t311 * t69)
-      t328 = -t5 * t301 * t304 / 0.8D1 + (-0.90D2 * t5 * (t307 - t316 * 
-     #t301) + 0.180D3 * t43 * t4 * t301) * t58 * t53 / 0.720D3
-      t329 = FJET(XB1, XB2, s, 0.0D0, t290, -t292, t294, -t300, t328)
-      t332 = t2 * x1 * t288
-      t333 = t296 * t299
-      t334 = z * t287
-      t335 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t332
-     #, -t292, 0.0D0, t333)
-      t337 = t9 * t308
-      t338 = t15 * t311
-      t343 = log(0.4D1 * t337 * t338 * t288 * t18)
-      t345 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t332
-     #, -t292, 0.0D0, t333)
-      t349 = x3 * x1
-      t350 = t349 * z
-      t351 = x1 * t10
-      t352 = x3 * t10
-      t353 = t352 * x1
-      t355 = 0.2D1 * t9 * z
-      t356 = t9 * t10
-      t357 = x3 * t287
-      t359 = Sqrt(t357 * t17)
-      t364 = 0.1D1 / (-t286 - t350 + t351 + t353 - t9 - t28 + t355 - t35
-     #6 - t10 + 0.2D1 * t27 * t359 * z)
-      t366 = t338 * t288
-      t369 = log(-0.4D1 * t337 * t366)
-      t376 = -t334 * t345 * t364 + t345
-      t383 = (-0.90D2 * t5 * (-(t334 * t335 - t343 * z * t287 * t345) * 
-     #t364 + t335 - t369 * t345) + 0.180D3 * t43 * t4 * t376) * t51 * t5
-     #3 / 0.1440D4
-      t386 = t5 * t376 * t304 / 0.8D1
-      t389 = log(-0.4D1 * t309 * t366)
-      t391 = -t335 + t389 * t345
-      t394 = t4 * t345
-      t396 = 0.180D3 * t43 * t394
-      t400 = (-0.90D2 * t5 * t391 - t396) * t58 * t53 / 0.720D3
-      t404 = log(-0.4D1 * t8 * t308 * t366)
-      t406 = t404 ** 2
-      t409 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t332
-     #, -t292, 0.0D0, t333)
-      t410 = t404 * t335 - t406 * t345 / 0.2D1 - t409
-      t414 = -t335 + t404 * t345
-      t418 = t102 * t394
-      t422 = -t383 + t386 + t400 + (-0.90D2 * t5 * t410 + 0.180D3 * t43 
-     #* t4 * t414 - t418) * t53 / 0.1440D4
-      t423 = FJET(XB1, XB2, s, 0.0D0, -t292, -t332, 0.0D0, t333, t422)
-      t425 = FJET(XB1, XB2, s, 0.0D0, -t332, -t292, 0.0D0, t333, t422)
-      t427 = FJET(XB1, XB2, s, 0.0D0, -t243, 0.0D0, t241, 0.0D0, t281)
-      t429 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t230)
-      t431 = FJET(XB1, XB2, s, t294, -t292, t290, 0.0D0, -t300, t328)
-      t433 = FJET(XB1, XB2, s, t241, 0.0D0, -t243, 0.0D0, 0.0D0, t281)
-      t435 = FJET(XB1, XB2, s, t290, 0.0D0, t294, -t292, -t300, t328)
-      t440 = t17 * s * t1 * t291 * t239
-      t441 = t2 * x1
-      t443 = Sqrt(-t357 * t247)
-      t444 = t27 * t443
-      t450 = t441 * x2 * (-x3 + t237 - z + t28 - x1 + t349 + t286 - t350
-     # + 0.2D1 * t444) * t288 * t239
-      t451 = t292 * t240
-      t452 = t184 * t286
-      t455 = t184 * x1
-      t460 = t441 * (-t452 - x2 + t237 + 0.2D1 * t444 * x2 + t455 + t184
-     # * z + 0.1D1 - x3) * t288 * t239
-      t461 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t450, -t460,
-     # t440, -t451, -t300)
-      t464 = x2 * x1
-      t465 = t464 * z
-      t473 = t10 * x2
-      t477 = t452 - 0.2D1 * t237 * t286 + 0.2D1 * t9 * x2 * z + t352 * t
-     #464 - t9 * t473 - 0.2D1 * t444 * t464 + t350 - t353 - t355 + t356 
-     #+ t286 - t351 + t9
-      t478 = t8 * x2
-      t491 = t28 + t10 + t478 + 0.2D1 * t444 * t465 - t455 + t465 - t473
-     # * x1 - 0.2D1 * t478 * z + t8 * t10 * x2 - 0.2D1 * t444 * z - t9 *
-     # x2 - t237 * z + t237 * x1
-      t495 = (-z + t465 - t464) / (t477 + t491) * t304
-      t497 = t5 * t287 * t461 * t495 / 0.8D1
-      t498 = FJET(XB1, XB2, s, t440, t450, -t451, -t460, -t300, t497)
-      t501 = t4 * t287 * t461
-      t505 = FJET(XB1, XB2, s, t450, t440, -t460, -t451, -t300, t497)
-      t519 = (-0.90D2 * t5 * t410 + 0.180D3 * t43 * t4 * t414 - t418) * 
-     #t53 / 0.1440D4
-      t520 = -t383 + t386 + t400 + t519
-      t521 = FJET(XB1, XB2, s, -t292, 0.0D0, 0.0D0, -t332, t333, t520)
-      t523 = FJET(XB1, XB2, s, -t292, t294, 0.0D0, t290, -t300, t328)
-      t532 = -t383 + t386 + (-0.90D2 * t5 * t391 - t396) * t58 * t53 / 0
-     #.720D3 + t519
-      t533 = FJET(XB1, XB2, s, -t332, 0.0D0, 0.0D0, -t292, t333, t532)
-      t535 = FJET(XB1, XB2, s, -t243, 0.0D0, t241, 0.0D0, 0.0D0, t281)
-      t537 = FJET(XB1, XB2, s, -t460, -t451, t450, t440, -t300, t497)
-      t542 = FJET(XB1, XB2, s, -t451, -t460, t440, t450, -t300, t497)
-      rrgg2qqbarht7s3e0 = t231 * t230 + t233 * t230 + t235 * t230 + t282
-     # * t281 + t329 * t328 + t423 * t422 + t425 * t422 + t427 * t281 + 
-     #t429 * t230 + t431 * t328 + t433 * t281 + t435 * t328 + t498 * pi 
-     #* t501 * t495 / 0.8D1 + t505 * pi * t501 * t495 / 0.8D1 + t521 * t
-     #520 + t523 * t328 + t533 * t532 + t535 * t281 + t537 * pi * t501 *
-     # t495 / 0.8D1 + t542 * pi * t501 * t495 / 0.8D1
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s3em1
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = t1 * s
-      t3 = s ** 2
-      t4 = 0.1D1 / t3
-      t5 = pi * t4
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
-      t7 = z ** 2
-      t9 = 0.1D1 / t7 / z
-      t10 = x3 * t9
-      t11 = x4 * pi
-      t12 = Sin(t11)
-      t13 = t12 ** 2
-      t16 = log(0.4D1 * t10 * t13)
-      t17 = -0.1D1 + x3
-      t22 = log(-0.4D1 * t10 * t13 / t17)
-      t24 = cos(t11)
-      t25 = x3 * z
-      t27 = Sqrt(-t25 * t17)
-      t31 = 0.1D1 / (-z - x3 + 0.2D1 * t24 * t27)
-      t37 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t40 = pi * lh
-      t43 = 0.180D3 * t40 * t4 * t6
-      t49 = 0.1D1 / x3
-      t52 = x1 ** 2
-      t56 = log(0.4D1 * t52 * t9 * t13)
-      t62 = 0.1D1 / x1
-      t72 = t5 * z
-      t74 = 0.1D1 / x2
-      t75 = t49 * t74
-      t79 = x2 ** 2
-      t80 = t9 * t79
-      t81 = -0.1D1 + x2
-      t85 = log(-0.4D1 * t80 * t13 * t81)
-      t88 = log(0.4D1 * t80 * t13)
-      t97 = log(0.4D1 * t9 * t13)
-      t98 = t97 * pi
-      t106 = t97 ** 2
-      t109 = lh ** 2
-      t111 = pi ** 2
-      t119 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t122 = -(0.90D2 * t5 * t6 * (-t16 - t22 * z * t31) + (0.90D2 * t5 
-     #* t37 - t43) * (0.1D1 + z * t31)) * t49 / 0.2880D4 + (-0.90D2 * t5
-     # * (t37 - t56 * t6) + t43) * t62 / 0.1440D4 + t5 * (-t6 - z * t6 *
-     # t31) * t49 * t62 / 0.16D2 - t72 * t6 * t31 * t75 / 0.16D2 + t5 * 
-     #t6 * (-t85 + t88) * t74 / 0.16D2 + (0.180D3 * t40 + 0.90D2 * t98) 
-     #* t4 * t37 / 0.2880D4 + (-0.180D3 * t98 * lh - 0.45D2 * t106 * pi 
-     #+ pi * (-0.180D3 * t109 + 0.30D2 * t111)) * t4 * t6 / 0.2880D4 - t
-     #5 * t119 / 0.32D2
-      t123 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t122)
-      t125 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t122)
-      t127 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t122)
-      t129 = x2 * x3
-      t131 = 0.1D1 / (0.1D1 - x3 + t129)
-      t133 = t2 * t129 * t131
-      t135 = t2 * t17 * t131
-      t136 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t135, t133, 0.0D0)
-      t139 = Sqrt(t25 * t81 * t17)
-      t145 = t136 / (-z - x3 + t129 + 0.2D1 * t24 * t139) * t75
-      t147 = t72 * t145 / 0.16D2
-      t148 = FJET(XB1, XB2, s, 0.0D0, t133, 0.0D0, -t135, 0.0D0, t147)
-      t150 = t4 * z
-      t155 = t1 * x1
-      t156 = x1 * z
-      t157 = -z - x1 + t156
-      t158 = 0.1D1 / t157
-      t160 = t81 * s * t155 * t158
-      t161 = -0.1D1 + x1
-      t162 = t2 * t161
-      t164 = x2 * s * t155
-      t165 = t1 ** 2
-      t166 = s * t165
-      t169 = x1 * t161 * t158
-      t170 = t166 * t81 * t169
-      t171 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t164, t160, 
-     #-t162, 0.0D0, -t170)
-      t173 = t171 * t74 * t62
-      t175 = t5 * t173 / 0.8D1
-      t176 = FJET(XB1, XB2, s, 0.0D0, t160, -t162, t164, -t170, -t175)
-      t182 = t2 * x1 * t158
-      t183 = t166 * t169
-      t184 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t182
-     #, -t162, 0.0D0, t183)
-      t188 = t5 * t184 * t74 * t62 / 0.8D1
-      t189 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t182
-     #, -t162, 0.0D0, t183)
-      t193 = t161 ** 2
-      t197 = log(-0.4D1 * t52 / t7 * t13 * t158 * t193)
-      t199 = -t189 + t197 * t184
-      t204 = 0.180D3 * t40 * t4 * t184
-      t214 = x3 * t52
-      t220 = Sqrt(x3 * t157 * t17)
-      t232 = t5 * (-z * t157 * t184 / (-t156 - x3 * x1 * z + x1 * t7 + x
-     #3 * t7 * x1 - t214 - t25 + 0.2D1 * t214 * z - t214 * t7 - t7 + 0.2
-     #D1 * t24 * t220 * z) + t184) * t49 * t62 / 0.16D2
-      t233 = t188 + (-0.90D2 * t5 * t199 - t204) * t62 / 0.1440D4 + t232
-      t234 = FJET(XB1, XB2, s, 0.0D0, -t162, -t182, 0.0D0, t183, t233)
-      t236 = FJET(XB1, XB2, s, 0.0D0, -t182, -t162, 0.0D0, t183, t233)
-      t238 = FJET(XB1, XB2, s, 0.0D0, -t135, 0.0D0, t133, 0.0D0, t147)
-      t243 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t122)
-      t245 = FJET(XB1, XB2, s, t164, -t162, t160, 0.0D0, -t170, -t175)
-      t250 = FJET(XB1, XB2, s, t133, 0.0D0, -t135, 0.0D0, 0.0D0, t147)
-      t255 = FJET(XB1, XB2, s, t160, 0.0D0, t164, -t162, -t170, -t175)
-      t266 = t188 + (-0.90D2 * t5 * t199 - t204) * t62 / 0.1440D4 + t232
-      t267 = FJET(XB1, XB2, s, -t162, 0.0D0, 0.0D0, -t182, t183, t266)
-      t269 = FJET(XB1, XB2, s, -t162, t164, 0.0D0, t160, -t170, -t175)
-      t274 = FJET(XB1, XB2, s, -t182, 0.0D0, 0.0D0, -t162, t183, t266)
-      t276 = FJET(XB1, XB2, s, -t135, 0.0D0, t133, 0.0D0, 0.0D0, t147)
-      rrgg2qqbarht7s3em1 = t123 * t122 + t125 * t122 + t127 * t122 + t14
-     #8 * pi * t150 * t145 / 0.16D2 - t176 * pi * t4 * t173 / 0.8D1 + t2
-     #34 * t233 + t236 * t233 + t238 * pi * t150 * t145 / 0.16D2 + t243 
-     #* t122 - t245 * pi * t4 * t173 / 0.8D1 + t250 * pi * t150 * t145 /
-     # 0.16D2 - t255 * pi * t4 * t173 / 0.8D1 + t267 * t266 - t269 * pi 
-     #* t4 * t173 / 0.8D1 + t274 * t266 + t276 * pi * t150 * t145 / 0.16
-     #D2
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s3em2
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = t1 * s
-      t3 = s ** 2
-      t4 = 0.1D1 / t3
-      t5 = pi * t4
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
-      t7 = 0.1D1 / x1
-      t11 = x4 * pi
-      t12 = cos(t11)
-      t16 = Sqrt(-x3 * z * (-0.1D1 + x3))
-      t28 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t33 = z ** 2
-      t36 = Sin(t11)
-      t37 = t36 ** 2
-      t40 = log(0.4D1 / t33 / z * t37)
-      t47 = -t5 * t6 * t7 / 0.16D2 - t5 * t6 * (0.1D1 + z / (-z - x3 + 0
-     #.2D1 * t12 * t16)) / x3 / 0.32D2 - t5 * t28 / 0.32D2 + (0.180D3 * 
-     #pi * lh + 0.90D2 * t40 * pi) * t4 * t6 / 0.2880D4
-      t48 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t47)
-      t50 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t47)
-      t52 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t47)
-      t54 = -0.1D1 + x1
-      t55 = t2 * t54
-      t58 = 0.1D1 / (-z - x1 + x1 * z)
-      t60 = t2 * x1 * t58
-      t61 = t1 ** 2
-      t65 = s * t61 * x1 * t54 * t58
-      t66 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t60, 
-     #-t55, 0.0D0, t65)
-      t69 = t5 * t66 * t7 / 0.16D2
-      t70 = FJET(XB1, XB2, s, 0.0D0, -t55, -t60, 0.0D0, t65, t69)
-      t73 = t4 * t66 * t7
-      t76 = FJET(XB1, XB2, s, 0.0D0, -t60, -t55, 0.0D0, t65, t69)
-      t80 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t47)
-      t82 = FJET(XB1, XB2, s, -t55, 0.0D0, 0.0D0, -t60, t65, t69)
-      t86 = FJET(XB1, XB2, s, -t60, 0.0D0, 0.0D0, -t55, t65, t69)
-      rrgg2qqbarht7s3em2 = t48 * t47 + t50 * t47 + t52 * t47 + t70 * pi 
-     #* t73 / 0.16D2 + t76 * pi * t73 / 0.16D2 + t80 * t47 + t82 * pi * 
-     #t73 / 0.16D2 + t86 * pi * t73 / 0.16D2
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s3em3
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t2 = (-0.1D1 + z) * s
-      t3 = s ** 2
-      t4 = 0.1D1 / t3
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
-      t8 = pi * t4 * t6 / 0.32D2
-      t9 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, -t8)
-      t11 = t4 * t6
-      t13 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, -t8)
-      t16 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, -t8)
-      t19 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, -t8)
-      rrgg2qqbarht7s3em3 = -t9 * pi * t11 / 0.32D2 - t13 * pi * t11 / 0.
-     #32D2 - t16 * pi * t11 / 0.32D2 - t19 * pi * t11 / 0.32D2
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s3em4
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      rrgg2qqbarht7s3em4 = 0.0D0
-
-      end function
-
-
-      doubleprecision function rrgg2qqbarht7s4e1
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -3349,324 +2343,304 @@
       t13 = t12 ** 2
       t14 = t10 * t13
       t17 = log(0.4D1 * t7 * t14)
-      t18 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
+      t18 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
       t20 = t17 ** 2
-      t21 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t24 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t28 = pi * lh
-      t34 = lh ** 2
-      t36 = pi ** 2
-      t38 = -0.180D3 * t34 + 0.30D2 * t36
-      t39 = pi * t38
-      t40 = t4 * t21
-      t41 = t39 * t40
-      t43 = 0.1D1 / x3
-      t45 = 0.1D1 / x1
-      t48 = t6 * t10
-      t49 = t48 * t13
-      t51 = log(0.4D1 * t49)
-      t56 = t51 ** 2
-      t59 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t72 = -0.60D2 * lh * t36 + 0.240D3 * zeta3 + 0.120D3 * t34 * lh
-      t73 = pi * t72
-      t74 = t73 * t40
-      t85 = t7 * x2
-      t86 = -0.1D1 + x2
-      t87 = t86 ** 2
-      t88 = t14 * t87
-      t91 = log(0.4D1 * t85 * t88)
-      t93 = x2 * x3
-      t96 = log(0.4D1 * t93 * t49)
-      t100 = 0.1D1 / x2
-      t102 = t43 * t100 * t45
-      t105 = t6 * x2
-      t108 = log(0.4D1 * t105 * t14)
-      t110 = t108 ** 2
-      t115 = log(0.4D1 * t105 * t88)
-      t117 = t115 ** 2
-      t133 = x3 * t10
-      t136 = log(0.4D1 * t133 * t13)
-      t141 = t136 ** 2
-      t163 = log(0.4D1 * t93 * t14)
-      t165 = t163 ** 2
-      t170 = log(0.4D1 * t93 * t88)
-      t172 = t170 ** 2
-      t193 = x2 * t10
-      t196 = log(0.4D1 * t193 * t13)
-      t197 = t196 ** 2
-      t198 = t13 * t87
-      t201 = log(0.4D1 * t193 * t198)
-      t202 = t201 ** 2
-      t225 = log(0.4D1 * t14)
-      t226 = t225 ** 2
-      t227 = t226 * pi
-      t231 = t226 * t225 * pi
-      t233 = t225 * pi
-      t252 = rrgg2qqbarh71J5(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t262 = t36 ** 2
-      t263 = t34 ** 2
-      t269 = t226 ** 2
-      t276 = -(-0.90D2 * t5 * (t17 * t18 - t20 * t21 / 0.2D1 - t24) + 0.
-     #180D3 * t28 * t4 * (-t18 + t17 * t21) - t41) * t43 * t45 / 0.720D3
-     # - (t39 * t4 * (-t18 + t51 * t21) - 0.90D2 * t5 * (-t56 * t18 / 0.
-     #2D1 - t59 + t56 * t51 * t21 / 0.6D1 + t51 * t24) - t74 + 0.180D3 *
-     # t28 * t4 * (t51 * t18 - t56 * t21 / 0.2D1 - t24)) * t45 / 0.720D3
-     # - t5 * (t91 * t21 - t96 * t21) * t102 / 0.8D1 - (-0.90D2 * t5 * (
-     #t108 * t18 - t110 * t21 / 0.2D1 - t115 * t18 + t117 * t21 / 0.2D1)
-     # + 0.180D3 * t28 * t4 * (t108 * t21 - t115 * t21)) * t100 * t45 / 
-     #0.720D3 - (t39 * t4 * (-t18 + t136 * t21) - 0.90D2 * t5 * (-t141 *
-     # t18 / 0.2D1 - t59 + t141 * t136 * t21 / 0.6D1 + t136 * t24) - t74
-     # + 0.180D3 * t28 * t4 * (t136 * t18 - t141 * t21 / 0.2D1 - t24)) *
-     # t43 / 0.1440D4 - (-0.90D2 * t5 * (t163 * t18 - t165 * t21 / 0.2D1
-     # - t170 * t18 + t172 * t21 / 0.2D1) + 0.180D3 * t28 * t4 * (t163 *
-     # t21 - t170 * t21)) * t43 * t100 / 0.1440D4 - ((0.90D2 * t5 * t18 
-     #- 0.180D3 * t28 * t40) * (t197 / 0.2D1 - t202 / 0.2D1) + 0.90D2 * 
-     #t5 * t21 * (t202 * t201 / 0.6D1 - t197 * t196 / 0.6D1) + (-0.180D3
-     # * t28 * t4 * t18 - t41 + 0.90D2 * t5 * t24) * (-t196 + t201)) * t
-     #100 / 0.1440D4 + (0.90D2 * t227 * lh + t73 + 0.15D2 * t231 - t233 
-     #* t38) * t4 * t18 / 0.1440D4 + (-0.180D3 * t233 * lh - 0.45D2 * t2
-     #27 + t39) * t4 * t24 / 0.1440D4 + (0.180D3 * t28 + 0.90D2 * t233) 
-     #* t4 * t59 / 0.1440D4 - t5 * t252 / 0.16D2 + (-0.30D2 * t231 * lh 
-     #+ t227 * t38 / 0.2D1 - t233 * t72 + pi * (-0.480D3 * lh * zeta3 - 
-     #t262 - 0.60D2 * t263 + 0.60D2 * t34 * t36) - 0.15D2 / 0.4D1 * t269
-     # * pi) * t4 * t21 / 0.1440D4
-      t277 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t276)
-      t280 = -0.1D1 + t93
-      t281 = 0.1D1 / t280
-      t282 = x3 * t86 * t281
-      t283 = t2 * t282
-      t284 = -0.1D1 + x3
-      t286 = t2 * t284 * t281
-      t287 = t280 ** 2
-      t288 = 0.1D1 / t287
-      t290 = t93 * t284 * t288
-      t293 = log(-0.4D1 * t88 * t290)
-      t294 = t293 * z
-      t295 = cos(t11)
-      t296 = x3 * z
-      t297 = x2 * t284
-      t299 = Sqrt(-t296 * t297)
-      t303 = 0.1D1 / (-z - t93 + 0.2D1 * t295 * t299)
-      t304 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t286, t283, 0.0D0)
-      t307 = t293 ** 2
-      t309 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t286, t283, 0.0D0)
-      t310 = t303 * t309
-      t313 = z * t303
-      t314 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t286, t283, 0.0D0)
-      t319 = t313 * t304
-      t326 = t313 * t309
-      t335 = log(-0.4D1 * t48 * t198 * t290)
-      t341 = t28 * t4
-      t346 = t100 * t45
-      t349 = -(-0.90D2 * t5 * (-t294 * t303 * t304 + t307 * z * t310 / 0
-     #.2D1 + t313 * t314) + 0.180D3 * t28 * t4 * (t319 - t294 * t310) + 
-     #t39 * t4 * t326) * t43 * t100 / 0.1440D4 + (-0.90D2 * t5 * (-t319 
-     #+ t335 * z * t310) - 0.180D3 * t341 * t326) * t43 * t346 / 0.720D3
-      t350 = FJET(XB1, XB2, s, 0.0D0, t283, 0.0D0, t286, 0.0D0, t349)
-      t352 = t284 * s
-      t353 = -0.1D1 + x1
-      t354 = t1 * t353
-      t356 = t352 * t354 * t281
-      t357 = t2 * x1
-      t358 = x3 * x1
-      t359 = x1 * z
-      t360 = t358 * z
-      t361 = -z - x1 + t359
-      t364 = Sqrt(x3 * t361 * t297)
-      t365 = t295 * t364
-      t366 = 0.2D1 * t365
-      t369 = 0.1D1 / t361
-      t372 = t357 * t86 * (-t93 - z + t296 - x1 + t358 + t359 - t360 + t
-     #366) * t369 * t281
-      t373 = t2 * t353
-      t374 = t373 * t282
-      t379 = x2 ** 2
-      t380 = x3 * t379
-      t381 = t380 * t359
-      t382 = t380 * x1
-      t384 = t93 * z
-      t386 = t93 * x1
-      t388 = 0.2D1 * t365 * x2 - 0.2D1 * t93 * t359 + t381 + t93 - t382 
-     #- t380 * z + t360 + 0.2D1 * t384 + 0.2D1 * t386 - x2 - t366 - t296
-     # - t358
-      t391 = t357 * t388 * t369 * t281
-      t392 = t1 ** 2
-      t397 = s * t392 * x2 * x1 * t353 * t369
-      t398 = x2 * x1
-      t399 = t398 * z
-      t400 = z + t399 - t359 + x1 - t398
-      t401 = t361 * t400
-      t402 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t372, -t391,
-     # -t356, -t374, t397)
-      t404 = t6 * t13
-      t405 = 0.1D1 / t8
-      t406 = t404 * t405
-      t408 = t353 ** 2
-      t409 = t408 * t369
-      t415 = log(0.4D1 * t93 * t406 * t409 * t87 * t284 * t288)
-      t417 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t372, -t391,
-     # -t356, -t374, t397)
-      t426 = t8 * x2
-      t432 = t6 * t8
-      t437 = t105 - t8 + 0.2D1 * t7 * x2 * z + x3 * t8 * t398 - t381 - t
-     #7 * t426 + 0.2D1 * x1 * t8 + 0.2D1 * t6 * z - t432 - t426 * x1 - 0
-     #.2D1 * t105 * z + t432 * x2
-      t449 = t382 - t85 + t399 - t384 - t386 - 0.2D1 * t359 + 0.2D1 * t3
-     #65 * z + 0.2D1 * t365 * x1 - t6 - 0.2D1 * t365 * t398 - 0.2D1 * t3
-     #65 * t359 + 0.2D1 * t365 * t399
-      t451 = 0.1D1 / (t437 + t449)
-      t459 = 0.90D2 * t5 * (t401 * t402 - t415 * t361 * t400 * t417) * t
-     #451 - 0.180D3 * t341 * t401 * t417 * t451
-      t462 = t459 * t43 * t346 / 0.720D3
-      t463 = FJET(XB1, XB2, s, -t356, t372, -t374, -t391, t397, t462)
-      t468 = x3 * s * t354
-      t469 = t2 * t358
-      t470 = t352 * t354
-      t471 = t1 * x1
-      t472 = t352 * t471
-      t473 = x3 * t284
-      t477 = log(0.4D1 * t406 * t473 * t409)
-      t478 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t472, t469,
-     # t470, -t468, 0.0D0)
-      t480 = t477 ** 2
-      t481 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t472, t469,
-     # t470, -t468, 0.0D0)
-      t484 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t472, t469,
-     # t470, -t468, 0.0D0)
-      t493 = t4 * t481
-      t499 = t13 * t405
-      t505 = log(0.4D1 * t369 * t6 * t499 * t408 * x2 * t473)
-      t516 = -(-0.90D2 * t5 * (t477 * t478 - t480 * t481 / 0.2D1 - t484)
-     # + 0.180D3 * t28 * t4 * (-t478 + t477 * t481) - t39 * t493) * t43 
-     #* t45 / 0.720D3 + (-0.90D2 * t5 * (t478 - t505 * t481) + 0.180D3 *
-     # t28 * t493) * t43 * t346 / 0.720D3
-      t517 = FJET(XB1, XB2, s, -t468, t469, t470, -t472, 0.0D0, t516)
-      t519 = FJET(XB1, XB2, s, t286, 0.0D0, t283, 0.0D0, 0.0D0, t349)
-      t522 = t86 * s * t471
-      t524 = t2 * t398 * t369
-      t525 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t522, -t524
-     #, -t373, 0.0D0, t397)
-      t527 = t405 * t408
-      t529 = t527 * t369 * t87
-      t532 = log(-0.4D1 * t93 * t404 * t529)
-      t533 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t522, -t524
-     #, -t373, 0.0D0, t397)
-      t538 = t4 * t533
-      t543 = (-0.90D2 * t5 * (t525 - t532 * t533) + 0.180D3 * t28 * t538
-     #) * t43 * t346
-      t544 = t105 * t13
-      t547 = log(-0.4D1 * t544 * t529)
-      t549 = t547 ** 2
-      t552 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, -t522, -t524
-     #, -t373, 0.0D0, t397)
-      t553 = -t547 * t525 + t549 * t533 / 0.2D1 + t552
-      t557 = t525 - t547 * t533
-      t561 = t39 * t538
-      t566 = t543 / 0.720D3 - (0.90D2 * t5 * t553 - 0.180D3 * t28 * t4 *
-     # t557 - t561) * t100 * t45 / 0.720D3
-      t567 = FJET(XB1, XB2, s, -t522, -t373, -t524, 0.0D0, t397, t566)
-      t571 = t13 * t408 * t369
-      t574 = log(-0.4D1 * t7 * t405 * t571)
-      t575 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t357, 0.0D0,
-     # -t373, 0.0D0, 0.0D0)
-      t577 = t574 ** 2
-      t578 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t357, 0.0D0,
-     # -t373, 0.0D0, 0.0D0)
-      t581 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t357, 0.0D0,
-     # -t373, 0.0D0, 0.0D0)
-      t590 = t4 * t578
-      t591 = t39 * t590
-      t598 = log(-0.4D1 * t6 * t405 * t571)
-      t603 = t598 ** 2
-      t606 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, t357, 0.0D0,
-     # -t373, 0.0D0, 0.0D0)
-      t627 = log(-0.4D1 * t85 * t499 * t409)
-      t640 = log(-0.4D1 * t544 * t527 * t369)
-      t642 = t640 ** 2
-      t657 = -(-0.90D2 * t5 * (-t574 * t575 + t577 * t578 / 0.2D1 + t581
-     #) + 0.180D3 * t28 * t4 * (t575 - t574 * t578) + t591) * t43 * t45 
-     #/ 0.720D3 - (t39 * t4 * (t575 - t598 * t578) - 0.90D2 * t5 * (t603
-     # * t575 / 0.2D1 + t606 - t603 * t598 * t578 / 0.6D1 - t598 * t581)
-     # + t73 * t590 + 0.180D3 * t28 * t4 * (-t598 * t575 + t603 * t578 /
-     # 0.2D1 + t581)) * t45 / 0.720D3 + (-0.90D2 * t5 * (-t575 + t627 * 
-     #t578) - 0.180D3 * t28 * t590) * t43 * t346 / 0.720D3 - (-0.90D2 * 
-     #t5 * (-t640 * t575 + t642 * t578 / 0.2D1 + t581) + 0.180D3 * t28 *
-     # t4 * (t575 - t640 * t578) + t591) * t100 * t45 / 0.720D3
-      t658 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t357, -t373, 0.0D0, t657)
-      t660 = FJET(XB1, XB2, s, -t373, t357, 0.0D0, 0.0D0, 0.0D0, t657)
-      t662 = FJET(XB1, XB2, s, -t472, t470, t469, -t468, 0.0D0, t516)
-      t664 = FJET(XB1, XB2, s, t469, -t468, -t472, t470, 0.0D0, t516)
-      t666 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t276)
-      t679 = t543 / 0.720D3 - (0.90D2 * t5 * t553 - 0.180D3 * t28 * t4 *
-     # t557 - t561) * t100 * t45 / 0.720D3
-      t680 = FJET(XB1, XB2, s, 0.0D0, -t524, -t373, -t522, t397, t679)
-      t682 = t2 * t284
-      t683 = t2 * x3
-      t687 = log(-0.4D1 * t7 * t14 * t284)
-      t688 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t682, t683, 0.0D0)
-      t690 = t687 ** 2
-      t691 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t682, t683, 0.0D0)
-      t694 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t682, t683, 0.0D0)
-      t703 = t4 * t691
-      t704 = t39 * t703
-      t712 = log(-0.4D1 * t544 * t133 * t284)
-      t726 = log(-0.4D1 * t133 * t13 * t284)
-      t731 = t726 ** 2
-      t734 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t682, t683, 0.0D0)
-      t757 = log(-0.4D1 * t193 * t13 * x3 * t284)
-      t759 = t757 ** 2
-      t774 = -(-0.90D2 * t5 * (-t687 * t688 + t690 * t691 / 0.2D1 + t694
-     #) + 0.180D3 * t28 * t4 * (t688 - t687 * t691) + t704) * t43 * t45 
-     #/ 0.720D3 + (-0.90D2 * t5 * (-t688 + t712 * t691) - 0.180D3 * t28 
-     #* t703) * t43 * t346 / 0.720D3 - (t39 * t4 * (t688 - t726 * t691) 
-     #- 0.90D2 * t5 * (t731 * t688 / 0.2D1 + t734 - t731 * t726 * t691 /
-     # 0.6D1 - t726 * t694) + t73 * t703 + 0.180D3 * t28 * t4 * (-t726 *
-     # t688 + t731 * t691 / 0.2D1 + t694)) * t43 / 0.1440D4 - (-0.90D2 *
-     # t5 * (-t757 * t688 + t759 * t691 / 0.2D1 + t694) + 0.180D3 * t28 
-     #* t4 * (t688 - t757 * t691) + t704) * t43 * t100 / 0.1440D4
-      t775 = FJET(XB1, XB2, s, -t682, 0.0D0, t683, 0.0D0, 0.0D0, t774)
-      t777 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t373, t357, 0.0D0, t657)
-      t779 = t277 * t276 + t350 * t349 + t463 * t459 * t102 / 0.720D3 + 
-     #t517 * t516 + t519 * t349 + t567 * t566 + t658 * t657 + t660 * t65
-     #7 + t662 * t516 + t664 * t516 + t666 * t276 + t680 * t679 + t775 *
-     # t774 + t777 * t657
-      t780 = FJET(XB1, XB2, s, t470, -t472, -t468, t469, 0.0D0, t516)
-      t782 = FJET(XB1, XB2, s, t357, -t373, 0.0D0, 0.0D0, 0.0D0, t657)
-      t784 = FJET(XB1, XB2, s, 0.0D0, -t682, 0.0D0, t683, 0.0D0, t774)
-      t786 = FJET(XB1, XB2, s, -t391, -t374, t372, -t356, t397, t462)
-      t790 = FJET(XB1, XB2, s, -t374, -t391, -t356, t372, t397, t462)
-      t794 = FJET(XB1, XB2, s, t372, -t356, -t391, -t374, t397, t462)
-      t798 = FJET(XB1, XB2, s, 0.0D0, t683, 0.0D0, -t682, 0.0D0, t774)
-      t800 = FJET(XB1, XB2, s, -t524, 0.0D0, -t522, -t373, t397, t566)
-      t802 = FJET(XB1, XB2, s, t683, 0.0D0, -t682, 0.0D0, 0.0D0, t774)
-      t804 = FJET(XB1, XB2, s, 0.0D0, t286, 0.0D0, t283, 0.0D0, t349)
-      t806 = FJET(XB1, XB2, s, -t373, -t522, 0.0D0, -t524, t397, t566)
-      t808 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t276)
-      t810 = FJET(XB1, XB2, s, t283, 0.0D0, t286, 0.0D0, 0.0D0, t349)
-      t812 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t276)
-      t814 = t780 * t516 + t782 * t657 + t784 * t774 + t786 * t459 * t10
-     #2 / 0.720D3 + t790 * t459 * t102 / 0.720D3 + t794 * t459 * t102 / 
-     #0.720D3 + t798 * t774 + t800 * t566 + t802 * t774 + t804 * t349 + 
-     #t806 * t566 + t808 * t276 + t810 * t349 + t812 * t276
-      rrgg2qqbarht7s4e1 = t779 + t814
+      t21 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t24 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t25 = -0.1D1 + x3
+      t26 = 0.1D1 / t25
+      t27 = t14 * t26
+      t30 = log(-0.4D1 * t7 * t27)
+      t31 = t30 * z
+      t33 = t30 ** 2
+      t37 = z * t24
+      t39 = cos(t11)
+      t40 = x3 * z
+      t42 = Sqrt(-t40 * t25)
+      t46 = 0.1D1 / (-z - x3 + 0.2D1 * t39 * t42)
+      t51 = lh * pi
+      t53 = z * t18
+      t61 = lh ** 2
+      t62 = 0.180D3 * t61
+      t63 = pi ** 2
+      t64 = 0.30D2 * t63
+      t65 = t62 - t64
+      t66 = t65 * pi
+      t68 = z * t21 * t46
+      t73 = 0.1D1 / x3
+      t75 = 0.1D1 / x1
+      t78 = t6 * t13
+      t79 = t78 * t10
+      t81 = log(0.4D1 * t79)
+      t86 = t81 ** 2
+      t89 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t98 = 0.60D2 * lh * t63
+      t99 = 0.240D3 * zeta3
+      t101 = 0.120D3 * t61 * lh
+      t102 = t98 - t99 - t101
+      t103 = t102 * pi
+      t104 = t4 * t21
+      t116 = x2 ** 2
+      t117 = x3 * t116
+      t120 = log(0.4D1 * t117 * t79)
+      t122 = t117 * t6
+      t123 = -0.1D1 + x2
+      t124 = t14 * t123
+      t127 = log(-0.4D1 * t122 * t124)
+      t131 = log(-0.4D1 * t122 * t27)
+      t139 = t51 * t4
+      t144 = 0.1D1 / x2
+      t145 = t144 * t75
+      t148 = t116 * t6
+      t151 = log(0.4D1 * t148 * t14)
+      t153 = t151 ** 2
+      t158 = log(-0.4D1 * t148 * t124)
+      t160 = t158 ** 2
+      t176 = pi * t18
+      t179 = pi * t24
+      t181 = pi * t21
+      t185 = x3 * t10
+      t189 = log(-0.4D1 * t185 * t13 * t26)
+      t194 = log(0.4D1 * t185 * t13)
+      t197 = t194 ** 2
+      t199 = t189 ** 2
+      t234 = log(-0.4D1 * t117 * t124)
+      t236 = t234 ** 2
+      t241 = log(-0.4D1 * t117 * t27)
+      t242 = t241 * z
+      t244 = t241 ** 2
+      t252 = log(0.4D1 * t117 * t14)
+      t254 = t252 ** 2
+      t269 = t66 * t4
+      t280 = t10 * t116
+      t281 = t13 * t123
+      t284 = log(-0.4D1 * t280 * t281)
+      t285 = t284 ** 2
+      t288 = log(0.4D1 * t280 * t13)
+      t289 = t288 ** 2
+      t300 = t4 * t18
+      t313 = log(0.4D1 * t14)
+      t314 = t313 ** 2
+      t317 = t314 * t313
+      t339 = rrgg2qqbarhhard71J5(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t347 = t63 ** 2
+      t348 = t61 ** 2
+      t354 = t314 ** 2
+      t360 = (0.90D2 * t5 * (t17 * t18 - t20 * t21 / 0.2D1 - t24 - (-t31
+     # * t18 + t33 * z * t21 / 0.2D1 + t37) * t46) - 0.180D3 * t51 * t4 
+     #* (-t18 + t17 * t21 - (t53 - t31 * t21) * t46) + t66 * t4 * (-t68 
+     #- t21)) * t73 * t75 / 0.1440D4 - (t66 * t4 * (t18 - t81 * t21) + 0
+     #.90D2 * t5 * (t86 * t18 / 0.2D1 + t89 - t86 * t81 * t21 / 0.6D1 - 
+     #t81 * t24) + t103 * t104 - 0.180D3 * t51 * t4 * (-t81 * t18 + t86 
+     #* t21 / 0.2D1 + t24)) * t75 / 0.1440D4 - (0.90D2 * t5 * (-t120 * t
+     #21 + t127 * t21 + (t53 - t131 * z * t21) * t46) - 0.180D3 * t139 *
+     # t68) * t73 * t145 / 0.720D3 - (0.90D2 * t5 * (-t151 * t18 + t153 
+     #* t21 / 0.2D1 + t158 * t18 - t160 * t21 / 0.2D1) - 0.180D3 * t51 *
+     # t4 * (t158 * t21 - t151 * t21)) * t144 * t75 / 0.720D3 + ((-0.180
+     #D3 * t176 * lh + 0.90D2 * t179 + t181 * t65) * t4 * (t189 * z * t4
+     #6 + t194) + 0.90D2 * t5 * t21 * (t197 * t194 / 0.6D1 + t199 * t189
+     # * z * t46 / 0.6D1) + (-0.180D3 * t179 * lh + t181 * t102 + 0.90D2
+     # * pi * t89 + t176 * t65) * t4 * (-z * t46 - 0.1D1) + (-0.180D3 * 
+     #t181 * lh + 0.90D2 * t176) * t4 * (-t199 * z * t46 / 0.2D1 - t197 
+     #/ 0.2D1)) * t73 / 0.2880D4 + (0.90D2 * t5 * (-t234 * t18 + t236 * 
+     #t21 / 0.2D1 - (-t242 * t18 + t244 * z * t21 / 0.2D1 + t37) * t46 +
+     # t252 * t18 - t254 * t21 / 0.2D1) - 0.180D3 * t51 * t4 * (-t234 * 
+     #t21 - (t53 - t242 * t21) * t46 + t252 * t21) - t269 * t68) * t73 *
+     # t144 / 0.1440D4 - ((0.90D2 * t5 * t18 - 0.180D3 * t51 * t104) * (
+     #-t285 / 0.2D1 + t289 / 0.2D1) + 0.90D2 * t5 * t21 * (-t289 * t288 
+     #/ 0.6D1 + t285 * t284 / 0.6D1) + (-0.180D3 * t51 * t300 + t66 * t1
+     #04 + 0.90D2 * t5 * t24) * (t284 - t288)) * t144 / 0.1440D4 - (-0.9
+     #0D2 * t314 * lh + t98 - t99 - t101 - 0.15D2 * t317 - t313 * t65) *
+     # pi * t300 / 0.2880D4 - (0.180D3 * t313 * lh + 0.45D2 * t314 + t62
+     # - t64) * pi * t4 * t24 / 0.2880D4 - (-0.180D3 * lh - 0.90D2 * t31
+     #3) * pi * t4 * t89 / 0.2880D4 - t5 * t339 / 0.32D2 - (0.30D2 * t31
+     #7 * lh + t314 * t65 / 0.2D1 - t313 * t102 + t347 + 0.60D2 * t348 +
+     # 0.480D3 * lh * zeta3 - 0.60D2 * t61 * t63 + 0.15D2 / 0.4D1 * t354
+     #) * pi * t104 / 0.2880D4
+      t361 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t360)
+      t363 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t360)
+      t365 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t360)
+      t367 = x2 * x3
+      t368 = 0.1D1 - x3 + t367
+      t369 = 0.1D1 / t368
+      t370 = t367 * t369
+      t371 = t2 * t370
+      t373 = t2 * t25 * t369
+      t375 = t368 ** 2
+      t376 = 0.1D1 / t375
+      t377 = t25 * t376
+      t381 = log(0.4D1 * t117 * t10 * t281 * t377)
+      t382 = t381 * z
+      t383 = t123 * t25
+      t385 = Sqrt(t40 * t383)
+      t389 = 0.1D1 / (-z - x3 + t367 + 0.2D1 * t39 * t385)
+      t390 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t373, t371, 0.0D0)
+      t393 = t381 ** 2
+      t395 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t373, t371, 0.0D0)
+      t396 = t389 * t395
+      t399 = z * t389
+      t400 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t373, t371, 0.0D0)
+      t405 = t399 * t390
+      t411 = t399 * t395
+      t417 = t117 * t78
+      t422 = log(0.4D1 * t417 * t10 * t123 * t377)
+      t434 = (0.90D2 * t5 * (-t382 * t389 * t390 + t393 * z * t396 / 0.2
+     #D1 + t399 * t400) - 0.180D3 * t51 * t4 * (t405 - t382 * t396) + t2
+     #69 * t411) * t73 * t144 / 0.1440D4 - (0.90D2 * t5 * (-t405 + t422 
+     #* z * t396) + 0.180D3 * t139 * t411) * t73 * t145 / 0.720D3
+      t435 = FJET(XB1, XB2, s, 0.0D0, t371, 0.0D0, -t373, 0.0D0, t434)
+      t438 = t1 * x1
+      t439 = x1 * z
+      t440 = -z - x1 + t439
+      t441 = 0.1D1 / t440
+      t443 = t123 * s * t438 * t441
+      t444 = -0.1D1 + x1
+      t445 = t2 * t444
+      t447 = x2 * s * t438
+      t448 = t1 ** 2
+      t449 = s * t448
+      t452 = x1 * t444 * t441
+      t453 = t449 * t123 * t452
+      t454 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t447, t4
+     #43, -t445, 0.0D0, -t453)
+      t455 = 0.1D1 / t8
+      t456 = t455 * t441
+      t457 = t444 ** 2
+      t459 = t456 * t457 * t123
+      t462 = log(0.4D1 * t417 * t459)
+      t463 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t447, t4
+     #43, -t445, 0.0D0, -t453)
+      t468 = t4 * t463
+      t474 = t148 * t13
+      t477 = log(0.4D1 * t474 * t459)
+      t479 = t477 ** 2
+      t482 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t447, t4
+     #43, -t445, 0.0D0, -t453)
+      t496 = -(0.90D2 * t5 * (t454 - t462 * t463) - 0.180D3 * t51 * t468
+     #) * t73 * t145 / 0.720D3 - (0.90D2 * t5 * (-t477 * t454 + t479 * t
+     #463 / 0.2D1 + t482) - 0.180D3 * t51 * t4 * (t454 - t477 * t463) + 
+     #t66 * t468) * t144 * t75 / 0.720D3
+      t497 = FJET(XB1, XB2, s, 0.0D0, t443, -t445, t447, -t453, t496)
+      t500 = t2 * x1 * t441
+      t501 = t449 * t452
+      t502 = t7 * t13
+      t503 = t456 * t457
+      t506 = log(-0.4D1 * t502 * t503)
+      t507 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t500, -t445, 0.0D0, t501)
+      t510 = t456 * t457 * t26
+      t513 = log(0.4D1 * t502 * t510)
+      t514 = t513 * z
+      t517 = t513 ** 2
+      t519 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t500, -t445, 0.0D0, t501)
+      t520 = t440 * t519
+      t523 = z * t440
+      t524 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t500, -t445, 0.0D0, t501)
+      t527 = x3 * x1
+      t528 = t527 * z
+      t529 = x1 * t8
+      t530 = x3 * t8
+      t531 = t530 * x1
+      t533 = 0.2D1 * t7 * z
+      t534 = t7 * t8
+      t535 = x3 * t440
+      t537 = Sqrt(t535 * t25)
+      t542 = 0.1D1 / (-t439 - t528 - t40 - t7 + t529 + t531 + t533 - t53
+     #4 - t8 + 0.2D1 * t39 * t537 * z)
+      t544 = t506 ** 2
+      t550 = t523 * t507
+      t561 = t519 - t523 * t519 * t542
+      t570 = log(-0.4D1 * t78 * t503)
+      t575 = t570 ** 2
+      t578 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t500, -t445, 0.0D0, t501)
+      t586 = t4 * t519
+      t599 = t441 * t457
+      t603 = log(-0.4D1 * t122 * t13 * t455 * t599)
+      t607 = log(0.4D1 * t417 * t510)
+      t625 = log(-0.4D1 * t474 * t503)
+      t626 = t625 ** 2
+      t643 = (0.90D2 * t5 * (-t506 * t507 - (-t514 * t440 * t507 + t517 
+     #* z * t520 / 0.2D1 + t523 * t524) * t542 + t524 + t544 * t519 / 0.
+     #2D1) - 0.180D3 * t51 * t4 * (-(t550 - t514 * t520) * t542 - t506 *
+     # t519 + t507) + t66 * t4 * t561) * t73 * t75 / 0.1440D4 - (t66 * t
+     #4 * (-t507 + t570 * t519) + 0.90D2 * t5 * (-t575 * t507 / 0.2D1 - 
+     #t578 + t575 * t570 * t519 / 0.6D1 + t570 * t524) - t103 * t586 - 0
+     #.180D3 * t51 * t4 * (t570 * t507 - t575 * t519 / 0.2D1 - t524)) * 
+     #t75 / 0.1440D4 - (0.90D2 * t5 * (-t507 + t603 * t519 + (t550 - t60
+     #7 * z * t520) * t542) + 0.180D3 * t51 * t4 * t561) * t73 * t145 / 
+     #0.720D3 - (0.90D2 * t5 * (-t626 * t519 / 0.2D1 - t524 + t625 * t50
+     #7) - 0.180D3 * t51 * t4 * (t625 * t519 - t507) - t66 * t586) * t14
+     #4 * t75 / 0.720D3
+      t644 = FJET(XB1, XB2, s, 0.0D0, -t445, -t500, 0.0D0, t501, t643)
+      t646 = FJET(XB1, XB2, s, 0.0D0, -t500, -t445, 0.0D0, t501, t643)
+      t648 = FJET(XB1, XB2, s, 0.0D0, -t373, 0.0D0, t371, 0.0D0, t434)
+      t650 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t360)
+      t652 = FJET(XB1, XB2, s, t447, -t445, t443, 0.0D0, -t453, t496)
+      t654 = FJET(XB1, XB2, s, t371, 0.0D0, -t373, 0.0D0, 0.0D0, t434)
+      t656 = FJET(XB1, XB2, s, t443, 0.0D0, t447, -t445, -t453, t496)
+      t661 = t25 * s * t1 * t444 * t369
+      t662 = t2 * x1
+      t664 = Sqrt(-t535 * t383)
+      t665 = t39 * t664
+      t671 = t662 * x2 * (-x3 + t367 - z + t40 - x1 + t527 + t439 - t528
+     # + 0.2D1 * t665) * t441 * t369
+      t672 = t445 * t370
+      t675 = t117 * x1
+      t677 = t117 * t439
+      t681 = t662 * (0.2D1 * t665 * x2 + t675 + t117 * z - x2 + t367 - t
+     #677 + 0.1D1 - x3) * t441 * t369
+      t682 = x2 * x1
+      t683 = t682 * z
+      t688 = x2 * t6
+      t696 = t8 - t675 + t683 - t367 * z + t367 * x1 - t7 * x2 - t682 * 
+     #t8 - 0.2D1 * t688 * z + t688 * t8 - 0.2D1 * t665 * z + t688 + 0.2D
+     #1 * t665 * t683 + t439
+      t707 = t40 + t7 - t529 + t528 - t531 - t533 + t534 + t677 - 0.2D1 
+     #* t367 * t439 + t530 * t682 + 0.2D1 * t7 * x2 * z - t7 * t8 * x2 -
+     # 0.2D1 * t665 * t682
+      t709 = 0.1D1 / (t696 + t707)
+      t710 = t709 * t440
+      t711 = -z + t683 - t682
+      t712 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t671, -t
+     #681, t661, -t672, -t453)
+      t721 = log(-0.4D1 * t117 * t78 * t455 * t599 * t383 * t376)
+      t724 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t671, -t
+     #681, t661, -t672, -t453)
+      t734 = 0.90D2 * t5 * (-t710 * t711 * t712 + t721 * t709 * t440 * t
+     #711 * t724) + 0.180D3 * t139 * t710 * t711 * t724
+      t737 = t734 * t73 * t145 / 0.720D3
+      t738 = FJET(XB1, XB2, s, t661, t671, -t672, -t681, -t453, -t737)
+      t741 = t73 * t144 * t75
+      t744 = FJET(XB1, XB2, s, t671, t661, -t681, -t672, -t453, -t737)
+      t748 = FJET(XB1, XB2, s, -t445, 0.0D0, 0.0D0, -t500, t501, t643)
+      t750 = FJET(XB1, XB2, s, -t445, t447, 0.0D0, t443, -t453, t496)
+      t752 = FJET(XB1, XB2, s, -t500, 0.0D0, 0.0D0, -t445, t501, t643)
+      t754 = FJET(XB1, XB2, s, -t373, 0.0D0, t371, 0.0D0, 0.0D0, t434)
+      t756 = FJET(XB1, XB2, s, -t681, -t672, t671, t661, -t453, -t737)
+      t760 = FJET(XB1, XB2, s, -t672, -t681, t661, t671, -t453, -t737)
+      rrgg2qqbarhhardt7s3e1 = t361 * t360 + t363 * t360 + t365 * t360 + 
+     #t435 * t434 + t497 * t496 + t644 * t643 + t646 * t643 + t648 * t43
+     #4 + t650 * t360 + t652 * t496 + t654 * t434 + t656 * t496 - t738 *
+     # t734 * t741 / 0.720D3 - t744 * t734 * t741 / 0.720D3 + t748 * t64
+     #3 + t750 * t496 + t752 * t643 + t754 * t434 - t756 * t734 * t741 /
+     # 0.720D3 - t760 * t734 * t741 / 0.720D3
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s4e0
+      doubleprecision function rrgg2qqbarhhardt7s3e0
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -3686,290 +2660,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
-
-      doubleprecision Pi
-      parameter(pi=3.141592653589793d0)
-      doubleprecision zeta3
-      parameter(zeta3=1.202056903159594d0)
-      doubleprecision zeta5
-      parameter(zeta5=1.036927755143370d0)
-      doubleprecision zeta7
-      parameter(zeta7=1.008349277381923d0)
-      t1 = -0.1D1 + z
-      t2 = t1 * s
-      t3 = -0.1D1 + x2
-      t5 = x2 * x3
-      t6 = -0.1D1 + t5
-      t7 = 0.1D1 / t6
-      t8 = x3 * t3 * t7
-      t9 = t2 * t8
-      t10 = -0.1D1 + x3
-      t12 = t2 * t10 * t7
-      t13 = s ** 2
-      t14 = 0.1D1 / t13
-      t15 = pi * t14
-      t16 = x4 * pi
-      t17 = cos(t16)
-      t18 = x3 * z
-      t19 = x2 * t10
-      t21 = Sqrt(-t18 * t19)
-      t25 = 0.1D1 / (-z - t5 + 0.2D1 * t17 * t21)
-      t26 = z * t25
-      t27 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t12, t9, 0.0D0)
-      t29 = z ** 2
-      t31 = 0.1D1 / t29 / z
-      t32 = t3 ** 2
-      t34 = Sin(t16)
-      t35 = t34 ** 2
-      t36 = t31 * t32 * t35
-      t37 = t6 ** 2
-      t43 = log(-0.4D1 * t36 * t5 * t10 / t37)
-      t45 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t12, t9, 0.0D0)
-      t51 = pi * lh
-      t57 = 0.1D1 / x3
-      t59 = 0.1D1 / x2
-      t64 = 0.1D1 / x1
-      t69 = -(-0.90D2 * t15 * (t26 * t27 - t43 * z * t25 * t45) + 0.180D
-     #3 * t51 * t14 * t26 * t45) * t57 * t59 / 0.1440D4 + t15 * t26 * t4
-     #5 * t57 * t59 * t64 / 0.8D1
-      t70 = FJET(XB1, XB2, s, t9, 0.0D0, t12, 0.0D0, 0.0D0, t69)
-      t72 = t2 * t10
-      t73 = t2 * x3
-      t74 = x3 * t31
-      t78 = log(-0.4D1 * t74 * t35 * t10)
-      t79 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # -t72, t73, 0.0D0)
-      t81 = t78 ** 2
-      t82 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # -t72, t73, 0.0D0)
-      t85 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # -t72, t73, 0.0D0)
-      t94 = lh ** 2
-      t96 = pi ** 2
-      t98 = -0.180D3 * t94 + 0.30D2 * t96
-      t99 = pi * t98
-      t100 = t14 * t82
-      t105 = x1 ** 2
-      t106 = x3 * t105
-      t107 = t35 * t31
-      t111 = log(-0.4D1 * t106 * t107 * t10)
-      t117 = 0.180D3 * t51 * t100
-      t124 = t57 * t59 * t64
-      t127 = x2 * t31
-      t132 = log(-0.4D1 * t127 * t35 * x3 * t10)
-      t141 = -(-0.90D2 * t15 * (-t78 * t79 + t81 * t82 / 0.2D1 + t85) + 
-     #0.180D3 * t51 * t14 * (t79 - t78 * t82) + t99 * t100) * t57 / 0.14
-     #40D4 - (-0.90D2 * t15 * (t79 - t111 * t82) + t117) * t57 * t64 / 0
-     #.720D3 + t15 * t82 * t124 / 0.8D1 - (-0.90D2 * t15 * (t79 - t132 *
-     # t82) + t117) * t57 * t59 / 0.1440D4
-      t142 = FJET(XB1, XB2, s, -t72, 0.0D0, t73, 0.0D0, 0.0D0, t141)
-      t144 = FJET(XB1, XB2, s, t73, 0.0D0, -t72, 0.0D0, 0.0D0, t141)
-      t146 = FJET(XB1, XB2, s, 0.0D0, -t72, 0.0D0, t73, 0.0D0, t141)
-      t148 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t151 = log(0.4D1 * t106 * t107)
-      t152 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t157 = t14 * t152
-      t159 = 0.180D3 * t51 * t157
-      t164 = t105 * x2
-      t167 = log(0.4D1 * t164 * t107)
-      t171 = log(0.4D1 * t164 * t36)
-      t181 = log(0.4D1 * t105 * t31 * t35)
-      t183 = t181 ** 2
-      t186 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t195 = t99 * t157
-      t201 = log(0.4D1 * t74 * t35)
-      t203 = t201 ** 2
-      t218 = log(0.4D1 * t107)
-      t219 = t218 * pi
-      t222 = t218 ** 2
-      t223 = t222 * pi
-      t229 = rrgg2qqbarh71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t2, 0.0D0, 0.0D0)
-      t257 = log(0.4D1 * t5 * t107)
-      t261 = log(0.4D1 * t5 * t36)
-      t270 = log(0.4D1 * t127 * t35)
-      t271 = t270 ** 2
-      t275 = log(0.4D1 * t127 * t35 * t32)
-      t276 = t275 ** 2
-      t290 = -(-0.90D2 * t15 * (-t148 + t151 * t152) - t159) * t57 * t64
-     # / 0.720D3 + t15 * (t167 * t152 - t171 * t152) * t59 * t64 / 0.8D1
-     # - (-0.90D2 * t15 * (t181 * t148 - t183 * t152 / 0.2D1 - t186) + 0
-     #.180D3 * t51 * t14 * (-t148 + t181 * t152) - t195) * t64 / 0.720D3
-     # - (-0.90D2 * t15 * (t201 * t148 - t203 * t152 / 0.2D1 - t186) + 0
-     #.180D3 * t51 * t14 * (-t148 + t201 * t152) - t195) * t57 / 0.1440D
-     #4 + (-0.180D3 * t219 * lh - 0.45D2 * t223 + t99) * t14 * t148 / 0.
-     #1440D4 - t15 * t229 / 0.16D2 + (0.90D2 * t223 * lh + pi * (-0.60D2
-     # * lh * t96 + 0.240D3 * zeta3 + 0.120D3 * t94 * lh) + 0.15D2 * t22
-     #2 * t218 * pi - t219 * t98) * t14 * t152 / 0.1440D4 + (0.180D3 * t
-     #51 + 0.90D2 * t219) * t14 * t186 / 0.1440D4 + t15 * (t257 * t152 -
-     # t261 * t152) * t57 * t59 / 0.16D2 - (0.90D2 * t15 * t152 * (t271 
-     #/ 0.2D1 - t276 / 0.2D1) + (0.90D2 * t15 * t148 - t159) * (-t270 + 
-     #t275)) * t59 / 0.1440D4
-      t291 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t290)
-      t293 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t290)
-      t295 = t2 * x1
-      t296 = x3 * x1
-      t297 = x1 * z
-      t298 = t296 * z
-      t299 = -z - x1 + t297
-      t302 = Sqrt(x3 * t299 * t19)
-      t303 = t17 * t302
-      t304 = 0.2D1 * t303
-      t307 = 0.1D1 / t299
-      t310 = t295 * t3 * (-t5 - z + t18 - x1 + t296 + t297 - t298 + t304
-     #) * t307 * t7
-      t311 = t10 * s
-      t312 = -0.1D1 + x1
-      t313 = t1 * t312
-      t315 = t311 * t313 * t7
-      t320 = x2 ** 2
-      t321 = x3 * t320
-      t322 = t321 * t297
-      t323 = t321 * x1
-      t325 = t5 * z
-      t327 = t5 * x1
-      t329 = 0.2D1 * t303 * x2 - 0.2D1 * t5 * t297 + t322 + t5 - t323 - 
-     #t321 * z + t298 + 0.2D1 * t325 + 0.2D1 * t327 - x2 - t304 - t18 - 
-     #t296
-      t332 = t295 * t329 * t307 * t7
-      t333 = t2 * t312
-      t334 = t333 * t8
-      t335 = t1 ** 2
-      t340 = s * t335 * x2 * x1 * t312 * t307
-      t341 = x2 * x1
-      t342 = t341 * z
-      t343 = z + t342 - t297 + x1 - t341
-      t346 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t310, -t332,
-     # -t315, -t334, t340)
-      t352 = t29 * x2
-      t358 = t105 * t29
-      t363 = t164 - t29 + 0.2D1 * t106 * x2 * z + x3 * t29 * t341 - t322
-     # - t106 * t352 + 0.2D1 * x1 * t29 + 0.2D1 * t105 * z - t358 - t352
-     # * x1 - 0.2D1 * t164 * z + t358 * x2
-      t376 = t323 - t106 * x2 + t342 - t325 - t327 - 0.2D1 * t297 + 0.2D
-     #1 * t303 * z + 0.2D1 * t303 * x1 - t105 - 0.2D1 * t303 * t341 - 0.
-     #2D1 * t303 * t297 + 0.2D1 * t303 * t342
-      t380 = t346 / (t363 + t376) * t124
-      t382 = t15 * t299 * t343 * t380 / 0.8D1
-      t383 = FJET(XB1, XB2, s, t310, -t315, -t332, -t334, t340, t382)
-      t386 = t14 * t299 * t343
-      t390 = t2 * t296
-      t392 = x3 * s * t313
-      t393 = t1 * x1
-      t394 = t311 * t393
-      t395 = t311 * t313
-      t396 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t394, t390,
-     # t395, -t392, 0.0D0)
-      t398 = 0.1D1 / t29
-      t401 = t312 ** 2
-      t406 = log(0.4D1 * t105 * t35 * t398 * x3 * t10 * t307 * t401)
-      t407 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t394, t390,
-     # t395, -t392, 0.0D0)
-      t422 = -(-0.90D2 * t15 * (-t396 + t406 * t407) - 0.180D3 * t51 * t
-     #14 * t407) * t57 * t64 / 0.720D3 - t15 * t407 * t124 / 0.8D1
-      t423 = FJET(XB1, XB2, s, t390, -t392, -t394, t395, 0.0D0, t422)
-      t425 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t290)
-      t427 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t295, 0.0D0,
-     # -t333, 0.0D0, 0.0D0)
-      t430 = t35 * t401 * t307
-      t433 = log(-0.4D1 * t106 * t398 * t430)
-      t434 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t295, 0.0D0,
-     # -t333, 0.0D0, 0.0D0)
-      t439 = t14 * t434
-      t441 = 0.180D3 * t51 * t439
-      t449 = t164 * t35
-      t454 = log(-0.4D1 * t449 * t398 * t401 * t307)
-      t466 = log(-0.4D1 * t105 * t398 * t430)
-      t468 = t466 ** 2
-      t471 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, t295, 0.0D0,
-     # -t333, 0.0D0, 0.0D0)
-      t484 = -(-0.90D2 * t15 * (t427 - t433 * t434) + t441) * t57 * t64 
-     #/ 0.720D3 + t15 * t434 * t124 / 0.8D1 - (-0.90D2 * t15 * (t427 - t
-     #454 * t434) + t441) * t59 * t64 / 0.720D3 - (-0.90D2 * t15 * (-t46
-     #6 * t427 + t468 * t434 / 0.2D1 + t471) + 0.180D3 * t51 * t14 * (t4
-     #27 - t466 * t434) + t99 * t439) * t64 / 0.720D3
-      t485 = FJET(XB1, XB2, s, t295, -t333, 0.0D0, 0.0D0, 0.0D0, t484)
-      t487 = FJET(XB1, XB2, s, 0.0D0, t73, 0.0D0, -t72, 0.0D0, t141)
-      t489 = FJET(XB1, XB2, s, 0.0D0, t9, 0.0D0, t12, 0.0D0, t69)
-      t492 = t3 * s * t393
-      t494 = t2 * t341 * t307
-      t495 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t492, -t494
-     #, -t333, 0.0D0, t340)
-      t498 = t15 * t495 * t124 / 0.8D1
-      t499 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, -t492, -t494
-     #, -t333, 0.0D0, t340)
-      t505 = log(-0.4D1 * t449 * t398 * t307 * t401 * t32)
-      t507 = t499 - t505 * t495
-      t512 = 0.180D3 * t51 * t14 * t495
-      t517 = -t498 - (0.90D2 * t15 * t507 - t512) * t59 * t64 / 0.720D3
-      t518 = FJET(XB1, XB2, s, -t492, -t333, -t494, 0.0D0, t340, t517)
-      t520 = FJET(XB1, XB2, s, -t394, t395, t390, -t392, 0.0D0, t422)
-      t522 = t70 * t69 + t142 * t141 + t144 * t141 + t146 * t141 + t291 
-     #* t290 + t293 * t290 + t383 * pi * t386 * t380 / 0.8D1 + t423 * t4
-     #22 + t425 * t290 + t485 * t484 + t487 * t141 + t489 * t69 + t518 *
-     # t517 + t520 * t422
-      t523 = FJET(XB1, XB2, s, -t332, -t334, t310, -t315, t340, t382)
-      t528 = FJET(XB1, XB2, s, t395, -t394, -t392, t390, 0.0D0, t422)
-      t530 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t290)
-      t532 = FJET(XB1, XB2, s, -t315, t310, -t334, -t332, t340, t382)
-      t544 = -t498 - (0.90D2 * t15 * t507 - t512) * t59 * t64 / 0.720D3
-      t545 = FJET(XB1, XB2, s, 0.0D0, -t494, -t333, -t492, t340, t544)
-      t547 = FJET(XB1, XB2, s, -t333, t295, 0.0D0, 0.0D0, 0.0D0, t484)
-      t549 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t333, t295, 0.0D0, t484)
-      t551 = FJET(XB1, XB2, s, -t333, -t492, 0.0D0, -t494, t340, t517)
-      t553 = FJET(XB1, XB2, s, t12, 0.0D0, t9, 0.0D0, 0.0D0, t69)
-      t555 = FJET(XB1, XB2, s, -t334, -t332, -t315, t310, t340, t382)
-      t560 = FJET(XB1, XB2, s, -t392, t390, t395, -t394, 0.0D0, t422)
-      t562 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t295, -t333, 0.0D0, t484)
-      t564 = FJET(XB1, XB2, s, -t494, 0.0D0, -t492, -t333, t340, t517)
-      t566 = FJET(XB1, XB2, s, 0.0D0, t12, 0.0D0, t9, 0.0D0, t69)
-      t568 = t523 * pi * t386 * t380 / 0.8D1 + t528 * t422 + t530 * t290
-     # + t532 * pi * t386 * t380 / 0.8D1 + t545 * t544 + t547 * t484 + t
-     #549 * t484 + t551 * t517 + t553 * t69 + t555 * pi * t386 * t380 / 
-     #0.8D1 + t560 * t422 + t562 * t484 + t564 * t517 + t566 * t69
-      rrgg2qqbarht7s4e0 = t522 + t568
-
-      end function
-
-
-
-      doubleprecision function rrgg2qqbarht7s4em1
-     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
-      IMPLICIT DOUBLE PRECISION(t)
-      doubleprecision s
-      doubleprecision XB1
-      doubleprecision XB2
-      doubleprecision z
-      doubleprecision lh
-      doubleprecision wd
-      doubleprecision nf
-      doubleprecision x1
-      doubleprecision x2
-      doubleprecision x3
-      doubleprecision x4
-
-      doubleprecision FJET
-      doubleprecision KAPPA
-      doubleprecision KAPPA2
-      doubleprecision KAPPAF
-      doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -3984,8 +2680,1252 @@
       t3 = s ** 2
       t4 = 0.1D1 / t3
       t5 = pi * t4
-      t6 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
+      t6 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
+      t7 = x1 ** 2
+      t8 = x3 * t7
+      t9 = z ** 2
+      t11 = 0.1D1 / t9 / z
+      t12 = x4 * pi
+      t13 = Sin(t12)
+      t14 = t13 ** 2
+      t15 = t11 * t14
+      t18 = log(0.4D1 * t8 * t15)
+      t19 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t21 = z * t6
+      t22 = -0.1D1 + x3
+      t23 = 0.1D1 / t22
+      t24 = t15 * t23
+      t27 = log(-0.4D1 * t8 * t24)
+      t31 = cos(t12)
+      t32 = x3 * z
+      t34 = Sqrt(-t32 * t22)
+      t38 = 0.1D1 / (-z - x3 + 0.2D1 * t31 * t34)
+      t43 = lh * pi
+      t44 = z * t19
+      t45 = t44 * t38
+      t51 = 0.1D1 / x3
+      t53 = 0.1D1 / x1
+      t58 = 0.1D1 / x2
+      t59 = t58 * t53
+      t63 = x2 ** 2
+      t64 = t63 * t7
+      t65 = -0.1D1 + x2
+      t66 = t15 * t65
+      t69 = log(-0.4D1 * t64 * t66)
+      t73 = log(0.4D1 * t64 * t15)
+      t80 = t7 * t14
+      t83 = log(0.4D1 * t80 * t11)
+      t85 = t83 ** 2
+      t88 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t97 = lh ** 2
+      t98 = 0.180D3 * t97
+      t99 = pi ** 2
+      t100 = 0.30D2 * t99
+      t101 = t98 - t100
+      t102 = t101 * pi
+      t103 = t4 * t19
+      t108 = x3 * t11
+      t112 = log(-0.4D1 * t108 * t14 * t23)
+      t113 = t112 ** 2
+      t118 = log(0.4D1 * t108 * t14)
+      t119 = t118 ** 2
+      t125 = pi * t19
+      t128 = pi * t6
+      t150 = log(0.4D1 * t15)
+      t153 = t150 ** 2
+      t160 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t184 = x3 * t63
+      t187 = log(-0.4D1 * t184 * t66)
+      t191 = log(-0.4D1 * t184 * t24)
+      t198 = log(0.4D1 * t184 * t15)
+      t203 = t43 * t4
+      t210 = t11 * t63
+      t211 = t14 * t65
+      t214 = log(-0.4D1 * t210 * t211)
+      t215 = t214 ** 2
+      t218 = log(0.4D1 * t210 * t14)
+      t219 = t218 ** 2
+      t235 = (0.90D2 * t5 * (-t6 + t18 * t19 - (t21 - t27 * z * t19) * t
+     #38) - 0.180D3 * t43 * t4 * (-t45 - t19)) * t51 * t53 / 0.1440D4 - 
+     #t5 * t44 * t38 * t51 * t59 / 0.8D1 - t5 * (t69 * t19 - t73 * t19) 
+     #* t58 * t53 / 0.8D1 - (0.90D2 * t5 * (-t83 * t6 + t85 * t19 / 0.2D
+     #1 + t88) - 0.180D3 * t43 * t4 * (t6 - t83 * t19) + t102 * t103) * 
+     #t53 / 0.1440D4 + (0.90D2 * t5 * t19 * (-t113 * z * t38 / 0.2D1 - t
+     #119 / 0.2D1) + (-0.180D3 * t125 * lh + 0.90D2 * t128) * t4 * (t112
+     # * z * t38 + t118) + (-0.180D3 * t128 * lh + 0.90D2 * pi * t88 + t
+     #125 * t101) * t4 * (-z * t38 - 0.1D1)) * t51 / 0.2880D4 - (0.180D3
+     # * t150 * lh + 0.45D2 * t153 + t98 - t100) * pi * t4 * t6 / 0.2880
+     #D4 - t5 * t160 / 0.32D2 - (-0.90D2 * t153 * lh + 0.60D2 * lh * t99
+     # - 0.240D3 * zeta3 - 0.120D3 * t97 * lh - 0.15D2 * t153 * t150 - t
+     #150 * t101) * pi * t103 / 0.2880D4 - (-0.180D3 * lh - 0.90D2 * t15
+     #0) * pi * t4 * t88 / 0.2880D4 + (0.90D2 * t5 * (-t187 * t19 - (t21
+     # - t191 * z * t19) * t38 + t198 * t19) + 0.180D3 * t203 * t45) * t
+     #51 * t58 / 0.1440D4 - (0.90D2 * t5 * t19 * (-t215 / 0.2D1 + t219 /
+     # 0.2D1) + (0.90D2 * t5 * t6 - 0.180D3 * t43 * t103) * (t214 - t218
+     #)) * t58 / 0.1440D4
+      t236 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t235)
+      t238 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t235)
+      t240 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t235)
+      t242 = x2 * x3
+      t243 = 0.1D1 - x3 + t242
+      t244 = 0.1D1 / t243
+      t245 = t242 * t244
+      t246 = t2 * t245
+      t248 = t2 * t22 * t244
+      t249 = t65 * t22
+      t251 = Sqrt(t32 * t249)
+      t255 = 0.1D1 / (-z - x3 + t242 + 0.2D1 * t31 * t251)
+      t256 = z * t255
+      t258 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t248, t246, 0.0D0)
+      t263 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t248, t246, 0.0D0)
+      t266 = t243 ** 2
+      t272 = log(0.4D1 * t184 * t11 * t211 * t22 / t266)
+      t286 = t5 * t256 * t258 * t51 * t59 / 0.8D1 + (0.90D2 * t5 * (t256
+     # * t263 - t272 * z * t255 * t258) - 0.180D3 * t203 * t256 * t258) 
+     #* t51 * t58 / 0.1440D4
+      t287 = FJET(XB1, XB2, s, 0.0D0, t246, 0.0D0, -t248, 0.0D0, t286)
+      t290 = t1 * x1
+      t291 = x1 * z
+      t292 = -z - x1 + t291
+      t293 = 0.1D1 / t292
+      t295 = t65 * s * t290 * t293
+      t296 = -0.1D1 + x1
+      t297 = t2 * t296
+      t299 = x2 * s * t290
+      t300 = t1 ** 2
+      t301 = s * t300
+      t304 = x1 * t296 * t293
+      t305 = t301 * t65 * t304
+      t306 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t299, t2
+     #95, -t297, 0.0D0, -t305)
+      t309 = t51 * t58 * t53
+      t312 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t299, t2
+     #95, -t297, 0.0D0, -t305)
+      t313 = t64 * t14
+      t315 = 0.1D1 / t9 * t293
+      t316 = t296 ** 2
+      t321 = log(0.4D1 * t313 * t315 * t316 * t65)
+      t333 = -t5 * t306 * t309 / 0.8D1 - (0.90D2 * t5 * (t312 - t321 * t
+     #306) - 0.180D3 * t43 * t4 * t306) * t58 * t53 / 0.720D3
+      t334 = FJET(XB1, XB2, s, 0.0D0, t295, -t297, t299, -t305, t333)
+      t337 = t2 * x1 * t293
+      t338 = t301 * t304
+      t339 = z * t292
+      t340 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t337, -t297, 0.0D0, t338)
+      t342 = t8 * t14
+      t347 = log(0.4D1 * t342 * t315 * t316 * t23)
+      t349 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t337, -t297, 0.0D0, t338)
+      t353 = x3 * x1
+      t354 = t353 * z
+      t355 = x1 * t9
+      t356 = x3 * t9
+      t357 = t356 * x1
+      t359 = 0.2D1 * t8 * z
+      t360 = t8 * t9
+      t361 = x3 * t292
+      t363 = Sqrt(t361 * t22)
+      t368 = 0.1D1 / (-t291 - t354 - t32 - t8 + t355 + t357 + t359 - t36
+     #0 - t9 + 0.2D1 * t31 * t363 * z)
+      t370 = t315 * t316
+      t373 = log(-0.4D1 * t342 * t370)
+      t380 = t349 - t339 * t349 * t368
+      t394 = log(-0.4D1 * t313 * t370)
+      t399 = t4 * t349
+      t408 = log(-0.4D1 * t80 * t370)
+      t410 = t408 ** 2
+      t413 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t337, -t297, 0.0D0, t338)
+      t426 = (0.90D2 * t5 * (-(t339 * t340 - t347 * z * t292 * t349) * t
+     #368 - t373 * t349 + t340) - 0.180D3 * t43 * t4 * t380) * t51 * t53
+     # / 0.1440D4 + t5 * t380 * t309 / 0.8D1 - (0.90D2 * t5 * (t394 * t3
+     #49 - t340) + 0.180D3 * t43 * t399) * t58 * t53 / 0.720D3 - (0.90D2
+     # * t5 * (t408 * t340 - t410 * t349 / 0.2D1 - t413) - 0.180D3 * t43
+     # * t4 * (-t340 + t408 * t349) - t102 * t399) * t53 / 0.1440D4
+      t427 = FJET(XB1, XB2, s, 0.0D0, -t297, -t337, 0.0D0, t338, t426)
+      t429 = FJET(XB1, XB2, s, 0.0D0, -t337, -t297, 0.0D0, t338, t426)
+      t431 = FJET(XB1, XB2, s, 0.0D0, -t248, 0.0D0, t246, 0.0D0, t286)
+      t433 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t235)
+      t435 = FJET(XB1, XB2, s, t299, -t297, t295, 0.0D0, -t305, t333)
+      t437 = FJET(XB1, XB2, s, t246, 0.0D0, -t248, 0.0D0, 0.0D0, t286)
+      t439 = FJET(XB1, XB2, s, t295, 0.0D0, t299, -t297, -t305, t333)
+      t444 = t22 * s * t1 * t296 * t244
+      t445 = t2 * x1
+      t447 = Sqrt(-t361 * t249)
+      t448 = t31 * t447
+      t454 = t445 * x2 * (-x3 + t242 - z + t32 - x1 + t353 + t291 - t354
+     # + 0.2D1 * t448) * t293 * t244
+      t455 = t297 * t245
+      t458 = t184 * x1
+      t460 = t184 * t291
+      t464 = t445 * (0.2D1 * t448 * x2 + t458 + t184 * z - x2 + t242 - t
+     #460 + 0.1D1 - x3) * t293 * t244
+      t467 = x2 * x1
+      t476 = x2 * t7
+      t477 = t467 * z
+      t480 = t291 + t354 + t460 - 0.2D1 * t242 * t291 + t356 * t467 + 0.
+     #2D1 * t8 * x2 * z - t8 * t9 * x2 - 0.2D1 * t448 * t467 + t476 + 0.
+     #2D1 * t448 * t477 + t9 + t32 + t8
+      t490 = -t355 - t458 + t477 - t242 * z + t242 * x1 - t8 * x2 - t467
+     # * t9 - 0.2D1 * t476 * z + t476 * t9 - 0.2D1 * t448 * z - t357 - t
+     #359 + t360
+      t492 = 0.1D1 / (t480 + t490)
+      t496 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t454, -t
+     #464, t444, -t455, -t305)
+      t498 = (-z + t477 - t467) * t496 * t309
+      t500 = t5 * t492 * t292 * t498 / 0.8D1
+      t501 = FJET(XB1, XB2, s, t444, t454, -t455, -t464, -t305, t500)
+      t504 = t4 * t492 * t292
+      t508 = FJET(XB1, XB2, s, t454, t444, -t464, -t455, -t305, t500)
+      t513 = FJET(XB1, XB2, s, -t297, 0.0D0, 0.0D0, -t337, t338, t426)
+      t515 = FJET(XB1, XB2, s, -t297, t299, 0.0D0, t295, -t305, t333)
+      t517 = FJET(XB1, XB2, s, -t337, 0.0D0, 0.0D0, -t297, t338, t426)
+      t519 = FJET(XB1, XB2, s, -t248, 0.0D0, t246, 0.0D0, 0.0D0, t286)
+      t521 = FJET(XB1, XB2, s, -t464, -t455, t454, t444, -t305, t500)
+      t526 = FJET(XB1, XB2, s, -t455, -t464, t444, t454, -t305, t500)
+      rrgg2qqbarhhardt7s3e0 = t236 * t235 + t238 * t235 + t240 * t235 + 
+     #t287 * t286 + t334 * t333 + t427 * t426 + t429 * t426 + t431 * t28
+     #6 + t433 * t235 + t435 * t333 + t437 * t286 + t439 * t333 + t501 *
+     # pi * t504 * t498 / 0.8D1 + t508 * pi * t504 * t498 / 0.8D1 + t513
+     # * t426 + t515 * t333 + t517 * t426 + t519 * t286 + t521 * pi * t5
+     #04 * t498 / 0.8D1 + t526 * pi * t504 * t498 / 0.8D1
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s3em1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + z
+      t2 = t1 * s
+      t3 = s ** 2
+      t4 = 0.1D1 / t3
+      t5 = pi * t4
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
+      t7 = z ** 2
+      t9 = 0.1D1 / t7 / z
+      t10 = x3 * t9
+      t11 = x4 * pi
+      t12 = Sin(t11)
+      t13 = t12 ** 2
+      t14 = -0.1D1 + x3
+      t19 = log(-0.4D1 * t10 * t13 / t14)
+      t21 = cos(t11)
+      t22 = x3 * z
+      t24 = Sqrt(-t22 * t14)
+      t28 = 0.1D1 / (-z - x3 + 0.2D1 * t21 * t24)
+      t32 = log(0.4D1 * t10 * t13)
+      t40 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t49 = 0.1D1 / x3
+      t52 = x1 ** 2
+      t53 = t52 * t13
+      t56 = log(0.4D1 * t53 * t9)
+      t61 = lh * pi
+      t62 = t4 * t6
+      t66 = 0.1D1 / x1
+      t76 = t5 * z
+      t78 = 0.1D1 / x2
+      t79 = t49 * t78
+      t83 = x2 ** 2
+      t84 = t9 * t83
+      t85 = -0.1D1 + x2
+      t89 = log(-0.4D1 * t84 * t13 * t85)
+      t92 = log(0.4D1 * t84 * t13)
+      t101 = log(0.4D1 * t9 * t13)
+      t110 = t101 ** 2
+      t112 = lh ** 2
+      t114 = pi ** 2
+      t120 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t123 = (0.90D2 * t5 * t6 * (t19 * z * t28 + t32) + (-0.180D3 * pi 
+     #* t6 * lh + 0.90D2 * pi * t40) * t4 * (-z * t28 - 0.1D1)) * t49 / 
+     #0.2880D4 - (0.90D2 * t5 * (t40 - t56 * t6) - 0.180D3 * t61 * t62) 
+     #* t66 / 0.1440D4 + t5 * (-z * t6 * t28 - t6) * t49 * t66 / 0.16D2 
+     #- t76 * t6 * t28 * t79 / 0.16D2 - t5 * t6 * (t89 - t92) * t78 / 0.
+     #16D2 - (-0.180D3 * lh - 0.90D2 * t101) * pi * t4 * t40 / 0.2880D4 
+     #- (0.180D3 * t101 * lh + 0.45D2 * t110 + 0.180D3 * t112 - 0.30D2 *
+     # t114) * pi * t62 / 0.2880D4 - t5 * t120 / 0.32D2
+      t124 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t123)
+      t126 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t123)
+      t128 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t123)
+      t130 = x2 * x3
+      t132 = 0.1D1 / (0.1D1 - x3 + t130)
+      t134 = t2 * t130 * t132
+      t136 = t2 * t14 * t132
+      t139 = Sqrt(t22 * t85 * t14)
+      t144 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t136, t134, 0.0D0)
+      t146 = 0.1D1 / (-z - x3 + t130 + 0.2D1 * t21 * t139) * t144 * t79
+      t148 = t76 * t146 / 0.16D2
+      t149 = FJET(XB1, XB2, s, 0.0D0, t134, 0.0D0, -t136, 0.0D0, t148)
+      t151 = t4 * z
+      t156 = t1 * x1
+      t157 = x1 * z
+      t158 = -z - x1 + t157
+      t159 = 0.1D1 / t158
+      t161 = t85 * s * t156 * t159
+      t162 = -0.1D1 + x1
+      t163 = t2 * t162
+      t165 = x2 * s * t156
+      t166 = t1 ** 2
+      t167 = s * t166
+      t170 = x1 * t162 * t159
+      t171 = t167 * t85 * t170
+      t172 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t165, t1
+     #61, -t163, 0.0D0, -t171)
+      t174 = t172 * t78 * t66
+      t176 = t5 * t174 / 0.8D1
+      t177 = FJET(XB1, XB2, s, 0.0D0, t161, -t163, t165, -t171, -t176)
+      t183 = t2 * x1 * t159
+      t184 = t167 * t170
+      t185 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t183, -t163, 0.0D0, t184)
+      t190 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -
+     #t183, -t163, 0.0D0, t184)
+      t193 = t162 ** 2
+      t197 = log(-0.4D1 * t53 / t7 * t159 * t193)
+      t211 = x3 * t52
+      t220 = Sqrt(x3 * t158 * t14)
+      t233 = t5 * t185 * t78 * t66 / 0.8D1 - (0.90D2 * t5 * (-t190 + t19
+     #7 * t185) + 0.180D3 * t61 * t4 * t185) * t66 / 0.1440D4 + t5 * (t1
+     #85 - z * t158 * t185 / (-t157 - x3 * x1 * z - t22 - t211 + x1 * t7
+     # + x3 * t7 * x1 + 0.2D1 * t211 * z - t211 * t7 - t7 + 0.2D1 * t21 
+     #* t220 * z)) * t49 * t66 / 0.16D2
+      t234 = FJET(XB1, XB2, s, 0.0D0, -t163, -t183, 0.0D0, t184, t233)
+      t236 = FJET(XB1, XB2, s, 0.0D0, -t183, -t163, 0.0D0, t184, t233)
+      t238 = FJET(XB1, XB2, s, 0.0D0, -t136, 0.0D0, t134, 0.0D0, t148)
+      t243 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t123)
+      t245 = FJET(XB1, XB2, s, t165, -t163, t161, 0.0D0, -t171, -t176)
+      t250 = FJET(XB1, XB2, s, t134, 0.0D0, -t136, 0.0D0, 0.0D0, t148)
+      t255 = FJET(XB1, XB2, s, t161, 0.0D0, t165, -t163, -t171, -t176)
+      t260 = FJET(XB1, XB2, s, -t163, 0.0D0, 0.0D0, -t183, t184, t233)
+      t262 = FJET(XB1, XB2, s, -t163, t165, 0.0D0, t161, -t171, -t176)
+      t267 = FJET(XB1, XB2, s, -t183, 0.0D0, 0.0D0, -t163, t184, t233)
+      t269 = FJET(XB1, XB2, s, -t136, 0.0D0, t134, 0.0D0, 0.0D0, t148)
+      rrgg2qqbarhhardt7s3em1 = t124 * t123 + t126 * t123 + t128 * t123 +
+     # t149 * pi * t151 * t146 / 0.16D2 - t177 * pi * t4 * t174 / 0.8D1 
+     #+ t234 * t233 + t236 * t233 + t238 * pi * t151 * t146 / 0.16D2 + t
+     #243 * t123 - t245 * pi * t4 * t174 / 0.8D1 + t250 * pi * t151 * t1
+     #46 / 0.16D2 - t255 * pi * t4 * t174 / 0.8D1 + t260 * t233 - t262 *
+     # pi * t4 * t174 / 0.8D1 + t267 * t233 + t269 * pi * t151 * t146 / 
+     #0.16D2
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s3em2
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + z
+      t2 = t1 * s
+      t3 = s ** 2
+      t4 = 0.1D1 / t3
+      t5 = pi * t4
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
+      t7 = 0.1D1 / x1
+      t11 = x4 * pi
+      t12 = cos(t11)
+      t16 = Sqrt(-x3 * z * (-0.1D1 + x3))
+      t28 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t32 = z ** 2
+      t35 = Sin(t11)
+      t36 = t35 ** 2
+      t39 = log(0.4D1 / t32 / z * t36)
+      t46 = -t5 * t6 * t7 / 0.16D2 + t5 * t6 * (-z / (-z - x3 + 0.2D1 * 
+     #t12 * t16) - 0.1D1) / x3 / 0.32D2 - t5 * t28 / 0.32D2 - (-0.180D3 
+     #* lh - 0.90D2 * t39) * pi * t4 * t6 / 0.2880D4
+      t47 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t46)
+      t49 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t46)
+      t51 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t46)
+      t53 = -0.1D1 + x1
+      t54 = t2 * t53
+      t57 = 0.1D1 / (-z - x1 + x1 * z)
+      t59 = t2 * x1 * t57
+      t60 = t1 ** 2
+      t64 = s * t60 * x1 * t53 * t57
+      t65 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, -t
+     #59, -t54, 0.0D0, t64)
+      t68 = t5 * t65 * t7 / 0.16D2
+      t69 = FJET(XB1, XB2, s, 0.0D0, -t54, -t59, 0.0D0, t64, t68)
+      t72 = t4 * t65 * t7
+      t75 = FJET(XB1, XB2, s, 0.0D0, -t59, -t54, 0.0D0, t64, t68)
+      t79 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t46)
+      t81 = FJET(XB1, XB2, s, -t54, 0.0D0, 0.0D0, -t59, t64, t68)
+      t85 = FJET(XB1, XB2, s, -t59, 0.0D0, 0.0D0, -t54, t64, t68)
+      rrgg2qqbarhhardt7s3em2 = t47 * t46 + t49 * t46 + t51 * t46 + t69 *
+     # pi * t72 / 0.16D2 + t75 * pi * t72 / 0.16D2 + t79 * t46 + t81 * p
+     #i * t72 / 0.16D2 + t85 * pi * t72 / 0.16D2
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s3em3
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t2 = (-0.1D1 + z) * s
+      t3 = s ** 2
+      t4 = 0.1D1 / t3
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
+      t8 = pi * t4 * t6 / 0.32D2
+      t9 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, -t8)
+      t11 = t4 * t6
+      t13 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, -t8)
+      t16 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, -t8)
+      t19 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, -t8)
+      rrgg2qqbarhhardt7s3em3 = -t9 * pi * t11 / 0.32D2 - t13 * pi * t11 
+     #/ 0.32D2 - t16 * pi * t11 / 0.32D2 - t19 * pi * t11 / 0.32D2
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s3em4
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhhardt7s3em4 = 0.0D0
+
+      end function
+
+
+      doubleprecision function rrgg2qqbarhhardt7s4e1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + x3
+      t2 = t1 * s
+      t3 = -0.1D1 + z
+      t4 = -0.1D1 + x1
+      t5 = t3 * t4
+      t6 = x2 * x3
+      t7 = -0.1D1 + t6
+      t8 = 0.1D1 / t7
+      t10 = t2 * t5 * t8
+      t11 = s * t3
+      t12 = t11 * x1
+      t13 = -0.1D1 + x2
+      t14 = x3 * z
+      t15 = x3 * x1
+      t16 = x1 * z
+      t17 = t15 * z
+      t18 = x4 * pi
+      t19 = cos(t18)
+      t20 = -z - x1 + t16
+      t22 = x2 * t1
+      t24 = Sqrt(x3 * t20 * t22)
+      t25 = t19 * t24
+      t26 = 0.2D1 * t25
+      t29 = 0.1D1 / t20
+      t32 = t12 * t13 * (-t6 - z + t14 - x1 + t15 + t16 - t17 + t26) * t
+     #29 * t8
+      t33 = t11 * t4
+      t35 = x3 * t13 * t8
+      t36 = t33 * t35
+      t37 = t6 * z
+      t39 = t6 * x1
+      t41 = x2 ** 2
+      t42 = t41 * x3
+      t43 = t42 * x1
+      t47 = t42 * t16
+      t50 = t17 + 0.2D1 * t37 + 0.2D1 * t39 - t43 - t42 * z + t6 - t14 -
+     # t15 - 0.2D1 * t6 * t16 + t47 - x2 + 0.2D1 * t25 * x2 - t26
+      t53 = t12 * t50 * t29 * t8
+      t54 = t3 ** 2
+      t59 = s * t54 * x2 * x1 * t4 * t29
+      t60 = s ** 2
+      t61 = 0.1D1 / t60
+      t62 = pi * t61
+      t63 = z ** 2
+      t64 = x2 * x1
+      t65 = t64 * z
+      t66 = x1 ** 2
+      t67 = x3 * t66
+      t68 = t67 * x2
+      t70 = x2 * t66
+      t81 = -t63 + t65 - t37 - t39 - t68 + t43 - t64 * t63 - 0.2D1 * t70
+     # * z + t70 * t63 + x3 * t63 * t64 + 0.2D1 * t67 * x2 * z - t67 * t
+     #63 * x2
+      t98 = -t47 - 0.2D1 * t25 * t64 - 0.2D1 * t25 * t16 - 0.2D1 * t16 +
+     # 0.2D1 * t25 * z + 0.2D1 * t25 * x1 + 0.2D1 * t25 * t65 + 0.2D1 * 
+     #x1 * t63 + 0.2D1 * t66 * z - t66 * t63 + t70 - t66
+      t100 = 0.1D1 / (t81 + t98)
+      t101 = t20 * t100
+      t102 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t32, -t5
+     #3, -t10, -t36, t59)
+      t105 = Sin(t18)
+      t106 = t105 ** 2
+      t107 = 0.1D1 / t63
+      t108 = t106 * t107
+      t111 = t7 ** 2
+      t113 = t13 ** 2
+      t114 = 0.1D1 / t111 * t113
+      t115 = t4 ** 2
+      t121 = log(0.4D1 * t66 * t29 * t108 * t1 * t114 * t115 * x2 * x3)
+      t123 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t32, -t5
+     #3, -t10, -t36, t59)
+      t127 = z + t65 - t64 + x1 - t16
+      t131 = lh * pi
+      t132 = t131 * t61
+      t137 = -0.90D2 * t62 * (t101 * t102 - t121 * t20 * t100 * t123) * 
+     #t127 + 0.180D3 * t132 * t101 * t123 * t127
+      t138 = 0.1D1 / x3
+      t140 = 0.1D1 / x2
+      t141 = 0.1D1 / x1
+      t142 = t140 * t141
+      t144 = t137 * t138 * t142 / 0.720D3
+      t145 = FJET(XB1, XB2, s, -t10, t32, -t36, -t53, t59, -t144)
+      t148 = t138 * t140 * t141
+      t151 = FJET(XB1, XB2, s, -t53, -t36, t32, -t10, t59, -t144)
+      t156 = 0.1D1 / t63 / z
+      t157 = t156 * t106
+      t160 = log(0.4D1 * t67 * t157)
+      t161 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t11, 0.0D0, 0.0D0)
+      t163 = t160 ** 2
+      t164 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t11, 0.0D0, 0.0D0)
+      t167 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t11, 0.0D0, 0.0D0)
+      t176 = lh ** 2
+      t177 = 0.180D3 * t176
+      t178 = pi ** 2
+      t179 = 0.30D2 * t178
+      t180 = t177 - t179
+      t181 = t180 * pi
+      t182 = t61 * t164
+      t183 = t181 * t182
+      t188 = t66 * t106
+      t189 = t188 * t156
+      t191 = log(0.4D1 * t189)
+      t196 = t191 ** 2
+      t199 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t11, 0.0D0, 0.0D0)
+      t208 = 0.60D2 * lh * t178
+      t209 = 0.240D3 * zeta3
+      t211 = 0.120D3 * t176 * lh
+      t212 = t208 - t209 - t211
+      t213 = t212 * pi
+      t214 = t213 * t182
+      t227 = log(0.4D1 * t6 * t189)
+      t229 = t157 * t113
+      t232 = log(0.4D1 * t68 * t229)
+      t240 = log(0.4D1 * t70 * t229)
+      t242 = t240 ** 2
+      t247 = log(0.4D1 * t70 * t157)
+      t249 = t247 ** 2
+      t265 = x3 * t156
+      t268 = log(0.4D1 * t265 * t106)
+      t273 = t268 ** 2
+      t295 = log(0.4D1 * t6 * t157)
+      t297 = t295 ** 2
+      t302 = log(0.4D1 * t6 * t229)
+      t304 = t302 ** 2
+      t325 = x2 * t156
+      t329 = log(0.4D1 * t325 * t106 * t113)
+      t330 = t329 ** 2
+      t333 = log(0.4D1 * t325 * t106)
+      t334 = t333 ** 2
+      t345 = t61 * t161
+      t357 = log(0.4D1 * t157)
+      t358 = t357 ** 2
+      t361 = t358 * t357
+      t383 = rrgg2qqbarhhard71J5(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t11, 0.0D0, 0.0D0)
+      t391 = t178 ** 2
+      t392 = t176 ** 2
+      t398 = t358 ** 2
+      t404 = -(0.90D2 * t62 * (-t160 * t161 + t163 * t164 / 0.2D1 + t167
+     #) - 0.180D3 * t131 * t61 * (t161 - t160 * t164) + t183) * t138 * t
+     #141 / 0.720D3 + (t181 * t61 * (-t161 + t191 * t164) + 0.90D2 * t62
+     # * (-t196 * t161 / 0.2D1 - t199 + t196 * t191 * t164 / 0.6D1 + t19
+     #1 * t167) - t214 - 0.180D3 * t131 * t61 * (t191 * t161 - t196 * t1
+     #64 / 0.2D1 - t167)) * t141 / 0.720D3 - t62 * (-t227 * t164 + t232 
+     #* t164) * t148 / 0.8D1 - (0.90D2 * t62 * (t240 * t161 - t242 * t16
+     #4 / 0.2D1 - t247 * t161 + t249 * t164 / 0.2D1) - 0.180D3 * t131 * 
+     #t61 * (t240 * t164 - t247 * t164)) * t140 * t141 / 0.720D3 + (t181
+     # * t61 * (-t161 + t268 * t164) + 0.90D2 * t62 * (-t273 * t161 / 0.
+     #2D1 - t199 + t273 * t268 * t164 / 0.6D1 + t268 * t167) - t214 - 0.
+     #180D3 * t131 * t61 * (t268 * t161 - t273 * t164 / 0.2D1 - t167)) *
+     # t138 / 0.1440D4 - (0.90D2 * t62 * (-t295 * t161 + t297 * t164 / 0
+     #.2D1 + t302 * t161 - t304 * t164 / 0.2D1) - 0.180D3 * t131 * t61 *
+     # (-t295 * t164 + t302 * t164)) * t138 * t140 / 0.1440D4 - ((0.90D2
+     # * t62 * t161 - 0.180D3 * t131 * t182) * (-t330 / 0.2D1 + t334 / 0
+     #.2D1) + 0.90D2 * t62 * t164 * (-t334 * t333 / 0.6D1 + t330 * t329 
+     #/ 0.6D1) + (-0.180D3 * t131 * t345 + t183 + 0.90D2 * t62 * t167) *
+     # (t329 - t333)) * t140 / 0.1440D4 - (-0.90D2 * t358 * lh + t208 - 
+     #t209 - t211 - 0.15D2 * t361 - t357 * t180) * pi * t345 / 0.1440D4 
+     #- (0.180D3 * t357 * lh + 0.45D2 * t358 + t177 - t179) * pi * t61 *
+     # t167 / 0.1440D4 - (-0.180D3 * lh - 0.90D2 * t357) * pi * t61 * t1
+     #99 / 0.1440D4 - t62 * t383 / 0.16D2 - (0.30D2 * t361 * lh + t358 *
+     # t180 / 0.2D1 - t357 * t212 + t391 + 0.60D2 * t392 + 0.480D3 * lh 
+     #* zeta3 - 0.60D2 * t176 * t178 + 0.15D2 / 0.4D1 * t398) * pi * t18
+     #2 / 0.1440D4
+      t405 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t11, 0.0D0, t404)
+      t407 = FJET(XB1, XB2, s, t32, -t10, -t53, -t36, t59, -t144)
+      t411 = FJET(XB1, XB2, s, -t36, -t53, -t10, t32, t59, -t144)
+      t416 = t107 * t29
+      t417 = t416 * t115
+      t420 = log(-0.4D1 * t67 * t106 * t417)
+      t421 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t12, 0.0
+     #D0, -t33, 0.0D0, 0.0D0)
+      t423 = t420 ** 2
+      t424 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t12, 0.0
+     #D0, -t33, 0.0D0, 0.0D0)
+      t427 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t12, 0.0
+     #D0, -t33, 0.0D0, 0.0D0)
+      t436 = t61 * t424
+      t437 = t181 * t436
+      t443 = log(-0.4D1 * t188 * t417)
+      t448 = t443 ** 2
+      t451 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, t12, 0.0
+     #D0, -t33, 0.0D0, 0.0D0)
+      t469 = t29 * t115
+      t473 = log(-0.4D1 * t68 * t108 * t469)
+      t483 = t70 * t106
+      t486 = log(-0.4D1 * t483 * t417)
+      t488 = t486 ** 2
+      t503 = -(0.90D2 * t62 * (t420 * t421 - t423 * t424 / 0.2D1 - t427)
+     # - 0.180D3 * t131 * t61 * (-t421 + t420 * t424) - t437) * t138 * t
+     #141 / 0.720D3 + (t181 * t61 * (t421 - t443 * t424) + 0.90D2 * t62 
+     #* (t448 * t421 / 0.2D1 + t451 - t448 * t443 * t424 / 0.6D1 - t443 
+     #* t427) + t213 * t436 - 0.180D3 * t131 * t61 * (-t443 * t421 + t44
+     #8 * t424 / 0.2D1 + t427)) * t141 / 0.720D3 - (0.90D2 * t62 * (-t42
+     #1 + t473 * t424) + 0.180D3 * t131 * t436) * t138 * t142 / 0.720D3 
+     #- (0.90D2 * t62 * (t486 * t421 - t488 * t424 / 0.2D1 - t427) - 0.1
+     #80D3 * t131 * t61 * (-t421 + t486 * t424) - t437) * t140 * t141 / 
+     #0.720D3
+      t504 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t33, t12, 0.0D0, t503)
+      t507 = t3 * x1
+      t508 = t13 * s * t507
+      t510 = t11 * t64 * t29
+      t511 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t508, -
+     #t510, -t33, 0.0D0, t59)
+      t514 = t416 * t115 * t113
+      t517 = log(-0.4D1 * t6 * t188 * t514)
+      t518 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t508, -
+     #t510, -t33, 0.0D0, t59)
+      t523 = t61 * t518
+      t531 = log(-0.4D1 * t483 * t514)
+      t533 = t531 ** 2
+      t536 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t508, -
+     #t510, -t33, 0.0D0, t59)
+      t550 = -(0.90D2 * t62 * (t511 - t517 * t518) - 0.180D3 * t131 * t5
+     #23) * t138 * t142 / 0.720D3 - (0.90D2 * t62 * (-t531 * t511 + t533
+     # * t518 / 0.2D1 + t536) - 0.180D3 * t131 * t61 * (t511 - t531 * t5
+     #18) + t181 * t523) * t140 * t141 / 0.720D3
+      t551 = FJET(XB1, XB2, s, -t508, -t33, -t510, 0.0D0, t59, t550)
+      t554 = t11 * t1 * t8
+      t555 = t11 * t35
+      t556 = t157 * t1
+      t557 = t114 * t6
+      t560 = log(-0.4D1 * t556 * t557)
+      t561 = t560 * z
+      t562 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t554, t555, 0.0D0)
+      t564 = t560 ** 2
+      t566 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t554, t555, 0.0D0)
+      t569 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t554, t555, 0.0D0)
+      t573 = Sqrt(-t14 * t22)
+      t577 = 0.1D1 / (-z - t6 + 0.2D1 * t19 * t573)
+      t581 = z * t562
+      t590 = z * t566 * t577
+      t600 = log(-0.4D1 * t188 * t156 * t1 * t557)
+      t613 = -(-0.90D2 * t62 * (-t561 * t562 + t564 * z * t566 / 0.2D1 +
+     # z * t569) * t577 + 0.180D3 * t131 * t61 * (t581 - t561 * t566) * 
+     #t577 - t181 * t61 * t590) * t138 * t140 / 0.1440D4 - (-0.90D2 * t6
+     #2 * (t581 - t600 * z * t566) * t577 + 0.180D3 * t132 * t590) * t13
+     #8 * t142 / 0.720D3
+      t614 = FJET(XB1, XB2, s, t554, 0.0D0, t555, 0.0D0, 0.0D0, t613)
+      t616 = FJET(XB1, XB2, s, -t33, t12, 0.0D0, 0.0D0, 0.0D0, t503)
+      t618 = FJET(XB1, XB2, s, 0.0D0, t554, 0.0D0, t555, 0.0D0, t613)
+      t620 = t2 * t507
+      t621 = t2 * t5
+      t622 = t11 * t15
+      t624 = x3 * s * t5
+      t627 = x3 * t1 * t469
+      t630 = log(0.4D1 * t188 * t107 * t627)
+      t631 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t620, t
+     #622, t621, -t624, 0.0D0)
+      t633 = t630 ** 2
+      t634 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t620, t
+     #622, t621, -t624, 0.0D0)
+      t637 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, -t620, t
+     #622, t621, -t624, 0.0D0)
+      t646 = t61 * t634
+      t654 = log(0.4D1 * t70 * t108 * t627)
+      t665 = -(0.90D2 * t62 * (-t630 * t631 + t633 * t634 / 0.2D1 + t637
+     #) - 0.180D3 * t131 * t61 * (t631 - t630 * t634) + t181 * t646) * t
+     #138 * t141 / 0.720D3 - (0.90D2 * t62 * (t631 - t654 * t634) - 0.18
+     #0D3 * t131 * t646) * t138 * t142 / 0.720D3
+      t666 = FJET(XB1, XB2, s, -t620, t621, t622, -t624, 0.0D0, t665)
+      t668 = FJET(XB1, XB2, s, t555, 0.0D0, t554, 0.0D0, 0.0D0, t613)
+      t670 = t11 * x3
+      t671 = t11 * t1
+      t674 = log(-0.4D1 * t67 * t556)
+      t675 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t671, t670, 0.0D0)
+      t677 = t674 ** 2
+      t678 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t671, t670, 0.0D0)
+      t681 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t671, t670, 0.0D0)
+      t690 = t61 * t678
+      t691 = t181 * t690
+      t695 = (0.90D2 * t62 * (t674 * t675 - t677 * t678 / 0.2D1 - t681) 
+     #- 0.180D3 * t131 * t61 * (-t675 + t674 * t678) - t691) * t138 * t1
+     #41 / 0.720D3
+      t699 = log(-0.4D1 * t483 * t265 * t1)
+      t709 = (0.90D2 * t62 * (-t675 + t699 * t678) + 0.180D3 * t131 * t6
+     #90) * t138 * t142 / 0.720D3
+      t713 = log(-0.4D1 * t265 * t106 * t1)
+      t715 = t675 - t713 * t678
+      t718 = t713 ** 2
+      t721 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t671, t670, 0.0D0)
+      t726 = t718 * t675 / 0.2D1 + t721 - t718 * t713 * t678 / 0.6D1 - t
+     #713 * t681
+      t729 = t213 * t690
+      t733 = -t713 * t675 + t718 * t678 / 0.2D1 + t681
+      t744 = log(-0.4D1 * t325 * t106 * x3 * t1)
+      t746 = t744 ** 2
+      t760 = (0.90D2 * t62 * (t744 * t675 - t746 * t678 / 0.2D1 - t681) 
+     #- 0.180D3 * t131 * t61 * (-t675 + t744 * t678) - t691) * t138 * t1
+     #40 / 0.1440D4
+      t761 = -t695 - t709 + (t181 * t61 * t715 + 0.90D2 * t62 * t726 + t
+     #729 - 0.180D3 * t131 * t61 * t733) * t138 / 0.1440D4 - t760
+      t762 = FJET(XB1, XB2, s, 0.0D0, t670, 0.0D0, -t671, 0.0D0, t761)
+      t764 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t12, -t33, 0.0D0, t503)
+      t766 = -t145 * t137 * t148 / 0.720D3 - t151 * t137 * t148 / 0.720D
+     #3 + t405 * t404 - t407 * t137 * t148 / 0.720D3 - t411 * t137 * t14
+     #8 / 0.720D3 + t504 * t503 + t551 * t550 + t614 * t613 + t616 * t50
+     #3 + t618 * t613 + t666 * t665 + t668 * t613 + t762 * t761 + t764 *
+     # t503
+      t767 = FJET(XB1, XB2, s, 0.0D0, t555, 0.0D0, t554, 0.0D0, t613)
+      t782 = -t695 - t709 + (t181 * t61 * t715 + 0.90D2 * t62 * t726 + t
+     #729 - 0.180D3 * t131 * t61 * t733) * t138 / 0.1440D4 - t760
+      t783 = FJET(XB1, XB2, s, -t671, 0.0D0, t670, 0.0D0, 0.0D0, t782)
+      t785 = FJET(XB1, XB2, s, t621, -t620, -t624, t622, 0.0D0, t665)
+      t787 = FJET(XB1, XB2, s, t12, -t33, 0.0D0, 0.0D0, 0.0D0, t503)
+      t789 = FJET(XB1, XB2, s, 0.0D0, -t510, -t33, -t508, t59, t550)
+      t791 = FJET(XB1, XB2, s, 0.0D0, t11, 0.0D0, 0.0D0, 0.0D0, t404)
+      t793 = FJET(XB1, XB2, s, t670, 0.0D0, -t671, 0.0D0, 0.0D0, t782)
+      t795 = FJET(XB1, XB2, s, t622, -t624, -t620, t621, 0.0D0, t665)
+      t797 = FJET(XB1, XB2, s, -t510, 0.0D0, -t508, -t33, t59, t550)
+      t799 = FJET(XB1, XB2, s, -t624, t622, t621, -t620, 0.0D0, t665)
+      t801 = FJET(XB1, XB2, s, 0.0D0, -t671, 0.0D0, t670, 0.0D0, t761)
+      t803 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t11, 0.0D0, 0.0D0, t404)
+      t805 = FJET(XB1, XB2, s, -t33, -t508, 0.0D0, -t510, t59, t550)
+      t807 = FJET(XB1, XB2, s, t11, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t404)
+      t809 = t767 * t613 + t783 * t782 + t785 * t665 + t787 * t503 + t78
+     #9 * t550 + t791 * t404 + t793 * t782 + t795 * t665 + t797 * t550 +
+     # t799 * t665 + t801 * t761 + t803 * t404 + t805 * t550 + t807 * t4
+     #04
+      rrgg2qqbarhhardt7s4e1 = t766 + t809
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s4e0
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + z
+      t2 = t1 * s
+      t3 = t2 * x3
+      t4 = -0.1D1 + x3
+      t5 = t2 * t4
+      t6 = s ** 2
+      t7 = 0.1D1 / t6
+      t8 = pi * t7
+      t9 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, -t5, t3, 0.0D0)
+      t10 = x1 ** 2
+      t11 = x3 * t10
+      t12 = x4 * pi
+      t13 = Sin(t12)
+      t14 = t13 ** 2
+      t15 = z ** 2
+      t17 = 0.1D1 / t15 / z
+      t18 = t14 * t17
+      t19 = t18 * t4
+      t22 = log(-0.4D1 * t11 * t19)
+      t23 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, -t5, t3, 0.0D0)
+      t28 = lh * pi
+      t29 = t7 * t23
+      t31 = 0.180D3 * t28 * t29
+      t33 = 0.1D1 / x3
+      t35 = 0.1D1 / x1
+      t37 = (0.90D2 * t8 * (-t9 + t22 * t23) + t31) * t33 * t35 / 0.720D
+     #3
+      t39 = 0.1D1 / x2
+      t41 = t33 * t39 * t35
+      t43 = t8 * t23 * t41 / 0.8D1
+      t44 = x2 * t17
+      t49 = log(-0.4D1 * t44 * t14 * x3 * t4)
+      t57 = (0.90D2 * t8 * (-t9 + t49 * t23) + t31) * t33 * t39 / 0.1440
+     #D4
+      t58 = x3 * t17
+      t62 = log(-0.4D1 * t58 * t14 * t4)
+      t64 = t62 ** 2
+      t67 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, -t5, t3, 0.0D0)
+      t68 = t62 * t9 - t64 * t23 / 0.2D1 - t67
+      t72 = -t9 + t62 * t23
+      t76 = lh ** 2
+      t77 = 0.180D3 * t76
+      t78 = pi ** 2
+      t79 = 0.30D2 * t78
+      t80 = t77 - t79
+      t81 = t80 * pi
+      t82 = t81 * t29
+      t86 = -t37 + t43 - t57 + (-0.90D2 * t8 * t68 + 0.180D3 * t28 * t7 
+     #* t72 + t82) * t33 / 0.1440D4
+      t87 = FJET(XB1, XB2, s, t3, 0.0D0, -t5, 0.0D0, 0.0D0, t86)
+      t89 = FJET(XB1, XB2, s, -t5, 0.0D0, t3, 0.0D0, 0.0D0, t86)
+      t91 = -0.1D1 + x2
+      t93 = x2 * x3
+      t94 = -0.1D1 + t93
+      t95 = 0.1D1 / t94
+      t96 = x3 * t91 * t95
+      t97 = t2 * t96
+      t99 = t2 * t4 * t95
+      t100 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t99, t97, 0.0D0)
+      t102 = t94 ** 2
+      t104 = t91 ** 2
+      t109 = log(-0.4D1 * t19 / t102 * t104 * t93)
+      t111 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t99, t97, 0.0D0)
+      t114 = cos(t12)
+      t115 = x3 * z
+      t116 = x2 * t4
+      t118 = Sqrt(-t115 * t116)
+      t122 = 0.1D1 / (-z - t93 + 0.2D1 * t114 * t118)
+      t127 = z * t111
+      t141 = -(-0.90D2 * t8 * (z * t100 - t109 * z * t111) * t122 + 0.18
+     #0D3 * t28 * t7 * t127 * t122) * t33 * t39 / 0.1440D4 + t8 * t127 *
+     # t122 * t33 * t39 * t35 / 0.8D1
+      t142 = FJET(XB1, XB2, s, 0.0D0, t97, 0.0D0, t99, 0.0D0, t141)
+      t144 = t2 * x1
+      t145 = -0.1D1 + x1
+      t146 = t2 * t145
+      t147 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t144, 0.
+     #0D0, -t146, 0.0D0, 0.0D0)
+      t149 = 0.1D1 / t15
+      t150 = x1 * z
+      t151 = -z - x1 + t150
+      t152 = 0.1D1 / t151
+      t153 = t149 * t152
+      t154 = t145 ** 2
+      t155 = t153 * t154
+      t158 = log(-0.4D1 * t11 * t14 * t155)
+      t159 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t144, 0.
+     #0D0, -t146, 0.0D0, 0.0D0)
+      t164 = t7 * t159
+      t166 = 0.180D3 * t28 * t164
+      t174 = x2 * t10
+      t175 = t174 * t14
+      t178 = log(-0.4D1 * t175 * t155)
+      t187 = t10 * t14
+      t190 = log(-0.4D1 * t187 * t155)
+      t192 = t190 ** 2
+      t195 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, t144, 0.
+     #0D0, -t146, 0.0D0, 0.0D0)
+      t208 = -(0.90D2 * t8 * (-t147 + t158 * t159) + t166) * t33 * t35 /
+     # 0.720D3 + t8 * t159 * t41 / 0.8D1 - (0.90D2 * t8 * (-t147 + t178 
+     #* t159) + t166) * t39 * t35 / 0.720D3 + (0.90D2 * t8 * (-t190 * t1
+     #47 + t192 * t159 / 0.2D1 + t195) - 0.180D3 * t28 * t7 * (t147 - t1
+     #90 * t159) + t81 * t164) * t35 / 0.720D3
+      t209 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t144, -t146, 0.0D0, t208)
+      t211 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t214 = log(0.4D1 * t11 * t18)
+      t215 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t220 = t7 * t215
+      t222 = 0.180D3 * t28 * t220
+      t227 = t18 * t104
+      t230 = log(0.4D1 * t174 * t227)
+      t234 = log(0.4D1 * t174 * t18)
+      t243 = log(0.4D1 * t187 * t17)
+      t245 = t243 ** 2
+      t248 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t257 = t81 * t220
+      t263 = log(0.4D1 * t58 * t14)
+      t265 = t263 ** 2
+      t280 = log(0.4D1 * t18)
+      t283 = t280 ** 2
+      t290 = rrgg2qqbarhhard71J4(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t2, 0.0D0, 0.0D0)
+      t316 = log(0.4D1 * t93 * t18)
+      t320 = log(0.4D1 * t93 * t227)
+      t330 = log(0.4D1 * t44 * t14 * t104)
+      t331 = t330 ** 2
+      t334 = log(0.4D1 * t44 * t14)
+      t335 = t334 ** 2
+      t349 = -(0.90D2 * t8 * (t211 - t214 * t215) - t222) * t33 * t35 / 
+     #0.720D3 - t8 * (t230 * t215 - t234 * t215) * t39 * t35 / 0.8D1 + (
+     #0.90D2 * t8 * (t243 * t211 - t245 * t215 / 0.2D1 - t248) - 0.180D3
+     # * t28 * t7 * (-t211 + t243 * t215) - t257) * t35 / 0.720D3 + (0.9
+     #0D2 * t8 * (t263 * t211 - t265 * t215 / 0.2D1 - t248) - 0.180D3 * 
+     #t28 * t7 * (-t211 + t263 * t215) - t257) * t33 / 0.1440D4 - (0.180
+     #D3 * t280 * lh + 0.45D2 * t283 + t77 - t79) * pi * t7 * t211 / 0.1
+     #440D4 - t8 * t290 / 0.16D2 - (-0.90D2 * t283 * lh + 0.60D2 * lh * 
+     #t78 - 0.240D3 * zeta3 - 0.120D3 * t76 * lh - 0.15D2 * t283 * t280 
+     #- t280 * t80) * pi * t220 / 0.1440D4 - (-0.180D3 * lh - 0.90D2 * t
+     #280) * pi * t7 * t248 / 0.1440D4 - t8 * (-t316 * t215 + t320 * t21
+     #5) * t33 * t39 / 0.16D2 - (0.90D2 * t8 * t215 * (-t331 / 0.2D1 + t
+     #335 / 0.2D1) + (0.90D2 * t8 * t211 - t222) * (t330 - t334)) * t39 
+     #/ 0.1440D4
+      t350 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t349)
+      t352 = x3 * x1
+      t353 = t352 * z
+      t354 = t93 * z
+      t356 = t93 * x1
+      t358 = x2 ** 2
+      t359 = t358 * x3
+      t360 = t359 * x1
+      t364 = t359 * t150
+      t367 = Sqrt(x3 * t151 * t116)
+      t368 = t114 * t367
+      t371 = 0.2D1 * t368
+      t372 = t353 + 0.2D1 * t354 + 0.2D1 * t356 - t360 - t359 * z + t93 
+     #- t115 - t352 - 0.2D1 * t93 * t150 + t364 - x2 + 0.2D1 * t368 * x2
+     # - t371
+      t375 = t144 * t372 * t152 * t95
+      t376 = t146 * t96
+      t381 = t144 * t91 * (-t93 - z + t115 - x1 + t352 + t150 - t353 + t
+     #371) * t152 * t95
+      t382 = t4 * s
+      t383 = t1 * t145
+      t385 = t382 * t383 * t95
+      t386 = t1 ** 2
+      t391 = s * t386 * x2 * x1 * t145 * t152
+      t392 = x2 * x1
+      t393 = t392 * z
+      t406 = -t15 + t393 - t354 - t356 - t11 * x2 + t360 - t392 * t15 - 
+     #0.2D1 * t174 * z + t174 * t15 + x3 * t15 * t392 + 0.2D1 * t11 * x2
+     # * z - t11 * t15 * x2
+      t423 = -t364 - 0.2D1 * t368 * t392 - 0.2D1 * t368 * t150 - 0.2D1 *
+     # t150 + 0.2D1 * t368 * z + 0.2D1 * t368 * x1 + 0.2D1 * t368 * t393
+     # + 0.2D1 * x1 * t15 + 0.2D1 * t10 * z - t10 * t15 + t174 - t10
+      t425 = 0.1D1 / (t406 + t423)
+      t428 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t381, -t
+     #375, -t385, -t376, t391)
+      t431 = t428 * (z + t393 - t392 + x1 - t150) * t41
+      t433 = t8 * t151 * t425 * t431 / 0.8D1
+      t434 = FJET(XB1, XB2, s, -t375, -t376, t381, -t385, t391, t433)
+      t437 = t7 * t151 * t425
+      t441 = FJET(XB1, XB2, s, -t376, -t375, -t385, t381, t391, t433)
+      t446 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t146, t144, 0.0D0, t208)
+      t458 = -t37 + t43 - t57 + (-0.90D2 * t8 * t68 + 0.180D3 * t28 * t7
+     # * t72 + t82) * t33 / 0.1440D4
+      t459 = FJET(XB1, XB2, s, 0.0D0, t3, 0.0D0, -t5, 0.0D0, t458)
+      t462 = t2 * t392 * t152
+      t464 = t1 * x1
+      t465 = t91 * s * t464
+      t466 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t465, -
+     #t462, -t146, 0.0D0, t391)
+      t470 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t465, -
+     #t462, -t146, 0.0D0, t391)
+      t475 = log(-0.4D1 * t175 * t153 * t154 * t104)
+      t487 = -t8 * t466 * t41 / 0.8D1 - (0.90D2 * t8 * (t470 - t475 * t4
+     #66) - 0.180D3 * t28 * t7 * t466) * t39 * t35 / 0.720D3
+      t488 = FJET(XB1, XB2, s, 0.0D0, -t462, -t146, -t465, t391, t487)
+      t490 = FJET(XB1, XB2, s, t144, -t146, 0.0D0, 0.0D0, 0.0D0, t208)
+      t492 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t349)
+      t494 = FJET(XB1, XB2, s, t99, 0.0D0, t97, 0.0D0, 0.0D0, t141)
+      t496 = t2 * t352
+      t498 = x3 * s * t383
+      t499 = t382 * t464
+      t500 = t382 * t383
+      t501 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, -t499, t
+     #496, t500, -t498, 0.0D0)
+      t508 = log(0.4D1 * t187 * t149 * x3 * t4 * t152 * t154)
+      t509 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t499, t
+     #496, t500, -t498, 0.0D0)
+      t524 = -(0.90D2 * t8 * (t501 - t508 * t509) - 0.180D3 * t28 * t7 *
+     # t509) * t33 * t35 / 0.720D3 - t8 * t509 * t41 / 0.8D1
+      t525 = FJET(XB1, XB2, s, t496, -t498, -t499, t500, 0.0D0, t524)
+      t527 = t87 * t86 + t89 * t86 + t142 * t141 + t209 * t208 + t350 * 
+     #t349 + t434 * pi * t437 * t431 / 0.8D1 + t441 * pi * t437 * t431 /
+     # 0.8D1 + t446 * t208 + t459 * t458 + t488 * t487 + t490 * t208 + t
+     #492 * t349 + t494 * t141 + t525 * t524
+      t528 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t349)
+      t530 = FJET(XB1, XB2, s, -t146, t144, 0.0D0, 0.0D0, 0.0D0, t208)
+      t532 = FJET(XB1, XB2, s, t381, -t385, -t375, -t376, t391, t433)
+      t537 = FJET(XB1, XB2, s, 0.0D0, t99, 0.0D0, t97, 0.0D0, t141)
+      t539 = FJET(XB1, XB2, s, -t462, 0.0D0, -t465, -t146, t391, t487)
+      t541 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t349)
+      t543 = FJET(XB1, XB2, s, -t465, -t146, -t462, 0.0D0, t391, t487)
+      t545 = FJET(XB1, XB2, s, -t146, -t465, 0.0D0, -t462, t391, t487)
+      t547 = FJET(XB1, XB2, s, t500, -t499, -t498, t496, 0.0D0, t524)
+      t549 = FJET(XB1, XB2, s, -t499, t500, t496, -t498, 0.0D0, t524)
+      t551 = FJET(XB1, XB2, s, -t498, t496, t500, -t499, 0.0D0, t524)
+      t553 = FJET(XB1, XB2, s, 0.0D0, -t5, 0.0D0, t3, 0.0D0, t458)
+      t555 = FJET(XB1, XB2, s, t97, 0.0D0, t99, 0.0D0, 0.0D0, t141)
+      t557 = FJET(XB1, XB2, s, -t385, t381, -t376, -t375, t391, t433)
+      t562 = t528 * t349 + t530 * t208 + t532 * pi * t437 * t431 / 0.8D1
+     # + t537 * t141 + t539 * t487 + t541 * t349 + t543 * t487 + t545 * 
+     #t487 + t547 * t524 + t549 * t524 + t551 * t524 + t553 * t458 + t55
+     #5 * t141 + t557 * pi * t437 * t431 / 0.8D1
+      rrgg2qqbarhhardt7s4e0 = t527 + t562
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhhardt7s4em1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision FJET
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      t1 = -0.1D1 + z
+      t2 = t1 * s
+      t3 = s ** 2
+      t4 = 0.1D1 / t3
+      t5 = pi * t4
+      t6 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
       t7 = z ** 2
       t9 = 0.1D1 / t7 / z
       t10 = x3 * t9
@@ -3993,130 +3933,133 @@
       t12 = Sin(t11)
       t13 = t12 ** 2
       t16 = log(0.4D1 * t10 * t13)
-      t17 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t22 = pi * lh
-      t25 = 0.180D3 * t22 * t4 * t17
+      t17 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t22 = lh * pi
+      t23 = t4 * t17
+      t25 = 0.180D3 * t22 * t23
       t27 = 0.1D1 / x3
       t30 = x1 ** 2
-      t34 = log(0.4D1 * t30 * t9 * t13)
+      t31 = t30 * t13
+      t34 = log(0.4D1 * t31 * t9)
       t40 = 0.1D1 / x1
       t47 = x2 * t9
-      t50 = log(0.4D1 * t47 * t13)
-      t51 = -0.1D1 + x2
-      t52 = t51 ** 2
-      t56 = log(0.4D1 * t47 * t13 * t52)
+      t48 = -0.1D1 + x2
+      t49 = t48 ** 2
+      t53 = log(0.4D1 * t47 * t13 * t49)
+      t56 = log(0.4D1 * t47 * t13)
       t59 = 0.1D1 / x2
       t66 = log(0.4D1 * t9 * t13)
-      t67 = t66 * pi
       t75 = t66 ** 2
-      t78 = lh ** 2
-      t80 = pi ** 2
-      t88 = rrgg2qqbarh71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t91 = -(-0.90D2 * t5 * (-t6 + t16 * t17) - t25) * t27 / 0.1440D4 -
-     # (-0.90D2 * t5 * (-t6 + t34 * t17) - t25) * t40 / 0.720D3 - t5 * t
-     #17 * t27 * t40 / 0.8D1 - t5 * t17 * (-t50 + t56) * t59 / 0.16D2 + 
-     #(0.180D3 * t22 + 0.90D2 * t67) * t4 * t6 / 0.1440D4 + (-0.180D3 * 
-     #t67 * lh - 0.45D2 * t75 * pi + pi * (-0.180D3 * t78 + 0.30D2 * t80
-     #)) * t4 * t17 / 0.1440D4 - t5 * t88 / 0.16D2
-      t92 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t91)
-      t94 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t91)
-      t96 = t2 * x1
-      t97 = -0.1D1 + x1
-      t98 = t2 * t97
-      t99 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t96, 0.0D0, -
-     #t98, 0.0D0, 0.0D0)
-      t104 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, t96, 0.0D0, 
-     #-t98, 0.0D0, 0.0D0)
-      t109 = 0.1D1 / (-z - x1 + x1 * z)
-      t111 = t97 ** 2
-      t115 = log(-0.4D1 * t30 / t7 * t13 * t109 * t111)
-      t130 = t5 * t99 * t59 * t40 / 0.8D1 - (-0.90D2 * t5 * (t104 - t115
-     # * t99) + 0.180D3 * t22 * t4 * t99) * t40 / 0.720D3 + t5 * t99 * t
-     #27 * t40 / 0.8D1
-      t131 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t96, -t98, 0.0D0, t130)
-      t133 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t98, t96, 0.0D0, t130)
-      t135 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t91)
-      t137 = t2 * x3
-      t138 = -0.1D1 + x3
-      t139 = t2 * t138
-      t140 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t139, t137, 0.0D0)
-      t144 = log(-0.4D1 * t10 * t13 * t138)
-      t145 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, -t139, t137, 0.0D0)
-      t156 = t145 * t27
-      t163 = -(-0.90D2 * t5 * (t140 - t144 * t145) + 0.180D3 * t22 * t4 
-     #* t145) * t27 / 0.1440D4 + t5 * t156 * t40 / 0.8D1 + t5 * t156 * t
-     #59 / 0.16D2
-      t164 = FJET(XB1, XB2, s, 0.0D0, t137, 0.0D0, -t139, 0.0D0, t163)
-      t166 = x2 * x3
-      t168 = 0.1D1 / (-0.1D1 + t166)
-      t170 = t2 * t138 * t168
-      t173 = t2 * x3 * t51 * t168
-      t175 = cos(t11)
-      t179 = Sqrt(-x3 * z * x2 * t138)
-      t184 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0
-     #, t170, t173, 0.0D0)
-      t187 = 0.1D1 / (-z - t166 + 0.2D1 * t175 * t179) * t184 * t27 * t5
-     #9
-      t189 = t5 * z * t187 / 0.16D2
-      t190 = FJET(XB1, XB2, s, 0.0D0, t170, 0.0D0, t173, 0.0D0, t189)
-      t192 = t4 * z
-      t196 = FJET(XB1, XB2, s, 0.0D0, t173, 0.0D0, t170, 0.0D0, t189)
-      t201 = FJET(XB1, XB2, s, 0.0D0, -t139, 0.0D0, t137, 0.0D0, t163)
-      t205 = t2 * x1 * x2 * t109
-      t207 = t1 * x1
-      t208 = t51 * s * t207
-      t209 = t1 ** 2
-      t214 = s * t209 * x2 * x1 * t97 * t109
-      t215 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t208, -t205
-     #, -t98, 0.0D0, t214)
-      t217 = t215 * t59 * t40
-      t219 = t5 * t217 / 0.8D1
-      t220 = FJET(XB1, XB2, s, 0.0D0, -t205, -t98, -t208, t214, -t219)
-      t225 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t91)
-      t227 = FJET(XB1, XB2, s, t96, -t98, 0.0D0, 0.0D0, 0.0D0, t130)
-      t229 = t92 * t91 + t94 * t91 + t131 * t130 + t133 * t130 + t135 * 
-     #t91 + t164 * t163 + t190 * pi * t192 * t187 / 0.16D2 + t196 * pi *
-     # t192 * t187 / 0.16D2 + t201 * t163 - t220 * pi * t4 * t217 / 0.8D
-     #1 + t225 * t91 + t227 * t130
-      t230 = FJET(XB1, XB2, s, t137, 0.0D0, -t139, 0.0D0, 0.0D0, t163)
-      t233 = t2 * x1 * x3
-      t235 = t1 * t97
-      t236 = x3 * s * t235
-      t237 = t138 * s
-      t238 = t237 * t207
-      t239 = t237 * t235
-      t240 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, -t238, t233,
-     # t239, -t236, 0.0D0)
-      t242 = t240 * t27 * t40
-      t244 = t5 * t242 / 0.8D1
-      t245 = FJET(XB1, XB2, s, t233, -t236, -t238, t239, 0.0D0, -t244)
-      t250 = FJET(XB1, XB2, s, t239, -t238, -t236, t233, 0.0D0, -t244)
-      t255 = FJET(XB1, XB2, s, t170, 0.0D0, t173, 0.0D0, 0.0D0, t189)
-      t260 = FJET(XB1, XB2, s, t173, 0.0D0, t170, 0.0D0, 0.0D0, t189)
-      t265 = FJET(XB1, XB2, s, -t98, t96, 0.0D0, 0.0D0, 0.0D0, t130)
-      t267 = FJET(XB1, XB2, s, -t98, -t208, 0.0D0, -t205, t214, -t219)
-      t272 = FJET(XB1, XB2, s, -t139, 0.0D0, t137, 0.0D0, 0.0D0, t163)
-      t274 = FJET(XB1, XB2, s, -t236, t233, t239, -t238, 0.0D0, -t244)
-      t279 = FJET(XB1, XB2, s, -t208, -t98, -t205, 0.0D0, t214, -t219)
-      t284 = FJET(XB1, XB2, s, -t238, t239, t233, -t236, 0.0D0, -t244)
-      t289 = FJET(XB1, XB2, s, -t205, 0.0D0, -t208, -t98, t214, -t219)
-      t294 = t230 * t163 - t245 * pi * t4 * t242 / 0.8D1 - t250 * pi * t
-     #4 * t242 / 0.8D1 + t255 * pi * t192 * t187 / 0.16D2 + t260 * pi * 
-     #t192 * t187 / 0.16D2 + t265 * t130 - t267 * pi * t4 * t217 / 0.8D1
-     # + t272 * t163 - t274 * pi * t4 * t242 / 0.8D1 - t279 * pi * t4 * 
-     #t217 / 0.8D1 - t284 * pi * t4 * t242 / 0.8D1 - t289 * pi * t4 * t2
-     #17 / 0.8D1
-      rrgg2qqbarht7s4em1 = t229 + t294
+      t77 = lh ** 2
+      t79 = pi ** 2
+      t85 = rrgg2qqbarhhard71J3(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t88 = (0.90D2 * t5 * (-t6 + t16 * t17) + t25) * t27 / 0.1440D4 + (
+     #0.90D2 * t5 * (-t6 + t34 * t17) + t25) * t40 / 0.720D3 - t5 * t17 
+     #* t27 * t40 / 0.8D1 - t5 * t17 * (t53 - t56) * t59 / 0.16D2 - (-0.
+     #180D3 * lh - 0.90D2 * t66) * pi * t4 * t6 / 0.1440D4 - (0.180D3 * 
+     #t66 * lh + 0.45D2 * t75 + 0.180D3 * t77 - 0.30D2 * t79) * pi * t23
+     # / 0.1440D4 - t5 * t85 / 0.16D2
+      t89 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t88)
+      t91 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t88)
+      t93 = t2 * x1
+      t94 = -0.1D1 + x1
+      t95 = t2 * t94
+      t96 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t93, 0.0D
+     #0, -t95, 0.0D0, 0.0D0)
+      t101 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, t93, 0.0
+     #D0, -t95, 0.0D0, 0.0D0)
+      t105 = 0.1D1 / (-z - x1 + x1 * z)
+      t107 = t94 ** 2
+      t111 = log(-0.4D1 * t31 / t7 * t105 * t107)
+      t126 = t5 * t96 * t59 * t40 / 0.8D1 + (0.90D2 * t5 * (t101 - t111 
+     #* t96) - 0.180D3 * t22 * t4 * t96) * t40 / 0.720D3 + t5 * t96 * t2
+     #7 * t40 / 0.8D1
+      t127 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t93, -t95, 0.0D0, t126)
+      t129 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t95, t93, 0.0D0, t126)
+      t131 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t88)
+      t133 = t2 * x3
+      t134 = -0.1D1 + x3
+      t135 = t2 * t134
+      t136 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t135, t133, 0.0D0)
+      t140 = log(-0.4D1 * t10 * t13 * t134)
+      t141 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, -t135, t133, 0.0D0)
+      t143 = t136 - t140 * t141
+      t148 = 0.180D3 * t22 * t4 * t141
+      t152 = t141 * t27
+      t155 = t5 * t152 * t40 / 0.8D1
+      t158 = t5 * t152 * t59 / 0.16D2
+      t159 = (0.90D2 * t5 * t143 - t148) * t27 / 0.1440D4 + t155 + t158
+      t160 = FJET(XB1, XB2, s, 0.0D0, t133, 0.0D0, -t135, 0.0D0, t159)
+      t162 = x2 * x3
+      t164 = 0.1D1 / (-0.1D1 + t162)
+      t166 = t2 * t134 * t164
+      t169 = t2 * x3 * t48 * t164
+      t171 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0
+     #.0D0, t166, t169, 0.0D0)
+      t172 = cos(t11)
+      t176 = Sqrt(-x3 * z * x2 * t134)
+      t183 = t171 / (-z - t162 + 0.2D1 * t172 * t176) * t27 * t59
+      t185 = t5 * z * t183 / 0.16D2
+      t186 = FJET(XB1, XB2, s, 0.0D0, t166, 0.0D0, t169, 0.0D0, t185)
+      t188 = t4 * z
+      t192 = FJET(XB1, XB2, s, 0.0D0, t169, 0.0D0, t166, 0.0D0, t185)
+      t197 = FJET(XB1, XB2, s, 0.0D0, -t135, 0.0D0, t133, 0.0D0, t159)
+      t201 = t2 * x1 * x2 * t105
+      t203 = t1 * x1
+      t204 = t48 * s * t203
+      t205 = t1 ** 2
+      t210 = s * t205 * x2 * x1 * t94 * t105
+      t211 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t204, -
+     #t201, -t95, 0.0D0, t210)
+      t213 = t211 * t59 * t40
+      t215 = t5 * t213 / 0.8D1
+      t216 = FJET(XB1, XB2, s, 0.0D0, -t201, -t95, -t204, t210, -t215)
+      t221 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t88)
+      t223 = FJET(XB1, XB2, s, t93, -t95, 0.0D0, 0.0D0, 0.0D0, t126)
+      t225 = t89 * t88 + t91 * t88 + t127 * t126 + t129 * t126 + t131 * 
+     #t88 + t160 * t159 + t186 * pi * t188 * t183 / 0.16D2 + t192 * pi *
+     # t188 * t183 / 0.16D2 + t197 * t159 - t216 * pi * t4 * t213 / 0.8D
+     #1 + t221 * t88 + t223 * t126
+      t232 = (0.90D2 * t5 * t143 - t148) * t27 / 0.1440D4 + t155 + t158
+      t233 = FJET(XB1, XB2, s, t133, 0.0D0, -t135, 0.0D0, 0.0D0, t232)
+      t236 = t2 * x1 * x3
+      t238 = t1 * t94
+      t239 = x3 * s * t238
+      t240 = t134 * s
+      t241 = t240 * t203
+      t242 = t240 * t238
+      t243 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, -t241, t
+     #236, t242, -t239, 0.0D0)
+      t245 = t243 * t27 * t40
+      t247 = t5 * t245 / 0.8D1
+      t248 = FJET(XB1, XB2, s, t236, -t239, -t241, t242, 0.0D0, -t247)
+      t253 = FJET(XB1, XB2, s, t166, 0.0D0, t169, 0.0D0, 0.0D0, t185)
+      t258 = FJET(XB1, XB2, s, t242, -t241, -t239, t236, 0.0D0, -t247)
+      t263 = FJET(XB1, XB2, s, t169, 0.0D0, t166, 0.0D0, 0.0D0, t185)
+      t268 = FJET(XB1, XB2, s, -t95, t93, 0.0D0, 0.0D0, 0.0D0, t126)
+      t270 = FJET(XB1, XB2, s, -t95, -t204, 0.0D0, -t201, t210, -t215)
+      t275 = FJET(XB1, XB2, s, -t135, 0.0D0, t133, 0.0D0, 0.0D0, t232)
+      t277 = FJET(XB1, XB2, s, -t239, t236, t242, -t241, 0.0D0, -t247)
+      t282 = FJET(XB1, XB2, s, -t204, -t95, -t201, 0.0D0, t210, -t215)
+      t287 = FJET(XB1, XB2, s, -t241, t242, t236, -t239, 0.0D0, -t247)
+      t292 = FJET(XB1, XB2, s, -t201, 0.0D0, -t204, -t95, t210, -t215)
+      t297 = t233 * t232 - t248 * pi * t4 * t245 / 0.8D1 + t253 * pi * t
+     #188 * t183 / 0.16D2 - t258 * pi * t4 * t245 / 0.8D1 + t263 * pi * 
+     #t188 * t183 / 0.16D2 + t268 * t126 - t270 * pi * t4 * t213 / 0.8D1
+     # + t275 * t232 - t277 * pi * t4 * t245 / 0.8D1 - t282 * pi * t4 * 
+     #t213 / 0.8D1 - t287 * pi * t4 * t245 / 0.8D1 - t292 * pi * t4 * t2
+     #13 / 0.8D1
+      rrgg2qqbarhhardt7s4em1 = t225 + t297
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s4em2
+      doubleprecision function rrgg2qqbarhhardt7s4em2
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4136,12 +4079,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -4155,54 +4098,53 @@
       t3 = s ** 2
       t4 = 0.1D1 / t3
       t5 = pi * t4
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
       t7 = 0.1D1 / x1
       t11 = 0.1D1 / x3
-      t15 = rrgg2qqbarh71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # t2, 0.0D0, 0.0D0)
-      t20 = z ** 2
-      t24 = Sin(x4 * pi)
-      t25 = t24 ** 2
-      t28 = log(0.4D1 / t20 / z * t25)
-      t35 = -t5 * t6 * t7 / 0.8D1 - t5 * t6 * t11 / 0.16D2 - t5 * t15 / 
-     #0.16D2 + (0.180D3 * pi * lh + 0.90D2 * t28 * pi) * t4 * t6 / 0.144
-     #0D4
-      t36 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t35)
-      t38 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t35)
-      t40 = t2 * x1
-      t42 = t2 * (-0.1D1 + x1)
-      t43 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, t40, 0.0D0, -
-     #t42, 0.0D0, 0.0D0)
-      t46 = t5 * t43 * t7 / 0.8D1
-      t47 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t40, -t42, 0.0D0, t46)
-      t50 = t4 * t43 * t7
-      t53 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t42, t40, 0.0D0, t46)
-      t57 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t35)
-      t59 = t2 * x3
-      t61 = t2 * (-0.1D1 + x3)
-      t62 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0,
-     # -t61, t59, 0.0D0)
-      t65 = t5 * t62 * t11 / 0.16D2
-      t66 = FJET(XB1, XB2, s, 0.0D0, t59, 0.0D0, -t61, 0.0D0, t65)
-      t69 = t4 * t62 * t11
-      t72 = FJET(XB1, XB2, s, 0.0D0, -t61, 0.0D0, t59, 0.0D0, t65)
-      t76 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t35)
-      t78 = FJET(XB1, XB2, s, t40, -t42, 0.0D0, 0.0D0, 0.0D0, t46)
-      t82 = FJET(XB1, XB2, s, t59, 0.0D0, -t61, 0.0D0, 0.0D0, t65)
-      t86 = FJET(XB1, XB2, s, -t42, t40, 0.0D0, 0.0D0, 0.0D0, t46)
-      t90 = FJET(XB1, XB2, s, -t61, 0.0D0, t59, 0.0D0, 0.0D0, t65)
-      rrgg2qqbarht7s4em2 = t36 * t35 + t38 * t35 + t47 * pi * t50 / 0.8D
-     #1 + t53 * pi * t50 / 0.8D1 + t57 * t35 + t66 * pi * t69 / 0.16D2 +
-     # t72 * pi * t69 / 0.16D2 + t76 * t35 + t78 * pi * t50 / 0.8D1 + t8
-     #2 * pi * t69 / 0.16D2 + t86 * pi * t50 / 0.8D1 + t90 * pi * t69 / 
-     #0.16D2
+      t15 = rrgg2qqbarhhard71J2(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, t2, 0.0D0, 0.0D0)
+      t19 = z ** 2
+      t23 = Sin(x4 * pi)
+      t24 = t23 ** 2
+      t27 = log(0.4D1 / t19 / z * t24)
+      t34 = -t5 * t6 * t7 / 0.8D1 - t5 * t6 * t11 / 0.16D2 - t5 * t15 / 
+     #0.16D2 - (-0.180D3 * lh - 0.90D2 * t27) * pi * t4 * t6 / 0.1440D4
+      t35 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, t34)
+      t37 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, t34)
+      t39 = t2 * x1
+      t41 = t2 * (-0.1D1 + x1)
+      t42 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, t39, 0.0D
+     #0, -t41, 0.0D0, 0.0D0)
+      t45 = t5 * t42 * t7 / 0.8D1
+      t46 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t39, -t41, 0.0D0, t45)
+      t49 = t4 * t42 * t7
+      t52 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, -t41, t39, 0.0D0, t45)
+      t56 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, t34)
+      t58 = t2 * x3
+      t60 = t2 * (-0.1D1 + x3)
+      t61 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.
+     #0D0, -t60, t58, 0.0D0)
+      t64 = t5 * t61 * t11 / 0.16D2
+      t65 = FJET(XB1, XB2, s, 0.0D0, t58, 0.0D0, -t60, 0.0D0, t64)
+      t68 = t4 * t61 * t11
+      t71 = FJET(XB1, XB2, s, 0.0D0, -t60, 0.0D0, t58, 0.0D0, t64)
+      t75 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, t34)
+      t77 = FJET(XB1, XB2, s, t39, -t41, 0.0D0, 0.0D0, 0.0D0, t45)
+      t81 = FJET(XB1, XB2, s, t58, 0.0D0, -t60, 0.0D0, 0.0D0, t64)
+      t85 = FJET(XB1, XB2, s, -t41, t39, 0.0D0, 0.0D0, 0.0D0, t45)
+      t89 = FJET(XB1, XB2, s, -t60, 0.0D0, t58, 0.0D0, 0.0D0, t64)
+      rrgg2qqbarhhardt7s4em2 = t35 * t34 + t37 * t34 + t46 * pi * t49 / 
+     #0.8D1 + t52 * pi * t49 / 0.8D1 + t56 * t34 + t65 * pi * t68 / 0.16
+     #D2 + t71 * pi * t68 / 0.16D2 + t75 * t34 + t77 * pi * t49 / 0.8D1 
+     #+ t81 * pi * t68 / 0.16D2 + t85 * pi * t49 / 0.8D1 + t89 * pi * t6
+     #8 / 0.16D2
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s4em3
+      doubleprecision function rrgg2qqbarhhardt7s4em3
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4222,12 +4164,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -4240,22 +4182,22 @@
       t2 = (-0.1D1 + z) * s
       t3 = s ** 2
       t4 = 0.1D1 / t3
-      t6 = rrgg2qqbarh71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0D0, 
-     #t2, 0.0D0, 0.0D0)
+      t6 = rrgg2qqbarhhard71J1(s, XB1, XB2, z, lh, wd, nf, s, 0.0D0, 0.0
+     #D0, t2, 0.0D0, 0.0D0)
       t8 = pi * t4 * t6 / 0.16D2
       t9 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, 0.0D0, t2, 0.0D0, -t8)
       t11 = t4 * t6
       t13 = FJET(XB1, XB2, s, 0.0D0, 0.0D0, t2, 0.0D0, 0.0D0, -t8)
       t16 = FJET(XB1, XB2, s, 0.0D0, t2, 0.0D0, 0.0D0, 0.0D0, -t8)
       t19 = FJET(XB1, XB2, s, t2, 0.0D0, 0.0D0, 0.0D0, 0.0D0, -t8)
-      rrgg2qqbarht7s4em3 = -t9 * pi * t11 / 0.16D2 - t13 * pi * t11 / 0.
-     #16D2 - t16 * pi * t11 / 0.16D2 - t19 * pi * t11 / 0.16D2
+      rrgg2qqbarhhardt7s4em3 = -t9 * pi * t11 / 0.16D2 - t13 * pi * t11 
+     #/ 0.16D2 - t16 * pi * t11 / 0.16D2 - t19 * pi * t11 / 0.16D2
 
       end function
 
 
 
-      doubleprecision function rrgg2qqbarht7s4em4
+      doubleprecision function rrgg2qqbarhhardt7s4em4
      &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4275,12 +4217,12 @@
       doubleprecision KAPPA2
       doubleprecision KAPPAF
       doubleprecision Log
-      doubleprecision rrgg2qqbarh71J1
-      doubleprecision rrgg2qqbarh71J2
-      doubleprecision rrgg2qqbarh71J3
-      doubleprecision rrgg2qqbarh71J4
-      doubleprecision rrgg2qqbarh71J5
-      doubleprecision rrgg2qqbarh71J6
+      doubleprecision rrgg2qqbarhhard71J1
+      doubleprecision rrgg2qqbarhhard71J2
+      doubleprecision rrgg2qqbarhhard71J3
+      doubleprecision rrgg2qqbarhhard71J4
+      doubleprecision rrgg2qqbarhhard71J5
+      doubleprecision rrgg2qqbarhhard71J6
 
       doubleprecision Pi
       parameter(pi=3.141592653589793d0)
@@ -4290,13 +4232,13 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      rrgg2qqbarht7s4em4 = 0.0D0
+      rrgg2qqbarhhardt7s4em4 = 0.0D0
 
       end function
   
  
 
-      doubleprecision function rrgg2qqbarh71J1
+      doubleprecision function rrgg2qqbarhhard71J1
      &(s, XB1, XB2, z, lh, wd, nf, S12, S13, S14, S23, S24, S34) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4327,26 +4269,26 @@
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
       t5 = S24 ** 2
-      t9 = S13 ** 2
+      t11 = S13 ** 2
       t17 = t5 * S24
-      t18 = S14 ** 2
-      t21 = S23 ** 2
-      t26 = t9 * S13
+      t20 = S14 ** 2
+      t23 = S23 ** 2
+      t26 = t11 * S13
       t40 = S12 ** 2
-      rrgg2qqbarh71J1 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24) * 
-     #nf * S12 + 0.3D1 / 0.8D1 * (0.2D1 * t5 - 0.6D1 * S13 * S14 + 0.2D1
-     # * t9 - 0.6D1 * S23 * S24) * nf + 0.3D1 / 0.8D1 * (0.4D1 * S23 * t
-     #5 - t17 - 0.7D1 * S13 * t18 - 0.7D1 * t21 * S24 + 0.4D1 * t9 * S14
-     # - t26) * nf / S12 + 0.3D1 / 0.8D1 * (0.4D1 * S23 * t17 + 0.4D1 * 
-     #t18 * S14 * S13 + 0.4D1 * S14 * t26 + 0.4D1 * t21 * S23 * S24) * n
-     #f / t40) / pi * wd / z
+      rrgg2qqbarhhard71J1 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24
+     #) * nf * S12 + 0.3D1 / 0.8D1 * (0.2D1 * t5 - 0.6D1 * S23 * S24 - 0
+     #.6D1 * S13 * S14 + 0.2D1 * t11) * nf + 0.3D1 / 0.8D1 * (0.4D1 * S2
+     #3 * t5 - t17 + 0.4D1 * t11 * S14 - 0.7D1 * S13 * t20 - 0.7D1 * t23
+     # * S24 - t26) * nf / S12 + 0.3D1 / 0.8D1 * (0.4D1 * t23 * S23 * S2
+     #4 + 0.4D1 * S23 * t17 + 0.4D1 * t20 * S14 * S13 + 0.4D1 * S14 * t2
+     #6) * nf / t40) / pi * wd / z
 
       end function
   
    
  
 
-      doubleprecision function rrgg2qqbarh71J2
+      doubleprecision function rrgg2qqbarhhard71J2
      &(s, XB1, XB2, z, lh, wd, nf, S12, S13, S14, S23, S24, S34) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4376,37 +4318,37 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      t9 = S23 * S24
-      t11 = S13 ** 2
-      t13 = S13 * S14
-      t15 = S24 ** 2
-      t19 = t15 * S24
-      t21 = t11 * S14
-      t23 = S23 ** 2
-      t26 = S23 * t15
-      t28 = S14 ** 2
-      t31 = t11 * S13
-      t33 = t23 * S24
-      t35 = S13 * t28
-      t67 = 0.4D1 * S14 * t26 + 0.4D1 * t9 * t28 + 0.4D1 * t33 * S14 + 0
-     #.4D1 * t21 * S23 + 0.4D1 * t13 * t23 + 0.4D1 * t35 * S23 + 0.4D1 *
-     # S23 * t19 - 0.8D1 * t23 * t15 - 0.8D1 * t28 * t11 + 0.4D1 * S14 *
-     # t31 + 0.4D1 * t23 * S23 * S24 + 0.4D1 * t28 * S14 * S13
+      t5 = S13 * S14
+      t7 = S24 ** 2
+      t13 = S13 ** 2
+      t15 = S23 * S24
+      t19 = t13 * S13
+      t21 = S23 ** 2
+      t24 = S14 ** 2
+      t25 = S13 * t24
+      t27 = t13 * S14
+      t29 = t21 * S24
+      t31 = t7 * S24
+      t35 = S23 * t7
+      t67 = 0.4D1 * t21 * S23 * S24 + 0.4D1 * S23 * t31 - 0.8D1 * t21 * 
+     #t7 + 0.4D1 * t35 * S14 + 0.4D1 * t15 * t24 + 0.4D1 * t29 * S14 + 0
+     #.4D1 * S14 * t19 + 0.4D1 * t5 * t21 + 0.4D1 * t25 * S23 + 0.4D1 * 
+     #t24 * S14 * S13 + 0.4D1 * t27 * S23 - 0.8D1 * t24 * t13
       t69 = S12 ** 2
-      rrgg2qqbarh71J2 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24) * 
-     #nf * S12 + 0.3D1 / 0.8D1 * (-0.2D1 * S24 * S14 - 0.2D1 * S23 * S13
-     # - 0.12D2 * t9 + 0.4D1 * t11 - 0.12D2 * t13 + 0.4D1 * t15) * nf + 
-     #0.3D1 / 0.8D1 * (-0.2D1 * t19 + 0.8D1 * t21 - 0.2D1 * S13 * t23 + 
-     #0.8D1 * t26 - 0.2D1 * S24 * t28 - 0.2D1 * t31 - 0.14D2 * t33 - 0.1
-     #4D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi * wd 
-     #/ z
+      rrgg2qqbarhhard71J2 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24
+     #) * nf * S12 + 0.3D1 / 0.8D1 * (-0.12D2 * t5 + 0.4D1 * t7 - 0.2D1 
+     #* S23 * S13 - 0.2D1 * S24 * S14 + 0.4D1 * t13 - 0.12D2 * t15) * nf
+     # + 0.3D1 / 0.8D1 * (-0.2D1 * t19 - 0.2D1 * S13 * t21 - 0.14D2 * t2
+     #5 + 0.8D1 * t27 - 0.14D2 * t29 - 0.2D1 * t31 - 0.2D1 * S24 * t24 +
+     # 0.8D1 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi * 
+     #wd / z
 
       end function
   
    
  
 
-      doubleprecision function rrgg2qqbarh71J3
+      doubleprecision function rrgg2qqbarhhard71J3
      &(s, XB1, XB2, z, lh, wd, nf, S12, S13, S14, S23, S24, S34) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4436,37 +4378,37 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      t9 = S23 * S24
-      t11 = S13 ** 2
-      t13 = S13 * S14
-      t15 = S24 ** 2
-      t19 = t15 * S24
-      t21 = t11 * S14
-      t23 = S23 ** 2
-      t26 = S23 * t15
-      t28 = S14 ** 2
-      t31 = t11 * S13
-      t33 = t23 * S24
-      t35 = S13 * t28
-      t67 = 0.8D1 * S14 * t26 + 0.8D1 * t9 * t28 + 0.8D1 * t33 * S14 + 0
-     #.8D1 * t21 * S23 + 0.8D1 * t13 * t23 + 0.8D1 * t35 * S23 + 0.4D1 *
-     # S23 * t19 - 0.16D2 * t23 * t15 - 0.16D2 * t28 * t11 + 0.4D1 * S14
-     # * t31 + 0.4D1 * t23 * S23 * S24 + 0.4D1 * t28 * S14 * S13
+      t5 = S13 * S14
+      t7 = S24 ** 2
+      t13 = S13 ** 2
+      t15 = S23 * S24
+      t19 = t13 * S13
+      t21 = S23 ** 2
+      t24 = S14 ** 2
+      t25 = S13 * t24
+      t27 = t13 * S14
+      t29 = t21 * S24
+      t31 = t7 * S24
+      t35 = S23 * t7
+      t67 = 0.4D1 * t21 * S23 * S24 + 0.4D1 * S23 * t31 - 0.16D2 * t21 *
+     # t7 + 0.8D1 * t35 * S14 + 0.8D1 * t15 * t24 + 0.8D1 * t29 * S14 + 
+     #0.4D1 * S14 * t19 + 0.8D1 * t5 * t21 + 0.8D1 * t25 * S23 + 0.4D1 *
+     # t24 * S14 * S13 + 0.8D1 * t27 * S23 - 0.16D2 * t24 * t13
       t69 = S12 ** 2
-      rrgg2qqbarh71J3 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24) * 
-     #nf * S12 + 0.3D1 / 0.8D1 * (-0.4D1 * S24 * S14 - 0.4D1 * S23 * S13
-     # - 0.18D2 * t9 + 0.6D1 * t11 - 0.18D2 * t13 + 0.6D1 * t15) * nf + 
-     #0.3D1 / 0.8D1 * (-0.3D1 * t19 + 0.12D2 * t21 - 0.4D1 * S13 * t23 +
-     # 0.12D2 * t26 - 0.4D1 * S24 * t28 - 0.3D1 * t31 - 0.21D2 * t33 - 0
-     #.21D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi * w
-     #d / z
+      rrgg2qqbarhhard71J3 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24
+     #) * nf * S12 + 0.3D1 / 0.8D1 * (-0.18D2 * t5 + 0.6D1 * t7 - 0.4D1 
+     #* S23 * S13 - 0.4D1 * S24 * S14 + 0.6D1 * t13 - 0.18D2 * t15) * nf
+     # + 0.3D1 / 0.8D1 * (-0.3D1 * t19 - 0.4D1 * S13 * t21 - 0.21D2 * t2
+     #5 + 0.12D2 * t27 - 0.21D2 * t29 - 0.3D1 * t31 - 0.4D1 * S24 * t24 
+     #+ 0.12D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi 
+     #* wd / z
 
       end function
   
    
  
 
-      doubleprecision function rrgg2qqbarh71J4
+      doubleprecision function rrgg2qqbarhhard71J4
      &(s, XB1, XB2, z, lh, wd, nf, S12, S13, S14, S23, S24, S34) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4496,37 +4438,37 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      t9 = S23 * S24
-      t11 = S13 ** 2
-      t13 = S13 * S14
-      t15 = S24 ** 2
-      t19 = t15 * S24
-      t21 = t11 * S14
-      t23 = S23 ** 2
-      t26 = S23 * t15
-      t28 = S14 ** 2
-      t31 = t11 * S13
-      t33 = t23 * S24
-      t35 = S13 * t28
-      t67 = 0.12D2 * S14 * t26 + 0.12D2 * t9 * t28 + 0.12D2 * t33 * S14 
-     #+ 0.12D2 * t21 * S23 + 0.12D2 * t13 * t23 + 0.12D2 * t35 * S23 + 0
-     #.4D1 * S23 * t19 - 0.24D2 * t23 * t15 - 0.24D2 * t28 * t11 + 0.4D1
-     # * S14 * t31 + 0.4D1 * t23 * S23 * S24 + 0.4D1 * t28 * S14 * S13
+      t5 = S13 * S14
+      t7 = S24 ** 2
+      t13 = S13 ** 2
+      t15 = S23 * S24
+      t19 = t13 * S13
+      t21 = S23 ** 2
+      t24 = S14 ** 2
+      t25 = S13 * t24
+      t27 = t13 * S14
+      t29 = t21 * S24
+      t31 = t7 * S24
+      t35 = S23 * t7
+      t67 = 0.4D1 * t21 * S23 * S24 + 0.4D1 * S23 * t31 - 0.24D2 * t21 *
+     # t7 + 0.12D2 * t35 * S14 + 0.12D2 * t15 * t24 + 0.12D2 * t29 * S14
+     # + 0.4D1 * S14 * t19 + 0.12D2 * t5 * t21 + 0.12D2 * t25 * S23 + 0.
+     #4D1 * t24 * S14 * S13 + 0.12D2 * t27 * S23 - 0.24D2 * t24 * t13
       t69 = S12 ** 2
-      rrgg2qqbarh71J4 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24) * 
-     #nf * S12 + 0.3D1 / 0.8D1 * (-0.6D1 * S24 * S14 - 0.6D1 * S23 * S13
-     # - 0.24D2 * t9 + 0.8D1 * t11 - 0.24D2 * t13 + 0.8D1 * t15) * nf + 
-     #0.3D1 / 0.8D1 * (-0.4D1 * t19 + 0.16D2 * t21 - 0.6D1 * S13 * t23 +
-     # 0.16D2 * t26 - 0.6D1 * S24 * t28 - 0.4D1 * t31 - 0.28D2 * t33 - 0
-     #.28D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi * w
-     #d / z
+      rrgg2qqbarhhard71J4 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24
+     #) * nf * S12 + 0.3D1 / 0.8D1 * (-0.24D2 * t5 + 0.8D1 * t7 - 0.6D1 
+     #* S23 * S13 - 0.6D1 * S24 * S14 + 0.8D1 * t13 - 0.24D2 * t15) * nf
+     # + 0.3D1 / 0.8D1 * (-0.4D1 * t19 - 0.6D1 * S13 * t21 - 0.28D2 * t2
+     #5 + 0.16D2 * t27 - 0.28D2 * t29 - 0.4D1 * t31 - 0.6D1 * S24 * t24 
+     #+ 0.16D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi 
+     #* wd / z
 
       end function
   
    
  
 
-      doubleprecision function rrgg2qqbarh71J5
+      doubleprecision function rrgg2qqbarhhard71J5
      &(s, XB1, XB2, z, lh, wd, nf, S12, S13, S14, S23, S24, S34) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4556,37 +4498,37 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      t9 = S23 * S24
-      t11 = S13 ** 2
-      t13 = S13 * S14
-      t15 = S24 ** 2
-      t19 = t15 * S24
-      t21 = t11 * S14
-      t23 = S23 ** 2
-      t26 = S23 * t15
-      t28 = S14 ** 2
-      t31 = t11 * S13
-      t33 = t23 * S24
-      t35 = S13 * t28
-      t67 = 0.16D2 * S14 * t26 + 0.16D2 * t9 * t28 + 0.16D2 * t33 * S14 
-     #+ 0.16D2 * t21 * S23 + 0.16D2 * t13 * t23 + 0.16D2 * t35 * S23 + 0
-     #.4D1 * S23 * t19 - 0.32D2 * t23 * t15 - 0.32D2 * t28 * t11 + 0.4D1
-     # * S14 * t31 + 0.4D1 * t23 * S23 * S24 + 0.4D1 * t28 * S14 * S13
+      t5 = S13 * S14
+      t7 = S24 ** 2
+      t13 = S13 ** 2
+      t15 = S23 * S24
+      t19 = t13 * S13
+      t21 = S23 ** 2
+      t24 = S14 ** 2
+      t25 = S13 * t24
+      t27 = t13 * S14
+      t29 = t21 * S24
+      t31 = t7 * S24
+      t35 = S23 * t7
+      t67 = 0.4D1 * t21 * S23 * S24 + 0.4D1 * S23 * t31 - 0.32D2 * t21 *
+     # t7 + 0.16D2 * t35 * S14 + 0.16D2 * t15 * t24 + 0.16D2 * t29 * S14
+     # + 0.4D1 * S14 * t19 + 0.16D2 * t5 * t21 + 0.16D2 * t25 * S23 + 0.
+     #4D1 * t24 * S14 * S13 + 0.16D2 * t27 * S23 - 0.32D2 * t24 * t13
       t69 = S12 ** 2
-      rrgg2qqbarh71J5 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24) * 
-     #nf * S12 + 0.3D1 / 0.8D1 * (-0.8D1 * S24 * S14 - 0.8D1 * S23 * S13
-     # - 0.30D2 * t9 + 0.10D2 * t11 - 0.30D2 * t13 + 0.10D2 * t15) * nf 
-     #+ 0.3D1 / 0.8D1 * (-0.5D1 * t19 + 0.20D2 * t21 - 0.8D1 * S13 * t23
-     # + 0.20D2 * t26 - 0.8D1 * S24 * t28 - 0.5D1 * t31 - 0.35D2 * t33 -
-     # 0.35D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / pi *
-     # wd / z
+      rrgg2qqbarhhard71J5 = (0.3D1 / 0.8D1 * (-0.2D1 * S13 - 0.2D1 * S24
+     #) * nf * S12 + 0.3D1 / 0.8D1 * (-0.30D2 * t5 + 0.10D2 * t7 - 0.8D1
+     # * S23 * S13 - 0.8D1 * S24 * S14 + 0.10D2 * t13 - 0.30D2 * t15) * 
+     #nf + 0.3D1 / 0.8D1 * (-0.5D1 * t19 - 0.8D1 * S13 * t21 - 0.35D2 * 
+     #t25 + 0.20D2 * t27 - 0.35D2 * t29 - 0.5D1 * t31 - 0.8D1 * S24 * t2
+     #4 + 0.20D2 * t35) * nf / S12 + 0.3D1 / 0.8D1 * t67 * nf / t69) / p
+     #i * wd / z
 
       end function
   
    
  
 
-      doubleprecision function rrgg2qqbarh71J6
+      doubleprecision function rrgg2qqbarhhard71J6
      &(s, XB1, XB2, z, lh, wd, nf, S12, S13, S14, S23, S24, S34) 
       IMPLICIT DOUBLE PRECISION(t)
       doubleprecision s
@@ -4616,21 +4558,498 @@
       parameter(zeta5=1.036927755143370d0)
       doubleprecision zeta7
       parameter(zeta7=1.008349277381923d0)
-      t10 = S14 ** 2
-      t12 = S23 ** 2
-      t19 = S24 ** 2
-      t37 = S13 ** 2
-      t55 = 0.4D1 * S23 * t19 * S14 + 0.4D1 * S23 * S24 * t10 + 0.4D1 * 
-     #S14 * S13 * t12 - 0.8D1 * t12 * t19 + 0.4D1 * t12 * S24 * S14 - 0.
-     #4D1 * S23 * t19 * S24 + 0.4D1 * S14 * t37 * S23 - 0.4D1 * t10 * S1
-     #4 * S13 - 0.4D1 * S14 * t37 * S13 - 0.4D1 * t12 * S23 * S24 + 0.4D
-     #1 * t10 * S13 * S23 - 0.8D1 * t10 * t37
+      t10 = S23 ** 2
+      t12 = S14 ** 2
+      t25 = S13 ** 2
+      t28 = S24 ** 2
+      t55 = 0.4D1 * S23 * S24 * t12 + 0.4D1 * t10 * S24 * S14 - 0.8D1 * 
+     #t12 * t25 + 0.4D1 * S23 * t28 * S14 - 0.8D1 * t10 * t28 - 0.4D1 * 
+     #t12 * S14 * S13 - 0.4D1 * S14 * t25 * S13 + 0.4D1 * S14 * t25 * S2
+     #3 + 0.4D1 * S14 * S13 * t10 + 0.4D1 * t12 * S13 * S23 - 0.4D1 * t1
+     #0 * S23 * S24 - 0.4D1 * S23 * t28 * S24
       t57 = S12 ** 2
-      rrgg2qqbarh71J6 = (0.15D2 / 0.8D1 * (0.2D1 * S13 + 0.2D1 * S24) * 
-     #nf * S12 + 0.15D2 / 0.8D1 * (-0.2D1 * S24 * S14 - 0.2D1 * S23 * S1
-     #3) * nf + 0.15D2 / 0.8D1 * (-0.2D1 * S24 * t10 - 0.2D1 * S13 * t12
-     #) * nf / S12 + 0.15D2 / 0.8D1 * t55 * nf / t57) / pi * wd / z
+      rrgg2qqbarhhard71J6 = (0.15D2 / 0.8D1 * (0.2D1 * S24 + 0.2D1 * S13
+     #) * nf * S12 + 0.15D2 / 0.8D1 * (-0.2D1 * S23 * S13 - 0.2D1 * S24 
+     #* S14) * nf + 0.15D2 / 0.8D1 * (-0.2D1 * S13 * t10 - 0.2D1 * S24 *
+     # t12) * nf / S12 + 0.15D2 / 0.8D1 * t55 * nf / t57) / pi * wd / z
 
       end function
   
- 
+   
+      subroutine rrgg2qqbarhsoftt7
+     &(sector,pole,s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4,fff)     
+      implicit none  
+      integer sector,pole  
+      doubleprecision x1, x2, x3, x4,ff(5),fff  
+      doubleprecision s, XB1, XB2, z, lh, wd, nf  
+      doubleprecision KAPPA  
+      doubleprecision KAPPA2  
+      doubleprecision KAPPAF  
+      doubleprecision Log  
+      doubleprecision rrgg2qqbarhsoftt7s1e1  
+      doubleprecision rrgg2qqbarhsoftt7s1e0  
+      doubleprecision rrgg2qqbarhsoftt7s1em1  
+      doubleprecision rrgg2qqbarhsoftt7s1em2  
+      doubleprecision rrgg2qqbarhsoftt7s1em3  
+      doubleprecision rrgg2qqbarhsoftt7s1em4  
+      doubleprecision rrgg2qqbarhsoftt7s2e1  
+      doubleprecision rrgg2qqbarhsoftt7s2e0  
+      doubleprecision rrgg2qqbarhsoftt7s2em1  
+      doubleprecision rrgg2qqbarhsoftt7s2em2  
+      doubleprecision rrgg2qqbarhsoftt7s2em3  
+      doubleprecision rrgg2qqbarhsoftt7s2em4  
+      if(pole.eq.1)then  
+      if(sector.eq.1)then  
+         fff=rrgg2qqbarhsoftt7s1e1  
+     &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      else if(sector.eq.2)then  
+         fff=rrgg2qqbarhsoftt7s2e1  
+     &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      end if  
+      else if(pole.eq.0)then  
+      if(sector.eq.1)then  
+         fff=rrgg2qqbarhsoftt7s1e0  
+     &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      else if(sector.eq.2)then  
+         fff=rrgg2qqbarhsoftt7s2e0  
+     &    (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      end if  
+      else if(pole.eq.-1)then  
+      if(sector.eq.1)then  
+         fff=rrgg2qqbarhsoftt7s1em1  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      else if(sector.eq.2)then  
+         fff=rrgg2qqbarhsoftt7s2em1  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      end if  
+      else if(pole.eq.-2)then  
+      if(sector.eq.1)then  
+         fff=rrgg2qqbarhsoftt7s1em2  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      else if(sector.eq.2)then  
+         fff=rrgg2qqbarhsoftt7s2em2  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      end if  
+      else if(pole.eq.-3)then  
+      if(sector.eq.1)then  
+         fff=rrgg2qqbarhsoftt7s1em3  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      else if(sector.eq.2)then  
+         fff=rrgg2qqbarhsoftt7s2em3  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      end if  
+      else if(pole.eq.-4)then  
+      if(sector.eq.1)then  
+         fff=rrgg2qqbarhsoftt7s1em4  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      else if(sector.eq.2)then  
+         fff=rrgg2qqbarhsoftt7s2em4  
+     &     (s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4)  
+      end if  
+      end if  
+      end subroutine
+
+      doubleprecision function rrgg2qqbarhsoftt7s1e1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s1e1 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s1e0
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s1e0 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s1em1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s1em1 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s1em2
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s1em2 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s1em3
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s1em3 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s1em4
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s1em4 = 0.0D0
+
+      end function
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s2e1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s2e1 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s2e0
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s2e0 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s2em1
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s2em1 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s2em2
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s2em2 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s2em3
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s2em3 = 0.0D0
+
+      end function
+
+
+
+      doubleprecision function rrgg2qqbarhsoftt7s2em4
+     &(s, XB1, XB2, z, lh, wd, nf, x1, x2, x3, x4) 
+      IMPLICIT DOUBLE PRECISION(t)
+      doubleprecision s
+      doubleprecision XB1
+      doubleprecision XB2
+      doubleprecision z
+      doubleprecision lh
+      doubleprecision wd
+      doubleprecision nf
+      doubleprecision x1
+      doubleprecision x2
+      doubleprecision x3
+      doubleprecision x4
+
+      doubleprecision KAPPA
+      doubleprecision KAPPA2
+      doubleprecision KAPPAF
+      doubleprecision Log
+
+      doubleprecision Pi
+      parameter(pi=3.141592653589793d0)
+      doubleprecision zeta3
+      parameter(zeta3=1.202056903159594d0)
+      doubleprecision zeta5
+      parameter(zeta5=1.036927755143370d0)
+      doubleprecision zeta7
+      parameter(zeta7=1.008349277381923d0)
+      rrgg2qqbarhsoftt7s2em4 = 0.0D0
+
+      end function

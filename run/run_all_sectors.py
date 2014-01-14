@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 #-------------------------------------------------------------------------------
-
-directory_name = "python_script_test4"
+runcard = "higgs.card"
+ehixs_bin_directory = "../cmake_builds"
+directory_name = "higgs_rapidity_zero_bin"
 running_mode = "parallel" # or "serial"
 waiting_time_before_checking_for_status = 2.0 # in secs
 verbosity_level_for_checking_reports = "moderate" # or "moderate" or "zero"
@@ -15,6 +16,18 @@ import StringIO
 import xml.etree.ElementTree as ET
 from time import sleep
 
+#check to see if runcard is there
+if not(os.path.isfile(runcard)):
+    print "[python script] ERROR: runcard with name "+runcard+" not found!"
+    quit()
+
+directory_name = os.getcwd()+'/'+directory_name
+runcard = os.getcwd()+'/'+runcard
+#copy runcard to directory of the run
+os.system("cp "+runcard+" "+directory_name+"/"+runcard)
+
+pyscript_output_filename = directory_name + '/Total.data'
+
 class Sector:
     """holds results for sector"""
     def __init__(self):
@@ -27,12 +40,12 @@ class Sector:
         self.was_fired = False
     def run(self):
         print "[python script] firing sector "+self.ehixs_name
-        os.system('./ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename + ' > '+self.output_filename+'.log')
+        os.system(ehixs_bin_directory+'/ehixs '+'-i '+runcard+' -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename + ' > '+self.output_filename+'.log')
     def run_in_the_background(self):
         #print "[python script] firing sector "+self.ehixs_name
-        command_line = './ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename
-        args = shlex.split(command_line)
-        with open('./'+self.output_filename+'.log','w') as logfile:
+        command_line = ehixs_bin_directory+'/ehixs '+'-i '+runcard+' -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename
+        print "[python script] firing: "+command_line
+        with open(self.output_filename+'.log','w') as logfile:
             self.proc = subprocess.Popen(command_line,shell=True,stdout=logfile,stderr=logfile)
         self.was_fired = True
     def check_status(self):
@@ -44,8 +57,6 @@ class Sector:
             return "finished"
         else:
             return "abnormally terminated"
-    def print_command(self):
-        print './ehixs -s '+ str(self.id_number_in_ehixs)+' --output_filename '+self.output_filename 
     def read_results(self):
         if os.path.isfile(self.output_filename):
             print "[python script] reading from file "+self.output_filename
@@ -68,10 +79,12 @@ class Sector:
             if hist.get('name')==name:
                 return hist
     def printme(self,XS,Ttot):
+        print self.string_to_print(XS,Ttot)
+    def string_to_print(self,XS,Ttot):
         rel_error = 0.0
         if math.fabs(self.give('sigma'))>0.0:
             rel_error = math.fabs(self.give('error')/self.give('sigma'))
-            print '{0:>3} | {1:>10.2e} | {2:>10.2e} | {3:>8.1%} | {4:>8} | {5:>8.2f} s | {6:8.2e} s/p | {7:>8.1%} | {8:>8.1%}'.format(self.id_number_in_ehixs,self.give('sigma'), self.give('error'),rel_error,self.give('total_number_of_points'),self.give('time'),self.give('secs_per_point'),self.give('sigma')/XS,self.give('time')/Ttot)
+            return '{0:>3} | {1:>10.2e} | {2:>10.2e} | {3:>8.1%} | {4:>8} | {5:>8.2f} s | {6:8.2e} s/p | {7:>8.1%} | {8:>8.1%}'.format(self.id_number_in_ehixs,self.give('sigma'), self.give('error'),rel_error,self.give('total_number_of_points'),self.give('time'),self.give('secs_per_point'),self.give('sigma')/XS,self.give('time')/Ttot)
 
 
 
@@ -82,7 +95,9 @@ class Bin:
         self.num_of_points = 0
         self.lowend = 0.0
         self.highend = 0.0
+        self.indiv_sector_contributions=[]
     def add(self, thebin):
+        self.indiv_sector_contributions.append(float(thebin[0].text))
         self.sigma = self.sigma + float(thebin[0].text)
         loc_error = float(thebin[1].text)
         self.error_sq = self.error_sq + loc_error*loc_error
@@ -93,7 +108,22 @@ class Bin:
         if (math.fabs(self.sigma)>0):
             rel_error = math.fabs(math.sqrt(self.error_sq)/self.sigma)
         print '{0:>8.2f} | {1:>8.2f} | {2:>10.2e} | {3:>10.2e} | {4:>8.1%} | {5:8}'.format(self.lowend,self.highend, self.sigma,error,rel_error,self.num_of_points)
-
+    def string_to_print_analytics(self):
+        res='{0:>8.2f} | {1:>8.2f} | {2:>10.2e} |'.format(self.lowend,self.highend, self.sigma)
+        for sec_bin in self.indiv_sector_contributions:
+            res += ' {0:>8.1%} |'.format(sec_bin/self.sigma)
+        return res
+    def string_to_print_analytics(self,min,max):
+        res='{0:>8.2f} | {1:>8.2f} | {2:>10.2e} |'.format(self.lowend,self.highend, self.sigma)
+        for ii,sec_bin in enumerate(self.indiv_sector_contributions[min:max+1]):
+            if not(self.sigma==0):
+                res += ' {0:>8.1%} |'.format(sec_bin/self.sigma)
+            else:
+                res += ' {0:>8.1%} |'.format(0.0)
+        #res += ' {0:>8} |'.format(min+ii)
+        return res
+    def print_analytics(self):
+        print self.string_to_print_analytics()
 
 class Histogram:
     def __init__(self,name):
@@ -139,6 +169,29 @@ class Histogram:
             overflow_rel = self.overflow_bin.sigma/self.totalbinned
         print 'Total binned = {0:.2e} with sigma_total {1:.2e} ({2:.2%}). The overflow is {3:.2%}'.format(self.totalbinned,self.totalsigma,total_rel,overflow_rel)
         print '------'
+    def print_analytics(self):
+        print self.string_to_print_analytics()
+    def string_to_print_analytics(self):
+        res = '\nhistogram: '+self.name
+        num_sec = len(self.all_bins[0].indiv_sector_contributions)
+        cursec = 0
+        num_batches = num_sec / 10
+        print num_batches
+        firstline='{0:>8} | {1:>8} | {2:>10} |'.format("lowend","highend","sigma")
+        for i in range(num_batches):
+            res += '\n\n'+firstline
+            for x in range(10):
+                res += '{0:>9} |'.format('S'+str(i*10+x))
+            for thebin in self.all_bins:
+                res += '\n'+thebin.string_to_print_analytics(i*10,(i+1)*10-1)
+        res += '\n\n'+firstline
+        for x in range(num_sec % 10):
+            res += '{0:>9} |'.format('S'+str((num_batches)*10+x))
+        for thebin in self.all_bins:
+            res += '\n'+thebin.string_to_print_analytics((num_batches)*10,(num_batches)*10+x)
+                    
+        return res
+
 
 
 
@@ -162,22 +215,27 @@ class JobManager:
         self.sectors=sectors
         self.cores=ncores
         self.sectors_submitted = 0
+        self.status_message = ""
     def run(self):
-        while self.sectors_submitted<len(self.sectors):
-            self.run_a_batch()
-            self.wait()
-        self.wait_till_all_sectors_finished()
+        if not(os.path.isfile(self.sectors[1].output_filename)):
+            while self.sectors_submitted<len(self.sectors):
+                self.run_a_batch()
+                self.wait()
+            self.wait_till_all_sectors_finished()
         for cs in all_sectors:
             cs.read_results()
     def check_status(self):
         my_free_cores = self.cores
         running_sectors = 0
-        print "---"
+        new_message = '\n[python script] status'
         for cs in all_sectors:
             if cs.check_status()=="still running":
-                print "[python script] "+highlight("R ","red","normal")+cs.ehixs_name
+                new_message += '\n[python script] '+highlight("R ","red","normal")+cs.ehixs_name
                 my_free_cores -= 1
                 running_sectors += 1
+        if not(new_message==self.status_message):
+            print new_message
+            self.status_message = new_message
         #print "[python script] Status: running sectors "+str(running_sectors)
         return my_free_cores
     def run_a_batch(self):
@@ -185,8 +243,9 @@ class JobManager:
         if (free_cores>0):
             #print "[python script] Will fire "+str(free_cores)+" jobs"
             for x in self.sectors[self.sectors_submitted:self.sectors_submitted+free_cores]:
-                print "[python script]"+highlight(" F "+str(self.sectors_submitted+1)+"/"+str(len(self.sectors)),"green","normal") +" : "+ x.ehixs_name
-                x.run_in_the_background()
+                if not(os.path.isfile(x.output_filename)):
+                    print "[python script]"+highlight(" F "+str(self.sectors_submitted+1)+"/"+str(len(self.sectors)),"green","normal") +" : "+ x.ehixs_name
+                    x.run_in_the_background()
                 self.sectors_submitted +=1
     def wait_till_all_sectors_finished(self):
         while self.check_status()<self.cores:
@@ -208,7 +267,8 @@ if not(os.path.isdir(directory_name)):
 # this information is saved at directory_name/xml_info.out
 print "[python script] Asking ehixs for sectors that match the selection criteria of the runcard"
 xml_filename = directory_name+'/xml_info.out'
-os.system('./ehixs --info --xml_info '+xml_filename+' > '+xml_filename+'.log')
+print "[python script] with command : "+ehixs_bin_directory+'/ehixs -i '+runcard+' --info --xml_info '+xml_filename+' > '+xml_filename+'.log'
+os.system(ehixs_bin_directory+'/ehixs --info -i'+runcard+' --xml_info '+xml_filename+' > '+xml_filename+'.log')
 #reading the xml file
 run_tree = ET.parse(xml_filename)
 #constructing the root
@@ -216,6 +276,7 @@ run_root = run_tree.getroot()
 # all_sectors will hold all the sectors for the run
 all_sectors = []
 #initializing the sectors
+sector_counter=0
 for xml_sector in run_root.iter('sector'):
     cs = Sector()
     #the xml structure for <sector> is
@@ -226,23 +287,15 @@ for xml_sector in run_root.iter('sector'):
     cs.output_filename = directory_name+'/S'+cs.id_number_in_ehixs+'.data'
     #retrieve name
     cs.ehixs_name = xml_sector.get('name')
+    sector_counter +=1
+        #if sector_counter in range(31,60):
+    #all_sectors.append(cs)
     all_sectors.append(cs)
 #-------------------------------------------------------------------------------
 #
 #
 #
 #
-#
-
-def process_is_still_running(proc):
-    returncode = proc.poll()
-    if returncode==None:
-        return False
-    elif returncode==0:
-        return True
-    else:
-        print "[python script] one of the sectors exited abruptly"
-        return True
 
 
 
@@ -302,4 +355,26 @@ for hist in all_histograms:
     hist.add_histogram(all_sectors)
     #printing out result
     hist.printme()
+    hist.print_analytics()
+
+
+    
+with open(pyscript_output_filename,'w') as outfile:
+    outfile.write('ehixs total output')
+    for i,cs in enumerate(all_sectors):
+        outfile.write('\n'+str(i)+':'+cs.ehixs_name)
+    for cs in all_sectors:
+        res = '\n'+str(cs.string_to_print(total_xs,total_time_used))
+        res += '\n------------'
+        res += '\ntotalxs = {0:.2e} +- {1:.2e} | T = {5} :: highest probability that error is wrong {2:.2e} from sector #{3} :: total number of points for run {4}'.format(total_xs,math.sqrt(total_err_sq),highest_prob,highest_prob_sector_id,total_number_of_points_for_run, total_time_used)
+        outfile.write(res)
+    for hist in all_histograms:
+        res = '\n'+str(hist.string_to_print_analytics())
+        outfile.write(res)
+
+
+
+
+
+
 

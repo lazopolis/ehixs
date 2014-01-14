@@ -51,6 +51,13 @@ UserInterface::UserInterface()
             "Required",
             &qcd_perturbative_order,
             "none"));
+    options.push_back(new StringOption(
+                                       "rr_treatment",0,
+                                       "split or group : whether to split subsectors for each topology or to group them together",
+                                       "Required",
+                                       &rr_treatment,
+                                       "none"));
+    
     
      options.push_back(new IntOption("verbose",0,"level of verbosity","Required",&verbose,2));
      options.push_back(new IntOption("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,200000));
