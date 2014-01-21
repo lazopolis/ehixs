@@ -225,6 +225,7 @@ Vegas(UI)
         my_decay->cuts_->show_cut_info_and_exit();
         }
     
+    final_iteration_ = false;
 }
 
 
@@ -264,7 +265,10 @@ void Process::perform()
      
      Vegas.call_vegas();
      _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
-        //: this is after the final iteration
+    Vegas.prepare_for_final_iteration();
+    final_iteration_ = true;
+    Vegas.call_vegas();
+    //: this is after the final iteration
      print_output();
      close_event_filename();
      
@@ -421,6 +425,7 @@ void Process::book_event(const CombinedEvent& the_event)
     //cout<<"\n[Process]: after histograms are booked"<<endl;
      Vegas.set_up_vegas_ff(the_event.weight());
 //    cout<<"\n[Process]: bined event with weight "<<the_event.weight()<<endl;
+    my_event_stream<<the_event;
 
 }
 
