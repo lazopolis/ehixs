@@ -31,13 +31,11 @@ public:
     }
     
     string plotinfo();
-    
     string xml();
     friend ostream& operator<<(ostream&, const SimpleHistogram&);
     friend string compare_histograms( const SimpleHistogram* H1,const SimpleHistogram* H2,const string& comp_type);
     friend string compare_histograms( const vector<SimpleHistogram*> &);
     friend string compare_histograms( const vector<SimpleHistogram*> &,bool color);
-
 
     unsigned    _numbins;
     unsigned    _firstbin;

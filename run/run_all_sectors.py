@@ -2,6 +2,11 @@
 #-------------------------------------------------------------------------------
 
 directory_name = "python_script_test4"
+directory_name = "higgs_rapidity"
+=======
+runcard = "higgs.card"
+ehixs_bin_directory = "../cmake_builds"
+directory_name = "higgs_pt_total2"
 running_mode = "parallel" # or "serial"
 waiting_time_before_checking_for_status = 2.0 # in secs
 verbosity_level_for_checking_reports = "moderate" # or "moderate" or "zero"
