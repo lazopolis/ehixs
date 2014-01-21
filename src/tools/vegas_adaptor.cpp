@@ -31,18 +31,6 @@ string VegasAdaptor::xml()
     return stream.str();
 }
 
-<<<<<<< HEAD
-void VegasAdaptor::call_vegas_final()
-{
-mineval = 100000;
-maxeval=100000;
-nstart = 100000;
-epsabs=0.0;
-epsrel = 0.0;
-call_vegas();
-}
-
-=======
 
 void VegasAdaptor::prepare_for_final_iteration()
 {
@@ -54,7 +42,6 @@ void VegasAdaptor::prepare_for_final_iteration()
 }
 
 
->>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
 void VegasAdaptor::call_vegas()
 {
 #ifdef debug
@@ -64,11 +51,8 @@ void VegasAdaptor::call_vegas()
      double error[number_of_components];
      double prob[number_of_components];
      int neval,fail; 
-<<<<<<< HEAD
      int gridno=1; 
-=======
-     int gridno=1;
->>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
+
      int seed=0;
      //:0: Sobol
      //:>0 Ranlux

@@ -112,7 +112,10 @@ public:
         }
 
         }
+<<<<<<< HEAD
     virtual double matrix_element_squared(const double&,const double&,const double&)=0;
+=======
+>>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
     virtual double matrix_element_squared(const double&,const double&,
                                           const double&)=0;
 protected:
@@ -128,7 +131,6 @@ class GstarGstarMeLO: public GstarGstarMeDelta
 {
 public:
     GstarGstarMeLO(EventBox& event_box):GstarGstarMeDelta(event_box){};
-    double matrix_element_squared(const double& s12,const double& s13,const double& s23)
     double matrix_element_squared(const double& s12,const double& s13,
                                   const double& s23)
     {
@@ -149,7 +151,7 @@ public:
         info_->name = "NLOSoft";
 
         };
-    double matrix_element_squared(const double& s12,const double& s13,const double& s23)
+
     double matrix_element_squared(const double& s12,const double& s13,
                                   const double& s23)
     {
@@ -183,7 +185,7 @@ public:
                                      const string & myorder,
                                      const int & ep_power,
                                      const string & me_approx)
-    {string res = "we don't give no names in gamma* gamma*"; vector<string> res2;res2.push_back(res);return res2;}
+
         {
         string res = "we don't give no names in gamma* gamma*";
         vector<string> res2;
@@ -201,7 +203,6 @@ public:
                                        const double &,const double &,
                                        const double &,const double &,
                                        const double &,const double &,
-                               const double &){};//: public to integrate with fortran Fjet
                                const double &){};
     //: public to integrate with fortran Fjet
     

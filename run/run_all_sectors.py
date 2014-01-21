@@ -1,13 +1,8 @@
 #! /usr/bin/env python
 #-------------------------------------------------------------------------------
-<<<<<<< HEAD
-
-directory_name = "higgs_rapidity"
-=======
 runcard = "higgs.card"
 ehixs_bin_directory = "../cmake_builds"
 directory_name = "higgs_pt_total2"
->>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
 running_mode = "parallel" # or "serial"
 waiting_time_before_checking_for_status = 2.0 # in secs
 verbosity_level_for_checking_reports = "moderate" # or "moderate" or "zero"
