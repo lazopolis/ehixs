@@ -108,6 +108,10 @@ private://data
     
     bool final_iteration_;
     
+    bool bin_by_bin_integration_;
+    int current_bin_;
+    CHistogram* current_histogram_;
+    
 private://methods
     void set_production(Production * theproduction);
     void set_decay(Decay * thedecay);
