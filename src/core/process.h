@@ -101,7 +101,6 @@ private://data
     Decay *my_decay;
     Production* my_production;
     fstream my_event_stream;
-    ofstream my_event_stream;
     TimeKeeper myclock_;
     
     int decay_particle_id_;
