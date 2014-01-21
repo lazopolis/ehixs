@@ -30,6 +30,7 @@ public:
     Event* production;
     Event* decay;
     double weight() const ;
+    friend ostream& operator<<(ostream&, const CombinedEvent&);
 };
 
 class EventBox{

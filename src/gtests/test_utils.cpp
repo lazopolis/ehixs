@@ -29,7 +29,7 @@ vector<string> give_sectors(vector<channel_name> channels)
 
     WilsonCoefficients wc;
     BetaConstants beta;
-    GluonFusionSectorBox thebox(wc, beta,0.0);
+    GluonFusionSectorBox thebox(wc, beta,0.0,"group");
     
     UserInterface UI;
     UI.decay_sector=0;

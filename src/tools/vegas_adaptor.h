@@ -25,6 +25,11 @@ public:
      vector<double> ff_vegas; //: public because it has to be accessed by Integrand
      int number_of_components;//: public because it has to be accessed by Integrand
      void call_vegas();
+<<<<<<< HEAD
+     void call_vegas_final();
+=======
+    void prepare_for_final_iteration();
+>>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
      void  set_up_vegas_ff(double res);
      vector<double> vegas_integral_output;//: public because they need to be accessed by CHistogram::print()
      vector<double> vegas_error_output;//: public because they need to be accessed by CHistogram::print()
@@ -49,6 +54,7 @@ private:
      TheHatch* the_hatch;
      pointer_to_Integrand my_integrand;
     int total_number_of_points_;
+    string grid_file_name_;
      
 };
 

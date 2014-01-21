@@ -95,7 +95,20 @@ void EventBox::SetP(int i,const double& E,const double& px, const double& py, co
 //        }
 }
 
-
+ostream& operator<<(ostream& the_stream, const CombinedEvent& E)
+{
+    double w=E.weight();
+    the_stream<<'\n'<<w;
+    if (E.production!=NULL)
+        {
+        for (int i=1;i<6;i++)
+            {
+            double* p=E.production->ParticleMomentum(i);
+            the_stream<<"\t"<<p[0]<<"\t"<<p[1]<<"\t"<<p[2]<<"\t"<<p[3];
+            }
+        }
+    return the_stream;
+}
 
 
 

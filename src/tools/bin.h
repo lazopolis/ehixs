@@ -6,6 +6,8 @@
 #ifndef BIN_H
 #define BIN_H
 
+
+
 /** \brief Bin of histogram
   *
   * Represent a bin of a monte-carlo histogram. The bins are in fact integrating themselves since the VEGAS adaptation is in general only done for the total cross section. The weight thus have to passed from the VEGAS generator.
@@ -31,6 +33,7 @@ class Bin {
     //* \brief number of points in this bin */
     unsigned point_counter;
   public:
+    void flush(){running_f=0.0;running_f2=0.0;running_chi_sq=0.0;avg_f=0.0;avg_err=0.0;chi_sq=0.0;intra_point_f=0.0;iteration_number=0;point_counter=0;}
     string xml();
     double give_chi_sq() const;
     /** \brief Constructor
@@ -72,7 +75,7 @@ class Bin {
 
   friend ostream& operator<<(ostream&, const Bin&);
     
-    
+  double give_running_f(){return running_f;}  
 private://data
     unsigned points_since_last_update;
 };

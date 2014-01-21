@@ -50,15 +50,22 @@ class FranzBinder
 public:
     FranzBinder(){_ptr = NULL; _num_sectors = 0; _is_franz = false;}
     FranzBinder(pointer_to_Franz_gluon_fusion ptr,int num_sec)
-                                        :_ptr(ptr),_num_sectors(num_sec)
+                                        :_ptr(ptr),_num_sectors(num_sec),min_sec_(1),max_sec_(num_sec)
                                         {_is_franz = true;}
+    FranzBinder(pointer_to_Franz_gluon_fusion ptr,int min,int max)
+    :_ptr(ptr),_num_sectors(max-min+1), min_sec_(min),max_sec_(max)
+    {_is_franz = true;}
     int number_of_sectors(){return _num_sectors;}
     pointer_to_Franz_gluon_fusion func(){return _ptr;}
     bool is_franz(){return _is_franz;}
+    int min_sec(){return min_sec_;}
+    int max_sec(){return max_sec_;}
 private:
     pointer_to_Franz_gluon_fusion _ptr;
     int _num_sectors;
     bool _is_franz;
+    int min_sec_;
+    int max_sec_;
 };
 
 class MatrixElement
@@ -73,6 +80,9 @@ public:
      
 public:
     int number_of_sectors_in_this_topology(){return _franz->number_of_sectors();}
+    int min_sec(){return _franz->min_sec();}
+    int max_sec(){return _franz->max_sec();}
+
     pointer_to_Franz_gluon_fusion franz_func(){return _franz->func();}
     bool is_franz_topology(){return _franz->is_franz();}
     friend ostream& operator<<(ostream&, const MatrixElement&);
@@ -91,6 +101,8 @@ public://data
     ptr_to_GluonFusion_function parametrization;
     ptr_to_GluonFusion_function the_ggf_func;
     double epsilon_exponent_in_z_subtraction;
+    // for brute force RR
+    vector<FranzBinder* > fr_;
 private:
     MeExternalInfo* _info;
     FranzBinder* _franz;
@@ -98,7 +110,20 @@ private:
 
 };
 
-
+class MatrixElementRR : public MatrixElement
+{
+public:
+    MatrixElementRR(MeExternalInfo* info,
+                  const string & _kin,
+                  const string& _str_param,
+                  ptr_to_GluonFusion_function _the_ggf_func,
+                  vector<FranzBinder* > fr,
+                  double _e_exp_in_subtr)
+        :MatrixElement( info,_kin,_str_param,
+                       _the_ggf_func,NULL,_e_exp_in_subtr)
+        {fr_ = fr;}
+    //vector<FranzBinder* > fr_;
+};
 
 class SimpleSector
 {
@@ -137,12 +162,12 @@ struct ISparams{
 class GluonFusionMatrixElementBox
 {
 public:
-    GluonFusionMatrixElementBox();
+    GluonFusionMatrixElementBox(const string&);
     int size(){return available_matrix_elements.size();}
     MatrixElement* give_me(int k){return available_matrix_elements[k];}
 private://data
     vector<MatrixElement*> available_matrix_elements;
-    
+    string rr_treatment_;
 private://methods
     void add_gg_sectors();
     void add_qg_sectors();
@@ -167,7 +192,7 @@ private://methods
 class GluonFusionSectorBox
 {
 public:
-    GluonFusionSectorBox(const WilsonCoefficients&, const BetaConstants&,const double& log_mur_sq_over_muf_sq);
+    GluonFusionSectorBox(const WilsonCoefficients&, const BetaConstants&,const double& log_mur_sq_over_muf_sq,const string& rr_treatment);
     vector<string> give_sector_names(const string & pleft,const string & pright,const string & myorder,const int & requested_epsilon_power, const string& me_approx);
     vector<SimpleSector*> give_necessary_sectors(const UserInterface & UI);
     int size(){return available_sectors.size();}
@@ -301,6 +326,9 @@ public://methods
     void NNLO_rv_with_subtraction();
     void NNLO_subtraction(const double& lambda1,const double& lambda2,
                           const double& lambda3,const double& lambda4);
+    void NNLO_RR_brute_force_wrap();
+    void NNLO_RR_brute_force(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4);
+    
     void LO_exact();
     void NLO_soft_exact();
     void gg_NLO_hard_exact();

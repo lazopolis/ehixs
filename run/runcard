@@ -2,16 +2,16 @@ Etot = 13000
 m_higgs = 125.0
 muf_over_mhiggs = 0.5
 mur_over_mhiggs = 0.5
-production = GammaStarGammaStar
+production = ggF
 # the flavor of the parton from the left
 # if not declared all flavors are considered
-#Fleft = gluon
+Fleft = gluon
 #the flavor of the parton from the right
 # if not declared all flavors are considered
-#Fright = gluon
+Fright = gluon
 #the order at which 
-#matrix_element_approximation = effective
-qcd_perturbative_order = NLO
+matrix_element_approximation = effective
+qcd_perturbative_order = NNLO
 #perturbative_order = 0
 #ew_soft = false
 #ew_h_plus_j = false
@@ -21,10 +21,10 @@ qcd_perturbative_order = NLO
 #cut = [CutHiggsPT,10.0]
 #cut = [LeadingPhotonPt,57.5]
 #cut = [LeadingPhotonPtVeto,60.0]
-#histogram = [HistogramHiggsPt,20,0.0,1000.0]
+histogram = [HistogramHiggsPt,20,0.0,100.0]
 #histogram = [GstarX1,20,0,1.0]
 #histogram = [GstarX2,20,0,1.0]
-histogram = [GstarPhoton1Y,20.0,-5.0,5.0];
+#histogram = [GstarPhoton1Y,20.0,-5.0,5.0];
 #decay = 4leptons
 #leptonic_decay_mode_in_wwzz = eemumu
 #decay = gamma_gamma
@@ -35,6 +35,6 @@ epsrel = 0.001
 nstart = 10000
 mineval = 10000
 nincrease = 1000
-maxeval = 500000000
+maxeval = 100000
 #sector_for_production = 30
 #ew_soft = true

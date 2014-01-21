@@ -94,6 +94,18 @@ void HistogramBox::show_histogram_info_and_exit()
     exit(0);
 }
 
+void HistogramBox::print_running_f()
+{
+cout<<"\n[HistogramBox]running_f";
+for (unsigned i=0;i<histogram_vector.size();i++)
+    cout<<"\n"<<histogram_vector[i]->info()<<" : "<<histogram_vector[i]->tot_running_f();
+}
+
+void HistogramBox::flush_all()
+{
+for (unsigned i=0;i<histogram_vector.size();i++) histogram_vector[i]->flush();
+}
+
 void HistogramBox::book_histograms( const CombinedEvent& the_event, const double& vegas_weight)
 {
     
@@ -225,6 +237,7 @@ Vegas(UI)
         my_decay->cuts_->show_cut_info_and_exit();
         }
     
+    final_iteration_ = false;
 }
 
 
@@ -263,8 +276,13 @@ void Process::perform()
      if (!my_event_stream.is_open()) {cout<<"\n couldn't open event file"<<endl;exit(0);}
      
      Vegas.call_vegas();
+     _histograms->flush_all();
+     Vegas.call_vegas_final();
      _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
-        //: this is after the final iteration
+    Vegas.prepare_for_final_iteration();
+    final_iteration_ = true;
+    Vegas.call_vegas();
+    //: this is after the final iteration
      print_output();
      close_event_filename();
      
@@ -311,6 +329,7 @@ void Process::Evaluate_integral(const double xx[])
      //: we also need to reset the vegas_NOP_in_current_iteration
      if (Vegas.new_iteration_has_started())
          {
+         _histograms->print_running_f();
          _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_previous_iteration);
          print_output_intermediate();
          my_event_stream<<Vegas.NOP_in_previous_iteration<<"$"<<endl;
@@ -421,6 +440,7 @@ void Process::book_event(const CombinedEvent& the_event)
     //cout<<"\n[Process]: after histograms are booked"<<endl;
      Vegas.set_up_vegas_ff(the_event.weight());
 //    cout<<"\n[Process]: bined event with weight "<<the_event.weight()<<endl;
+    my_event_stream<<the_event;
 
 }
 

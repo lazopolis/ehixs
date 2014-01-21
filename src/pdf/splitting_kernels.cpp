@@ -8,6 +8,7 @@
 #include <cmath>
 #include "splitting_kernels.h"
 #include <iostream>
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
 using namespace std;
 #define PI 3.141592653589793
 #define ZETA2 1.644934066848226
@@ -120,7 +121,7 @@ Kernel::Kernel(int iparton,int from_parton,int a_power,int e_power)
 }
 
 double null_kernel(const double&x){return 0.0;}
-double no_kernel(const double&x){cout<<"\nNo kernel used: you shouldn't be doing this"<<endl;exit(0);}
+double no_kernel(const double&x){cout<<"\nNo kernel used: you shouldn't be doing this"<<endl;exit(EXIT_FAILURE);}
 double pgg0_d1(const double& NF)
 {
   return 11.0/4.0 - NF/6.0;

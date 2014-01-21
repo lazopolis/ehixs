@@ -31,6 +31,30 @@ string VegasAdaptor::xml()
     return stream.str();
 }
 
+<<<<<<< HEAD
+void VegasAdaptor::call_vegas_final()
+{
+mineval = 100000;
+maxeval=100000;
+nstart = 100000;
+epsabs=0.0;
+epsrel = 0.0;
+call_vegas();
+}
+
+=======
+
+void VegasAdaptor::prepare_for_final_iteration()
+{
+    mineval=100000;
+    maxeval=100000;
+    nstart=100000;
+    nincrease=0;
+    ff_vegas[0]=0.0;
+}
+
+
+>>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
 void VegasAdaptor::call_vegas()
 {
 #ifdef debug
@@ -40,7 +64,11 @@ void VegasAdaptor::call_vegas()
      double error[number_of_components];
      double prob[number_of_components];
      int neval,fail; 
-     int gridno=0; 
+<<<<<<< HEAD
+     int gridno=1; 
+=======
+     int gridno=1;
+>>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
      int seed=0;
      //:0: Sobol
      //:>0 Ranlux
@@ -62,7 +90,7 @@ void VegasAdaptor::call_vegas()
            nincrease,
            nbatch,
            gridno, 
-           NULL,//grid_file_name.c_str(),
+           "vegas_grid",//grid_file_name.c_str(),
            &neval,
            &fail,
            integral, 
@@ -103,6 +131,7 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI,pointer_to_Integrand ptr,int
     my_integrand = static_cast<pointer_to_Integrand>(ptr);
     number_of_dims = ndim;
     total_number_of_points_ =0;
+    grid_file_name_ = "vegas_grid";
 }
 
 

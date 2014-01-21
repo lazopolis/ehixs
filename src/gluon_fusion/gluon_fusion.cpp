@@ -209,8 +209,9 @@ void SimpleSector::setUpPrefactor(const double & a_s_over_pi)
 //------------------------------------------------------------------------------
 
 
-GluonFusionMatrixElementBox::GluonFusionMatrixElementBox()
+GluonFusionMatrixElementBox::GluonFusionMatrixElementBox(const string& rr_treatment)
 {
+    rr_treatment_ = rr_treatment;
     //: linking the matrix elements
     add_gg_sectors();
     add_qg_sectors();
@@ -346,45 +347,248 @@ void GluonFusionMatrixElementBox::add_gg_sectors()
             &GluonFusion::NNLO_rv_with_subtraction,-3,0,new FranzBinder(rvgg2ght4,2),"effective",4.0);
     
     vector<FranzBinder *> RR_functions;
-    RR_functions.push_back(new FranzBinder(rrgg2gght1,2));
-    RR_functions.push_back(new FranzBinder(rrgg2gght2,2));
-    RR_functions.push_back(new FranzBinder(rrgg2gght3,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght4,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght5,8));
-    RR_functions.push_back(new FranzBinder(rrgg2gght6,2));
-    RR_functions.push_back(new FranzBinder(rrgg2gght7,2));
-    RR_functions.push_back(new FranzBinder(rrgg2gght8,4));
-    RR_functions.push_back(new FranzBinder(rrgg2gght9,2));
-    RR_functions.push_back(new FranzBinder(rrgg2gght10,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght11,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght12,2));
-    RR_functions.push_back(new FranzBinder(rrgg2gght13,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght14,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght15,1));
-    RR_functions.push_back(new FranzBinder(rrgg2gght16,1));
-    
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht1,2));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht2,2));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht3,1));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht4,1));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht5,2));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht6,2));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht7,4));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht8,2));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht9,1));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht10,1));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht11,1));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht12,2));
-    RR_functions.push_back(new FranzBinder(rrgg2qqbarht13,1));
-    for (unsigned i=0; i<RR_functions.size(); i++)
+    vector<string> RR_names;
+    if (rr_treatment_ == "split")
         {
-        stringstream name_str;name_str<<"RR t"<<i+1;
-        push_me("gluon","gluon","NNLO",name_str.str(),
+        RR_functions.push_back(new FranzBinder(rrgg2gght1,1,1));
+        RR_names.push_back("RR gg->hgg t1.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght1,2,2));
+        RR_names.push_back("RR gg->hgg t1.2");
+        RR_functions.push_back(new FranzBinder(rrgg2gght2,1,1));
+        RR_names.push_back("RR gg->hgg t2.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght2,2,2));
+        RR_names.push_back("RR gg->hgg t2.2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght3,1));
+        RR_names.push_back("RR gg->hgg t3.1");
+
+        RR_functions.push_back(new FranzBinder(rrgg2gght4,1));
+        RR_names.push_back("RR gg->hgg t4.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,1,1));
+        RR_names.push_back("RR gg->hgg t5.1");
+
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,2,2));
+        RR_names.push_back("RR gg->hgg t5.2");
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,3,3));
+        RR_names.push_back("RR gg->hgg t5.3");
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,4,4));
+        RR_names.push_back("RR gg->hgg t5.4");
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,5,5));
+        RR_names.push_back("RR gg->hgg t5.5");
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,6,6));
+        RR_names.push_back("RR gg->hgg t5.6");
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,7,7));
+        RR_names.push_back("RR gg->hgg t5.7");
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,8,8));
+        RR_names.push_back("RR gg->hgg t5.8");
+
+        RR_functions.push_back(new FranzBinder(rrgg2gght6,1,1));
+        RR_names.push_back("RR gg->hgg t6.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght6,2,2));
+        RR_names.push_back("RR gg->hgg t6.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2gght7,1,1));
+        RR_names.push_back("RR gg->hgg t7.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght7,2,2));
+        RR_names.push_back("RR gg->hgg t7.2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght8,1,1));
+        RR_names.push_back("RR gg->hgg t8.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght8,2,2));
+        RR_names.push_back("RR gg->hgg t8.2");
+        RR_functions.push_back(new FranzBinder(rrgg2gght8,3,3));
+        RR_names.push_back("RR gg->hgg t8.3");
+        RR_functions.push_back(new FranzBinder(rrgg2gght8,4,4));
+        RR_names.push_back("RR gg->hgg t8.4");
+
+        RR_functions.push_back(new FranzBinder(rrgg2gght9,1,1));
+        RR_names.push_back("RR gg->hgg t9.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght9,2,2));
+        RR_names.push_back("RR gg->hgg t9.2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght10,1));
+        RR_names.push_back("RR gg->hgg t10.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght11,1));
+        RR_names.push_back("RR gg->hgg t11.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght12,1,1));
+        RR_names.push_back("RR gg->hgg t12.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght12,2,2));
+        RR_names.push_back("RR gg->hgg t12.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2gght13,1));
+        RR_names.push_back("RR gg->hgg t13.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght14,1));
+        RR_names.push_back("RR gg->hgg t14.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght15,1));
+        RR_names.push_back("RR gg->hgg t15.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght16,1));
+        RR_names.push_back("RR gg->hgg t16.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht1,1,1));
+        RR_names.push_back("RR gg->hqqb t1.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht1,2,2));
+        RR_names.push_back("RR gg->hqqb t1.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht2,1,1));
+        RR_names.push_back("RR gg->hqqb t2.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht2,2,2));
+        RR_names.push_back("RR gg->hqqb t2.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht3,1));
+        RR_names.push_back("RR gg->hqqb t3.1");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht4,1));
+        RR_names.push_back("RR gg->hqqb t4.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht5,1,1));
+        RR_names.push_back("RR gg->hqqb t5.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht5,2,2));
+        RR_names.push_back("RR gg->hqqb t5.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht6,1,1));
+        RR_names.push_back("RR gg->hqqb t6.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht6,2,2));
+        RR_names.push_back("RR gg->hqqb t6.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht7,1,1));
+        RR_names.push_back("RR gg->hqqb t7.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht7,2,2));
+        RR_names.push_back("RR gg->hqqb t7.2");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht7,3,3));
+        RR_names.push_back("RR gg->hqqb t7.3");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht7,4,4));
+        RR_names.push_back("RR gg->hqqb t7.4");
+
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht8,1,1));
+        RR_names.push_back("RR gg->hqqb t8.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht8,2,2));
+        RR_names.push_back("RR gg->hqqb t8.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht9,1));
+        RR_names.push_back("RR gg->hqqb t9.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht10,1));
+        RR_names.push_back("RR gg->hqqb t10.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht11,1));
+        RR_names.push_back("RR gg->hqqb t11.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht12,1,1));
+        RR_names.push_back("RR gg->hqqb t12.1");
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht12,2,2));
+        RR_names.push_back("RR gg->hqqb t12.2");
+
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht13,1));
+        RR_names.push_back("RR gg->hqqb t13.1");
+        }
+    else
+        {
+        RR_functions.push_back(new FranzBinder(rrgg2gght1,1,2));
+        RR_names.push_back("RR gg->hgg t1.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght2,1,2));
+        RR_names.push_back("RR gg->hgg t2.1-2");
+                
+        RR_functions.push_back(new FranzBinder(rrgg2gght3,1));
+        RR_names.push_back("RR gg->hgg t3.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght4,1));
+        RR_names.push_back("RR gg->hgg t4.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght5,1,8));
+        RR_names.push_back("RR gg->hgg t5.1-8");
+                
+        RR_functions.push_back(new FranzBinder(rrgg2gght6,1,2));
+        RR_names.push_back("RR gg->hgg t6.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght7,1,2));
+        RR_names.push_back("RR gg->hgg t7.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght8,1,4));
+        RR_names.push_back("RR gg->hgg t8.1-4");
+                
+        RR_functions.push_back(new FranzBinder(rrgg2gght9,1,2));
+        RR_names.push_back("RR gg->hgg t9.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght10,1));
+        RR_names.push_back("RR gg->hgg t10.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght11,1));
+        RR_names.push_back("RR gg->hgg t11.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght12,1,2));
+        RR_names.push_back("RR gg->hgg t12.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2gght13,1));
+        RR_names.push_back("RR gg->hgg t13.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght14,1));
+        RR_names.push_back("RR gg->hgg t14.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght15,1));
+        RR_names.push_back("RR gg->hgg t15.1");
+        RR_functions.push_back(new FranzBinder(rrgg2gght16,1));
+        RR_names.push_back("RR gg->hgg t16.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht1,1,2));
+        RR_names.push_back("RR gg->hqqb t1.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht2,1,2));
+        RR_names.push_back("RR gg->hqqb t2.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht3,1));
+        RR_names.push_back("RR gg->hqqb t3.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht4,1));
+        RR_names.push_back("RR gg->hqqb t4.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht5,1,2));
+        RR_names.push_back("RR gg->hqqb t5.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht6,1,2));
+        RR_names.push_back("RR gg->hqqb t6.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht7,1,4));
+        RR_names.push_back("RR gg->hqqb t7.1-4");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht8,1,2));
+        RR_names.push_back("RR gg->hqqb t8.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht9,1));
+        RR_names.push_back("RR gg->hqqb t9.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht10,1));
+        RR_names.push_back("RR gg->hqqb t10.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht11,1));
+        RR_names.push_back("RR gg->hqqb t11.1");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht12,1,2));
+        RR_names.push_back("RR gg->hqqb t12.1-2");
+        
+        RR_functions.push_back(new FranzBinder(rrgg2qqbarht13,1));
+        RR_names.push_back("RR gg->hqqb t13.1");
+        }
+     for (unsigned i=0; i<RR_functions.size(); i++)
+        {
+        //stringstream name_str;name_str<<"RR t"<<i+1;
+        push_me("gluon","gluon","NNLO",RR_names[i],
                 "kinematics:NNLO","param:NLO",
                 &GluonFusion::NNLO_hard_with_subtraction,-3,0,RR_functions[i],"effective",4.0);
         }
     
-    
+    // --- brute force sector
+    /*
+     for (int k=-3;k<1;k++)
+        {
+        
+        available_matrix_elements.push_back(
+                new MatrixElementRR(
+                                    new MeExternalInfo("gluon","gluon","NNLO","RR brute force",k,"effective"),
+                                    "kinematics:NNLO","param:NLO",
+                                    &GluonFusion::NNLO_RR_brute_force_wrap,RR_functions,4.0
+                                    )
+                                            );
+        }
+    */
     //: exact matrix elements
     push_me("gluon","gluon","LO","LO exact","kinematics:LO","param:LO",&GluonFusion::LO_exact,0,2,new FranzBinder,"exact",0.0);
     push_me("gluon","gluon","NLO","NLO soft exact","kinematics:LO","param:NLO",&GluonFusion::NLO_soft_exact,0,0,new FranzBinder,"exact",0.0);//: only the e^0 piece
@@ -549,14 +753,14 @@ void GluonFusionMatrixElementBox::push_me(const string & _pi,
 
 //------------------------------------------------------------------------------
 
-GluonFusionSectorBox::GluonFusionSectorBox(const WilsonCoefficients& WC, const BetaConstants& beta,const double& log_mur_sq_over_muf_sq)
+GluonFusionSectorBox::GluonFusionSectorBox(const WilsonCoefficients& WC, const BetaConstants& beta,const double& log_mur_sq_over_muf_sq,const string& rr_treatment)
 {
     _WC = WC;
     _beta = beta;
     _log_mur_sq_over_muf_sq = log_mur_sq_over_muf_sq;
     //cout<<"\n[GluonFusionSectorBox] : setting up MatrixElements"<<endl;
 
-    available_matrix_elements = new GluonFusionMatrixElementBox;
+    available_matrix_elements = new GluonFusionMatrixElementBox(rr_treatment);
     //cout<<"\n[GluonFusionSectorBox] : there are "
     //    <<available_matrix_elements->size()<<" possible Matrix Elements"<<endl;
 
@@ -1267,7 +1471,7 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
         }
     set_up_beta_constants();
     cout<<"\n[GluonFusion] : setting up sectors"<<endl;
-    all_sectors = new GluonFusionSectorBox(WC,beta,log_mur_sq_over_muf_sq);
+    all_sectors = new GluonFusionSectorBox(WC,beta,log_mur_sq_over_muf_sq,UI.rr_treatment);
     
     cout<<"\n hello before Parse"<<endl;
     #include "ggf_cut_initialization.h"
@@ -2129,73 +2333,7 @@ void GluonFusion::NNLO_event_kinematics( const double& sigma,
      // 
      //}
      
-     /*
-      if(jetalgorithm)
-      {
-      //jet algorithm definitions
-      const double ptjetmin=20.0;
-      //const double yjetmax=2.5;
-      const double R=0.4;
-      
-      all_momenta.jetnumber=0;
-      
-      
-      //: p3 and p4 are ultra soft
-      if (pt3<=ptbuf and pt4<=ptbuf)  //0-jet bin
-      {
-      //:nothing needs to be done here
-      }
-      //: p3 ultra soft
-      if (pt3<=ptbuf and pt4>ptbuf) 
-      {
-      //const double y4=p4.zrap();
-      if (pt4>ptjetmin) //: p4 is hard enough to be a jet
-      {
-      all_momenta.pjet1=all_momenta["pf4"];
-      all_momenta.jetnumber=1;
-      }
-      }
-      //: p4 ultra soft
-      if (pt4<=ptbuf and pt3>ptbuf) 
-      {
-      //const double y3=p3.zrap();
-      if (pt3>ptjetmin) //: p3 is hard enough to be a jet
-      {
-      all_momenta.pjet1=all_momenta["pf3"];
-      all_momenta.jetnumber=1;
-      }
-      }
-      //: none ultra soft, this is an event coming from honest RR
-      if (pt3>ptbuf and pt4>ptbuf)
-      {
-      //const double pi = 3.141592653589793;
-      //: now we have to calculate angular seperation
-      const double y3=all_momenta["pf3"].zrap();
-      const double y4=all_momenta["pf4"].zrap();
-      //cout<<"\n phi3 "<<acos(0.7);
-      //cout<<"\n phi4 "<<acos(-0.7);
-      const double delta_phi = all_momenta["pf3"].phi() -  all_momenta["pf4"].phi()  ;
-      //: taking care of the dphi>Pi case
-      //if (delta_phi>pi) {delta_phi = 2*pi -delta_phi;cout<<"\n it happened";}
-      const double d12 = pow(y3-y4,2.0) + pow(delta_phi,2.0);
-      //cout<<"\n-----\nd12="<<d12<<"\tRR="<<R<<"\t delta_phi^2="<<delta_phi
-      //<<"\t"<<X->p3.phi()<<"\t"<<X->p4.phi();
-      //cout<<"\np3="<<X->p3<<"\tp4="<<X->p4;
-      if (d12>R*R)//: potential 2-jet case / no parton merging
-      {
-      all_momenta.pjet1=all_momenta["pf3"];
-      all_momenta.pjet2=all_momenta["pf4"];
-      all_momenta.jetnumber=2;
-      }
-      else //: we need to merge the two partons in one jet 
-      {
-      all_momenta.pjet1 = all_momenta["pf3"]+all_momenta["pf4"];
-      all_momenta.jetnumber=1;
-      
-      }
-      }
-      }
-      */
+     
      
 }
 
@@ -2592,21 +2730,21 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                          cout<<"\n error in NNLO_hard_with_subtraction: coefficient with negative exponent of log(1-z) just appeared. I exit!"<<endl;
                          exit(1);
                          }
-                    for (int i=0;i<the_sector->ME->number_of_sectors_in_this_topology();i++)
+                    for (int i=the_sector->ME->min_sec();i<the_sector->ME->max_sec()+1;i++)
                          {
                          dummyres=0.0;
                          pointer_to_Franz_gluon_fusion the_func = the_sector->ME->franz_func();
                          
                          
                          (* the_func)
-                         (i+1,//:franz counts from one
+                         (i,//:franz counts from one
                           m,
                           shat,x1,x2,  z,-log_muf_sq_over_mh_sq, weight*thelog,consts::nf,
                           lambda1,lambda2,lambda3,lambda4,dummyres);
                          
                          dummyres=0.0;
                          (*the_func)
-                         (i+1,//:franz counts from one
+                         (i,//:franz counts from one
                           m,
                           ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,-log_muf_sq_over_mh_sq, -weightLO*thelog,consts::nf,
                           lambda1,lambda2,lambda3,lambda4,dummyres);
@@ -2615,6 +2753,91 @@ void GluonFusion::NNLO_subtraction(const double& lambda1,const double& lambda2,c
                }
           }
 }
+
+void GluonFusion::NNLO_RR_brute_force_wrap()
+{
+    //: this is double real kinematics in general, using maximum number of vegas variables
+    NNLO_RR_brute_force(xx_vegas[2],xx_vegas[3],xx_vegas[4],xx_vegas[5]);
+}
+
+
+void GluonFusion::NNLO_RR_brute_force(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4)
+{
+    if (the_sector->ME->epsilon_power()<-3
+        or the_sector->ME->epsilon_power()>1
+        or vars_too_close_to_edges(ISP.z,lambda1,lambda2,lambda3,lambda4))
+        {
+        //cout<<"\n cut::::::::::::::::::::::::::::::::::::::::::::::::::::::";
+        book_production_event();
+        }
+    else
+        {
+        double dummyres;
+        double shat =ISP.curs;
+        double x1=ISP.x1;
+        double x2 = ISP.x2;
+        double z=ISP.z;
+        double weight = pref_sgg
+        *ISP.meas
+        *lumi->LL(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *1.0/(1.0-ISP.z)
+        ;
+        double weightLO = pref_sgg
+        *ISP.measLO
+        *lumi->LL(0)
+        *the_sector->sector_specific_prefactors_from_a_e_expansion()
+        *1.0/(1.0-ISP.z)
+        ;
+                   for (int m=-3;m<the_sector->ME->epsilon_power()+1;m++)
+                {
+                double thelog;
+                int k=the_sector->ME->epsilon_power()-m;
+                if (k>0)
+                    {
+                    double factorials[3]={1.0,2.0,6.0};
+                    thelog=pow(-the_sector->ME->epsilon_exponent_in_z_subtraction*log(1.0-ISP.z),k)/factorials[k-1];
+                    }
+                else if (k==0)
+                    {
+                    thelog=1.0;
+                    }
+                else
+                    {
+                    cout<<"\n error in NNLO_hard_with_subtraction: coefficient with negative exponent of log(1-z) just appeared. I exit!"<<endl;
+                    exit(1);
+                    }
+                //cout<<"\n"<<the_sector->ME->fr_.size()<<" sectors to run"<<endl;
+                for (int RRsec=0;RRsec<the_sector->ME->fr_.size();RRsec++)
+                    {
+                    FranzBinder* franz_sec = the_sector->ME->fr_[RRsec];
+                    pointer_to_Franz_gluon_fusion the_func = franz_sec->func();
+                    for (int i=0;i<franz_sec->number_of_sectors();i++)
+                        {
+                        dummyres=0.0;
+                        
+                        
+                        
+                        (* the_func)
+                        (i+1,//:franz counts from one
+                         m,
+                         shat,x1,x2,  z,-log_muf_sq_over_mh_sq, weight*thelog,consts::nf,
+                         lambda1,lambda2,lambda3,lambda4,dummyres);
+                        
+                        dummyres=0.0;
+                        (*the_func)
+                        (i+1,//:franz counts from one
+                         m,
+                         ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,-log_muf_sq_over_mh_sq, -weightLO*thelog,consts::nf,
+                         lambda1,lambda2,lambda3,lambda4,dummyres);
+                        }
+                    }
+                }
+            }
+        
+}
+
+
 
 bool GluonFusion::vars_too_close_to_edges(const double&z,const double&lambda1
                                           ,const double&lambda2

@@ -472,6 +472,12 @@ string compare_histograms(const vector< CHistogram*> & all_H)
 }
 
 
+double SimpleHistogram::tot_running_f()
+{
+double res=0.0;
+for (int i=0;i<_all_bins.size();i++) res += _all_bins[i].give_running_f();
+return res;
+}
 
 void CHistogram::bin_event(const CombinedEvent& X,  const double& vegas_weight)
 {

@@ -2,6 +2,9 @@ available_histograms.push_back(
     new HistogramHiggsPt(20,0.0,100.0,"HistogramHiggsPt"));
 
 available_histograms.push_back(
+                               new HistogramHiggsY(20,-5.0,5.0,"HistogramHiggsY"));
+
+available_histograms.push_back(
     new HistogramLeadingPhotonPt(20,0.0,100.0,"HistogramLeadingPhotonPt"));
     
 available_histograms.push_back(

@@ -113,6 +113,8 @@ public:
 
         }
     virtual double matrix_element_squared(const double&,const double&,const double&)=0;
+    virtual double matrix_element_squared(const double&,const double&,
+                                          const double&)=0;
 protected:
     double s3;
     double s4;
@@ -127,6 +129,8 @@ class GstarGstarMeLO: public GstarGstarMeDelta
 public:
     GstarGstarMeLO(EventBox& event_box):GstarGstarMeDelta(event_box){};
     double matrix_element_squared(const double& s12,const double& s13,const double& s23)
+    double matrix_element_squared(const double& s12,const double& s13,
+                                  const double& s23)
     {
         return 8.0*(
                             s23/s13 - 2.0 * (s3+s4)/s13 - s3*s4/s13/s13
@@ -146,6 +150,8 @@ public:
 
         };
     double matrix_element_squared(const double& s12,const double& s13,const double& s23)
+    double matrix_element_squared(const double& s12,const double& s13,
+                                  const double& s23)
     {
         return 8.0*(
                     s23/s13 - 2.0 * (s3+s4)/s13 - s3*s4/s13/s13
@@ -178,6 +184,12 @@ public:
                                      const int & ep_power,
                                      const string & me_approx)
     {string res = "we don't give no names in gamma* gamma*"; vector<string> res2;res2.push_back(res);return res2;}
+        {
+        string res = "we don't give no names in gamma* gamma*";
+        vector<string> res2;
+        res2.push_back(res);
+        return res2;
+        }
     
     
     void evaluate_sector();
@@ -190,6 +202,8 @@ public:
                                        const double &,const double &,
                                        const double &,const double &,
                                const double &){};//: public to integrate with fortran Fjet
+                               const double &){};
+    //: public to integrate with fortran Fjet
     
     void create_matrix_elements();
     
