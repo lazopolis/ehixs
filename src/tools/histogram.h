@@ -80,7 +80,9 @@ public:
     friend string compare_histograms( const CHistogram* H1,const CHistogram* H2,const string& comp_type);
     friend string compare_histograms( const vector<CHistogram*> &);
     friend string compare_histograms( const vector<CHistogram*> &,bool color);
-  
+    
+    bool the_event_is_in_ith_bin(int bin_id,const CombinedEvent&);
+  void set_bin(int i,const double&res,const double& err,const double& prob){_all_bins[i].set(res,err,prob);}
 };
 
 #include "user_defined_histograms.h"

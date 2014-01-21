@@ -29,7 +29,7 @@ double LuminositySinglePair::give(const double& x1,const double& x2)
 
 Luminosity::Luminosity(const UserInterface& UI)
 {
-    cout<<"\nLuminosity : setting up PDFHub";
+    cout<<"\n[Luminosity] setting up PDFHub";
     pdfHub = new PDFHub(UI);
     
     _local_current_luminosity = vector<double>(pdfHub->size(),0.0);

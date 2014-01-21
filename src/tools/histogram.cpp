@@ -479,6 +479,32 @@ for (int i=0;i<_all_bins.size();i++) res += _all_bins[i].give_running_f();
 return res;
 }
 
+
+bool CHistogram::the_event_is_in_ith_bin(int bin_id,const CombinedEvent& X)
+{
+    const double val = determine_xval(X);
+    if((val >= _lowend) && (val <= _highend))
+    {
+        // Target bin
+        const unsigned bin = _firstbin + unsigned((val-_lowend)/_binsize);
+        if (bin == bin_id) return true;
+        else return false;
+    }
+    else
+    {
+        if (val==val) 
+        {
+            if (bin_id == _numbins-1){return true;}
+            else return false;
+        }
+        else
+        {
+            cout<<"\n in CHistogram "<<_name<<", val out of bounds and a nan :"<<val;
+        }
+    }
+}
+
+
 void CHistogram::bin_event(const CombinedEvent& X,  const double& vegas_weight)
 {
     // Get value to be binned

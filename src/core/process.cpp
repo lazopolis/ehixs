@@ -9,12 +9,6 @@
 #include <stdlib.h> //: for exit()
 
 
-
-
-
-
-
-
 #ifndef ONCE_PTR_2_PROCESS
 #define ONCE_PTR_2_PROCESS
 
@@ -66,7 +60,7 @@ HistogramBox::HistogramBox(const UserInterface& my_UI)
     
     for (int j=0;j<histogram_vector.size();j++)
         {
-        cout<<"\n new histogram added : "<<histogram_vector[j]->give_name()
+        cout<<"\n[HistogramBox]new histogram added : "<<histogram_vector[j]->give_name()
         <<" ["<<histogram_vector[j]->_lowend<<","
             <<histogram_vector[j]->_highend<<"] with "
             <<histogram_vector[j]->_numbins<<" bins!"<<endl;
@@ -79,7 +73,7 @@ HistogramBox::HistogramBox(const UserInterface& my_UI)
 //        histogram_vector.push_back(available_histograms[my_UI.requested_histogram]);
 //        }
     
-    cout<<"\n[HistogramBox] : number of histograms requested = "<<histogram_vector.size();
+    cout<<"[HistogramBox] : number of histograms requested = "<<histogram_vector.size();
 }
 
 void HistogramBox::show_histogram_info_and_exit()
@@ -94,17 +88,6 @@ void HistogramBox::show_histogram_info_and_exit()
     exit(0);
 }
 
-void HistogramBox::print_running_f()
-{
-cout<<"\n[HistogramBox]running_f";
-for (unsigned i=0;i<histogram_vector.size();i++)
-    cout<<"\n"<<histogram_vector[i]->info()<<" : "<<histogram_vector[i]->tot_running_f();
-}
-
-void HistogramBox::flush_all()
-{
-for (unsigned i=0;i<histogram_vector.size();i++) histogram_vector[i]->flush();
-}
 
 void HistogramBox::book_histograms( const CombinedEvent& the_event, const double& vegas_weight)
 {
@@ -170,8 +153,8 @@ Process::Process(const UserInterface & UI)
 Vegas(UI)
 {
     decay_particle_id_=-1;
-    cout<<"\n------------------------ new Process"<<endl;
-    UI.PrintAllOptions();
+    //cout<<"\n[ehixs] new Process"<<endl;
+    //UI.PrintAllOptions();
     //: DEFAULT SETTINGS
     Vegas.number_of_components=1;
     Vegas.set_ptr_to_the_hatch(&the_hatch);
@@ -199,35 +182,35 @@ Vegas(UI)
         {
         if (UI.production=="ggF")
             {
-            std::cout<<"\nProcess initiated with production "
+            std::cout<<"\n[ehixs] Process initiated with production "
             <<UI.production<<endl;
             set_production(new GluonFusion(UI));
             }
         else if (UI.production=="GammaStarGammaStar")
             {
-            std::cout<<"\nProcess initiated with production "<<UI.production;
+            std::cout<<"\n[ehixs] Process initiated with production "<<UI.production;
             set_production(new GammaStarGammaStar(UI));
             }
         else
             {
-            cout<<endl<<"Process "<<UI.production<<" not implemented";
+            cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
             throw "non-implemented process";
             }
         }
     // setting decay here!!
     if( UI.decay == "" || UI.decay == "1" )
         {
-        std::cout << "No decay specified" << endl;
+        std::cout << "[ehixs] No decay specified" << endl;
         }
     else
         {
-        std::cout<<"\nProcess initiated with decay "<<UI.decay;
+        std::cout<<"\n[ehixs] Process initiated with decay "<<UI.decay;
         if (UI.decay=="4leptons") set_decay(new Decay_WWZZ(UI));
         else if(UI.decay=="gamma_gamma") set_decay(new Decay_gammagamma(UI));
         else if(UI.decay=="Z_gamma") set_decay(new Decay_H_to_Z_Gamma(UI));
         else
             {
-            cout<<endl<<"Process "<<UI.decay<<" not implemented";
+            cout<<endl<<"[ehixs] Process "<<UI.decay<<" not implemented";
             throw "non-implemented process";
             }
         }
@@ -238,6 +221,9 @@ Vegas(UI)
         }
     
     final_iteration_ = false;
+    bin_by_bin_integration_ = UI.bin_by_bin_integration;
+    current_bin_ =0;
+    
 }
 
 
@@ -245,7 +231,6 @@ Vegas(UI)
 
 void Process::set_production(Production * theproduction)
 {
-    cout<<"\nSetting production"<<endl;
     my_production = theproduction;
     my_production->set_up_the_hatch(&the_hatch);
     Vegas.set_number_of_dimensions(the_hatch.GetVEGASDim());
@@ -272,19 +257,36 @@ void Process::perform()
           exit(1);
           }
      calculate_number_of_components();     
-     open_event_filename();
-     if (!my_event_stream.is_open()) {cout<<"\n couldn't open event file"<<endl;exit(0);}
      
-     Vegas.call_vegas();
-     _histograms->flush_all();
-     Vegas.call_vegas_final();
-     _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
-    Vegas.prepare_for_final_iteration();
-    final_iteration_ = true;
-    Vegas.call_vegas();
-    //: this is after the final iteration
-     print_output();
-     close_event_filename();
+     if (bin_by_bin_integration_)
+     {
+         for (int chist=0;chist<_histograms->size();chist++)
+         {
+             Vegas.flush();
+             current_histogram_ = _histograms->ptr_to_histogram_with_id(chist);
+             for (current_bin_=0;current_bin_<current_histogram_->size();current_bin_++)
+             {
+                 Vegas.flush();
+                 Vegas.call_vegas();
+                 current_histogram_->set_bin(current_bin_,Vegas.vegas_integral_output[0],Vegas.vegas_error_output[0],Vegas.vegas_prob_output[0]);
+                 print_output();
+             }
+         }
+     }
+     else
+     {
+         open_event_filename();
+         if (!my_event_stream.is_open()) {cout<<"\n couldn't open event file"<<endl;exit(0);}
+     
+         Vegas.call_vegas();
+         Vegas.prepare_for_final_iteration();
+         final_iteration_ = true;
+         Vegas.call_vegas();
+         _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
+         //: this is after the final iteration
+         print_output();
+         close_event_filename();
+     }
      
 }
 
@@ -327,9 +329,9 @@ void Process::Evaluate_integral(const double xx[])
      //: we need to update averages and errors per bin at all histograms
      //: at the end of every iteration
      //: we also need to reset the vegas_NOP_in_current_iteration
-     if (Vegas.new_iteration_has_started())
+     if (Vegas.new_iteration_has_started() and Vegas.vegas_iteration_number>1)
          {
-         _histograms->print_running_f();
+         //_histograms->print_running_f();
          _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_previous_iteration);
          print_output_intermediate();
          my_event_stream<<Vegas.NOP_in_previous_iteration<<"$"<<endl;
@@ -435,13 +437,26 @@ void Process::perform_decay_alone()//: no production was defined
 
 void Process::book_event(const CombinedEvent& the_event)
 {
-    //cout<<"\n[Process]: book event "<<endl;
-     _histograms->book_histograms(the_event,Vegas.vegas_weight);
-    //cout<<"\n[Process]: after histograms are booked"<<endl;
-     Vegas.set_up_vegas_ff(the_event.weight());
-//    cout<<"\n[Process]: bined event with weight "<<the_event.weight()<<endl;
-    my_event_stream<<the_event;
-
+    if (bin_by_bin_integration_)
+    {
+        if (current_histogram_->the_event_is_in_ith_bin(current_bin_,the_event))
+            {
+            Vegas.set_up_vegas_ff(the_event.weight());    
+            }
+        else
+            {
+                book_null_event();
+            }
+    }
+    else
+    {
+        if (final_iteration_)
+        {
+            _histograms->book_histograms(the_event,Vegas.vegas_weight);
+            my_event_stream<<the_event;
+        }
+        Vegas.set_up_vegas_ff(the_event.weight());
+    }
 }
 
 void Process::book_null_event()
@@ -465,7 +480,10 @@ void Process::close_event_filename()
 
 void Process::print_output_intermediate()
 {
-    _histograms->print_histograms();
+//    if (final_iteration_)
+//    {
+//    _histograms->print_histograms();
+//    }
      if (my_UI.output_filename.empty()) return;
      
      
@@ -497,7 +515,7 @@ void Process::calculate_number_of_components()
 
      // the first "Nmember" components are for the pdf error
      Vegas.number_of_components=1;//lumi.pdf_size();
-     cout<<"\nnumber_of_components = "<<Vegas.number_of_components;
+     //cout<<"\nnumber_of_components = "<<Vegas.number_of_components;
      
      //initializing ff_vegas to have number_of_components components
      for (int i=0;i<Vegas.number_of_components;i++)
@@ -543,7 +561,7 @@ void Process::print_output()
         my_local_outfile.close();
         }
      
-    _histograms->write_to_histogram_file();
+    //_histograms->write_to_histogram_file();
      
      
 }

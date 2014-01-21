@@ -158,7 +158,7 @@ PDFHub::PDFHub(const UserInterface& UI)
             }
         }
     
-    cout << ": Success [" << _grids->size() << "] sets!";
+    cout << "[PDFHub] Success [" << _grids->size() << "] sets!";
     
 
 }

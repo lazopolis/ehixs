@@ -38,7 +38,7 @@ public:
      int NOP_in_previous_iteration;
      int vegas_iteration_number_old;
      bool new_iteration_has_started();
-     
+     void flush(){ff_vegas[0]=0.0;total_number_of_points_ =0;vegas_integral_output.clear();vegas_error_output.clear();vegas_prob_output.clear();}
     void set_ptr_to_the_hatch(TheHatch* in_hatch)
         {the_hatch=in_hatch;}
     void set_number_of_dimensions(int dd){number_of_dims=dd;}
@@ -53,6 +53,7 @@ private:
      pointer_to_Integrand my_integrand;
     int total_number_of_points_;
     string grid_file_name_;
+    int gridno;
      
 };
 

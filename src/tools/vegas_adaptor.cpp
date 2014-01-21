@@ -44,14 +44,12 @@ void VegasAdaptor::prepare_for_final_iteration()
 
 void VegasAdaptor::call_vegas()
 {
-#ifdef debug
-     cout<<"\n["<<__func__<<"]";
-#endif
+     //cout<<"\n["<<__func__<<"]";
      double integral[number_of_components];
      double error[number_of_components];
      double prob[number_of_components];
      int neval,fail; 
-     int gridno=1; 
+       
 
      int seed=0;
      //:0: Sobol
@@ -74,7 +72,7 @@ void VegasAdaptor::call_vegas()
            nincrease,
            nbatch,
            gridno, 
-           "vegas_grid",//grid_file_name.c_str(),
+           NULL,//grid_file_name.c_str(),
            &neval,
            &fail,
            integral, 

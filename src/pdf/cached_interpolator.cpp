@@ -230,7 +230,7 @@ void CashedInterpolator::read_grid_from_file(vector<double> & )
      ifstream ifile(cashed_file_name.c_str(),ifstream::in);
      if (ifile)
           {
-          cout<<": READING FROM FILE "<<cashed_file_name<<endl;
+          cout<<"[CashedInterpolator] reading pdf grid from file "<<cashed_file_name<<endl;
           FGrid.clear();
           string buffer;
           //std::getline(ifile,buffer);//:skipping first line

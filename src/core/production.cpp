@@ -102,9 +102,9 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
     //:the vegas variables we need
     xx_vegas = the_hatch->RequestPtr();
     for (unsigned i=0;i<dim_of_integration;i++) the_hatch->RequestVar("VEGAS");
-    cout<<"\n==>dim_of_integration in Production::init_base = "
+    cout<<"[Production]dim_of_integration in Production::init_base = "
         <<dim_of_integration
-        <<"\n==> in the_hatch : "
+        <<"\n[Production] in the_hatch : "
         <<the_hatch->GetVEGASDim();
      
 }

@@ -35,6 +35,29 @@ public:
         }
 };
 
+
+
+class GluonFusionCut_Higgs_pt_veto : public CCut
+{
+public:
+    GluonFusionCut_Higgs_pt_veto(const double& cutvalue)
+    : CCut("CutHiggsPTVeto",cutvalue){};
+    bool operator()(Event* the_event)
+    {
+        double* ph = the_event->ParticleMomentum(5);
+        const double pth = sqrt(ph[1] * ph[1] + ph[2]*ph[2]);
+        if (pth<min)
+        {
+            //cout<<"\n event accepted with ptH = "<<pth;
+            return true;
+        }
+        
+        return false;
+    }
+};
+
+
+
 double transverse_momentum(double* p)
 {
     return sqrt(p[1]*p[1]+p[2]*p[2]);

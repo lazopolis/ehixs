@@ -1473,7 +1473,7 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
     cout<<"\n[GluonFusion] : setting up sectors"<<endl;
     all_sectors = new GluonFusionSectorBox(WC,beta,log_mur_sq_over_muf_sq,UI.rr_treatment);
     
-    cout<<"\n hello before Parse"<<endl;
+    //cout<<"\n hello before Parse"<<endl;
     #include "ggf_cut_initialization.h"
     cuts_->ParseCuts(UI);
     
@@ -1540,9 +1540,9 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
             {
             
             allocate_luminosity();
-            cout <<"\n----------------------------------\n\tSECTOR \""
+            cout <<"[GGF] sector \""
             <<the_sector->name
-            <<"\"\n----------------------------------\n"<<endl;
+            <<endl;
             
             
             //:after init_base is called (where Etot is set)
@@ -1565,8 +1565,7 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
             
             }
         
-        cout<<"\na_s used = "<<Model.alpha_strong()
-        <<"\t^"<<the_sector->alpha_power
+        cout<<"\n[GGF] a_s used = "<<Model.alpha_strong()
         <<"(a/Pi)^"<<the_sector->alpha_power<<" = "<<pow(Model.alpha_strong()/consts::Pi,the_sector->alpha_power) ;
         }
 }
@@ -1697,7 +1696,7 @@ void GluonFusion::find_topology(const UserInterface & UI)
                sector_defined=true;
                the_sector=necessary_sectors[sector_id];
                dim_of_integration=the_sector->ME->dimension;
-               cout<<"===> dim_of_integration = "<<dim_of_integration;
+               cout<<"[GGF] Dimension of integration for production = "<<dim_of_integration;
                }
           else
                {

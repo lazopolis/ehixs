@@ -181,7 +181,7 @@ public://data
     int verbose,maxeval,mineval,nstart,nincrease,perturbative_order,pole,decay_sector,sector_control,requested_histogram,requested_cut;
     int alpha_s_power,alpha_ew_power;
     bool info,histogram_info,cut_info,list_processes,help,show_me_list,
-    pdf_error, dummy_process,ew_soft,ew_h_plus_j,only_ew_h_j;
+    pdf_error, dummy_process,ew_soft,ew_h_plus_j,only_ew_h_j,bin_by_bin_integration;
     
     string my_generic_cut;
     vector<CutOption*> all_cuts;

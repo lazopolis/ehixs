@@ -101,6 +101,9 @@ UserInterface::UserInterface()
                                      "Optional",
                                      &only_ew_h_j,false));
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
+    options.push_back(new BoolOption("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)","Optional",&bin_by_bin_integration, false));
+    
+    
     vector<string>empty_vector;
     options.push_back(new CutOption("cut",0,"generic cut option","Required",my_generic_cut, empty_vector));
     vector<string> default_hist;
@@ -118,7 +121,7 @@ void UserInterface::ParseInput(int argc, char * const *argv)
      // look for runcard overwritting
      for (unsigned i=0;i<parsed_options.size();i++)
           {
-          cout  <<"command line option: "<<parsed_options[i][0]
+          cout  <<"[ehixs] command line option: "<<parsed_options[i][0]
                 <<" set to "<<parsed_options[i][1]<<endl;
           if (parsed_options[i][0]=="input_filename")
                {
@@ -150,19 +153,19 @@ void UserInterface::ParseInput(int argc, char * const *argv)
             {
             CutOption* total_cut = (CutOption*)(options[i]);
             
-            cout<<"\n*************parsing the cut "<<endl;
+            //cout<<"\n*************parsing the cut "<<endl;
             for (int j=0;j<total_cut->all_cut_values.size();j++)
                 {
                 string s = total_cut->all_cut_values[j];
-                cout<<"\n value = "<<s;
+                //cout<<"\n value = "<<s;
                 size_t posbracket = s.find('[');
                 size_t posfirstcomma = s.find(',');
                 string cutname = s.substr(posbracket+1, posfirstcomma-1);
-                cout<<"\n cut name = "<<cutname<<endl;
+                //cout<<"\n cut name = "<<cutname<<endl;
                 string rest_of_string = s.substr(posfirstcomma+1,s.npos);
                 vector<string> cutvalues;
                 size_t next_comma = rest_of_string.find(',');
-                cout<<"rest of string = "<<rest_of_string<<endl;
+                //cout<<"rest of string = "<<rest_of_string<<endl;
 
                 while(next_comma != rest_of_string.npos)
                     {
@@ -175,8 +178,8 @@ void UserInterface::ParseInput(int argc, char * const *argv)
                     size_t pos_sq_bracket = rest_of_string.find(']');
                     cutvalues.push_back(rest_of_string.substr(0,pos_sq_bracket));
                     }
-                cout<<"values : ";
-                for (int i=0;i<cutvalues.size();i++) cout<<cutvalues[i]<<" | ";
+                //cout<<"values : ";
+                //for (int i=0;i<cutvalues.size();i++) cout<<cutvalues[i]<<" | ";
         // construct the vector of string values
                 all_cuts.push_back(new CutOption("cut",
                                          0,
@@ -191,19 +194,19 @@ void UserInterface::ParseInput(int argc, char * const *argv)
             {
             HistogramOption* total_hist = (HistogramOption*)(options[i]);
             
-            cout<<"\n*************parsing the histogram "<<endl;
+            //cout<<"\n*************parsing the histogram "<<endl;
             for (int j=0;j<total_hist->all_hist_values.size();j++)
                 {
                 string s = total_hist->all_hist_values[j];
-                cout<<"\n value = "<<s;
+                //cout<<"\n value = "<<s;
                 size_t posbracket = s.find('[');
                 size_t posfirstcomma = s.find(',');
                 string histname = s.substr(posbracket+1, posfirstcomma-1);
-                cout<<"\n histogram name = "<<histname<<endl;
+                //cout<<"\n histogram name = "<<histname<<endl;
                 string rest_of_string = s.substr(posfirstcomma+1,s.npos);
                 vector<string> histvalues;
                 size_t next_comma = rest_of_string.find(',');
-                cout<<"rest of string = "<<rest_of_string<<endl;
+                //cout<<"rest of string = "<<rest_of_string<<endl;
                 
                 while(next_comma != rest_of_string.npos)
                     {
@@ -216,8 +219,8 @@ void UserInterface::ParseInput(int argc, char * const *argv)
                     size_t pos_sq_bracket = rest_of_string.find(']');
                     histvalues.push_back(rest_of_string.substr(0,pos_sq_bracket));
                     }
-                cout<<"values : ";
-                for (int i=0;i<histvalues.size();i++) cout<<histvalues[i]<<" | ";
+                //cout<<"values : ";
+                //for (int i=0;i<histvalues.size();i++) cout<<histvalues[i]<<" | ";
                 // construct the vector of string values
                 all_hists.push_back(new HistogramOption("histogram",
                                                  0,
@@ -230,7 +233,7 @@ void UserInterface::ParseInput(int argc, char * const *argv)
         }
     for(int i=0;i<all_hists.size();i++)
         {
-        cout<<"\n new histogram : "<<all_hists[i]->print();
+        cout<<"\n[ehixs] requested histogram : "<<all_hists[i]->print();
         }
      if (help) print_help_message();
 }
@@ -246,8 +249,8 @@ void UserInterface::CheckIf(bool condition, const string& error_message)
 {
     if (not condition)
         {
-        cout<<"\nSanity check failed: "<<error_message;
-        cout<<"\nehixs has to exit!"<<endl<<endl;
+        cout<<"\n[ehixs] Sanity check failed: "<<error_message;
+        cout<<"\n[ehixs] ehixs has to exit!"<<endl<<endl;
         exit(1);
         }
 }
@@ -260,7 +263,7 @@ int UserInterface::ParseFile(const string& in, bool verbose)
 
      // and do the job
      if(!file.good()) {
-          std::cout << "Tried to open runcard file named: " << in << " but failed!\nThe program will use default parameters overwritten by command line options." << std::endl;
+          std::cout << "[ehixs] Tried to open runcard file named: " << in << " but failed!\nThe program will use default parameters overwritten by command line options." << std::endl;
           return 1;
      }
      else
@@ -302,16 +305,16 @@ int UserInterface::ParseFile(const string& in, bool verbose)
                               if(s.substr(0, pos) == options[i]->name)
                                    {
                                    options[i]->set(s.substr(pos+1, s.npos));
-                                   cout<<"\n having recognised option "
-                                        <<options[i]->name
-                                        <<" in runcard, with value : "
-                                        <<s.substr(pos+1, s.npos);
+//                                   cout<<"\n having recognised option "
+//                                        <<options[i]->name
+//                                        <<" in runcard, with value : "
+//                                        <<s.substr(pos+1, s.npos);
                                    did=true;
                                    break;
                                    }
                          
                          if(!did && verbose) {
-                              std::cout << "Unexpected option in input file " << in << ": " << s.substr(0,pos) << std::endl;
+                              std::cout << "[ehixs] Unrecognised option in input file " << in << ": " << s.substr(0,pos) <<" -> it will be ignored"<< std::endl;
                               return 1;
                          }
                          }
