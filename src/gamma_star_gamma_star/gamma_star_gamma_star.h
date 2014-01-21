@@ -116,6 +116,7 @@ public:
     virtual double matrix_element_squared(const double&,const double&,const double&)=0;
 =======
 >>>>>>> 5e0f3ab9f21509f4dd41de9babcc8b62c33b0902
+
     virtual double matrix_element_squared(const double&,const double&,
                                           const double&)=0;
 protected:
