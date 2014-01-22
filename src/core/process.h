@@ -44,29 +44,7 @@ class CHistogram2d;
 class AverageObservable;
 
 #include "momenta.h"
-
-class HistogramBox
-{
-public://methods
-    HistogramBox(const UserInterface & UI);
-    void show_histogram_info_and_exit();
-    void  book_histograms(const CombinedEvent&,const double & vegas_weight);
-    void update_histograms_end_of_iteration(int NOP);
-	void update_histograms_end_of_vegas_point();
-    void print_histograms();
-    string print_histograms_to_string();
-    void write_to_histogram_file();
-    CHistogram* ptr_to_histogram_with_id(unsigned m){return histogram_vector[m];}
-    int size(){return histogram_vector.size();}
-
-private://data
-    vector<CHistogram*> histogram_vector;
-    vector<CHistogram*> available_histograms;
-    
-
-private://methods
-};
-
+#include "histogram.h"
 
 
 class Process
@@ -136,6 +114,5 @@ private://methods
 // ==================================================
 // Last includes
 #include "bin.h"
-#include "histogram.h"
 
 #endif
