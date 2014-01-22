@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <math.h> // for fabs
+#include <ostream>
 using namespace std;
 
 #define MAX_NUMBER_OF_PARTICLES 10
@@ -41,6 +42,7 @@ public:
     void SetNumberOfParticles(int n);
     int size(){return effective_size_;}
     void SetP(int i,const double& E,const double& px, const double& py, const double& pz);
+    void SetWeight(const double& w){events_[current_event_pointer_].SetWeight(w);}
     //void AddNewEvent();
     void AddNewEvent(const double& weight);
     Event* ptr_to_event(int i);

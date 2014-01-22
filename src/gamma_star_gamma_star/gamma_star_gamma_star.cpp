@@ -72,8 +72,9 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 
 void GammaStarGammaStar::create_matrix_elements()
 {
-    available_matrix_elements.push_back(new GstarGstarMeLO(event_box));
+    available_matrix_elements.push_back(new GstarGstarMELO(event_box));
     available_matrix_elements.push_back(new GstarGstarMeNLOSoft(event_box));
+    available_matrix_elements.push_back(new GstarGstarMeNLOHard(event_box));
 
 }
 

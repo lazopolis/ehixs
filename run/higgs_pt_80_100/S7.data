@@ -1,0 +1,29 @@
+<ehixs_data 
+
+ sigma="-0.199652"
+error="0.00372457" 
+prob="-999"
+total_number_of_points="29999"
+
+time="37.993"
+ secs_per_point="0.0012665"
+ runcard_name="/Users/lazopolis/my_code/ehixs/run/higgs.card" >
+
+	<histogram name="HistogramHiggsPt">
+		<bin le="80" he="100" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<overflow> 
+			<s>-0.199652</s>
+			<e>0.00372457</e>
+			<epc>1.86553</epc>
+			<chi>nan</chi>
+			<dof>1</dof>
+			<nop>30000</nop></overflow>
+		<totalbinned>0</totalbinned>
+	</histogram>
+</ehixs_data>

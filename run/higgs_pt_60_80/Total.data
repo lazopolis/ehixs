@@ -1,0 +1,38 @@
+ehixs total output
+0:F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,B,a_s^0,a_w^0,e^0 ,dim=2) : a_s^2,a_w^0,e^0
+1:F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(a)*(2*b0*L)(*)(1)(*)S(gluon,gluon,B,a_s^0,a_w^0,e^0 ,dim=2) : a_s^3,a_w^0,e^0
+2:F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(2*c0*c1* a^3)(*)(1)(*)(1)(*)S(gluon,gluon,B,a_s^0,a_w^0,e^0 ,dim=2) : a_s^3,a_w^0,e^0
+3:F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(a)*(-2*b0/e)(*)(1)(*)S(gluon,gluon,B,a_s^0,a_w^0,e^1 ,dim=2) : a_s^3,a_w^0,e^0
+4:F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,S,a_s^1,a_w^0,e^0 ,dim=2) : a_s^3,a_w^0,e^0
+5:F_gluon_from_gluon_00(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,H,a_s^1,a_w^0,e^0 ,dim=4) : a_s^3,a_w^0,e^0
+6:F_gluon_from_gluon_00(*)F_gluon_from_gluon_11(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,B,a_s^0,a_w^0,e^1 ,dim=2) : a_s^3,a_w^0,e^0
+7:F_gluon_from_gluon_11(*)F_gluon_from_gluon_00(*)(c0^2 a^2)(*)(1)(*)(1)(*)S(gluon,gluon,B,a_s^0,a_w^0,e^1 ,dim=2) : a_s^3,a_w^0,e^0
+  0 |   1.45e+01 |   6.87e-02 |     0.5% |    29999 |     1.25 s | 4.16e-05 s/p |    45.0% |     1.5%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+None
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+  2 |   3.06e+00 |   1.45e-02 |     0.5% |    29999 |     1.31 s | 4.36e-05 s/p |     9.5% |     1.6%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+  3 |  -2.13e+00 |   1.01e-02 |     0.5% |    29999 |     1.27 s | 4.23e-05 s/p |    -6.6% |     1.5%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+  4 |   5.49e+00 |   2.60e-02 |     0.5% |    29999 |     1.30 s | 4.32e-05 s/p |    17.1% |     1.5%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+  5 |   1.17e+01 |   3.55e-02 |     0.3% |    62998 |     1.69 s | 2.68e-05 s/p |    36.2% |     2.0%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+  6 |  -1.86e-01 |   4.21e-03 |     2.3% |    29999 |    37.99 s | 1.27e-03 s/p |    -0.6% |    45.2%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+  7 |  -1.86e-01 |   4.21e-03 |     2.3% |    29999 |    37.97 s | 1.27e-03 s/p |    -0.6% |    45.2%
+------------
+totalxs = 3.22e+01 +- 8.37e-02 | T = 84.0474 :: highest probability that error is wrong 1.16e-02 from sector #5 :: total number of points for run 272991
+
+histogram: HistogramHiggsPt
+
+  lowend |  highend |      sigma |       S0 |       S1 |       S2 |       S3 |       S4 |       S5 |       S6 |       S7 |
+   60.00 |    80.00 |   1.01e+00 |     0.0% |     0.0% |     0.0% |     0.0% |     0.0% |   100.0% |     0.0% |     0.0% |

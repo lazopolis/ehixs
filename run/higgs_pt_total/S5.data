@@ -1,0 +1,330 @@
+<ehixs_data 
+
+ sigma="11.5106"
+error="0.0355544" 
+prob="0.011946"
+total_number_of_points="62998"
+
+time="1.7809"
+ secs_per_point="2.8269e-05"
+ runcard_name="/Users/lazopolis/my_code/ehixs/run/higgs.card" >
+
+	<histogram name="HistogramHiggsPt">
+		<bin le="0" he="5" >
+			<s>-17.4298</s>
+			<e>0.553529</e>
+			<epc>3.17576</epc>
+			<chi>4.97477</chi>
+			<dof>2</dof>
+			<nop>654172</nop></bin>
+		<bin le="5" he="10" >
+			<s>10.1784</s>
+			<e>0.419678</e>
+			<epc>4.1232</epc>
+			<chi>9.38624</chi>
+			<dof>2</dof>
+			<nop>13838</nop></bin>
+		<bin le="10" he="15" >
+			<s>4.64131</s>
+			<e>0.185083</e>
+			<epc>3.98773</epc>
+			<chi>0.0212507</chi>
+			<dof>2</dof>
+			<nop>10538</nop></bin>
+		<bin le="15" he="20" >
+			<s>2.95422</s>
+			<e>0.133587</e>
+			<epc>4.52189</epc>
+			<chi>0.0171007</chi>
+			<dof>2</dof>
+			<nop>8440</nop></bin>
+		<bin le="20" he="25" >
+			<s>2.04092</s>
+			<e>0.117349</e>
+			<epc>5.74982</epc>
+			<chi>0.00711205</chi>
+			<dof>2</dof>
+			<nop>7048</nop></bin>
+		<bin le="25" he="30" >
+			<s>1.43597</s>
+			<e>0.0843247</e>
+			<epc>5.8723</epc>
+			<chi>0.0125525</chi>
+			<dof>2</dof>
+			<nop>5972</nop></bin>
+		<bin le="30" he="35" >
+			<s>1.04159</s>
+			<e>0.0480847</e>
+			<epc>4.61645</epc>
+			<chi>8.53335e-05</chi>
+			<dof>2</dof>
+			<nop>5248</nop></bin>
+		<bin le="35" he="40" >
+			<s>0.827614</s>
+			<e>0.04193</e>
+			<epc>5.06637</epc>
+			<chi>0.00408023</chi>
+			<dof>2</dof>
+			<nop>4460</nop></bin>
+		<bin le="40" he="45" >
+			<s>0.74354</s>
+			<e>0.0550385</e>
+			<epc>7.40222</epc>
+			<chi>0.00236594</chi>
+			<dof>2</dof>
+			<nop>3924</nop></bin>
+		<bin le="45" he="50" >
+			<s>0.565938</s>
+			<e>0.0311979</e>
+			<epc>5.51261</epc>
+			<chi>0.037659</chi>
+			<dof>2</dof>
+			<nop>3436</nop></bin>
+		<bin le="50" he="55" >
+			<s>0.472504</s>
+			<e>0.0294356</e>
+			<epc>6.2297</epc>
+			<chi>0.00509581</chi>
+			<dof>2</dof>
+			<nop>3028</nop></bin>
+		<bin le="55" he="60" >
+			<s>0.426992</s>
+			<e>0.0275207</e>
+			<epc>6.44524</epc>
+			<chi>0.0122821</chi>
+			<dof>2</dof>
+			<nop>2736</nop></bin>
+		<bin le="60" he="65" >
+			<s>0.319686</s>
+			<e>0.0219625</e>
+			<epc>6.87003</epc>
+			<chi>0.0139006</chi>
+			<dof>2</dof>
+			<nop>2462</nop></bin>
+		<bin le="65" he="70" >
+			<s>0.285186</s>
+			<e>0.0189367</e>
+			<epc>6.64013</epc>
+			<chi>0.00299208</chi>
+			<dof>2</dof>
+			<nop>2208</nop></bin>
+		<bin le="70" he="75" >
+			<s>0.243336</s>
+			<e>0.0167753</e>
+			<epc>6.89388</epc>
+			<chi>0.00776673</chi>
+			<dof>2</dof>
+			<nop>2006</nop></bin>
+		<bin le="75" he="80" >
+			<s>0.227401</s>
+			<e>0.0163873</e>
+			<epc>7.20634</epc>
+			<chi>0.0630099</chi>
+			<dof>2</dof>
+			<nop>1820</nop></bin>
+		<bin le="80" he="85" >
+			<s>0.214297</s>
+			<e>0.0179074</e>
+			<epc>8.35636</epc>
+			<chi>0.000171953</chi>
+			<dof>2</dof>
+			<nop>1646</nop></bin>
+		<bin le="85" he="90" >
+			<s>0.153115</s>
+			<e>0.00979055</e>
+			<epc>6.39425</epc>
+			<chi>0.0845885</chi>
+			<dof>2</dof>
+			<nop>1514</nop></bin>
+		<bin le="90" he="95" >
+			<s>0.158736</s>
+			<e>0.0157917</e>
+			<epc>9.94843</epc>
+			<chi>0.014826</chi>
+			<dof>2</dof>
+			<nop>1372</nop></bin>
+		<bin le="95" he="100" >
+			<s>0.143315</s>
+			<e>0.011429</e>
+			<epc>7.97474</epc>
+			<chi>0.000652282</chi>
+			<dof>2</dof>
+			<nop>1258</nop></bin>
+		<bin le="100" he="105" >
+			<s>0.115222</s>
+			<e>0.00899245</e>
+			<epc>7.80444</epc>
+			<chi>0.00709906</chi>
+			<dof>2</dof>
+			<nop>1122</nop></bin>
+		<bin le="105" he="110" >
+			<s>0.0991455</s>
+			<e>0.00793973</e>
+			<epc>8.00815</epc>
+			<chi>0.0114943</chi>
+			<dof>2</dof>
+			<nop>1030</nop></bin>
+		<bin le="110" he="115" >
+			<s>0.101461</s>
+			<e>0.00924695</e>
+			<epc>9.11377</epc>
+			<chi>0.121975</chi>
+			<dof>2</dof>
+			<nop>990</nop></bin>
+		<bin le="115" he="120" >
+			<s>0.0920013</s>
+			<e>0.00803767</e>
+			<epc>8.73647</epc>
+			<chi>0.0140831</chi>
+			<dof>2</dof>
+			<nop>924</nop></bin>
+		<bin le="120" he="125" >
+			<s>0.0680656</s>
+			<e>0.00718073</e>
+			<epc>10.5497</epc>
+			<chi>0.0162151</chi>
+			<dof>2</dof>
+			<nop>798</nop></bin>
+		<bin le="125" he="130" >
+			<s>0.0822276</s>
+			<e>0.0081581</e>
+			<epc>9.92136</epc>
+			<chi>0.044287</chi>
+			<dof>2</dof>
+			<nop>766</nop></bin>
+		<bin le="130" he="135" >
+			<s>0.0571447</s>
+			<e>0.00474</e>
+			<epc>8.29474</epc>
+			<chi>0.00485437</chi>
+			<dof>2</dof>
+			<nop>734</nop></bin>
+		<bin le="135" he="140" >
+			<s>0.0629424</s>
+			<e>0.00679822</e>
+			<epc>10.8007</epc>
+			<chi>0.0055368</chi>
+			<dof>2</dof>
+			<nop>648</nop></bin>
+		<bin le="140" he="145" >
+			<s>0.047063</s>
+			<e>0.00477982</e>
+			<epc>10.1562</epc>
+			<chi>0.00504713</chi>
+			<dof>2</dof>
+			<nop>592</nop></bin>
+		<bin le="145" he="150" >
+			<s>0.0602723</s>
+			<e>0.00691099</e>
+			<epc>11.4663</epc>
+			<chi>0.0296607</chi>
+			<dof>2</dof>
+			<nop>614</nop></bin>
+		<bin le="150" he="155" >
+			<s>0.0471407</s>
+			<e>0.00530345</e>
+			<epc>11.2503</epc>
+			<chi>0.0030861</chi>
+			<dof>2</dof>
+			<nop>522</nop></bin>
+		<bin le="155" he="160" >
+			<s>0.042125</s>
+			<e>0.00429953</e>
+			<epc>10.2066</epc>
+			<chi>0.000259915</chi>
+			<dof>2</dof>
+			<nop>486</nop></bin>
+		<bin le="160" he="165" >
+			<s>0.0352013</s>
+			<e>0.00576228</e>
+			<epc>16.3695</epc>
+			<chi>0.000550145</chi>
+			<dof>2</dof>
+			<nop>436</nop></bin>
+		<bin le="165" he="170" >
+			<s>0.0408064</s>
+			<e>0.00439849</e>
+			<epc>10.7789</epc>
+			<chi>0.00626323</chi>
+			<dof>2</dof>
+			<nop>470</nop></bin>
+		<bin le="170" he="175" >
+			<s>0.0291478</s>
+			<e>0.00383796</e>
+			<epc>13.1672</epc>
+			<chi>0.000472329</chi>
+			<dof>2</dof>
+			<nop>374</nop></bin>
+		<bin le="175" he="180" >
+			<s>0.0321449</s>
+			<e>0.00393846</e>
+			<epc>12.2522</epc>
+			<chi>1.30994e-05</chi>
+			<dof>2</dof>
+			<nop>380</nop></bin>
+		<bin le="180" he="185" >
+			<s>0.0367082</s>
+			<e>0.00582306</e>
+			<epc>15.8631</epc>
+			<chi>8.91492e-06</chi>
+			<dof>2</dof>
+			<nop>378</nop></bin>
+		<bin le="185" he="190" >
+			<s>0.0246573</s>
+			<e>0.00324631</e>
+			<epc>13.1657</epc>
+			<chi>0.0352807</chi>
+			<dof>2</dof>
+			<nop>346</nop></bin>
+		<bin le="190" he="195" >
+			<s>0.0249445</s>
+			<e>0.00353431</e>
+			<epc>14.1687</epc>
+			<chi>0.0118475</chi>
+			<dof>2</dof>
+			<nop>298</nop></bin>
+		<bin le="195" he="200" >
+			<s>0.0193997</s>
+			<e>0.00249071</e>
+			<epc>12.8389</epc>
+			<chi>0.00116771</chi>
+			<dof>2</dof>
+			<nop>304</nop></bin>
+		<bin le="200" he="205" >
+			<s>0.0187886</s>
+			<e>0.00244577</e>
+			<epc>13.0173</epc>
+			<chi>5.77828e-06</chi>
+			<dof>2</dof>
+			<nop>268</nop></bin>
+		<bin le="205" he="210" >
+			<s>0.017124</s>
+			<e>0.00258662</e>
+			<epc>15.1052</epc>
+			<chi>0.00668695</chi>
+			<dof>2</dof>
+			<nop>248</nop></bin>
+		<bin le="210" he="215" >
+			<s>0.0204637</s>
+			<e>0.00299937</e>
+			<epc>14.657</epc>
+			<chi>0.000732735</chi>
+			<dof>2</dof>
+			<nop>258</nop></bin>
+		<bin le="215" he="220" >
+			<s>0.0223951</s>
+			<e>0.00365563</e>
+			<epc>16.3234</epc>
+			<chi>4.22296e-05</chi>
+			<dof>2</dof>
+			<nop>260</nop></bin>
+		<overflow> 
+			<s>0.285025</s>
+			<e>0.00910632</e>
+			<epc>3.19492</epc>
+			<chi>0.000195042</chi>
+			<dof>2</dof>
+			<nop>5628</nop></overflow>
+		<totalbinned>10.8409</totalbinned>
+	</histogram>
+</ehixs_data>

@@ -1,0 +1,330 @@
+<ehixs_data 
+
+ sigma="15.0773"
+error="0.0713076" 
+prob="-999"
+total_number_of_points="29999"
+
+time="1.3495"
+ secs_per_point="4.4986e-05"
+ runcard_name="/Users/lazopolis/my_code/ehixs/run/higgs.card" >
+
+	<histogram name="HistogramHiggsPt">
+		<bin le="0" he="5" >
+			<s>15.0773</s>
+			<e>0.0713076</e>
+			<epc>0.472948</epc>
+			<chi>nan</chi>
+			<dof>1</dof>
+			<nop>30000</nop></bin>
+		<bin le="5" he="10" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="10" he="15" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="15" he="20" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="20" he="25" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="25" he="30" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="30" he="35" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="35" he="40" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="40" he="45" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="45" he="50" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="50" he="55" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="55" he="60" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="60" he="65" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="65" he="70" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="70" he="75" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="75" he="80" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="80" he="85" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="85" he="90" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="90" he="95" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="95" he="100" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="100" he="105" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="105" he="110" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="110" he="115" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="115" he="120" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="120" he="125" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="125" he="130" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="130" he="135" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="135" he="140" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="140" he="145" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="145" he="150" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="150" he="155" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="155" he="160" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="160" he="165" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="165" he="170" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="170" he="175" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="175" he="180" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="180" he="185" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="185" he="190" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="190" he="195" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="195" he="200" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="200" he="205" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="205" he="210" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="210" he="215" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<bin le="215" he="220" >
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></bin>
+		<overflow> 
+			<s>0</s>
+			<e>0</e>
+			<epc>nan</epc>
+			<chi>nan</chi>
+			<dof>2</dof>
+			<nop>0</nop></overflow>
+		<totalbinned>15.0773</totalbinned>
+	</histogram>
+</ehixs_data>
