@@ -1,4 +1,5 @@
 add_library(pdf 
+            pdf_hub.cpp
             luminosity.cpp
             pdf.cpp
             interpolator.cpp

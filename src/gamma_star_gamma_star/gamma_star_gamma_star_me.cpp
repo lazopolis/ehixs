@@ -1,16 +1,195 @@
 #include "gamma_star_gamma_star_me.h"
 #include "chaplin.h"
 
-
-double GstarGstarMELO::eval_me(const double&s12,
-               const double& s13,
-               const double& s23,const double& s3,const double& s4)
+GstarGstarMe::GstarGstarMe(EventBox& event_box):NewMatrixElement(event_box)
 {
+    info_ = new NewMeExternalInfo;
+    dimension_ = 4;
+    info_->name = "Born";
+    info_->ISF = InitialStateFlavors("u","ub");
+    pdf_selection_ = "same flavor";
+    info_->alpha_power = 0;
+    info_->epsilon_power_min = 0;
+    info_->epsilon_power_max = 2;
+    alpha_em = 1.0/137.0 ;
+    const double m3=20.0;
+    const double m4=30.0;
+    kk_.s3=m3*m3;
+    kk_.s4=m4*m4;
+    smin = (m3+m4)*(m3+m4);
+}
+void GstarGstarMe::consolidate()
+{
+    kk_.tau = smin/smax; // smax is a protected member of the base class
+    kk_.smax = smax;
+    const double averaging_factor = 1.0/6.0 * 1.0/6.0 ;
+    const double color_factor = 3.0;
+    
+    prefactor_ = averaging_factor*color_factor* pow(alpha_em,2.0)* 0.389379*1e9;
+}
+
+void GstarGstarMe::JF(const double& w,const KinematicVariables& kv)
+{
+    event_box_->AddNewEvent(w);
+    event_box_->SetP(1,kv.p1.p[0],kv.p1.p[1],kv.p1.p[2],kv.p1.p[3]);
+    event_box_->SetP(2,kv.p2.p[0],kv.p2.p[1],kv.p2.p[2],kv.p2.p[3]);
+    event_box_->SetP(3,kv.p3.p[0],kv.p3.p[1],kv.p3.p[2],kv.p3.p[3]);
+    event_box_->SetP(4,kv.p4.p[0],kv.p4.p[1],kv.p4.p[2],kv.p4.p[3]);
+    event_box_->SetP(5,kv.p5.p[0],kv.p5.p[1],kv.p5.p[2],kv.p5.p[3]);
+    event_box_->SetP(6,kv.p6.p[0],kv.p6.p[1],kv.p6.p[2],kv.p6.p[3]);
+
+}
+
+void GstarGstarMe::JF()
+{
+    event_box_->AddNewEvent(0.0);
+
+}
+
+double GstarGstarMe::PP(const double& x)
+{
+    return 4.0/3.0 * (1.0+x*x)/(1.0-x*x); 
+}
+
+void KinematicVariables::generate_bjorken_xs(double* xx_vegas)
+{
+    const double y= log(tau) + (1.0-log(tau))*xx_vegas[0];
+    const double u = exp(y);
+    const double rho = 1.0/2.0*log(u) -  log(u) * xx_vegas[1];
+    x1 = sqrt(u)*exp(rho);
+    x2 = sqrt(u)*exp(-rho);
+    p1.Set(x1*sqrt(smax)/2.0,0.0,0.0,x1*sqrt(smax)/2.0);
+    p2.Set(x2*sqrt(smax)/2.0,0.0,0.0,-x2*sqrt(smax)/2.0);
+    jacobian = -log(u)*u*(1.0-tau)*(1.0-log(tau));
+}
+
+
+void KinematicVariables::SetLOKinematics(double* xx_vegas)
+{
+    const double Qsq = z * s12; // z!=1 is a N*LO configuration
+    const double costheta = -1.0 + 2.0 * xx_vegas[2];
+    const double phi = 2.0 * consts::Pi * xx_vegas[3];
+    const double sintheta = sqrt(1.0-costheta*costheta);
+    double A = - (Qsq-s3-s4);
+    double Kaellen = Qsq*Qsq + s3*s3 + s4*s4
+    -2.0*Qsq*s3-2.0*Qsq*s4-2.0*s3*s4;
+    
+    s13 = A/2.0 + sqrt(Kaellen)/2.0 * costheta;
+    s23 = A/2.0 - sqrt(Kaellen)/2.0 * costheta;
+    s14 = s23;
+    s24 = s13;
+    s34 = Qsq;
+    // cout<<"\n"<<varying_part_of_jacobian<<" "<<me_sq;
+    //Energies and z-momenta at the COM frame
+    const double p3 = sqrt(Kaellen)/2.0/sqrt(Qsq);
+    p3com.Set((Qsq+s3-s4)/2.0/sqrt(Qsq),
+                  p3 * sintheta * sin(phi),
+                  p3 * sintheta * cos(phi),
+                  p3 * costheta);
+    p4com.Set((Qsq+s4-s3)/2.0/sqrt(Qsq),
+                  -p3 * sintheta * sin(phi),
+                  -p3 * sintheta * cos(phi),
+                  -p3 * costheta);
+    
+       
+//    // boost factor for boosting back to LAB frame
+//    const double bb = (x2-x1)/(x2+x1);
+//    const double gb = 1.0/sqrt(1.0-bb*bb);
+//    // boosting to LAB frame (the transverse pieces are invariant)
+//    const double E3lab = gb * E3 - bb * gb * p3z;
+//    const double p3zlab = gb * p3z -bb * gb * E3;
+//    const double E4lab = gb * E4 - bb * gb * p4z;
+//    const double p4zlab = gb * p4z -bb * gb * E4;
+}
+
+void KinematicVariables::SetNLOKinematics(double* xx_vegas)
+{
+    z = xx_vegas[4];
+    lambda = xx_vegas[5];
+    phi = 2.0*consts::Pi*xx_vegas[6];
+    const double zbar = 1.0-z;
+    const double lambdabar = 1.0-lambda;
+    const double eq = zbar*sqrt(s12*lambda*lambdabar);
+    s15 = -s12 * zbar * lambda;
+    s25 = -s12 * zbar * lambdabar;
+    p5com.Set(zbar*lambdabar*p1com[0]+zbar*lambdabar*p2com[0],
+              eq*cos(phi),eq*sin(phi),
+              zbar*lambdabar*p1com[3]+zbar*lambdabar*p2com[3]);
+    SetLOKinematics(xx_vegas);
+}
+
+KinematicVariables KinematicVariables::single_collinear(int i)
+{
+    KinematicVariables kcol;
+    kcol.p3=p3;
+    kcol.p4=p4;
+    kcol.z=z;
+    kcol.s3=s3;
+    kcol.s4=s4;
+    kcol.s13=s13;
+    kcol.s23=s23;
+    kcol.s14=s14;
+    kcol.s24=s24;
+    kcol.s34=s34;
+    // p5 = null by default
+    if (i==1)
+        {
+        kcol.lambda=0.0;
+        kcol.p1.Set(z*p1[0],z*p1[1],z*p1[2],z*p1[3]);
+        kcol.p2=p2;
+        kcol.s15 = 0.0;
+        kcol.s25 = -s12*(1.0-z);
+        }
+    else if (i==2)
+        {
+        kcol.lambda=1.0;
+        kcol.p2.Set((1.0-z)*p1[0],(1.0-z)*p1[1],(1.0-z)*p1[2],(1.0-z)*p1[3]);
+        kcol.p1=p1;
+        kcol.s25 = 0.0;
+        kcol.s15 = -s12*(1.0-z);
+        }
+    return kcol;
+}
+
+double GstarGstarMe::Born(const KinematicVariables& kk)
+{
+
     return 8.0*(
-                s23/s13 - 2.0 * (s3+s4)/s13 - s3*s4/s13/s13
-                +s13/s23 - 2.0 * (s3+s4)/s23 - s3*s4/s23/s23
-                +2.0*pow(s3+s4,2.0)/ (s13*s23)
+                kk.s23/kk.s13 - 2.0 * (kk.s3+kk.s4)/kk.s13
+                - kk.s3*kk.s4/kk.s13/kk.s13
+                +kk.s13/kk.s23 - 2.0 * (kk.s3+kk.s4)/kk.s23
+                - kk.s3*kk.s4/kk.s23/kk.s23
+                +2.0*pow(kk.s3+kk.s4,2.0)/ (kk.s13*kk.s23)
                 );
+}
+
+void GstarGstarMeDelta::Evaluate(double* xx_vegas)
+{
+    kk_.generate_bjorken_xs(xx_vegas);
+    const double lumi = LL(kk_.x1,kk_.x2);
+    if (lumi!=0.0)
+        {
+        kk_.SetLOKinematics(xx_vegas);
+        double me_sq = eval_me(kk_);
+        const double sigma = prefactor_
+                        * lumi
+                        * 1.0/2.0/kk_.s12
+                        * me_sq
+                        ;
+        JF(sigma,kk_);
+        }
+    else
+        {
+        JF();
+        }
+    
+}
+
+
+
+double GstarGstarMELO::eval_me(const KinematicVariables& kinvar)
+{
+    return Born(kinvar);
 }
 
 
@@ -20,14 +199,14 @@ complex<double> GstarGstarMeNLOSoft::polylog(int i,const double& z)
     return HPL2(0,1,z);
 }
 
-double GstarGstarMeNLOSoft::eval_me(
-                            const double& s12,
-                            const double& s13,
-                            const double& s23,const double& s3,const double& s4)
+double GstarGstarMeNLOSoft::eval_me(const KinematicVariables& kv)
 {
-    double s=s12;
-    double t = s13;
-    double u = s23;
+    
+    double s= kv.s12;
+    double t = kv.s13;
+    double u = kv.s23;
+    double s3 = kv.s3;
+    double s4 = kv.s4;
     double K = sqrt(s*s+t*t+u*u-2.0*u*s-2.0*u*t-2.0*s*t);
     
     double z  = 0.5/s * (t-u+s + K);
@@ -40,13 +219,50 @@ double GstarGstarMeNLOSoft::eval_me(
     return 8.0*2.0*real( cg2);//:8 is the color factor
 }
 
-double GstarGstarMeNLOHard::eval_me(const double& s12,
-               const double& s13,
-               const double& s23,const double& s14,const double& s24
-               ,const double& s34,const double& s15,const double& s25
-               ,const double& s35,const double& s45,const double& s3
-               ,const double&  s4)
+
+void GstarGstarMeNLOkinematics::Evaluate(double* xx_vegas)
 {
-    cout<<"\n not ready yet "<<endl;
+    kk_.generate_bjorken_xs(xx_vegas);
+    const double lumi = LL(kk_.x1,kk_.x2);
+    if (lumi!=0.0)
+        {
+        kk_.SetNLOKinematics(xx_vegas);
+        double me_sq = eval_me(kk_);
+        
+        double collinear1 = kk_.z / kk_.lambda * PP(1.0/kk_.z) * Born(kk_);
+        double collinear2 = kk_.z / (1.0-kk_.lambda) * PP(1.0/kk_.z) * Born(kk_);
+
+        JF(lumi  *  me_sq / kk_.s12 , kk_);
+        JF(lumi  * collinear1 / kk_.s12, kk_.single_collinear(1));
+        JF(lumi  * collinear2 / kk_.s12, kk_.single_collinear(2));
+        }
+    else
+        {
+        event_box_->AddNewEvent(0.0);
+        
+        }
+    
+}
+
+
+double GstarGstarMeNLOHard::eval_me(const KinematicVariables&)
+{
+    
+    
+    
     return 0.0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

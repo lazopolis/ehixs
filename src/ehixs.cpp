@@ -17,7 +17,7 @@
 #include "timekeeper.h"
 
 #include "user_interface.h"
-
+#include "ehixs_config.h"
 using namespace std;
 
 
@@ -26,13 +26,19 @@ using namespace std;
 
 void print_logo()
 {
+    int vmajor = 0;
+    int vminor = 0;
+#ifdef EHIXS_VERSION_MAJOR
+    vmajor = EHIXS_VERSION_MAJOR;
+    vminor = EHIXS_VERSION_MINOR;
+#endif
   cout<<"\n* * * * * * * * * * * * * * * * * * * * * * * * *";
   cout<<"\n*                                               *";
   cout<<"\n*                                               *";
   cout<<"\n*                                               *";
   cout<<"\n*                ehixs                          *";
   cout<<"\n*                                               *";
-  cout<<"\n*                version 1.0                    *";
+  cout<<"\n*                version "<<vmajor<<"."<<vminor<<"                    *";
   cout<<"\n*                                               *";
   cout<<"\n*                                               *";
   cout<<"\n* * * * * * * * * * * * * * * * * * * * * * * * *";
@@ -42,6 +48,7 @@ void print_logo()
 
 int main(int argc, char** argv)
 {
+    
      // get init time
      //clock_t t_init = clock();
     TimeKeeper myclock;

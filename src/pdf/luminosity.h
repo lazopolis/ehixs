@@ -2,6 +2,7 @@
 #define LUMINOSITY_H
 
 #include "pdf.h"
+#include "pdf_hub.h"
 #include "constants.h"
 #include <utility>
 #include <string>
