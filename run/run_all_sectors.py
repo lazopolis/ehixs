@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------------------
 runcard = "higgs.card"
 ehixs_bin_directory = "../cmake_builds"
-directory_name = "higgs_pt_total2"
+directory_name = "tester"
 running_mode = "parallel" # or "serial"
 waiting_time_before_checking_for_status = 2.0 # in secs
 verbosity_level_for_checking_reports = "moderate" # or "moderate" or "zero"
@@ -217,7 +217,7 @@ class JobManager:
         self.sectors_submitted = 0
         self.status_message = ""
     def run(self):
-        if not(os.path.isfile(self.sectors[1].output_filename)):
+        if not(os.path.isfile(self.sectors[0].output_filename)):
             while self.sectors_submitted<len(self.sectors):
                 self.run_a_batch()
                 self.wait()

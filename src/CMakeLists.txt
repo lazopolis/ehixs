@@ -269,7 +269,12 @@ add_executable(ehixs
 target_link_libraries(ehixs 
             ${LIBRARIES_FOR_GLOBAL_TESTS})
 
-
+            
+add_executable(gstar2_nlo_test ${EHIXS_SRC_DIR}/gamma_star_gamma_star/gtests.cpp)
+target_link_libraries(gstar2_nlo_test
+                    gamma_star_gamma_star
+                    tools pdf LHAPDF chaplin
+                    gtest)
 
 set(CMAKE_BUILD_TYPE Release)
 

@@ -47,8 +47,12 @@ public:
      friend ostream& operator<<(ostream&, const VegasAdaptor&);
     string xml();
 private:
-     double epsrel,epsabs;
+    double epsrel,epsabs;
+    double epsrel_therm,epsabs_therm;
+    double epsrel_cur,epsabs_cur;
      int verbose,mineval,maxeval,nstart,nincrease,number_of_dims;
+    int mineval_therm,maxeval_therm,nstart_therm,nincrease_therm;
+    int mineval_cur,maxeval_cur,nstart_cur,nincrease_cur;
      TheHatch* the_hatch;
      pointer_to_Integrand my_integrand;
     int total_number_of_points_;

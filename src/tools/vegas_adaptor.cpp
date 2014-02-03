@@ -34,10 +34,12 @@ string VegasAdaptor::xml()
 
 void VegasAdaptor::prepare_for_final_iteration()
 {
-    mineval=100000;
-    maxeval=100000;
-    nstart=100000;
-    nincrease=0;
+    epsrel_cur=epsrel;
+    epsabs_cur=epsabs;
+    mineval_cur=mineval;
+    maxeval_cur=maxeval;
+    nstart_cur=nstart;
+    nincrease_cur=nincrease;
     ff_vegas[0]=0.0;
 }
 
@@ -50,7 +52,7 @@ void VegasAdaptor::call_vegas()
      double prob[number_of_components];
      int neval,fail; 
        
-
+    gridno = 1;
      int seed=0;
      //:0: Sobol
      //:>0 Ranlux
@@ -62,17 +64,17 @@ void VegasAdaptor::call_vegas()
            number_of_components,
            integrand_t(my_integrand),
            NULL,
-           epsrel, 
-           epsabs,
+           epsrel_cur,
+           epsabs_cur,
            verbose,
            seed,  
-           mineval, // = mineval
-           maxeval,
-           nstart,
-           nincrease,
+           mineval_cur, // = mineval
+           maxeval_cur,
+           nstart_cur,
+           nincrease_cur,
            nbatch,
            gridno, 
-           NULL,//grid_file_name.c_str(),
+           grid_file_name_.c_str(),
            &neval,
            &fail,
            integral, 
@@ -110,6 +112,21 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI,pointer_to_Integrand ptr,int
     nstart=UI.nstart;
     nincrease=UI.nincrease;
 
+    epsrel_therm=UI.epsrel_therm;
+    epsabs_therm=UI.epsabs_therm;
+    mineval_therm=UI.mineval_therm;
+    maxeval_therm=UI.maxeval_therm;
+    nstart_therm=UI.nstart_therm;
+    nincrease_therm=UI.nincrease_therm;
+    
+    // initial run with thermalized variables
+    epsrel_cur=epsrel_therm;
+    epsabs_cur=epsabs_therm;
+    mineval_cur=mineval_therm;
+    maxeval_cur=maxeval_therm;
+    nstart_cur=nstart_therm;
+    nincrease_cur=nincrease_therm;
+    
     my_integrand = static_cast<pointer_to_Integrand>(ptr);
     number_of_dims = ndim;
     total_number_of_points_ =0;
@@ -129,6 +146,26 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI )
      nincrease=UI.nincrease;
     number_of_dims = 0;
     total_number_of_points_ =0;
+    
+    
+    epsrel_therm=UI.epsrel_therm;
+    epsabs_therm=UI.epsabs_therm;
+    mineval_therm=UI.mineval_therm;
+    maxeval_therm=UI.maxeval_therm;
+    nstart_therm=UI.nstart_therm;
+    nincrease_therm=UI.nincrease_therm;
+    
+    // initial run with thermalized variables
+    epsrel_cur=epsrel_therm;
+    epsabs_cur=epsabs_therm;
+    mineval_cur=mineval_therm;
+    maxeval_cur=maxeval_therm;
+    nstart_cur=nstart_therm;
+    nincrease_cur=nincrease_therm;
+    grid_file_name_ = "vegas_grid";
+
+    
+    
 }
 
 

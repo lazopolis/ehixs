@@ -9,7 +9,13 @@ public:
     FMomentum(){for (int i=0;i<4;i++) p[i]=0.0;}
     double p[4];
     void Set(const double& E,const double& px,const double& py, const double& pz){p[0]=E;p[1]=px;p[2]=py;p[3]=pz;}
-    double operator[](int i){return p[i];}
+    void equal(const FMomentum& k)
+            {p[0]=k[0];p[1]=k[1];p[2]=k[2];p[3]=k[3];}
+    double operator[](int i) const {return p[i];}
+    void zboost(const double& b);
+    void boost(const double& bx,const double& by,const double& bz);
+    double operator*(const FMomentum& Q){return p[0]*Q[0]-p[1]*Q[1]-p[2]*Q[2]-p[3]*Q[3];}
+    friend ostream& operator<<(ostream&, const FMomentum&);
 };
 
 class KinematicVariables{
@@ -20,13 +26,11 @@ public:
     double lambda;
     double phi;
     double s3,s4;
-    double tau,smax;
-    FMomentum p1com;
-    FMomentum p2com;
+    double tau,smax,smin;
+
     FMomentum p3com;
     FMomentum p4com;
-    FMomentum p5com;
-    FMomentum p6com;
+
 
     FMomentum p1;
     FMomentum p2;
@@ -36,18 +40,19 @@ public:
     FMomentum p6;
 
     
-    
+public:
     void boost_to_lab();
-    void boost_along_z_axis(const double bb);
+    void boost_along_z_axis(const double& bb);
     void SetLOKinematics(double* xx_vegas);
     void SetNLOKinematics(double* xx_vegas);
     KinematicVariables single_collinear(int);
+    KinematicVariables z_shifted(int i) const;
+    void compute_born_invariants();
     void generate_bjorken_xs(double* xx_vegas);
 
     double jacobian;
 
 };
-
 
 class GstarGstarMe: public NewMatrixElement
 {
@@ -55,12 +60,13 @@ public:
     GstarGstarMe(EventBox& event_box);
     void consolidate();
 
+    double Born(const KinematicVariables& kk);
+    double PP(const double&);
 protected:
     void generate_resolved_kinematics(double* xx_vegas,const double Qsq);
     void JF(const double&,const KinematicVariables& kv);
     void JF();
-    double Born(const KinematicVariables& kk);
-    double PP(const double&);
+    
 protected:
     KinematicVariables kk_;
     
@@ -93,7 +99,7 @@ public:
         info_->name = "NLOSoft";
         
     };
-    complex<double> polylog(int i,const double& z);
+    complex<double> polylog(int i,const complex<double>& z);
     double eval_me(const KinematicVariables&);
 };
 
@@ -111,7 +117,8 @@ public:
         dimension_ = 7;
         };
     void Evaluate(double* xx_vegas);
-    
+    double collinear_limit(const KinematicVariables&,int i);
+
     virtual double eval_me(const KinematicVariables& )=0;
 protected:
     double s15;

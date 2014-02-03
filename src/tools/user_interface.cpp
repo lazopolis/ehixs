@@ -29,6 +29,10 @@ UserInterface::UserInterface()
      options.push_back(new DoublePrecisionOption("m_higgs",0,"higgs mass in GeV","Required",&m_higgs,125.0));
      options.push_back(new DoublePrecisionOption("epsrel",0,"vegas argument: target relative error","Required",&epsrel,0.01));
      options.push_back(new DoublePrecisionOption("epsabs",0,"vegas argument: target absolute error","Required",&epsabs,1e-10));
+    
+    options.push_back(new DoublePrecisionOption("epsrel_therm",0,"vegas argument: target relative error for thermalization phase","Required",&epsrel_therm,0.01));
+    options.push_back(new DoublePrecisionOption("epsabs_therm",0,"vegas argument: target absolute error for thermalization phase","Required",&epsabs_therm,1e-10));
+    
      options.push_back(new DoublePrecisionOption("muf_over_mhiggs",0,"mu_f / m_h","Required",&muf_over_mhiggs,1.0));
      options.push_back(new DoublePrecisionOption("mur_over_mhiggs",0,"mu_r / m_h","Required",&mur_over_mhiggs,1.0));
      options.push_back(new DoublePrecisionOption("number_of_flavours",0,"number of active flavors (do not change)","Required",&number_of_flavours,5.0));
@@ -64,6 +68,14 @@ UserInterface::UserInterface()
      options.push_back(new IntOption("maxeval",0,"vegas argument: maximum points to be evaluated","Required",&maxeval,50000000));
      options.push_back(new IntOption("nstart",0,"vegas argument: #of points for first iteration","Required",&nstart,20000));
      options.push_back(new IntOption("nincrease",0,"vegas argument: # of points for step increase","Required",&nincrease,1000));
+    
+    
+    options.push_back(new IntOption("mineval_therm",0,"vegas argument: minimum points to be evaluated  for thermalization phase","Required",&mineval_therm,1000));
+    options.push_back(new IntOption("maxeval_therm",0,"vegas argument: maximum points to be evaluated for thermalization phase","Required",&maxeval_therm,1000));
+    options.push_back(new IntOption("nstart_therm",0,"vegas argument: #of points for first iteration for thermalization phase","Required",&nstart_therm,1000));
+    options.push_back(new IntOption("nincrease_therm",0,"vegas argument: # of points for step increase  for thermalization phase","Required",&nincrease_therm,0));
+    
+    
      options.push_back(new IntOption("perturbative_order",0,
             "a_s perturbative order (0,1,2) for PDF choice and mass evolution",
             "Required",

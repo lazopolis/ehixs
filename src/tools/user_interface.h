@@ -175,11 +175,11 @@ public://methods
     void RunSanityChecks();
     void PrintAllOptions() const;
 public://data
-    double Etot,m_higgs,epsrel,epsabs,muf_over_mhiggs,mur_over_mhiggs,number_of_flavours;
+    double Etot,m_higgs,epsrel,epsabs,muf_over_mhiggs,mur_over_mhiggs,number_of_flavours,epsrel_therm,epsabs_therm;
     string production,decay,pdf_provider,sector_name,sector_for_production,input_filename,output_filename,matrix_element_approximation,Fleft,Fright, leptonic_decay_mode_in_wwzz,xml_info,
             qcd_perturbative_order,rr_treatment;
     int verbose,maxeval,mineval,nstart,nincrease,perturbative_order,pole,decay_sector,sector_control,requested_histogram,requested_cut;
-    int alpha_s_power,alpha_ew_power;
+    int alpha_s_power,alpha_ew_power,maxeval_therm,mineval_therm,nstart_therm,nincrease_therm;
     bool info,histogram_info,cut_info,list_processes,help,show_me_list,
     pdf_error, dummy_process,ew_soft,ew_h_plus_j,only_ew_h_j,bin_by_bin_integration;
     

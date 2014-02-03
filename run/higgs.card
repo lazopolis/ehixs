@@ -6,6 +6,7 @@ mur_over_mhiggs = 0.5
 # ggF, GammaStarGammaStar
 production = ggF
 #
+#bin_by_bin_integration = true
 #---------- selecting initial state channels
 # the flavor of the parton from the left
 # if not declared all flavors are considered
@@ -19,7 +20,7 @@ Fright = gluon
 m_higgs = 125.0
 rr_treatment = split
 #matrix_element_approximation = effective
-qcd_perturbative_order = NNLO
+qcd_perturbative_order = LO
 #perturbative_order = 0
 #ew_soft = false
 #ew_h_plus_j = false
@@ -38,8 +39,8 @@ qcd_perturbative_order = NNLO
 #
 #---------- histograms
 #
-histogram = [HistogramHiggsPt,2,0.0,220.0]
-histogram = [HistogramHiggsY,10,-5.0,5.0]
+#histogram = [HistogramHiggsPt,2,0.0,220.0]
+#histogram = [HistogramHiggsY,10,-5.0,5.0]
 #histogram = [GstarX1,20,0,1.0]
 #histogram = [GstarX2,20,0,1.0]
 #
@@ -54,9 +55,16 @@ histogram = [HistogramHiggsY,10,-5.0,5.0]
 #
 #---------- vegas variables
 #
-epsrel = 0.01
+epsrel_therm = 0.005
+epsabs_therm = 0.0001
+nstart_therm = 10000
+mineval_therm = 10000
+maxeval_therm = 10000000
+nincrease_therm = 1000
+#
+epsrel = 0.001
 epsabs = 0.0001
-nstart = 30000
-mineval = 100000
-nincrease = 3000
-maxeval = 500000000
+nstart = 10000
+mineval = 10000
+nincrease =1000
+maxeval = 300000
