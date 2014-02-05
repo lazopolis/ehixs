@@ -54,7 +54,15 @@ qcd_perturbative_order = NNLO
 #
 #---------- vegas variables
 #
-epsrel = 0.01
+#
+epsrel_therm = 0.01
+epsabs_therm = 0.0001
+nstart_therm = 10000
+mineval_therm = 10000
+maxeval_therm = 10000000
+nincrease_therm = 1000
+#
+epsrel = 0.005
 epsabs = 0.0001
 nstart = 30000
 mineval = 100000

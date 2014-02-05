@@ -99,10 +99,93 @@ public:
         info_->name = "NLOSoft";
         
     };
-    complex<double> polylog(int i,const complex<double>& z);
+    double polylog(int i,const complex<double>& z);
     double eval_me(const KinematicVariables&);
+    double Vimag(const double& s12,const double& s23,
+                        const double& s31,const double& s3,
+                        const double& s4,const double& z,
+                        const double& zp,const double& CF,
+                           const double& Nc);
+    double Vreal(const double& s12,const double& s23,
+                           const double& s31,const double& s3,
+                           const double& s4,const double& z,
+                           const double& zp,const double& CF,
+                           const double& Nc);
+
 };
 
+class GstarGstarMeNNLOSoft: public GstarGstarMeDelta
+{
+public:
+    GstarGstarMeNNLOSoft(EventBox& event_box):GstarGstarMeDelta(event_box){
+        info_->alpha_power = 2;
+        info_->name = "NNLOSoft";
+        
+    };
+    double polylog(int i,const complex<double>& z);
+    double eval_me(const KinematicVariables&);
+    double QQoc(double z,double zp,double w);
+    double Qoch(double z,double zp,double w);
+    double Qoclow(double z,double zp,double w);
+    double Qoczero(double z,double zp,double w);
+    double QQec(double z,double zp,double w);
+    double Qech(double z,double zp,double w);
+    double Qeclow(double z,double zp,double w);
+    double Qeczero(double z,double zp,double w);
+    double TT37 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT36 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT35 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT34 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT33 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT32 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT31 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT30 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT29 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT28 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT27 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT26 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT25 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT24 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT23 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT22 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT21 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT20 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT19 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT18 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT17 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT16 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT15 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT14 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT13 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    double TT12 (double u,double t,double q3,double q4,double z,
+                 double zp,double Nc,double Nf,double CF);
+    
+};
 
 class GstarGstarMeNLOkinematics : public GstarGstarMe
 {
