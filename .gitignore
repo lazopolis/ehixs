@@ -1,0 +1,12 @@
+
+*.o
+
+cmake_builds/CMakeCache.txt
+cmake_builds/*
+kmeans/*
+pdf_cache/*
+run/*
+src/gluon_fusion/RRroutinesv2/rrgg2ggh_old/*
+src/gluon_fusion/RRroutinesv2/rrgg2qqbarh_old/*
+src/decay_wwzz/higgs_zerfall_old.f
+src/gluon_fusion/electroweak_h_plus_jet

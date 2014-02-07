@@ -1,0 +1,201 @@
+kernelopts(printbytes=false);
+read "qqbargamgam1loop.map":
+read "qqbargamgam2loopNF.map":
+#read "integrals_phys.mpl":
+read "integrals.mpl":
+
+#---------------  SECTION 1 --------------------
+#---- Working on the born amplitude  --------
+
+     ampl0loop:=factor(born/gs^4):
+
+#---------------  SECTION 2 ----------------------
+#---- Working on the 1-loop amplitude  ---------
+
+     tmp:=collect(convert(oneloop, `+`)/gs^4, {gs, Pbox}, factor):
+     tmp:=subs(gs^2=gssq, tmp):
+
+#--  Redefinition of bare coupling
+
+     subigs:=gssq=alphas0pi*I*Sepsilon/2:
+
+#--- Momentum conservation
+
+     subimome:=s12=s3+s4-s23-s31:
+
+#--  where
+#      alphas0pi := alphas0/(2*Pi):
+
+#--- Substitute the one-loop master integrals:
+
+     tmp:=subs(subigs, Pboxlist1, tmp):
+
+#--  expand in epsilon
+
+     tmp:=convert(series(e^2*tmp/alphas0pi/Sepsilon, e=0, 5), polynom):
+
+     subisimplestuff:=[
+          s23-s3+s31-s4=-s12,
+	  ln(s23/s12)=ln(-s23)-ln(-s12),
+	  ln(s31/s12)=ln(-s31)-ln(-s12),
+	  ln(s3/s12)=ln(-s3)-ln(-s12),
+	  ln(s4/s12)=ln(-s4)-ln(-s12),
+	  ln(s3/s4)=ln(-s3)-ln(-s4),
+	  ln(s4/s3)=ln(-s4)-ln(-s3),
+	  ln(z*zp)=ln(z)+ln(zp),
+	  ln((-1+zp)*(-1+z))=ln(1-zp)+ln(1-z),
+	  ln(-s3)=ln(-s12)+ln(z)+ln(zp),
+	  ln(-s4)=ln(-s12)+ln(1-z)+ln(1-zp),
+	  ln(z/zp)=ln(z)-ln(zp),
+	  ln(zp/z)=ln(zp)-ln(z),
+	  ln((1-z)/(1-zp))=ln(1-z)-ln(1-zp),
+	  ln((1-zp)/(1-z))=ln(1-zp)-ln(1-z),
+	  ln((1-zp)*(1-z))=ln(1-zp)+ln(1-z),
+          ln(s23/(s12*z*zp))=ln(-s23)-ln(-s12)-ln(z)-ln(zp),
+ 	  ln(s23/(s12*(1-zp)*(1-z)))=ln(-s23)-ln(-s12)-ln(1-z)-ln(1-zp),
+          ln(s31/(s12*z*zp))=ln(-s31)-ln(-s12)-ln(z)-ln(zp),
+ 	  ln(s31/(s12*(1-zp)*(1-z)))=ln(-s31)-ln(-s12)-ln(1-z)-ln(1-zp),
+	  ln(2*Pi)=ln(2)+ln(Pi),
+	  ln(4*Pi)=2*ln(2)+ln(Pi),
+	       	 NULL]:
+
+     tmp:=subs(subisimplestuff, tmp):
+
+     rtmp:=factor(coeff(tmp, e, 0))
+     +e*collect(subs(subisimplestuff, coeff(tmp, e, 1)), ln, factor)
+     +e^2*collect(subs(subisimplestuff, coeff(tmp, e, 2)), {ln, polylog, Pi}, factor)
+     +e^3*collect(subs(subisimplestuff, coeff(tmp, e, 3)), {ln, polylog,G, Zeta,  Pi}, factor)
+     +e^4*collect(subs(subisimplestuff, coeff(tmp, e, 4)), {ln, polylog,G, Zeta,  Pi, new1, new2, new7, new12}, factor)
+     +e^5*ALARM:
+
+#--- result for the unrenormalized one-loop amplitude
+
+     ampl1loop:=rtmp*alphas0pi*Sepsilon/e^2:
+
+
+
+#-----------------   SECTION 3 -------------------------------------
+#---- Working on the two-loop amplitude  ---------------------------
+
+      tmp:=collect(twoloop/gs^4, {gs, NF}):
+      tmp:=subs(gs=sqrt(gssq), tmp):
+      tmp:=subs(subimome,tmp):
+      tmp:=subs(subigs, Pboxlist2, tmp):
+
+#--  expand in epsilon
+
+     tmp:=convert(series(e^3*tmp/alphas0pi^2/Sepsilon^2, e=0, 5), polynom):
+
+     tmp:=subs(subisimplestuff, tmp):
+
+     #--- 1/e^3 pole
+     rtmp:=factor(subs(subimome, coeff(tmp, e, 0))):
+
+     #--- 1/e^2 pole
+     www:=coeff(tmp, e, 1):
+     inds:=map(xxx->op(0, xxx), indets(www, function)):
+     www:=collect(www, inds, xxx->factor(subs(subimome, xxx))):
+     www:=collect(subs(subisimplestuff, www), ln, factor):
+
+     rtmp:=rtmp+e*www:
+
+     #---- 1/e pole
+
+     www:=coeff(tmp, e, 2):
+     inds:=map(xxx->op(0, xxx), indets(www, function)):
+     www:=collect(www, inds, xxx->factor(subs(subimome, xxx))):
+     www:=subs(subisimplestuff, www):
+     www:=collect(www, inds, factor):
+
+     rtmp:=rtmp+e^2*www:
+
+     #---- finite part
+
+     www:=coeff(tmp, e, 3):
+     inds:=map(xxx->op(0, xxx), indets(www, function)):
+#     www:=collect(www, inds, xxx->factor(subs(subimome, xxx))):
+#     www:=subs(subisimplestuff, www):
+#     www:=collect(www, inds, factor):
+
+     rtmp:=rtmp+e^3*www:
+
+
+     #--- order espilon
+     rtmp:=rtmp+ALARM*e^4:
+
+     ampl2loop:= rtmp*alphas0pi^2*Sepsilon^2/e^3*NF*1/2:
+
+
+#-------------   SECTION 4  -----------------
+#-------    renormalization
+
+     unrenampl:=ampl0loop+ampl1loop+ampl2loop:
+
+     #-- bare to renormalized coupling
+
+	beta0:=(11*N-2*NF)/6:
+
+	as0pi:=alphaspi/Sepsilon*(1-alphaspi/e*beta0+ALARM*alphaspi^2):
+
+	subiampls:=subs(V=(N^2-1), [
+	xtmp0=coeff(unrenampl, alphas0pi, 0),
+	xtmp1=coeff(unrenampl, alphas0pi, 1),
+	xtmp2=coeff(coeff(unrenampl, alphas0pi, 2), NF, 1),
+	NULL]):
+
+
+	tmp:=xtmp0+xtmp1*as0pi+NF*xtmp2*as0pi^2+ALARM*alphaspi^3:
+
+	subiampls1:=[]:
+
+	rtmp0:=subs(subiampls, coeff(tmp, alphaspi, 0)):
+	rtmp1:=subs(subiampls, coeff(tmp, alphaspi, 1)):
+#---    select the NF part only for the two-loop
+	rtmp2:=subs(subiampls, coeff(coeff(tmp, alphaspi, 2), NF, 1))*NF:
+
+
+#--- the catani operators in the as/(2*Pi) normalization -------------------
+
+     K:=(67/18-Pi^2/6)*N-5/9*NF:
+     Hp:=(Pi^2/2-6*Zeta(3)-3/8)*CF^2
+     +(13/2*Zeta(3)+245/216-23/48*Pi^2)*N*CF
+     +(Pi^2/12-25/54)*CF*NF/2:
+
+    CF:=(N^2-1)/2/N:
+
+	I1:=e->-(N^2-1)/2/N*exp(e*gamma)/GAMMA(1-e)*(-s12)^(-e)*(1/e^2+3/2/e);
+
+	I2:=-1/2*I1(e)*(I1(e)+2*beta0/e)+exp(-e*gamma)*GAMMA(1-2*e)/GAMMA(1-e)*(beta0/e+K)*I1(2*e)+exp(e*gamma)/4/e/GAMMA(1-e)*2*Hp;
+
+	poles:=(I1(e)*alphaspi+alphaspi^2*coeff(I2, NF, 1)*NF)*rtmp0:
+
+       poles0:=coeff(poles, alphaspi, 0):
+
+       poles1:=coeff(poles, alphaspi, 1):
+
+       ptmp:=convert(simplify(series(poles1, e=0, 5)), polynom):
+
+       rpoles1:=coeff(ptmp, e, -2)/e^2+coeff(ptmp, e, -1)/e+coeff(ptmp, e, 0):
+
+       suvirampl1:=collect(rtmp1-rpoles1, e):
+
+
+       poles2:=coeff(poles, alphaspi, 2):
+
+       ptmp:=convert(simplify(series(poles2, e=0, 5)), polynom):
+
+       rpoles2:=coeff(ptmp, e, -3)/e^3+coeff(ptmp, e, -2)/e^2+coeff(ptmp, e, -1)/e+coeff(ptmp, e, 0):
+
+       suvirampl2:=collect(rtmp2-rpoles2, e):
+       inds:=map(xxx->xxx=subs(factor(xxx)), indets(suvirampl2, function)):
+
+       suvirampl2:=subs(inds, suvirampl2):
+
+       print("HI");
+
+
+
+#------- Romain -------
+#-- analytic ir poles from real radiation. What is subtracted out.
+
+
