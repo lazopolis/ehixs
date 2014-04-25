@@ -35,6 +35,10 @@ UserInterface::UserInterface()
     
      options.push_back(new DoublePrecisionOption("muf_over_mhiggs",0,"mu_f / m_h","Required",&muf_over_mhiggs,1.0));
      options.push_back(new DoublePrecisionOption("mur_over_mhiggs",0,"mu_r / m_h","Required",&mur_over_mhiggs,1.0));
+     
+     options.push_back(new DoublePrecisionOption("mur",0,"mur (do not use this for Higgs production)","Required",&mur,80.0));
+     options.push_back(new DoublePrecisionOption("muf",0,"muf (do not use this for Higgs production)","Required",&muf,80.0));
+     
      options.push_back(new DoublePrecisionOption("number_of_flavours",0,"number of active flavors (do not change)","Required",&number_of_flavours,5.0));
 
      options.push_back(new StringOption("production",0,"production process","Required",&production,"ggF"));

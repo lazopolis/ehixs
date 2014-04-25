@@ -22,3 +22,7 @@ available_histograms.push_back(
                                new HistogramGstarX1(20,-5.0,5.0,"GstarX1"));
 available_histograms.push_back(
                                new HistogramGstarX2(20,-5.0,5.0,"GstarX2"));
+                               
+                               
+available_histograms.push_back(
+                               new HistogramGstarGLUONPT(20,0.0,100.0,"GstarGLUONPT"));                               

@@ -87,6 +87,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/core
                     ${EHIXS_SRC_DIR}/pdf
                     ${EHIXS_SRC_DIR}/chaplin
+                    ${EHIXS_SRC_DIR}/ihixs
                     ${EHIXS_SRC_DIR}/../user_src
                     ${EHIXS_SRC_DIR}/../user_src/ggf_production
                     ${EHIXS_SRC_DIR}/../user_src/WWZZ_decay
@@ -123,6 +124,7 @@ add_subdirectory(pdf)
 add_subdirectory(avh_olo)
 add_subdirectory(gtests)
 
+#add_subdirectory(ihixs)
 
 #find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
 #This will check the environment for a variable named LHAPDF_PATH. 
@@ -258,11 +260,11 @@ target_link_libraries(iggf
 			)
 
 
-add_executable(ihixs++ 
-            ${EHIXS_SRC_DIR}/ihixs.cpp)
-target_link_libraries(ihixs++
-			ggf_inclusive chaplin tools models cuba pdf LHAPDF ${LHAPDF}
-			)
+#add_executable(ihixs++ 
+#            ${EHIXS_SRC_DIR}/ihixs.cpp)
+#target_link_libraries(ihixs++
+#			ihixs_lib chaplin tools models cuba pdf LHAPDF ${LHAPDF}
+#			)
 
 add_executable(ehixs  
             ${EHIXS_SRC_DIR}/ehixs.cpp)

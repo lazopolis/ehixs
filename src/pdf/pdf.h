@@ -9,15 +9,19 @@
 #include "cached_interpolator.h"
 #include "splitting_kernels.h"
 #include "user_interface.h"
-
+#include<sstream>
+using namespace std;
 struct pdf_desc
 {
+    pdf_desc(int x):i(x),j(x),n_as(0),n_eps(0){};
     pdf_desc(int i_,int j_,int n_as_, int n_eps_):i(i_),j(j_),n_as(n_as_),n_eps(n_eps_){};
     
     bool operator==(const pdf_desc& o)
     { return i==o.i && j==o.j && n_as==o.n_as && n_eps==o.n_eps; }
     
     int i,j,n_as,n_eps;
+    string name(){stringstream s;s<<"F_"
+                <<n_as<<"_"<<n_eps<<"_"<<i<<"_"<<j;return s.str();}
     
 };
 
@@ -67,6 +71,7 @@ public://methods
      * The argument result is the final result vector with the length pdf.NumberOfMembers
      * The functions then returns a vector with two entries, containing the "+" and "-" pdf-error
      */
+     string name(){return _my_desc.name();}
     vector<double> calculate_pdf_error(const vector<double>& result);
     unsigned size() const{ return NumberOfMembers; }
     vector<double> alpha_s_at_mz;

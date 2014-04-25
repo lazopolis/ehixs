@@ -21,11 +21,94 @@ double LuminositySinglePair::give(const double& x1,const double& x2)
     }
     else //: calculate lumi
     {
+//        cout<<"\n[lumi] "<<left_->name()<<" x "<<right_->name()
+//            <<"x1="<<x1<<" x2="<<x2
+//            <<" f(x1)="<<left_->give_f(x1,0)
+//            <<" f(x2)="<<right_->give_f(x2,0);
+        
         return left_->give_f(x1,0) * right_->give_f(x2,0);
     }
 
 }
 
+void LuminosityStack::set(Luminosity* lumi, const string& description)
+{
+    if (description=="gg")
+        {
+            pdf_desc gluon(0);
+            all_lumis_.push_back(lumi->give_single_pair_pt(gluon,gluon));
+        }
+    else if (description=="qg")    
+        {
+        for (int i=-5;i<6;i++)
+            {
+            if (i!=0) 
+                {
+                all_lumis_.push_back(lumi->give_single_pair_pt
+                                     (pdf_desc(0),pdf_desc(i))
+                                     );
+                all_lumis_.push_back(lumi->give_single_pair_pt
+                                         (pdf_desc(i),pdf_desc(0))
+                                         );
+
+                }
+            }
+        }
+    else if (description=="qqb")
+        {
+        for (int i=-5;i<6;i++)
+            {
+            if (i!=0) 
+                {
+                    all_lumis_.push_back(lumi->give_single_pair_pt
+                                         (pdf_desc(-i),pdf_desc(i))
+                                         );
+                }    
+            }
+        }
+    else if (description=="qq")
+        {
+            for (int i=-5;i<6;i++)
+            {
+                if (i!=0) 
+                {
+                    all_lumis_.push_back(lumi->give_single_pair_pt
+                                        (pdf_desc(i),pdf_desc(i))
+                                        );
+                }    
+            }
+        }
+    else if (description=="q1q2")
+        {
+            for (int i=-5;i<6;i++)
+            {
+                if (i!=0) 
+                {
+                for (int j=-5;j<6;j++)
+                    {
+                    if (j!=0 and j!=i)
+                        {
+                        all_lumis_.push_back(lumi->give_single_pair_pt
+                                    (pdf_desc(i),pdf_desc(j))
+                                    );
+                        }
+                    }
+                }    
+            }
+        }
+    else
+    {
+        cout<<"\n[LuminosityStack]: error, unknown or non-implemented luminosity descrption "<<description;
+    }
+}
+
+double LuminosityStack::give(const double& x1,const double& x2)
+{
+    double res=0.0;
+    for (int i=0;i<all_lumis_.size();i++) 
+        res += all_lumis_[i]->give(x1,x2);
+    return res;
+}
 
 Luminosity::Luminosity(const UserInterface& UI)
 {
@@ -44,8 +127,8 @@ LuminositySinglePair* Luminosity::give_single_pair_pt(const pdf_desc & left,
 {
     CPDF* ptr_to_left = pdfHub->construct_or_locate_pdf(left);
     CPDF* ptr_to_right = pdfHub->construct_or_locate_pdf(right);
-    LuminositySinglePair* new_pair = new LuminositySinglePair(ptr_to_left,
-                                                              ptr_to_right);
+    LuminositySinglePair* new_pair = new LuminositySinglePair(
+                                    ptr_to_left,ptr_to_right);
     all_single_pairs_.push_back(new_pair);
     return new_pair;
 

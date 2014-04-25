@@ -15,91 +15,82 @@ using namespace std;
 GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI)
 {
     SetNumberOfParticles();
-    // creating matrix elements
     create_matrix_elements();
-    // passing parameters to matrix elements
-    cout<<"\n[sector] passing parameters to matrix elements "<<UI.Etot<<endl;
-    PassParametersToMatrixElements(pow(UI.Etot,2.0));
-    // creating sectors
-    all_sectors = new SectorBox(available_matrix_elements,UI);
-    
-    #include "gstar_2_cut_initialization.h"
-    cuts_->ParseCuts(UI);    
-    
-    if (UI.info)
-        {
-        cout<<"\n Sectors that fit your selection criteria:\n";
-        for (int i=0;i<all_sectors->size();i++)
-            {
-            cout<<"\n"<<i<<" : "<<*all_sectors->give(i);
-            }
-        cout<<"\n\n number of Sectors defined : "<<all_sectors->size()<<endl;
+    if (UI.info) info();
+    else initialize_sector(UI);
+}
 
-        exit(0);
-        }
-    
-    if (UI.show_me_list)
-        {
-        cout<<"\n ME available:\n This should be re-implemented!!";
-        for (int i=0;i<available_matrix_elements.size();i++)
-            {
-            cout<<*(available_matrix_elements[i])<<endl;
-            }
-        exit(0);
-        }
-    
-    cout<<"\n[Gamma* Gamma*] : finding sector"<<endl;
-    find_sector(UI);
-    
+
+void GammaStarGammaStar::initialize_sector(const UserInterface& UI)
+{
+    find_the_xs(UI);    
     if (is_sector_defined())
-        {
-            
-        //allocate_luminosity();
-        cout <<"\n----------------------------------\n\tSECTOR \""
-        <<*the_sector
-        <<"\"\n----------------------------------\n"<<endl;
-            
-        the_sector->AllocateLuminosity(lumi);
-        cout<<"\n[sector] setting up prefactor"<<endl;
-        the_sector -> SetUpPrefactor(Model.alpha_strong()/consts::Pi);
-        }
+    {
+        // dimension is already set in constructors
+        dim_of_integration=the_xs_->Dimension();
+        #include "gstar_2_cut_initialization.h"
+        cuts_->ParseCuts(UI);
+        cout <<"\nCrossSection name : "<<*the_xs_<<endl;
+        the_xs_->SetEventBox(event_box);
+        the_xs_->PassEColliderSq(pow(UI.Etot,2.0));
+        the_xs_->AllocateLuminosity(lumi);
+        the_xs_->PassAlphaStrong(Model.alpha_strong()/consts::Pi);
+        the_xs_->PassScales(UI.mur,UI.muf);
+        //the_xs_->SetPhotonMasses(UI.m3,UI.m4);
+        the_xs_->Configure();        
+    }
     cout<<"\n[sector] end of construction phase"<<endl;
-//        cout<<"\na_s used = "<<Model.alpha_strong()
-//        <<"\t^"<<the_sector->alpha_power
-//        <<"(a/Pi)^"<<the_sector->alpha_power<<" = "<<pow(Model.alpha_strong()/consts::Pi,the_sector->alpha_power) ;
-    
+}
+
+
+GammaStarGammaStar::~GammaStarGammaStar()
+{
+for (int i=0;i<available_xs_.size();i++)
+    delete available_xs_[i];
 }
 
 void GammaStarGammaStar::create_matrix_elements()
 {
-    available_matrix_elements.push_back(new GstarGstarMELO(event_box));
-    available_matrix_elements.push_back(new GstarGstarMeNLOSoft(event_box));
-    available_matrix_elements.push_back(new GstarGstarMeNLOHard(event_box));
+available_xs_.push_back(new GstarGstarMELO);   
+available_xs_.push_back(new GstarGstarMeNLOSoft);
+available_xs_.push_back(new GstarGstarMeNLOHard);
+available_xs_.push_back(new GstarGstarMeNLOConv(1));
+available_xs_.push_back(new GstarGstarMeNLOConv(2));
+available_xs_.push_back(new GstarGstarMeNNLOSoft);
+available_xs_.push_back(new GstarGstarMeNNLOHard);
+available_xs_.push_back(new GstarGstarMeNNLOConvLeft);
+available_xs_.push_back(new GstarGstarMeNNLOConvRight);
+available_xs_.push_back(new GstarGstarMeNNLO_R_remnant);
+available_xs_.push_back(new GstarGstarMeNNLOMueller);
+available_xs_.push_back(new GstarGstarMeNNLO_IL_Romain);
+available_xs_.push_back(new GstarGstarMENLOHardQuarkGluon);
+
 
 }
 
-void GammaStarGammaStar::PassParametersToMatrixElements(const double& s)
-{
-    for (int i=0;i<available_matrix_elements.size();i++)
-        {
-        available_matrix_elements[i]->set_S(s);
-        cout<<"\n[gstar^2] we are gonna consolidate"<<endl;
-        available_matrix_elements[i]->consolidate();
 
-        }
-}
 
 //: this can be moved in production
+void GammaStarGammaStar::info()
+{
+    for (int i=0;i<available_xs_.size();i++)
+        {
+        cout<<"\n"<<i<<" : "<<*available_xs_[i];
+        }
+    cout<<endl<<endl;
+    exit(0);
+}
+
 void GammaStarGammaStar::evaluate_sector()
 {
     event_box.CleanUp();
-    the_sector->Evaluate(xx_vegas);
+    the_xs_->Evaluate(xx_vegas);
 
 }
 
 
 //: this can be moved in production
-void GammaStarGammaStar::find_sector(const UserInterface & UI)
+void GammaStarGammaStar::find_the_xs(const UserInterface & UI)
 {
     if (UI.sector_for_production=="none")
         {
@@ -109,18 +100,16 @@ void GammaStarGammaStar::find_sector(const UserInterface & UI)
     else
         {
         int sector_id=atoi(UI.sector_for_production.c_str());
-        if (sector_id>-1 and sector_id<all_sectors->size())
+        if (sector_id>-1 and sector_id<available_xs_.size())
             {
             sector_defined=true;
-            the_sector=all_sectors->give(sector_id);
-            dim_of_integration=the_sector->dimension();
-            cout<<"[find_sector] dim_of_integration = "<<dim_of_integration;
+            the_xs_=available_xs_[sector_id];
             }
         else
             {
             cout<<"\n[find_sector] The sector id number you asked for, "<<sector_id
             <<", was outside the bounds [0,"
-            << all_sectors->size()<<"]";
+            << available_xs_.size()<<"]";
             cout<<"\n[find_sector] Please run with UI.info=true"
             <<" or --info to get the list of sector names"<<endl;
             throw "\n[find_sector] Can't proceed!\n";

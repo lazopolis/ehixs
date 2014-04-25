@@ -13,12 +13,10 @@ public:
     GammaStarGammaStar(const UserInterface & UI);
     ~GammaStarGammaStar();
     
-    //: functions
+    //: virtual obligations from production 
     void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(3);}
-    int number_of_necessary_sectors(){return number_of_necessary_sectors_;}
+    int number_of_necessary_sectors(){return available_xs_.size();}
     
-    void PassParametersToMatrixElements(const double& s);
-
     
     vector<string> give_sector_names(const string & pleft,
                                      const string & pright,
@@ -39,22 +37,22 @@ public:
     void SetNumberOfParticles() {event_box.SetNumberOfParticles(6);}
     
     //: gluon fusion specific construction:  to be removed!
-    void book_production_event(const double &,const double &,
-                                       const double &,const double &,
-                                       const double &,const double &,
-                                       const double &,const double &,
-                               const double &){};
-    //: public to integrate with fortran Fjet
+    //: but it's a virtual function of the production
+    //: class, so the production class has to change
+    //: implementation for this one to be removed
+    void book_production_event(const double &,const double &,const double &,const double &,const double &,const double &,const double &,const double &,const double &){};
     
     void create_matrix_elements();
     
 private:
-    SectorBox* all_sectors;
-    vector<NewMatrixElement*> available_matrix_elements;
-    void find_sector(const UserInterface & UI);
+    vector<CrossSection*> available_xs_;
+    void find_the_xs(const UserInterface & UI);
     void allocate_luminosity();
-    Sector* the_sector;
-    int number_of_necessary_sectors_;
+    CrossSection* the_xs_;
+    //int number_of_necessary_sectors_;
+private:
+    void info();
+    void initialize_sector(const UserInterface& UI);
 
 };
 

@@ -161,6 +161,23 @@ public:
     
 };
 
+class HistogramGstarGLUONPT : public CHistogram
+{
+public:
+    HistogramGstarGLUONPT(unsigned numbins,const double& lowend,
+                            const double& highend,const std::string& name)
+    : CHistogram(numbins,0,lowend,highend,name,false){};
+    
+    double determine_xval(const CombinedEvent& ce)
+    {
+        
+        double* gamma1 = ce.production->ParticleMomentum(5);
+        double pt1 = sqrt(gamma1[1]*gamma1[1]+gamma1[2]*gamma1[2]);
+        return pt1;
+        
+    }
+    
+};
 
 
 

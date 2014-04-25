@@ -35,5 +35,63 @@ public:
         }
 };
 
+class GStar2Cut_GAMMA2_pt : public CCut
+{
+public:
+    GStar2Cut_GAMMA2_pt(const double& cutvalue)
+    : CCut("CutGAMMA2PT",cutvalue){};
+    bool operator()(Event* the_event)
+    {
+        double* pgamma2 = the_event->ParticleMomentum(4);
+        const double pth = sqrt(pgamma2[1] * pgamma2[1] + pgamma2[2]*pgamma2[2]);
+        if (pth>min)
+        {
+            //cout<<"\n event accepted with ptH = "<<pth;
+            return true;
+        }
+        
+        return false;
+    }
+};
+
+
+class GStar2Cut_GLUONSTAR_pt : public CCut
+{
+public:
+    GStar2Cut_GLUONSTAR_pt(const double& cutvalue)
+    : CCut("CutGLUONSTARPT",cutvalue){};
+    bool operator()(Event* the_event)
+    {
+        double* gstar = the_event->ParticleMomentum(5);
+        const double pth = sqrt(gstar[1] * gstar[1] + gstar[2]*gstar[2]);
+        if (pth>min)
+        {
+            //cout<<"\n event accepted with ptH = "<<pth;
+            return true;
+        }
+        
+        return false;
+    }
+};
+
+
+class GStar2Cut_GLUONSTAR_IM : public CCut
+{
+public:
+    GStar2Cut_GLUONSTAR_IM(const double& cutvalue)
+    : CCut("CutGLUONSTARIM",cutvalue){};
+    bool operator()(Event* the_event)
+    {
+        double* gstar = the_event->ParticleMomentum(5);
+        const double psq = (gstar[0] * gstar[0]-gstar[1] * gstar[1] - gstar[2]*gstar[2]-gstar[3] * gstar[3]);
+        if (psq>min)
+        {
+            //cout<<"\n event accepted with ptH = "<<pth;
+            return true;
+        }
+        
+        return false;
+    }
+};
 
 #endif

@@ -5,62 +5,18 @@
 using namespace std;
 
 
-double NewMatrixElement::LL(const double& x1,const double& x2)
-{
-    double res=0.0;
-    for (int i=0;i<FFA_.size();i++)
-        {
 
-        res = res + FFA_[i]->give(x1,x2);
 
-        }
-    return res;
-}
+
+/*
+
+
+
 
 
 //------------------------------------------------------------------------------
 
 
-bool FFF::is_valid()
-{
-     bool res=true;
-     if (order==0 and parton_i!=parton_from) {res=false; }
-     if (order==1 and parton_i=="quark" and parton_from=="antiquark"){res=false;}
-     if (order==1 and parton_i=="antiquark" and parton_from=="quark"){res=false;}
-     if (order>2) {res=false;}
-     //if (not(res)) cout<< " failed";
-     return res;
-}
-
-ostream& operator<<(ostream& stream, const FFF& F)
-{
-     if (F.order==0) stream <<"F_"<<F.parton_i<<"_from_"<<F.parton_from<<"_"<<F.order<<F.epsilon_order;
-     else stream <<"F_"<<F.parton_i<<"_from_"<<F.parton_from<<"_"<<F.order<<F.epsilon_order;
-     return stream;
-}
-
-
-string FFF::name()
-{
-     ostringstream  stream;
-     stream<<*this;
-     return (stream.str());
-}
-//------------------------------------------------------------------------------
-
-ExpansionTerm operator*(const ExpansionTerm& E1,const ExpansionTerm& E2)
-{
-    string newname;
-    string name1 = E1.give_name();
-    string name2 = E2.give_name();
-    if (name1=="1") newname = name2;
-    else if (name2=="1") newname = name1;
-    else newname = name1+"*"+name2;
-    return  ExpansionTerm(newname,
-                      E1.give_value()*E2.give_value(),
-                      E1.give_a_power()+E2.give_a_power(),
-                      E1.give_e_power()+E2.give_e_power());
-}
 //------------------------------------------------------------------------------
 
 void Polynomial::truncate_in_alpha_up_to_power(int M)
@@ -184,13 +140,14 @@ ostream& operator<<(ostream& stream, const Polynomial& P)
     
     return stream;
 }
-
+*/
 
 //------------------------------------------------------------------------------
 
 // defines a map from integer parton id numbers to keywords like gluon or upbar
 // which are used as placeholders in defining matrix elements
 // This has to change, presumably, for each new process
+/*
 void FSingle::construct_names()
 {
     set_name(name_from_,name_descriptors_from,parton_from_);
@@ -246,26 +203,95 @@ void FSingle::set_name(string& pname,vector<string>& name_descriptor,int pid)
             }
         }
 }
-
-void FxF::AllocateLuminosity(Luminosity* lumi)
+*/
+void LuminosityBox::AllocateLuminosity(Luminosity* lumi)
 {
-    my_lumi_ = lumi->give_single_pair_pt(fleft_->description(),
-                                         fright_->description());
+    for (int i=0;i<luminosities_.size();i++)
+    {
+    my_lumis_.push_back(lumi->give_single_pair_pt(pdf_desc(luminosities_[i].left),pdf_desc(luminosities_[i].right)));
+    }
 }
 
-void FxFxA::SetUpPrefactor(const double & a_s_over_pi,int me_alpha_power)
+void LuminosityBox::MatchPDFs(const string& left, const string& right, const string& pdf_selector_)
 {
-    
-        prefactor_ = term_->give_value()
-                    * pow(a_s_over_pi,alpha_power()+ me_alpha_power);
+    if (left=="u" and right=="ub")
+        luminosities_.push_back(pdf_desc_pair(2,-2));
+    else
+        {
+        cout<<"\n undefined pdfs : "<<left<<","<<right<<endl;
+        exit(1);
+        }
     
 }
 
+double LuminosityBox::give(const double& x1,const double& x2)
+{
+    double res=0.0;
+    for (int i=0;i<my_lumis_.size();i++)
+    {
+        
+        res = res + my_lumis_[i]->give(x1,x2);
+    }
+    return res;
+}
+
+ostream& operator<<(ostream& stream, const CrossSection& XS)
+{
+    stream<<XS.info_.name<<"("<<XS.info_.ISF.left<<","<<XS.info_.ISF.right
+    <<"): a^"<<XS.info_.alpha_power
+    <<" ,dim="<<XS.dimension_;
+    
+    return stream;
+}
+
+// legacy for gluon fusion below
+
+
+bool FFF::is_valid()
+{
+    bool res=true;
+    if (order==0 and parton_i!=parton_from) {res=false; }
+    if (order==1 and parton_i=="quark" and parton_from=="antiquark"){res=false;}
+    if (order==1 and parton_i=="antiquark" and parton_from=="quark"){res=false;}
+    if (order>2) {res=false;}
+    //if (not(res)) cout<< " failed";
+    return res;
+}
+
+ostream& operator<<(ostream& stream, const FFF& F)
+{
+    if (F.order==0) stream <<"F_"<<F.parton_i<<"_from_"<<F.parton_from<<"_"<<F.order<<F.epsilon_order;
+    else stream <<"F_"<<F.parton_i<<"_from_"<<F.parton_from<<"_"<<F.order<<F.epsilon_order;
+    return stream;
+}
+
+
+string FFF::name()
+{
+    ostringstream  stream;
+    stream<<*this;
+    return (stream.str());
+}
+//------------------------------------------------------------------------------
+
+ExpansionTerm operator*(const ExpansionTerm& E1,const ExpansionTerm& E2)
+{
+    string newname;
+    string name1 = E1.give_name();
+    string name2 = E2.give_name();
+    if (name1=="1") newname = name2;
+    else if (name2=="1") newname = name1;
+    else newname = name1+"*"+name2;
+    return  ExpansionTerm(newname,
+                          E1.give_value()*E2.give_value(),
+                          E1.give_a_power()+E2.give_a_power(),
+                          E1.give_e_power()+E2.give_e_power());
+}
 
 //------------------------------------------------------------------------------
 
 
-
+/*
 
 ostream& operator<<(ostream& stream, const NewMatrixElement& ME)
 {
@@ -300,6 +326,8 @@ ostream& operator<<(ostream& stream, const Sector& P)
 
     return stream;
 }
+
+
 //------------------------------------------------------------------------------
 
 // this can be moved to production
@@ -323,6 +351,11 @@ void Sector::SetUpPrefactor(const double & a_s_over_pi)
         }
 }
 
+void Sector::PassAlphaStrong(const double& alpha_s_over_pi)
+{
+    me_->SetAlphaStrong(alpha_s_over_pi);
+}
+
 void Sector::Evaluate(double* xx_vegas)
 {
     me_->Evaluate(xx_vegas);
@@ -333,6 +366,7 @@ void Sector::Evaluate(double* xx_vegas)
 
 
 //------------------------------------------------------------------------------
+
 void SectorBox::determine_as_power_requested(const UserInterface& UI)
 {
     // default  option: qcd_perturbative_order
@@ -346,66 +380,68 @@ void SectorBox::determine_as_power_requested(const UserInterface& UI)
         as_control_.Set(UI.alpha_s_power,UI.alpha_s_power);
 }
 
-SectorBox::SectorBox(const vector<NewMatrixElement*>& mes,
-                          const UserInterface& UI)
+
+SectorBox::SectorBox()
 {
-    set_up_pdfs();
-    set_up_polynomial();
-    // this is where the runcard semantics are resolved
-    determine_as_power_requested(UI);
-    
-    cout<<"[SectorBox] there are "<<mes.size()<<" matrix elements defined"<<endl;
-    for (int ime = 0; ime<mes.size();ime++)
-        {
-        NewMatrixElement* me = mes[ime];
-        cout<<"[SectorBox] examining ME: "<<*me;
-        // checking whether the ME is of too high an order in a_s
-        if (as_control_.IsAboveMaximum(me->alpha_power() ) )
-            {
-            cout<<" ** ME of power a_s^"<<me->alpha_power()<<" : too high"<<endl;
-            continue;
-            }
-        Polynomial loc_a_renorm = ppow(a_renorm,me->alpha_power());
-        loc_a_renorm.truncate_in_alpha_up_to_power(2);
-        vector<FxF*> FF_pairs_that_fit_=DeterminePdfs(me,
-                                                      UI.Fleft,UI.Fright);
-        cout<<"\n[SectorBox] FF pairs that fit :"<<FF_pairs_that_fit_.size();
-        for (int me_e_pow=me->epsilon_power_min();
-                me_e_pow<me->epsilon_power_max()+1;me_e_pow++)
-            {
-            cout<<"\n[SectorBox] e^"<<me_e_pow;
-            vector<FxFxA*> FFA;
-            for (int i=0;i<FF_pairs_that_fit_.size();i++)
-                {
-                for (int j=0;j<loc_a_renorm.size();j++)
-                    {
-                    //cout<<"n-- "<<i<<" "<<j<<endl;
-                    //cout<<"\n checking "<<*FF_pairs_that_fit_[i];
-                    int alpha_tot = FF_pairs_that_fit_[i]->alpha_power()
-                                    + loc_a_renorm[j]->give_a_power()
-                                    + me->alpha_power();
-                    //cout<<"\n alpha_tot = "<<alpha_tot
-                    //    <<FF_pairs_that_fit_[i]->alpha_power()
-                    //    << loc_a_renorm[j]->give_a_power()
-                    //    << me->alpha_power()<<endl;
-                    
-                    int etot = FF_pairs_that_fit_[i]->epsilon_power()
-                        + loc_a_renorm[j]->give_e_power()
-                        +me_e_pow;
-                    bool pole_ok = etot == UI.pole;
-                    if (as_control_.IsWithinRequestedRange(alpha_tot) and pole_ok)
-                        {
-                        FxFxA* newffa = new FxFxA(FF_pairs_that_fit_[i],loc_a_renorm[j]);
-                      //  cout<<"\n[SectorBox] new FxFxA "<<*newffa<<endl;
-                        FFA.push_back(newffa);
-                        }
-                    }
-                }
-            if (FFA.size()>0) available_sectors.push_back(new Sector(FFA,me,me_e_pow));
-            else
-                {cout<<"\n[SectorBox] no matching luminosity combination";}
-            }
-        }
+//    for (int avail_matrix_el=0;avail_matrix_el<mes.size();avail_matrix_el++)
+//    {
+//        vector<FxF*> FF_pairs_that_fit_=DeterminePdfs(me);
+//        for (int i=0;i<FF_pairs_that_fit_.size();i++)
+//            {
+//            available_sectors.push_back(new Sector(FFA,me,me_e_pow));    
+//            }
+//    }
+
+// -- useful only above
+
+//    
+//    set_up_pdfs();
+//    //set_up_polynomial();
+//    // this is where the runcard semantics are resolved
+//    //determine_as_power_requested(UI);
+//    
+//    for (int ime = 0; ime<mes.size();ime++)
+//        {
+//        NewMatrixElement* me = mes[ime];
+////        if (as_control_.IsAboveMaximum(me->alpha_power() ) )
+////            {
+////            continue;
+////            }
+//        vector<FxF*> FF_pairs_that_fit_=DeterminePdfs(me,
+//                                                      UI.Fleft,UI.Fright);
+////        for (int me_e_pow=me->epsilon_power_min();
+////                me_e_pow<me->epsilon_power_max()+1;me_e_pow++)
+////            {
+//            //cout<<"\n[SectorBox] e^"<<me_e_pow;
+//            vector<FxFxA*> FFA;
+//            for (int i=0;i<FF_pairs_that_fit_.size();i++)
+//                {
+//                //: remove this if you want to automatically generate convolutions
+////                if (not(FF_pairs_that_fit_[i]->alpha_power()==0)) 
+////                    continue;
+////                int alpha_tot = FF_pairs_that_fit_[i]->alpha_power()
+////                    + me->alpha_power();
+////                int etot = FF_pairs_that_fit_[i]->epsilon_power()
+////                        +me_e_pow;
+////                bool pole_ok = etot == UI.pole;
+////                if (as_control_.IsWithinRequestedRange(alpha_tot) and pole_ok)
+////                    {
+//                    FxFxA* newffa = new FxFxA(FF_pairs_that_fit_[i],
+//                    new ExpansionTerm("1",1.0,0,0));
+//                    FFA.push_back(newffa);
+////                    }
+////                else
+////                    {
+//////                    cout<<"\n[SectorBox] a_s control = "<<alpha_tot<<" which is outside the range ";
+////                    }
+//                }
+//            if (FFA.size()>0) available_sectors.push_back(new Sector(FFA,me,me_e_pow));
+//            else
+//                {
+////                cout<<"\n[SectorBox] no matching luminosity combination";
+//                }
+//            //}
+//        }
 }
 
 void SectorBox::set_up_pdfs()
@@ -415,26 +451,26 @@ void SectorBox::set_up_pdfs()
         all_pdfs.push_back(new FSingle(i,i,0,0));
         // 11 pdfs
         //gluon case F11[x->gluon] for all x
-        if (i==0)
-            {
-            for (int j=-5;j<6;j++)
-                {
-                all_pdfs.push_back(new FSingle(0,j,1,1));
-                }
-            }
-        //quark case F11[g->q] and F11[q->q] only
-        else
-            {
-            all_pdfs.push_back(new FSingle(i,0,1,1));
-            all_pdfs.push_back(new FSingle(i,i,1,1));
-            }
-        for (int j=-5;j<6;j++)
-            {
-            all_pdfs.push_back(new FSingle(i,j,2,1));
-            all_pdfs.push_back(new FSingle(i,j,2,2));
-            }
+//        if (i==0)
+//            {
+//            for (int j=-5;j<6;j++)
+//                {
+//                all_pdfs.push_back(new FSingle(0,j,1,1));
+//                }
+//            }
+//        //quark case F11[g->q] and F11[q->q] only
+//        else
+//            {
+//            all_pdfs.push_back(new FSingle(i,0,1,1));
+//            all_pdfs.push_back(new FSingle(i,i,1,1));
+//            }
+//        for (int j=-5;j<6;j++)
+//            {
+//            all_pdfs.push_back(new FSingle(i,j,2,1));
+//            all_pdfs.push_back(new FSingle(i,j,2,2));
+//            }
         }
-    cout<<"\n[SectorBox] total number of pdfs : "<<all_pdfs.size()<<endl;
+    //cout<<"\n[SectorBox] total number of pdfs : "<<all_pdfs.size()<<endl;
 }
 
 void SectorBox::set_up_polynomial()
@@ -455,7 +491,6 @@ void SectorBox::set_up_polynomial()
     cout<<"\n[SectorBox] a_renorm constructed"<<endl;
     
 }
-
 
 vector<FxF*>  SectorBox::DeterminePdfs(NewMatrixElement* me,
                                        const string& Fleft,const string& Fright)
@@ -484,7 +519,7 @@ vector<FxF*>  SectorBox::DeterminePdfs(NewMatrixElement* me,
                 }
             }
         }
-    cout<<"\n[SectorBox] pdf pairs that match: "<<FF_pairs_that_fit_.size()<<endl;
+   // cout<<"\n[SectorBox] pdf pairs that match: "<<FF_pairs_that_fit_.size()<<endl;
 
     return FF_pairs_that_fit_;
 }
@@ -514,13 +549,6 @@ bool SectorBox::pdfs_match(FSingle* f1, FSingle* f2,const string& selection)
         }
     return false;
 }
-    
-
-
-
-
-
-
-
+*/
 
 

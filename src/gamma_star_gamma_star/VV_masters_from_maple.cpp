@@ -1,34 +1,18 @@
-#include <math.h>
 
-double GstarGstarMeNNLOSoft::QQoc(double z,double zp,double w)
+
+
+double polylog(int i,const complex<double>& z);
+
+
+double CCL3(const double x, const double y)
 {
-    if (z == zp) return 0.0;
-    const double check = w-z*(1.0-zp);
-    if (check>0.0) return Qoch(z,zp,w);
-    else if (check<0.0) return Qoclow(z,zp,w);
-    else if (check==0.0) return Qoczero(z,zp,w);
-    else {
-        cout<<"\n nan in two loop master QQoc: w-z*(1-zp)= "<<check<<endl;
-        exit(0);
-    }
+       return polylog(3, x)+polylog(3, y)
+        -(1./2.)*log(x*y)*(polylog(2, x)
+        +polylog(2, y))
+        +(1./12.)*pow(log(x*y),2.0)*(-log(1-x)-log(1-y));
 }
 
-double GstarGstarMeNNLOSoft::QQec(double z,double zp,double w)
-{
-    if (z == zp) return 0.0;
-    const double check = w-z*(1.0-zp);
-    if (check>0.0) return Qech(z,zp,w);
-    else if (check<0.0) return Qeclow(z,zp,w);
-    else if (check==0.0) return Qeczero(z,zp,w);
-    else {
-        cout<<"\n nan in two loop master QQec: w-z*(1-zp)= "<<check<<endl;
-        exit(0);
-    }
-}
-
-#include <math.h>
-
-double GstarGstarMeNNLOSoft::Qoch (double z, double zp, double w)
+double Qoch (double z, double zp, double w)
 {
   double t1;
   double t10;
@@ -170,9 +154,8 @@ double GstarGstarMeNNLOSoft::Qoch (double z, double zp, double w)
   t162 = 0.500000000000000000000000000000e0 * t114 * t32 + (t29 + (-t91 + t43) * t27 - 0.1e1 * t34 * t32 + t86 + t47 - 0.164493406684822643647241516665e1) * t52 + (0.500000000000000000000000000000e0 * t39 - t98 + 0.500000000000000000000000000000e0 * t34 - t99) * t28 + 0.2e1 * t128 + t130 - 0.1e1 * t131 + t136 - 0.333333333333333333333333333333e0 * t84 * t43 + 0.333333333333333333333333333333e0 * t89 * t34 - 0.1e1 * t141 + t143 + t144 - 0.1e1 * t145 - 0.1e1 * t149 - 0.166666666666666666666666666667e0 * t114 * t52 + t153 - 0.1e1 * t157 + 0.166666666666666666666666666667e0 * t110 * t49 + 0.164493406684822643647241516665e1 * t43;
   return(t113 + t162);
 }
-#include <math.h>
 
-double GstarGstarMeNNLOSoft::Qoclow (double z, double zp, double w)
+double Qoclow (double z, double zp, double w)
 {
   double t1;
   double t10;
@@ -334,9 +317,8 @@ double GstarGstarMeNNLOSoft::Qoclow (double z, double zp, double w)
   t180 = 0.500000000000000000000000000000e0 * t28 * t5 + ((-t49 - t115 + t11) * t14 - 0.150000000000000000000000000000e1 * t17 + (t9 + 0.2e1 * t20 + t34) * t11 + (-t30 + t5 - t49) * t25 - t107 + t20 * t5 + t36 + t37 - 0.164493406684822643647241516665e1) * t58 + t136 - 0.1e1 * t137 - 0.666666666666666666666666666667e0 * t28 * t20 + 0.166666666666666666666666666667e0 * t101 * t25 - 0.1e1 * t143 + t145 + t146 - 0.1e1 * t147 - 0.1e1 * t151 + t156 - 0.2e1 * t158 - 0.1e1 * t162 - 0.1e1 * t167 + 0.333333333333333333333333333333e0 * t17 * t11 + 0.2e1 * t172 + t174 - 0.1e1 * t175 + t179;
   return(t118 + t180);
 }
-#include <math.h>
 
-double GstarGstarMeNNLOSoft::Qoczero (double z, double zp, double w)
+double Qoczero (double z, double zp, double w)
 {
   double t10;
   double t12;
@@ -412,9 +394,8 @@ double GstarGstarMeNNLOSoft::Qoczero (double z, double zp, double w)
   t75 = t18 * t18;
   return((-t4 - t8 - t10) * t12 + (t9 + t8 + t3) * t15 + (-0.1e1 * t7 + t9 + t18 - t4) * t22 + (-0.1e1 * t18 - t10) * t32 + t34 - 0.1e1 * t35 - 0.1e1 * t39 + t43 - 0.1e1 * t47 + t51 - 0.1e1 * t54 + t58 - 0.1e1 * t59 + t61 - 0.150000000000000000000000000000e1 * t62 * t7 + (-0.1e1 * t65 + 0.2e1 * t7 * t67 + t18 * t7 - 0.500000000000000000000000000000e0 * t71) * t9 + 0.500000000000000000000000000000e0 * t3 * t75 + (0.500000000000000000000000000000e0 * t65 + t71 - 0.2e1 * t3 * t67) * t18 + 0.164493406684822643647241516665e1 * t7 + 0.164493406684822643647241516665e1 * t3);
 }
-#include <math.h>
 
-double GstarGstarMeNNLOSoft::Qech (double z, double zp, double w)
+double Qech (double z, double zp, double w)
 {
   double t1;
   double t10;
@@ -606,9 +587,8 @@ double GstarGstarMeNNLOSoft::Qech (double z, double zp, double w)
   t199 = 0.500000000000000000000000000000e0 * t148 * t82 + 0.500000000000000000000000000000e0 * t170 * t86 + (-0.500000000000000000000000000000e0 * t96 + t53 * t175 - t138 + t175 * t56 - 0.2e1 * t107 + (t86 + t82) * t3 - 0.1e1 * t110 + 0.657973626739290574588966066659e1) * t51 - 0.2e1 * t184 - 0.328986813369645287294483033329e1 * t92 + 0.666666666666666666666666666667e0 * t110 * t92 - 0.166666666666666666666666666667e0 * t170 * t49 + 0.666666666666666666666666666667e0 * t107 * t3 + 0.333333333333333333333333333333e0 * t102 * t56 + 0.333333333333333333333333333333e0 * t96 * t53 + t197 + t198;
   return(t66 + t133 + t167 + t199);
 }
-#include <math.h>
 
-double GstarGstarMeNNLOSoft::Qeclow (double z, double zp, double w)
+double Qeclow (double z, double zp, double w)
 {
   double t1;
   double t10;
@@ -810,9 +790,8 @@ double GstarGstarMeNNLOSoft::Qeclow (double z, double zp, double w)
   t214 = t171 * t183 + (-t179 - t178 + 0.493480220054467930941724549994e1) * t70 + t174 * t187 + (-t119 - t120 + t55 - t168 - t129) * t190 + (-t98 + t45 + t90) * t194 + 0.666666666666666666666666666667e0 * t74 * t70 + 0.500000000000000000000000000000e0 * t64 * t63 + t200 + t203 + t206 - 0.1e1 * t210 + 0.333333333333333333333333333333e0 * t56 * t55;
   return(t54 + t150 + t182 + t214);
 }
-#include <math.h>
 
-double GstarGstarMeNNLOSoft::Qeczero (double z, double zp, double w)
+double Qeczero (double z, double zp, double w)
 {
   double t1;
   double t10;
@@ -890,3 +869,34 @@ double GstarGstarMeNNLOSoft::Qeczero (double z, double zp, double w)
   t94 = 0.480822761263837714159895264604e1 - 0.1e1 * t56 + t60 - 0.1e1 * t61 - 0.1e1 * t63 - 0.150000000000000000000000000000e1 * t3 * t65 + (t9 * t3 - 0.137500000000000000000000000000e1 * t69 - 0.875000000000000000000000000000e0 * t71 + 0.250000000000000000000000000000e0 * t7 * t3 + 0.2e1 * t3 * t75) * t17 + (t3 + 0.500000000000000000000000000000e0 * t7) * t82 + (0.125000000000000000000000000000e0 * t69 + (-0.2e1 * t75 + 0.250000000000000000000000000000e0 * t3) * t7 - 0.375000000000000000000000000000e0 * t71) * t9 + 0.328986813369645287294483033329e1 * t7 + 0.328986813369645287294483033329e1 * t3;
   return((-t4 - t8 - t10) * t12 + (t9 + t8 + t3) * t15 + (-t4 + t17 + t9 - 0.1e1 * t7) * t22 + (-t10 - 0.1e1 * t17) * t32 - 0.1e1 * t34 - 0.1e1 * t36 - 0.1e1 * t40 + t44 - 0.1e1 * t48 + t52 + t94);
 }
+
+
+
+double QQoc(double z,double zp,double w)
+{
+    
+    if (z == zp) return 0.0;
+    const double check = w-z*(1.0-zp);
+    if (check>0.0) return Qoch(z,zp,w);
+    else if (check<0.0) return Qoclow(z,zp,w);
+    else if (check==0.0) return Qoczero(z,zp,w);
+    else {
+        cout<<"\n nan in two loop master QQoc: w-z*(1-zp)= "<<check<<endl;
+        exit(0);
+    }
+}
+
+double QQec(double z,double zp,double w)
+{
+    
+    if (z == zp) return 0.0;
+    const double check = w-z*(1.0-zp);
+    if (check>0.0) return Qech(z,zp,w);
+    else if (check<0.0) return Qeclow(z,zp,w);
+    else if (check==0.0) return Qeczero(z,zp,w);
+    else {
+        cout<<"\n nan in two loop master QQec: w-z*(1-zp)= "<<check<<endl;
+        exit(0);
+    }
+}
+

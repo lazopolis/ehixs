@@ -194,7 +194,14 @@ bool VegasAdaptor::new_iteration_has_started()
      }
 }
 
-
+void VegasAdaptor::flush()
+{
+    ff_vegas[0]=0.0;
+    total_number_of_points_ =0;
+    vegas_integral_output.clear();
+    vegas_error_output.clear();
+    vegas_prob_output.clear();
+}
 
 
 //  ---------------------------------------------------------------------------

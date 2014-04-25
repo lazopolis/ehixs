@@ -75,8 +75,10 @@ Production::Production(const UserInterface & UI)
                           UI.mur_over_mhiggs,
                           UI.perturbative_order,
                           UI.m_higgs);
-        mu_r=UI.mur_over_mhiggs * Model.higgs.m();
-        mu_f=UI.muf_over_mhiggs * Model.higgs.m();
+        //mu_r=UI.mur_over_mhiggs * Model.higgs.m();
+        //mu_f=UI.muf_over_mhiggs * Model.higgs.m();
+        mu_f = UI.muf;
+        mu_r = UI.mur;
         //: this depends on m_higgs which we take to be the nominal higgs mass
         //: CHANGE the above in case Higgs is off-shell.
         if (UI.number_of_flavours!=5)

@@ -7,4 +7,5 @@ add_library(tools
                     bin.cpp
                     convolutions.cpp
                     user_interface.cpp
+                    epsilon_series.cpp
                     )

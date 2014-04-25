@@ -20,8 +20,6 @@ private:
     CPDF* right_;
 };
 
-class Luminosity;
-
 
 class Luminosity
 {
@@ -51,6 +49,19 @@ private://data
     vector<LuminositySinglePair*> all_single_pairs_;
 private://methods    
 
+};
+
+
+class LuminosityStack
+{
+public:
+    LuminosityStack(){};
+    void set(Luminosity*, const string& description);
+    void add(LuminositySinglePair* new_pair)
+    {all_lumis_.push_back(new_pair);}
+    double give(const double& x1,const double& x2);    
+private:
+    vector<LuminositySinglePair*> all_lumis_;
 };
 
 #endif
