@@ -39,6 +39,7 @@ ostream& operator<<(ostream& stream, const KinematicVariables& kk)
 
 void FMomentum::zboost(const double& bb)
 {
+//    if (bb>1.0-1e-16) cout<<"\nzboost too close to light cone, bb = "<<bb;
     const double gb = 1.0/sqrt(1.0-bb*bb);
     const double E  =    gb*p[0]   -bb*gb*p[3];
     const double pz = -bb*gb*p[0]  +gb*p[3];
@@ -76,14 +77,12 @@ void FMomentum::boost(const double& bx,const double& by,const double& bz)
 
 void BjorkenXs::generate(const double& tau,const double& v0, const double& v1)
 {
-    const double v0max = 1.-1e-6;
-    const double rescaled_v0 = v0max * v0;
-    const double y= log(tau) *(1.0-rescaled_v0);
+    const double y= log(tau) *(1.0-v0);
     const double u = exp(y);
     const double rho = 1.0/2.0*log(u) -  log(u) * v1;
     x1_ = sqrt(u)*exp(rho);
     x2_ = sqrt(u)*exp(-rho);
-    jacobian_ = -log(u)*u*(1.0-tau)*(-log(tau))*v0max;
+    jacobian_ = -log(u)*u*(1.0-tau)*(-log(tau));
 }
 
 void KinematicInvariants::compute_dimensionless_invariants()
@@ -167,11 +166,20 @@ void Massive2ParticlePhaseSpace::generate(const double& Qsq,const double& s3, co
               -pp3 * sintheta * sin(phi),
               -pp3 * sintheta * cos(phi),
               -pp3 * costheta);
+    if (p3com_[1] != p3com_[1])
+        {
+        cout<<"\n[Massive2ParticlePhaseSpace]: Q^2="<<Qsq
+            <<" pp3 = "<<pp3;
+        }
 }
 
 double Massive2ParticlePhaseSpace::Kaellen(const double& a, const double& b,const double& c)
 {
-    return a*a+b*b+c*c-2.*a*b-2.*a*c-2.*b*c;
+    const double res = a*a+b*b+c*c-2.*a*b-2.*a*c-2.*b*c;
+    const double kaellen_cutoff = 1e-5;
+    if (res<1e-16 and res>-kaellen_cutoff) return 0.0;
+    if (res<-kaellen_cutoff) {cout<<"\n[Kaellen] negative Kaellen K = "<<res;exit(1);}
+    return res;
 }
 
 void LOKinematics::generate_kinematics(double* xx_vegas)
@@ -238,7 +246,7 @@ void NLOKinematics::generate_kinematics(double* xx_vegas)
 {
     generate_bjorken_xs(xx_vegas);
     
-    const double max_allowed_z = 1.0 -1e-10*0.0;
+    const double max_allowed_z = 1.0 -1e-15;
     z = smin_/s(1,2)+(max_allowed_z-smin_/s(1,2))*xx_vegas[4];
     
     lambda = xx_vegas[5];

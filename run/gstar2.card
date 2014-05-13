@@ -1,9 +1,13 @@
 # example runcard for ehixs
 #
 Etot = 13000
-m_higgs = 20.23
-muf = 20.23
-mur = 20.23
+#
+astar_m3 = 91.1876
+astar_m4 = 91.1876
+#
+m_higgs = 40.0
+muf = 40.0
+mur = 40.0
 muf_over_mhiggs = 1.0
 mur_over_mhiggs = 1.0
 # ggF, GammaStarGammaStar
@@ -19,7 +23,7 @@ production = GammaStarGammaStar
 #
 #---------- ggf specific options
 qcd_perturbative_order = NNLO
-#perturbative_order = 0
+perturbative_order = 2
 #alpha_s_power = 3
 #alpha_ew_power = 1
 #
@@ -27,28 +31,32 @@ qcd_perturbative_order = NNLO
 #
 #histogram = [GstarX1,20,0,1.0]
 #histogram = [GstarX2,20,0,1.0]
-#histogram = [GstarGLUONPT,20,0,10.0]
+#histogram = [GstarGLUONPT,60,0,100.0]
+#histogram = [GstarPhoton1Pt,30,0.0,60.0]
+#histogram = [GstarPhoton1Y,24,-6.0,6.0]
+#bin_by_bin_integration = true
 #
 #---------- cuts
 #
 #cut = [CutGAMMA1PT,10.0]
 #cut = [CutGAMMA2PT,10.0]
-#cut = [CutGLUONSTARPT,10.0]
+#cut = [CutGLUONSTARPT,1.0]
 #cut = [CutGLUONSTARIM,10.0]
 #
 #---------- vegas variables
 #
 #
+#no_grid_adaptation = true
 epsrel_therm = 0.03
-epsabs_therm = 0.0000001
+epsabs_therm = 0.1
 nstart_therm = 10000
-mineval_therm = 50000
+mineval_therm = 100000
 maxeval_therm = 10000000
 nincrease_therm = 1000
 #
 epsrel = 0.001
-epsabs = 0.0001
-nstart = 50000
-mineval = 500000
+epsabs = 0.000001
+nstart = 100000
+mineval = 100000
 nincrease = 0
-maxeval = 500000000
+maxeval = 50000000

@@ -124,7 +124,8 @@ ostream& operator<<(ostream& stream, const SimpleHistogram& hist)
         total += hist._all_bins[i];
         }
     stream << "[  overflow  ] | "<<hist._all_bins[hist._numbins-1] << endl;
-    stream << "total binned = " << total << endl;
+    stream << "total binned = " << total 
+            <<"\t|\t total_binned + overflow = "<<total+hist._all_bins[hist._numbins-1]<< endl;
     stream<<"</histogram>"<<endl;
     return stream;
 }

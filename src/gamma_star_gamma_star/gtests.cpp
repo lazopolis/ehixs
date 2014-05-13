@@ -916,6 +916,94 @@ TEST_F(RealNLO,collinear_limit_2)
     
 }
 
+
+//---------------------------------------------------------------
+
+class RealNLOQuarkGluon: public ::testing::Test {
+protected:
+    RealNLOQuarkGluon():shifted_right(4),kk(5){}
+    virtual void SetUp() {
+        
+        kk.SetBoundaries(9.0,1000.0);
+        kk.SetMassesSquared(1.0,4.0);
+        shifted_right.SetMassesSquared(1.0,4.0);
+        shifted_right.SetBoundaries(9.0,1000.0);
+        
+        xx_vegas[0]=0.564;//~x1*x2
+        xx_vegas[1]=0.123123;//~x1/x2
+        xx_vegas[2]=0.23;// angle between photons
+        xx_vegas[3]=0.56;// angle between photons
+        xx_vegas[4]=0.6;//~z
+        xx_vegas[5]=0.1;//lambda
+        xx_vegas[6]=0.8642;//phi / 2 Pi
+        
+        kk.generate_kinematics(xx_vegas);
+        shifted_right.SetZ(kk.z);
+        shifted_right.generate_kinematics(xx_vegas);
+    }
+    double xx_vegas[7];
+    GstarGstarMENLOHardQuarkGluon R;
+    NLOKinematics kk;
+    LOKinematicsShiftedRight shifted_right;
+};
+
+
+
+
+TEST_F(RealNLOQuarkGluon,collinear_limit_2)
+{
+    
+    xx_vegas[0]=0.4564;//~x1*x2
+    xx_vegas[1]=0.123123;//~x1/x2
+    xx_vegas[2]=0.423;// angle between photons
+    xx_vegas[3]=0.556;// angle between photons
+    xx_vegas[4]=0.324;//~z
+    xx_vegas[5]=0.31;//lambda
+    xx_vegas[6]=0.8642;//phi / 2 Pi
+    kk.generate_kinematics(xx_vegas);
+    shifted_right.SetZ(kk.z);
+    shifted_right.generate_kinematics(xx_vegas);    
+    double me_sq;
+    double limit;
+    const double correction_for_averaging = 3./8.;
+    for (int i=0;i<20;i++)
+    {
+        xx_vegas[5]=1.0-(1.0-xx_vegas[5])/4.0;
+        
+        kk.generate_kinematics(xx_vegas);
+        shifted_right.SetZ(kk.z);
+        shifted_right.generate_kinematics(xx_vegas);
+        
+        me_sq = correction_for_averaging *R.Rcrossed(kk.invariants());
+        const double collinear2 = 
+        limit = - 1./4.
+                *(1.-2.*kk.z*(1.-kk.z))/kk.s(2,5)
+                *R.born_(shifted_right.invariants())/kk.z;
+        cout<<setprecision(16)<<"\nlambda = "<<setw(20)<<kk.lambda
+        <<" M^2 "<<setw(20)<<me_sq
+        <<" vs limit "<<setw(20)<<limit<<"\t diff "<<setw(20)<<fabs(me_sq-limit)/me_sq;
+        
+    }
+    cout<<endl;
+    
+    const double test_result = me_sq;
+    const double expected = limit;
+    
+    const double err = 1e-4;
+    EXPECT_LT(fabs(test_result-expected)/fabs(test_result),err)
+    <<"[   INFO   ] test_result = "<<test_result
+    <<" +- "<<err<<" | expected = "<<expected<<endl;
+    
+}
+
+
+
+//---------------------------------------------------------------
+
+
+
+
+
 class RealNNLO: public ::testing::Test {
 protected:
     RealNNLO():hard(),kk(5),shifted_left(4),shifted_right(4),kk_nlo(5){}

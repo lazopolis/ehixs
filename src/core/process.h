@@ -84,12 +84,14 @@ private://data
     int decay_particle_id_;
     
     bool final_iteration_;
-    
+    bool no_grid_adaptation_;
     bool bin_by_bin_integration_;
     int current_bin_;
     CHistogram* current_histogram_;
     
 private://methods
+    void choose_production(const UserInterface & UI);
+    void choose_decay(const UserInterface & UI);
     void set_production(Production * theproduction);
     void set_decay(Decay * thedecay);
     void book_null_event();

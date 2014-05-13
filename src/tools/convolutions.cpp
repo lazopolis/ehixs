@@ -215,7 +215,112 @@ void LuminosityBox::AllocateLuminosity(Luminosity* lumi)
 void LuminosityBox::MatchPDFs(const string& left, const string& right, const string& pdf_selector_)
 {
     if (left=="u" and right=="ub")
+        {
         luminosities_.push_back(pdf_desc_pair(2,-2));
+        flavor_dependent_prefactor_.push_back(1.0);
+        }
+    else if (left=="q" and right=="qbar" and pdf_selector_=="crossed")
+        {
+            for (int i=-5;i<6;i++)
+                {
+                    if (i!=0)
+                        {
+                        luminosities_.push_back
+                            (pdf_desc_pair(i,-i));
+                        flavor_dependent_prefactor_.push_back(1.0);
+                        }
+                }
+        }
+    else if (left=="q" and right=="qbar" and pdf_selector_=="crossed_charged")
+    {
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                luminosities_.push_back
+                (pdf_desc_pair(i,-i));
+                if (abs(i)==1 or abs(i)==3 or abs(i)==5)
+                    {
+                    flavor_dependent_prefactor_.push_back(pow(-1./3.,4.));
+                    }
+                if (abs(i)==2 or abs(i)==4)
+                {
+                    flavor_dependent_prefactor_.push_back(pow(2./3.,4.));
+                }
+            }
+        }
+    }
+    else if (left=="q" and right=="qbar" and pdf_selector_=="up_type_only")
+    {
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                if (abs(i)==2 or abs(i)==4)
+                {
+                    luminosities_.push_back
+                    (pdf_desc_pair(i,-i));
+                    flavor_dependent_prefactor_.push_back(pow(2./3.,4.));
+                }
+            }
+        }
+    }
+    else if (left=="u" and right=="g")
+        {
+        luminosities_.push_back(pdf_desc_pair(2,0));
+        flavor_dependent_prefactor_.push_back(1.0);
+        }
+    else if (left=="q" and right=="g" and pdf_selector_=="crossed")
+        {
+            for (int i=-5;i<6;i++)
+            {
+                if (i!=0)
+                    {
+                    luminosities_.push_back
+                    (pdf_desc_pair(i,0));
+                    flavor_dependent_prefactor_.push_back(1.0);
+                    }
+            }
+        }
+    else if (left=="q" and right=="g" and pdf_selector_=="crossed_charged")
+    {
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                luminosities_.push_back
+                (pdf_desc_pair(i,0));
+                if (abs(i)==1 or abs(i)==3 or abs(i)==5)
+                {
+                    flavor_dependent_prefactor_.push_back(pow(-1./3.,4.));
+                }
+                if (abs(i)==2 or abs(i)==4)
+                {
+                    flavor_dependent_prefactor_.push_back(pow(2./3.,4.));
+                }
+            }
+        }
+    }
+    else if (left=="q" and right=="g" and pdf_selector_=="up_type_only")
+    {
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                if (abs(i)==2 or abs(i)==4)
+                {
+                    luminosities_.push_back
+                    (pdf_desc_pair(i,0));
+                    flavor_dependent_prefactor_.push_back(pow(2./3.,4.));
+                }
+            }
+        }
+    }
+    else if (left=="g" and right=="ubar")
+        {
+        luminosities_.push_back(pdf_desc_pair(0,-2));
+        flavor_dependent_prefactor_.push_back(1.0);
+        }
     else
         {
         cout<<"\n undefined pdfs : "<<left<<","<<right<<endl;
@@ -229,20 +334,12 @@ double LuminosityBox::give(const double& x1,const double& x2)
     double res=0.0;
     for (int i=0;i<my_lumis_.size();i++)
     {
-        
-        res = res + my_lumis_[i]->give(x1,x2);
+        res = res + my_lumis_[i]->give(x1,x2)*flavor_dependent_prefactor_[i];
     }
     return res;
 }
 
-ostream& operator<<(ostream& stream, const CrossSection& XS)
-{
-    stream<<XS.info_.name<<"("<<XS.info_.ISF.left<<","<<XS.info_.ISF.right
-    <<"): a^"<<XS.info_.alpha_power
-    <<" ,dim="<<XS.dimension_;
-    
-    return stream;
-}
+
 
 // legacy for gluon fusion below
 

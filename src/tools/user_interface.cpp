@@ -41,6 +41,10 @@ UserInterface::UserInterface()
      
      options.push_back(new DoublePrecisionOption("number_of_flavours",0,"number of active flavors (do not change)","Required",&number_of_flavours,5.0));
 
+    options.push_back(new DoublePrecisionOption("astar_m3",0,")virtuality of photon no 3","Required",&astar_m3,5.0));
+    options.push_back(new DoublePrecisionOption("astar_m4",0,")virtuality of photon no 4","Required",&astar_m4,5.0));
+
+
      options.push_back(new StringOption("production",0,"production process","Required",&production,"ggF"));
      options.push_back(new StringOption("decay",0,"decay process","Required",&decay,""));
      options.push_back(new StringOption("pdf_provider",0,"pdf provider","Required",&pdf_provider,"MSTW"));
@@ -118,7 +122,7 @@ UserInterface::UserInterface()
                                      &only_ew_h_j,false));
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
     options.push_back(new BoolOption("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)","Optional",&bin_by_bin_integration, false));
-    
+    options.push_back(new BoolOption("no_grid_adaptation",0,"switch off grid adaptation in Vegas (defaul is on)","Optional",&no_grid_adaptation, false));
     
     vector<string>empty_vector;
     options.push_back(new CutOption("cut",0,"generic cut option","Required",my_generic_cut, empty_vector));

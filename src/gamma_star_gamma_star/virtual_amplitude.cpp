@@ -743,7 +743,7 @@ double VirtualAmplitude::Evaluate(const KinematicInvariants& kv) const
     kk.push_back(kv.q(4));
     kk.push_back(kv.q(1,4));
     kk.push_back(kv.q(1,3));
-    const double res = e0_(kk) -   consts::pi_square/4.0 *  em2_(kk);
+    const double res = e0_(kk) -    consts::pi_square/4.0 *  em2_(kk);
     return res;
 }
 

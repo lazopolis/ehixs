@@ -72,7 +72,8 @@ private:
      vector<int> types;
      double data[NVAR_MAX];
      unsigned number_of_vegas_variables;
-     
+    double open_interval(const double&);
+
 };
 
 

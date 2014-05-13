@@ -33,8 +33,8 @@ public:
     string name;
     InitialStateFlavors ISF;
     int alpha_power;
-    int epsilon_power_min;
-    int epsilon_power_max;
+    //int epsilon_power_min;
+    //int epsilon_power_max;
 };
 
 class pdf_desc_pair
@@ -43,6 +43,7 @@ public:
     pdf_desc_pair(int i,int j){left=i;right=j;}
     int left;
     int right;
+    double flavor_dependent_prefactor;
 };
 
 class LuminosityBox
@@ -56,48 +57,10 @@ friend ostream& operator<<(ostream& stream, const LuminosityBox&);
 private:
     vector<pdf_desc_pair> luminosities_;
     vector<LuminositySinglePair*> my_lumis_;
+    vector<double> flavor_dependent_prefactor_;
 };
 
-class CrossSection
-{
-public:
-    virtual void Evaluate(double*)=0;
-    virtual void Configure()=0;
-    void PassEColliderSq(const double& smaximum)
-        {smax=smaximum;}
-    void AllocateLuminosity(Luminosity* lumi)
-        {
-        lumi_box_.MatchPDFs(info_.ISF.left, info_.ISF.right,pdf_selection_);
-        lumi_box_.AllocateLuminosity(lumi);
-        }
-    void PassAlphaStrong(const double& a_s_over_pi)
-        {a_s_over_pi_=a_s_over_pi;}
-    void PassScales(const double& mur,const double& muf)
-        {mur_=mur; muf_=muf;}
-    void SetEventBox(EventBox& event_box)
-        {event_box_=&event_box;}
-    int Dimension(){return dimension_;}
-    
-    friend ostream& operator<<(ostream& stream, const CrossSection&);
-protected:
-    NewMeExternalInfo info_;
-    int dimension_;
-    EventBox* event_box_;
-    
-    double smax;
-    string pdf_selection_;
-    double a_s_over_pi_;
-    double mur_;
-    double muf_;
-    LuminosityBox lumi_box_;
-    string name_;
-protected:
-    double LL(const double& x1,const double& x2)
-        {
-        lumi_box_.give(x1,x2)
-                *pow(a_s_over_pi_,info_.alpha_power);
-        }
-};
+
 
 
 // gluon fusion legacy code below

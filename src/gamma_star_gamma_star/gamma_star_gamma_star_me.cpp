@@ -80,49 +80,68 @@ double Power(const double x,int i)
 }
 
 
+ostream& operator<<(ostream& stream, const CrossSection& XS)
+{
+    stream<<XS.info_.name<<"("<<XS.info_.ISF.left<<","<<XS.info_.ISF.right
+    <<"): a^"<<XS.info_.alpha_power
+    <<" ,dim="<<XS.dimension_;
+    
+    return stream;
+}
+
+
 GstarGstarMe::GstarGstarMe()
 {
+    //refacator: move this to the LO daughter class
     number_of_particles_ = 6;
     //info_ = new NewMeExternalInfo;
     dimension_ = 4;
     info_.name = "Born";
-    info_.ISF = InitialStateFlavors("u","ub");
-    pdf_selection_ = "same flavor";
+    //info_.ISF = InitialStateFlavors("u","ub");
+    //pdf_selection_ = "same flavor";
+    info_.ISF = InitialStateFlavors("q","qbar");
+    //refactor: here we hack to set the quark charges
+    // in the luminosity function
+    pdf_selection_ = "crossed_charged";
     info_.alpha_power = 0;
-    alpha_em = 1.0/137.0 ;
-    m3 = 40.0;
-    m4 = 50.0;//9.118800e+01;
+    //refactor: drive alpha_em from the model class
+    //alpha_em = 1.0/137.0 ;
+    // a_em(m_z) from MCFM with mz = 91.1876
+    alpha_em = 1./132.3384323;
+    //m3 = 40.0;
+    //m4 = 50.0;//9.118800e+01;
     
     //kk_.s4= m4*m4;
-    smin = pow(m3+m4,2.0);
+    
+    
 }
+
+
+void GstarGstarMeDelta::Configure()
+{
+    //refactor: make a ConfigureBase function and move smin setting there
+    smin = pow(m3+m4,2.0);
+    cout<<"\n[Delta::Configure]: smin = "<<smin;
+    kk_.SetMassesSquared(m3*m3,m4*m4);
+    kk_.SetBoundaries(smin,smax);
+    compute_averaging_charge_and_a_em_prefactor();
+}
+
 void GstarGstarMe::compute_averaging_charge_and_a_em_prefactor()
 {
     
     const double averaging_factor = 1.0/6.0 * 1.0/6.0 ;
-    const double charge = 2.0/3.0;
+    //:charge now inside lumi
+    //const double charge = 2.0/3.0;
     //const double color_factor = 3.0;
     
-    prefactor_ = averaging_factor*pow(charge,4.0)
-                * pow(alpha_em,2.0)* 0.389379*1.e9;
-}
-
-void GstarGstarMeDelta::Configure()
-{
-    kk_.SetMassesSquared(m3*m3,m4*m4);
-    kk_.SetBoundaries(smin,smax);
-    compute_averaging_charge_and_a_em_prefactor();
-}
-
-void GstarGstarMeNLOConv::Configure()
-{
-    kk_.SetMassesSquared(m3*m3,m4*m4);
-    kk_.SetBoundaries(smin,smax);
-    compute_averaging_charge_and_a_em_prefactor();
+    prefactor_ = averaging_factor//*pow(charge,4.0)
+    * pow(alpha_em,2.0)* 0.389379*1.e9;
 }
 
 void GstarGstarMeNLOkinematics::Configure()
 {
+    smin = pow(m3+m4,2.0);
     kk_.SetMassesSquared(m3*m3,m4*m4);
     kk_.SetBoundaries(smin,smax);
     kk_left_.SetMassesSquared(m3*m3,m4*m4);
@@ -134,6 +153,7 @@ void GstarGstarMeNLOkinematics::Configure()
 
 void GstarGstarMeNNLOHard::Configure()
 {
+    smin = pow(m3+m4,2.0);
     kk_.SetMassesSquared(m3*m3,m4*m4);
     kk_.SetBoundaries(smin,smax);
     kk_nlo_.SetMassesSquared(m3*m3,m4*m4);
@@ -147,6 +167,7 @@ void GstarGstarMeNNLOHard::Configure()
 
 void GstarGstarMeNNLOMueller::Configure()
 {
+    smin = pow(m3+m4,2.0);
     kk_.SetMassesSquared(m3*m3,m4*m4);
     kk_.SetBoundaries(smin,smax);
     kk_nlo_.SetMassesSquared(m3*m3,m4*m4);
@@ -160,6 +181,13 @@ void GstarGstarMeNNLOMueller::Configure()
 
 void GstarGstarMe::JF(const double& w,const KinematicVariables& kv)
 {
+    if (w!=w)
+        {
+            cout<<"\nerror: nan as event weight. w="<<w;
+            cout<<kv;
+            cout<<endl;
+            exit(1);
+        }
     event_box_->AddNewEvent(w);
     event_box_->SetP(1,kv.p1.p[0],kv.p1.p[1],kv.p1.p[2],kv.p1.p[3]);
     event_box_->SetP(2,kv.p2.p[0],kv.p2.p[1],kv.p2.p[2],kv.p2.p[3]);
@@ -698,7 +726,8 @@ double GstarGstarMeNLOSoft::eval_me(const KinematicInvariants& kv)
     //There is a factor of 2  from 2*Re(V*conjg(B))
     //and a compensating factor of 1/2 from the virtual being defined in a 
     //a_s/2/pi expansion (we always use a_s/pi here)
-    return 1.0*V_.Evaluate(kv) 
+
+    return  V_.Epsilon0(kv)
             + 4.0/3.0*born_.e2(kv)
             + 4.0/3.0*3.0/2.0*born_.e(kv);
 }
@@ -940,6 +969,8 @@ void GstarGstarMeNLOkinematics::Evaluate(double* xx_vegas)
         const double ds_c1 = total_factor * zbar * collinear1;
         const double ds_c2 = total_factor * zbar * collinear2;
         
+        if (ds_R != ds_R or ds_c1!=ds_c1 or ds_c2!=ds_c2) cout<<kk_<<"\nz="<<kk_.z<<"\nlambda="<<kk_.lambda;
+        
         JF(ds_R , kk_);
         JF(-ds_c1, kk_left_);
         JF(-ds_c2, kk_right_);
@@ -968,12 +999,13 @@ GstarGstarMENLOHardQuarkGluon::GstarGstarMENLOHardQuarkGluon():GstarGstarMe(),kk
     info_.alpha_power = 1;
     dimension_ = 7;
     info_.name = "Quark Gluon NLOHard";
-    info_.ISF = InitialStateFlavors("u","g");
-    
+    info_.ISF = InitialStateFlavors("q","g");
+    pdf_selection_ = "crossed_charged";
 };
 
 void GstarGstarMENLOHardQuarkGluon::Configure()
 {
+    smin = pow(m3+m4,2.0);
     kk_.SetMassesSquared(m3*m3,m4*m4);
     kk_.SetBoundaries(smin,smax);
     kk_right_.SetMassesSquared(m3*m3,m4*m4);
@@ -994,7 +1026,7 @@ void GstarGstarMENLOHardQuarkGluon::Evaluate(double* xx_vegas)
         const double correction_for_averaging = 3./8.;
         double me_sq = correction_for_averaging *Rcrossed(kk_.invariants());
         const double zbar = 1.0-kk_.z;
-        const double collinear2 = 1./4.
+        const double collinear2 = - 1./4.
                         *(1.-2.*kk_.z*(1.-kk_.z))/kk_.s(2,5)
                         *born_(kk_right_.invariants())/kk_.z;
         const double total_factor = prefactor_ * kk_.jacobian
@@ -1002,8 +1034,12 @@ void GstarGstarMENLOHardQuarkGluon::Evaluate(double* xx_vegas)
         * 1.0/2.0/kk_.s(1,2);
         
         const double ds_R =  total_factor * zbar * me_sq;
-        const double ds_c2 = total_factor * zbar * collinear2;
         
+        const double experimental_func = 1.0;//pow(kk_.lambda,0.0);
+        
+        const double ds_c2 = total_factor * zbar * collinear2 
+                            * experimental_func;
+ 
         JF(ds_R , kk_);
         JF(-ds_c2, kk_right_);
     }
@@ -1017,20 +1053,21 @@ double GstarGstarMENLOHardQuarkGluon::Rcrossed(const KinematicInvariants& kv)
 {
     // crossing 2<->5
     KinematicInvariants kcrossed;
-    
+    kcrossed.SetMaxMomentumID(5);
     kcrossed.Set(3,kv.s(3));
     kcrossed.Set(4,kv.s(4));
-    kcrossed.Set(1,2,-kv.s(1,5));
+    kcrossed.Set(1,2,kv.s(1,5));
     kcrossed.Set(1,3,kv.s(1,3));
     kcrossed.Set(1,4,kv.s(1,4));
-    kcrossed.Set(1,5,-kv.s(1,2));
-    kcrossed.Set(2,3,-kv.s(3,5));
-    kcrossed.Set(2,4,-kv.s(4,5));
+    kcrossed.Set(1,5,kv.s(1,2));
+    kcrossed.Set(2,3,kv.s(3,5));
+    kcrossed.Set(2,4,kv.s(4,5));
     kcrossed.Set(2,5,kv.s(2,5));
     kcrossed.Set(3,4,kv.s(3,4));
-    kcrossed.Set(3,5,-kv.s(2,3));
-    kcrossed.Set(4,5,-kv.s(2,4));
-    return R(kcrossed);
+    kcrossed.Set(3,5,kv.s(2,3));
+    kcrossed.Set(4,5,kv.s(2,4));
+    // the minus sign is from crossing
+    return -R(kcrossed);
 }
 
 
@@ -1089,11 +1126,21 @@ double GstarGstarNPlusOne::rescaling_factor(const KinematicVariables& kk)
 
 //----------------------------------------------------
 
+
+void GstarGstarMeNLOConv::Configure()
+{
+    smin = pow(m3+m4,2.0);
+    kk_.SetMassesSquared(m3*m3,m4*m4);
+    kk_.SetBoundaries(smin,smax);
+    compute_averaging_charge_and_a_em_prefactor();
+}
+
+
 void GstarGstarMeNLOConv::Evaluate(double* xx_vegas)
 {
     kk_.generate_kinematics(xx_vegas);
     const double lumi = LL(kk_.x1(),kk_.x2());
-    
+    //cout<<"\nm3="<<m3<<" m4="<<m4<<" smin="<<smin;
     //: this z does *not* affect the kinematics it's an integration variable
     //: for the convolution integral
     double z;
@@ -1136,15 +1183,58 @@ void GstarGstarMeNLOConv::Evaluate(double* xx_vegas)
     
     const double res = total_factor 
         * (-1.0/2.0) * CF 
-        * ( L * (2.0 * D0  -(1.0 + z) * reg + 3.0/2.0 * delta) 
-            -4.0 * D1  +(2.0* (1.0+z)*log(1.0-z) - (1.0 - z)) * reg 
-            + consts::pi_square / 4.0 * delta
+        * ( L * (2.0 * D0  -(1.0 + z) * reg + 3.0/2.0 * delta)
+            + log(z) * (1.0+z*z)/(1.-z) * reg 
+            -4.0 * D1  
+            +(2.0* (1.0+z)*log(1.0-z) - (1.0 - z)) * reg 
             ); 
     JF(res,kk_);    
         
 }
 
 
+void GstarGstarMeNLOConvQuarkGluon::Configure()
+{
+    smin = pow(m3+m4,2.0);
+    kk_.SetMassesSquared(m3*m3,m4*m4);
+    kk_.SetBoundaries(smin,smax);
+    compute_averaging_charge_and_a_em_prefactor();
+}
+
+
+void GstarGstarMeNLOConvQuarkGluon::Evaluate(double* xx_vegas)
+{
+    kk_.generate_kinematics(xx_vegas);
+    
+    //: this z does *not* affect the kinematics it's an integration variable
+    //: for the convolution integral
+    double z;
+    double convolution_jacobian;
+    //double muf = kk_.s12;
+    double L =  log(muf_*muf_/kk_.s(1,2));
+    
+    z = kk_.x2()+(1.0-kk_.x2())*xx_vegas[4];
+    const double lumi_x_over_z = LL(kk_.x1(),kk_.x2()/z);
+    convolution_jacobian =  (1.0-kk_.x2());//from z 
+    
+    const double reg = lumi_x_over_z/z; 
+    
+    const double total_factor = prefactor_ 
+                            * kk_.jacobian 
+                            * convolution_jacobian
+                            * 1.0/2.0/kk_.s(1,2) 
+                            * born_(kk_.invariants())   ;
+    const double zbar = 1.-z;
+    const double A = (2.*z*zbar
+                      +2.*log(zbar)*(1.-2.*z*zbar)
+                      -L*(1.-2.*z*zbar)
+                      -log(z)*(1.-2.*z*zbar)
+                      )/4.;
+    const double res = total_factor  * A * reg; 
+    
+    JF(res,kk_);    
+    
+}
 
 
 //----------------------------------------------------
@@ -1311,6 +1401,22 @@ double GstarGstarMeNNLOConv::log_plus()
             +log1_D1 * D1 *L_ );
 }
 
+double GstarGstarMeNNLOConv::reg_partial_bfkl_log_from_plus()
+{
+    
+    const double zbar = 1.-z;
+    const double CF = 4.0/3.0;
+    return  CF * reg *( 
+                1./8. * (1.+z*z) * pow(log(z),2.)/zbar
+                + log(z)/zbar * (    
+                                 (1.+z*z)/6. * L_
+                                -(1.+z*z)/6. * log(zbar)
+                                +(1.+z*z)*2./9. 
+                                -z/6.
+                                )
+                  );
+}
+
 double GstarGstarMeNNLOConv::log_reg()
 {
     const double zsqp1 = z*z+1.;
@@ -1320,10 +1426,10 @@ double GstarGstarMeNNLOConv::log_reg()
     const double zbar = 1.0-z;
     
     const double log2_reg = -1./24.*zp1;
-    const double log1_reg =  1./12.*zsqp1*logz/zbar
-    +1./6.*zp1*logzbar
-    -1./18.
-    -2./9.*z;
+    const double log1_reg =  1./12.*zsqp1*logz/zbar * 0.0 //this term moved to reg_partial_bfkl_log_from_plus()
+                            +1./6.*zp1*logzbar
+                            -1./18.
+                            -2./9.*z;
     const double CF = 4.0/3.0;
     return CF * ( log2_reg*pow(L_,2.)+log1_reg*L_ ) * reg;
 }
@@ -1371,6 +1477,7 @@ double GstarGstarMeNNLOConv::nonlog_reg()
 
 void GstarGstarMeNNLOConv::Configure()
 {
+    smin = pow(m3+m4,2.0);
     kk_.SetMassesSquared(m3*m3,m4*m4);
     kk_.SetBoundaries(smin,smax);
     compute_averaging_charge_and_a_em_prefactor();
@@ -1397,6 +1504,7 @@ void GstarGstarMeNNLOConv::Evaluate(double* xx_vegas)
                 *consts::nf
                 * (
                 log_delta() + log_plus() + log_reg()
+                + reg_partial_bfkl_log_from_plus()
                 + nonlog_plus() + nonlog_delta() + nonlog_reg()
                 + asymmetric_reg_piece()
                   ); 

@@ -78,7 +78,8 @@ int main(int argc, char** argv)
           }
      catch(const char* s)
           {
-          cerr << endl << argv[0] << ": " << s << endl;
+          cerr << endl << "[ehixs]" << " exception thrown: " << s 
+              <<"\n[ehixs] The exception was considered fatal"<< endl;
           }
      catch(...)
           {

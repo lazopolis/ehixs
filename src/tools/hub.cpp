@@ -93,7 +93,7 @@ void TheHatch::SetVars(const double* x_vegas)
           switch (types[i])
           {
                case 0:
-                    data[i]=x_vegas[c];
+                    data[i]=open_interval(x_vegas[c]);
                     c++;//: how cool is this?
                     break;
                case 1:
@@ -106,6 +106,11 @@ void TheHatch::SetVars(const double* x_vegas)
      
 }
 
+double TheHatch::open_interval(const double& x)
+{
+    const double technical_cuttoff = 0.5e-15;
+    return 2.*technical_cuttoff + (1.-technical_cuttoff)*x;
+}
 
 
 

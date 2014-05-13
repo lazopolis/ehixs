@@ -35,7 +35,10 @@ class Bin {
   public:
     void flush(){running_f=0.0;running_f2=0.0;running_chi_sq=0.0;avg_f=0.0;avg_err=0.0;chi_sq=0.0;intra_point_f=0.0;iteration_number=0;point_counter=0;}
     string xml();
-    void set(const double& res,const double& err,const double& prob){avg_f = res;avg_err = err;chi_sq = prob;}
+    void set(const double& res,const double& err,
+             const double& prob,const unsigned& it_num,
+             const unsigned& point_num)
+             {avg_f = res;avg_err = err;chi_sq = prob;iteration_number = it_num; point_counter = point_num;}
     double give_chi_sq() const;
     /** \brief Constructor
     *

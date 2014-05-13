@@ -36,6 +36,7 @@ void GammaStarGammaStar::initialize_sector(const UserInterface& UI)
         the_xs_->AllocateLuminosity(lumi);
         the_xs_->PassAlphaStrong(Model.alpha_strong()/consts::Pi);
         the_xs_->PassScales(UI.mur,UI.muf);
+        the_xs_->PassMasses(UI.astar_m3,UI.astar_m4);
         //the_xs_->SetPhotonMasses(UI.m3,UI.m4);
         the_xs_->Configure();        
     }
@@ -64,7 +65,7 @@ available_xs_.push_back(new GstarGstarMeNNLO_R_remnant);
 available_xs_.push_back(new GstarGstarMeNNLOMueller);
 available_xs_.push_back(new GstarGstarMeNNLO_IL_Romain);
 available_xs_.push_back(new GstarGstarMENLOHardQuarkGluon);
-
+available_xs_.push_back(new GstarGstarMeNLOConvQuarkGluon);
 
 }
 

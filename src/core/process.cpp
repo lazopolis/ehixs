@@ -62,46 +62,9 @@ Vegas(UI)
     decay_is_defined=false;
     //: setting production
     // process forking
-    if( UI.production == "" || UI.production == "1" )
-        {
-        std::cout << "No process specified" << endl;
-        }
-    else
-        {
-        if (UI.production=="ggF")
-            {
-            std::cout<<"\n[ehixs] Process initiated with production "
-            <<UI.production<<endl;
-            set_production(new GluonFusion(UI));
-            }
-        else if (UI.production=="GammaStarGammaStar")
-            {
-            std::cout<<"\n[ehixs] Process initiated with production "<<UI.production;
-            set_production(new GammaStarGammaStar(UI));
-            }
-        else
-            {
-            cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
-            throw "non-implemented process";
-            }
-        }
-    // setting decay here!!
-    if( UI.decay == "" || UI.decay == "1" )
-        {
-        std::cout << "[ehixs] No decay specified" << endl;
-        }
-    else
-        {
-        std::cout<<"\n[ehixs] Process initiated with decay "<<UI.decay;
-        if (UI.decay=="4leptons") set_decay(new Decay_WWZZ(UI));
-        else if(UI.decay=="gamma_gamma") set_decay(new Decay_gammagamma(UI));
-        else if(UI.decay=="Z_gamma") set_decay(new Decay_H_to_Z_Gamma(UI));
-        else
-            {
-            cout<<endl<<"[ehixs] Process "<<UI.decay<<" not implemented";
-            throw "non-implemented process";
-            }
-        }
+    choose_production(UI);
+    choose_decay(UI);
+    
     if (UI.cut_info)
         {
         my_production->cuts_->show_cut_info_and_exit();
@@ -110,11 +73,26 @@ Vegas(UI)
     
     final_iteration_ = false;
     bin_by_bin_integration_ = UI.bin_by_bin_integration;
+    no_grid_adaptation_ = UI.no_grid_adaptation;
     current_bin_ =0;
     
 }
 
-
+void Process::choose_production(const UserInterface & UI)
+{
+    std::cout<<"\n[ehixs] Process initiated with production "
+            <<UI.production<<endl;
+    if (UI.production=="ggF") 
+        set_production(new GluonFusion(UI));
+    else if (UI.production=="GammaStarGammaStar")
+        set_production(new GammaStarGammaStar(UI));
+    else
+    {
+        cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
+        throw "non-implemented process";
+    }
+    
+}
 
 
 void Process::set_production(Production * theproduction)
@@ -125,6 +103,29 @@ void Process::set_production(Production * theproduction)
     decay_particle_id_ = my_production->event_box.DecayParticleId();
     production_is_defined=true;
 }
+
+
+void Process::choose_decay(const UserInterface & UI)
+{
+    if( UI.decay == "" || UI.decay == "1" )
+    {
+        std::cout << "[ehixs] No decay specified" << endl;
+    }
+    else
+    {
+        std::cout<<"\n[ehixs] Process initiated with decay "<<UI.decay;
+        if (UI.decay=="4leptons") set_decay(new Decay_WWZZ(UI));
+        else if(UI.decay=="gamma_gamma") set_decay(new Decay_gammagamma(UI));
+        else if(UI.decay=="Z_gamma") set_decay(new Decay_H_to_Z_Gamma(UI));
+        else
+        {
+            cout<<endl<<"[ehixs] Process "<<UI.decay<<" not implemented";
+            throw "non-implemented process";
+        }
+    }
+
+}
+
 
 void Process::set_decay(Decay * thedecay)
 {
@@ -156,10 +157,23 @@ void Process::perform()
              {
                  Vegas.flush();
                  Vegas.call_vegas();
-                 current_histogram_->set_bin(current_bin_,Vegas.vegas_integral_output[0],Vegas.vegas_error_output[0],Vegas.vegas_prob_output[0]);
+                 current_histogram_->set_bin(current_bin_,
+                 Vegas.vegas_integral_output[0],
+                 Vegas.vegas_error_output[0],
+                 Vegas.vegas_prob_output[0],
+                 Vegas.vegas_iteration_number,
+                 Vegas.total_number_of_points());
+                 _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
                  print_output();
              }
          }
+     }
+     else if (no_grid_adaptation_)
+     {
+         Vegas.call_vegas();
+         
+         _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
+         print_output();
      }
      else
      {
@@ -225,8 +239,6 @@ void Process::Evaluate_integral(const double xx[])
          my_event_stream<<Vegas.NOP_in_previous_iteration<<"$"<<endl;
          }
      
-    // cout<<"\n[Process::EvaluateIntegral] : setting the vegas vars to the_hatch"
-    //    <<endl;
      //: copying vegas random variables from xx to TheHatch 
      the_hatch.SetVars(xx);
     //cout<<"\n[Process::EvaluateIntegral] : proceeding to production phase"
@@ -335,6 +347,14 @@ void Process::book_event(const CombinedEvent& the_event)
             {
                 book_null_event();
             }
+    }
+    else if (no_grid_adaptation_)
+    {
+      
+            _histograms->book_histograms(the_event,Vegas.vegas_weight);
+            my_event_stream<<the_event;
+        
+        Vegas.set_up_vegas_ff(the_event.weight());
     }
     else
     {

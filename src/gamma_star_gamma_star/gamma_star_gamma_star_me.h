@@ -19,13 +19,64 @@ private:
 
 
 
+class CrossSection
+{
+public:
+    virtual void Evaluate(double*)=0;
+    virtual void Configure()=0;
+    void PassEColliderSq(const double& smaximum)
+    {smax=smaximum;}
+    void AllocateLuminosity(Luminosity* lumi)
+    {
+        lumi_box_.MatchPDFs(info_.ISF.left, info_.ISF.right,pdf_selection_);
+        lumi_box_.AllocateLuminosity(lumi);
+    }
+    void PassAlphaStrong(const double& a_s_over_pi)
+    {
+    a_s_over_pi_=a_s_over_pi;
+    cout<<"\n[CrossSection]: a_s = "<<a_s_over_pi_* consts::Pi;
+    }
+    void PassScales(const double& mur,const double& muf)
+    {mur_=mur; muf_=muf;}
+    void SetEventBox(EventBox& event_box)
+    {event_box_=&event_box;}
+    int Dimension(){return dimension_;}
+    
+    //specific to gstar^2
+    virtual void PassMasses(const double& m3, const double& m4)=0;
+    
+    friend ostream& operator<<(ostream& stream, const CrossSection&);
+protected:
+    NewMeExternalInfo info_;
+    int dimension_;
+    EventBox* event_box_;
+    
+    double smax;
+    string pdf_selection_;
+    double a_s_over_pi_;
+    double mur_;
+    double muf_;
+    LuminosityBox lumi_box_;
+    string name_;
+protected:
+    double LL(const double& x1,const double& x2)
+    {
+        
+        return lumi_box_.give(x1,x2)
+        *pow(a_s_over_pi_,info_.alpha_power);
+    }
+};
+
 class GstarGstarMe: public CrossSection
 {
 public:
     GstarGstarMe();
     void compute_averaging_charge_and_a_em_prefactor();
 
-
+    //refactor: m3 -> m3_
+    void PassMasses(const double& mm3, const double& mm4)
+        {m3=mm3;m4=mm4;
+        cout<<"\n[GstarGstarMe]:Setting masses m3="<<m3<<" m4="<<m4<<endl;}
     double R(const KinematicInvariants& kk);
     double RR(const KinematicInvariants& kk);
     double PP(const double&);
@@ -157,7 +208,7 @@ public:
 private:
     NLOKinematics kk_;
     LOKinematicsShiftedRight kk_right_;
-private:
+public:
 double Rcrossed(const KinematicInvariants& kv);
 
 };
@@ -196,7 +247,27 @@ private:
     LOKinematics kk_;
 };
 
+class GstarGstarMeNLOConvQuarkGluon : public GstarGstarMe
+{
+public:
+    GstarGstarMeNLOConvQuarkGluon()
+    :GstarGstarMe(),kk_(4)
+    {
+        info_.alpha_power = 1;
+        stringstream ss;
+        ss << "NLOConv Quark Gluon";
+        info_.name = ss.str();
+        dimension_ = 5;
+        info_.ISF = InitialStateFlavors("q","g");
+        pdf_selection_ = "crossed_charged";
 
+
+    };
+    void Evaluate(double* xx_vegas);
+    void Configure();
+private:
+    LOKinematics kk_;
+};
 
 
 //----------------------------------------------------
@@ -270,6 +341,7 @@ protected:
     double log_delta();
     double log_plus();
     double log_reg();
+    double reg_partial_bfkl_log_from_plus();
     double nonlog_delta();
     double nonlog_plus();
     double nonlog_reg();
