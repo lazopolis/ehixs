@@ -178,13 +178,17 @@ void Process::perform()
      else
      {
          open_event_filename();
-         if (!my_event_stream.is_open()) {cout<<"\n couldn't open event file"<<endl;exit(0);}
+         if (!my_event_stream.is_open()) 
+            {cout<<"\n couldn't open event file"<<endl;exit(0);}
      
          Vegas.call_vegas();
+         //vegas_info_<<"\nAdaptation Phase"<<Vegas.iteration_info();
          Vegas.prepare_for_final_iteration();
          final_iteration_ = true;
          Vegas.call_vegas();
          _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
+         //vegas_info_<<"\nMain Run Phase"<<Vegas.iteration_info();
+         //cout<<vegas_info_.str();
          //: this is after the final iteration
          print_output();
          close_event_filename();

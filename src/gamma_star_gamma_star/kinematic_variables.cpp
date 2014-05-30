@@ -5,23 +5,35 @@
 #include "math.h"
 #include <iomanip>
 using namespace std;
+
+ostream& operator<<(ostream& stream, const FMomentum& x)
+{
+    return stream<<setprecision(8)<<"("
+                <<x.p[0]<<","
+                <<x.p[1]<<","
+                <<x.p[2]<<","
+                <<x.p[3]<<")";
+}
+
+ostream& operator<<(ostream& stream, const KinematicInvariants& kk)
+{
+    for (int i=1;i<kk.max_+1;i++)
+    {
+        for (int j=i+1;j<kk.max_+1;j++)
+        {
+            stream<<"\n s"<<i<<j<<" = "<<kk.s(i,j)<<",";
+        }
+    }
+    for (int i=1;i<kk.max_+1;i++) stream<<"\n s"<<i<<" = "<<kk.s(i)<<",";
+    return stream;
+}
+
 ostream& operator<<(ostream& stream, const KinematicVariables& kk)
 {
+    
     return stream << setprecision(16)
     <<"\n-------"
-    <<"\n s12 = "<<kk.s(1,2)<<","
-    <<"\n s13 = "<<kk.s(1,3)<<","
-    <<"\n s23 = "<<kk.s(2,3)<<","
-    <<"\n s14 = "<<kk.s(1,4)<<","
-    <<"\n s24 = "<<kk.s(2,4)<<","
-    <<"\n s34 = "<<kk.s(3,4)<<","
-    <<"\n s15 = "<<kk.s(1,5)<<","
-    <<"\n s25 = "<<kk.s(2,5)<<","
-    <<"\n s35 = "<<kk.s(3,5)<<","
-    <<"\n s45 = "<<kk.s(4,5)<<","
-    <<"\n s3 = "<<kk.s(3)<<","
-    <<"\n s4 = "<<kk.s(4)<<","
-    <<"\n s5 = "<<kk.s(5)<<","
+    <<kk.kin_inv_
     <<"\n tau = "<<kk.tau_<<","
     <<"\n smax = "<<kk.smax_<<","
     <<"\n smin = "<<kk.smin_<<","
@@ -330,6 +342,106 @@ void NNLOKinematics::generate_kinematics(double* xx_vegas)
     kin_inv_.Set(4,5, s(4) + s(5) + 2.0 * (p5*p4));
     kin_inv_.compute_dimensionless_invariants();
 
+}
+
+
+void NNLOExclusiveKinematics::generate_kinematics(double* xx_vegas)
+{
+    generate_bjorken_xs(xx_vegas);
+    z = smin_/s(1,2)+(1.0-smin_/s(1,2))*xx_vegas[4];
+    jacobian = jacobian * (1.0-smin_/s(1,2));
+    lambda = xx_vegas[5];
+    phi_g = 2.0*consts::Pi*xx_vegas[6];
+    rho = xx_vegas[7];
+    x3 = xx_vegas[8];
+    x4 = xx_vegas[9];
+    const double x3bar = 1.-x3;
+    
+    const double zbar = 1.0-z;
+    const double lambdabar = 1.0-lambda;
+    const double rhobar = 1. - rho;
+    const double eq = zbar*sqrt(s(1,2)*lambda*lambdabar*rho);
+    const double w=(1.0-rho*zbar*lambdabar)/(1.0-zbar*lambdabar);
+    
+    // 2pi explanation: the PSmeasure has 1/(2*pi)^5
+    // but there is a 2*pi from the phi_g angle generation
+    // and a (2*pi)^4 from gs^4 = (4*pi_as)^2 = (2*pi)^4*(a_s/pi)^2
+    // so we omit the 1/(2*pi)^5 here altogether
+    jacobian = jacobian * (pow(zbar,3.)*lambda*lambdabar/(1.-zbar*lambdabar))               
+                            /16 * pow(s(1,2),2.);
+    
+    // p5 is generated at COM
+    p5.Set(zbar*lambdabar+zbar*lambda*w,
+           eq*cos(phi_g),eq*sin(phi_g),
+           zbar*lambdabar-zbar*lambda*w);
+    
+    const double AA = x3*rho + x3bar*rhobar/(1.-zbar*lambdabar);
+    const double AAbar = x3bar*rho + x3*rhobar/(1.-zbar*lambdabar);
+    const double QQ = sqrt(lambda*lambdabar/rho);
+    const double WW = sqrt(rho*rhobar*x3*x3bar/(1.-zbar*lambdabar));
+    
+    const double a5 = zbar*lambdabar*x3;
+    const double b5 = zbar*lambda*(AA-2.*cos(consts::Pi*x4)*WW);
+    const double c5 = zbar * (x3 * rho * QQ - cos(consts::Pi*x4)*QQ*WW);
+    const double d5 = zbar * sin(consts::Pi*x4) * QQ * WW;
+    
+    const double a6 = zbar*lambdabar*x3bar;
+    const double b6 = zbar*lambda*(AAbar+2.*cos(consts::Pi*x4)*WW);
+    const double c6 = zbar * (x3 * rho * QQ + cos(consts::Pi*x4)*QQ*WW);
+    const double d6 = -d5;
+    
+    const double sqrs = sqrt(s(1,2));
+    
+    p6.Set(sqrs*(a5+b5)/2., 
+           sqrs*(c5*cos(phi_g)-d5*sin(phi_g)),
+           sqrs*(c5*sin(phi_g)+d5*cos(phi_g)),
+           sqrs*(a5-b5)/2.
+           );
+    p7.Set(sqrs*(a6+b6)/2., 
+           sqrs*(c6*cos(phi_g)-d6*sin(phi_g)),
+           sqrs*(c6*sin(phi_g)+d6*cos(phi_g)),
+           sqrs*(a6-b6)/2.
+           );
+    
+    const double Qsq = z * s(1,2); // z!=1 is a N*LO configuration
+    
+    born_kins_.generate(Qsq,s(3),s(4),xx_vegas[2],xx_vegas[3]);
+    jacobian = jacobian * born_kins_.jacobian();
+    boost_to_lab();
+    
+    compute_born_invariants();
+    // computing s15, s25, s5 at COM!! from parameters directly 
+    // slightly improves convergence
+    // and doesn't affect histograms, since the numerical agreement
+    // between sij and (p_i-p_j)^2 is excellent apart from singular 
+    // regions of phase space (where the exact form of unresolved
+    // particles doesn't matter)
+    kin_inv_.Set(1,5, -s(1,2)*(1.-z)*lambda);
+    kin_inv_.Set(2,5, -s(1,2)*zbar*lambdabar
+                 *(1.-rhobar*zbar*lambda/(1.-zbar*lambdabar)));
+    kin_inv_.Set(5, s(1,2)*zbar*zbar*lambda*lambdabar*rhobar/(1.0-zbar*lambdabar));
+    kin_inv_.Set(1,6, -s(1,2)*zbar*lambda*(AA-2.*cos(consts::Pi*x4)*WW));
+    kin_inv_.Set(2,6, -s(1,2)*zbar*lambdabar*x3);
+    kin_inv_.Set(6, 0.0);
+    kin_inv_.Set(1,7,-s(1,2)*zbar*lambda*(AAbar-2.*cos(consts::Pi*x4)*WW));
+    kin_inv_.Set(2,7,-s(1,2)*zbar*lambdabar*x3bar);
+    kin_inv_.Set(7, 0.0);
+    
+    
+    //boosting 5,6 and 6 to lab
+    double bb = -(p1[3]+p2[3])/(p1[0]+p2[0]); 
+    p5.zboost(bb);
+    p6.zboost(bb);
+    p7.zboost(bb);
+    //compute s35 and s45 at LAB (because p3 and p4 are at LAB)
+    kin_inv_.Set(3,5, s(3) + s(5) + 2.0 * (p5*p3));
+    kin_inv_.Set(4,5, s(4) + s(5) + 2.0 * (p5*p4));
+    kin_inv_.Set(3,6, s(3)  + 2.0 * (p6*p3));
+    kin_inv_.Set(4,6, s(4)  + 2.0 * (p6*p4));
+    kin_inv_.Set(3,7, s(3)  + 2.0 * (p7*p3));
+    kin_inv_.Set(4,7, s(4)  + 2.0 * (p7*p4));
+    kin_inv_.compute_dimensionless_invariants();
+    
 }
 
 

@@ -88,6 +88,7 @@ private://data
     bool bin_by_bin_integration_;
     int current_bin_;
     CHistogram* current_histogram_;
+    //ostringstream vegas_info_;
     
 private://methods
     void choose_production(const UserInterface & UI);

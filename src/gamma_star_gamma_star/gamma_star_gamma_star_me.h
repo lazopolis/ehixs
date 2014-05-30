@@ -279,13 +279,32 @@ public:
     :GstarGstarMe(),kk_(5),kk_nlo_(5),kk_left_(4),kk_right_(4)
     {
         info_.alpha_power = 2;
-        info_.name = "NNLOHard";
+        info_.name = "NNLOHard inclusive";
         dimension_ = 8;
     };
     void Configure();
     void Evaluate(double* xx_vegas);
 protected:
     NNLOKinematics kk_;
+    NLOKinematics kk_nlo_;
+    LOKinematicsShiftedLeft  kk_left_;
+    LOKinematicsShiftedRight kk_right_;
+};
+
+class GstarGstarMeNNLOHardX: public GstarGstarMe
+{
+public:
+    GstarGstarMeNNLOHardX()
+    :GstarGstarMe(),kk_(7),kk_nlo_(5),kk_left_(4),kk_right_(4)
+    {
+        info_.alpha_power = 2;
+        info_.name = "NNLOHard exclusive";
+        dimension_ = 10;
+    };
+    void Configure();
+    void Evaluate(double* xx_vegas);
+protected:
+    NNLOExclusiveKinematics kk_;
     NLOKinematics kk_nlo_;
     LOKinematicsShiftedLeft  kk_left_;
     LOKinematicsShiftedRight kk_right_;

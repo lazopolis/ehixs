@@ -9,10 +9,10 @@ production = ggF
 #---------- selecting initial state channels
 # the flavor of the parton from the left
 # if not declared all flavors are considered
-Fleft = gluon
+#Fleft = gluon
 #the flavor of the parton from the right
 # if not declared all flavors are considered
-Fright = gluon
+#Fright = gluon
 #
 #---------- ggf specific options
 #

@@ -76,6 +76,7 @@ public:
     string give_parton(){return parton_i;}
     friend ostream& operator<<(ostream&, const FFF&);
     string name();
+    string short_name(const string&) const;
 };
 
 struct WilsonCoefficients{

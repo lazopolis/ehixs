@@ -7,6 +7,13 @@ add_library(gluon_fusion
                         # gluon_fusion_inclusive/GluonFusionInclusive.cpp
                          gluon_fusion.cpp
                          nlo_exact_matrix_elements.cpp
+                         simple_sector.cpp
+                         matrix_element.cpp
+                         gluon_fusion_sector_box.cpp
+                         gluon_fusion_exact_coefficients.cpp
+                         gluon_fusion_ew_coefficients.cpp
+                         gluon_fusion_parametrization.cpp
+                         gluon_fusion_event_reconstructor.cpp
                         )
 
 

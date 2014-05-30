@@ -2,12 +2,12 @@
 #
 Etot = 13000
 #
-astar_m3 = 91.1876
-astar_m4 = 91.1876
+astar_m3 = 15.0
+astar_m4 = 30.0
 #
-m_higgs = 40.0
-muf = 40.0
-mur = 40.0
+m_higgs = 20.0
+muf = 20.0
+mur = 20.0
 muf_over_mhiggs = 1.0
 mur_over_mhiggs = 1.0
 # ggF, GammaStarGammaStar
@@ -55,7 +55,7 @@ maxeval_therm = 10000000
 nincrease_therm = 1000
 #
 epsrel = 0.001
-epsabs = 0.000001
+epsabs = 0.4
 nstart = 100000
 mineval = 100000
 nincrease = 0

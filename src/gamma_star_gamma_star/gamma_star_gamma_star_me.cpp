@@ -4,11 +4,6 @@
 
 #include <iomanip>
 #include <sstream>
-ostream& operator<<(ostream& stream, const FMomentum& p)
-{
-    return stream << setprecision(8)
-        <<"[ "<<p[0]<<","<<p[1]<<","<<p[2]<<","<<p[3]<<" ]";
-}
 
 
 
@@ -696,7 +691,7 @@ void GstarGstarMeDelta::Evaluate(double* xx_vegas)
                         * me_sq
                         ;
         JF(sigma,kk_);
-
+        //cout<<kk_;
         }
     else
         {
@@ -1297,6 +1292,81 @@ void GstarGstarMeNNLOHard::Evaluate(double* xx_vegas)
         JF();
     }
 }
+
+//------------ nnlo hard exclusive
+
+void GstarGstarMeNNLOHardX::Configure()
+{
+    smin = pow(m3+m4,2.0);
+    kk_.SetMassesSquared(m3*m3,m4*m4);
+    kk_.SetBoundaries(smin,smax);
+    kk_nlo_.SetMassesSquared(m3*m3,m4*m4);
+    kk_nlo_.SetBoundaries(smin,smax);
+    kk_left_.SetMassesSquared(m3*m3,m4*m4);
+    kk_left_.SetBoundaries(smin,smax);
+    kk_right_.SetMassesSquared(m3*m3,m4*m4);
+    kk_right_.SetBoundaries(smin,smax);
+    compute_averaging_charge_and_a_em_prefactor();
+}
+void GstarGstarMeNNLOHardX::Evaluate(double* xx_vegas)
+{
+    
+    kk_.generate_kinematics(xx_vegas);
+    kk_nlo_.generate_kinematics(xx_vegas);
+    kk_left_.SetZ(kk_.z);
+    kk_left_.generate_kinematics(xx_vegas);
+    kk_right_.SetZ(kk_.z);
+    kk_right_.generate_kinematics(xx_vegas);
+    const double lumi = LL(kk_.x1(),kk_.x2());
+    if (lumi!=0.0)
+    {
+        const double zbar = 1.0-kk_.z;
+        const double rhobar = 1.0-kk_.rho;
+        const double lambdabar = 1. - kk_.lambda;
+        const double total_factor = lumi * prefactor_ 
+        * kk_.jacobian
+        *consts::nf 
+        /2./kk_.s(1,2)
+        ;
+        double double_real = RR(kk_.invariants())/2.0 ;
+        
+        
+        const double s15tilde = -kk_.s(1,2) * (1.-kk_.z)
+        *kk_.lambda;
+        const double s25tilde = -kk_.s(1,2) * (1.-kk_.z)
+        *(1.-kk_.lambda)*(1.-(1.-kk_.z)*(1.-kk_.rho));
+        
+        //        cout<<"\n"<<kk_.s(1,5)<<" "<<s15tilde
+        //            <<"\t"<<kk_.s(2,5)<<" "<<s25tilde;
+        double triple_col_1 = 1./2.*PPt1(kk_.z,kk_.rho)*born_(kk_left_.invariants())/kk_.z/(-s15tilde) ;
+        double triple_col_2 = 1./2.*PPt2(kk_.z,kk_.rho)*born_(kk_right_.invariants())/kk_.z/(-s25tilde) ;
+        double single_col = R(kk_nlo_.invariants()) ;
+        
+        double counter1 = 1./2.*PP(1./kk_nlo_.z) 
+        * born_(kk_left_.invariants())
+        /(kk_nlo_.s(1,5)) ;
+        double counter2 = 1./2.*PP(1./kk_nlo_.z) 
+        * born_(kk_right_.invariants())
+        /(kk_nlo_.s(2,5)) ;
+        
+        //the real thing
+        JF(double_real*total_factor   ,kk_);       
+        JF(-triple_col_1*total_factor,kk_left_);
+        JF(-triple_col_2*total_factor,kk_right_);
+        JF(-single_col*total_factor,kk_nlo_);
+        JF(+counter1*total_factor,kk_left_);
+        JF(+counter2*total_factor,kk_right_);
+        
+        
+    }
+    else
+    {
+        JF();
+    }
+}
+
+
+//------------
 
 void GstarGstarMeNNLOMueller::Evaluate(double* xx_vegas)
 {

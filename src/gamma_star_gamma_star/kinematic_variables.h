@@ -37,6 +37,10 @@ public:
     double s(int i)const {return s_i_[index(i)];}
     double q(int i)const {return q_i_[index(i)];}
     void compute_dimensionless_invariants();
+    
+    friend ostream& operator<<(ostream& stream, const KinematicInvariants& kk);
+    
+
 private:
     double s_ij_[10][10];//s_ij = (p_i-p_j)^2
     double q_ij_[10][10];//q_ij = s_ij/s_12
@@ -153,6 +157,7 @@ public:
     FMomentum p4;
     FMomentum p5;
     FMomentum p6;
+    FMomentum p7;
 public:
     virtual void generate_kinematics(double* xx_vegas)=0;
 
@@ -209,6 +214,24 @@ public:
     double z;
     double lambda;
     double rho;
+private:
+    
+    
+    double phi;
+    double phi_g;
+    
+};
+
+class NNLOExclusiveKinematics: public KinematicVariables
+{
+public:
+    NNLOExclusiveKinematics(int num_of_particles): KinematicVariables(num_of_particles){};
+    void generate_kinematics(double* xx_vegas);
+    double z;
+    double lambda;
+    double rho;
+    double x3;
+    double x4;
 private:
     
     

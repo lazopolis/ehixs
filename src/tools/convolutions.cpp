@@ -357,11 +357,22 @@ bool FFF::is_valid()
 
 ostream& operator<<(ostream& stream, const FFF& F)
 {
-    if (F.order==0) stream <<"F_"<<F.parton_i<<"_from_"<<F.parton_from<<"_"<<F.order<<F.epsilon_order;
-    else stream <<"F_"<<F.parton_i<<"_from_"<<F.parton_from<<"_"<<F.order<<F.epsilon_order;
+    stream <<"F_"<<F.short_name(F.parton_i)<<F.short_name(F.parton_from)<<"_"<<F.order<<F.epsilon_order;
     return stream;
 }
 
+string FFF::short_name(const string& long_name) const
+{
+    if (long_name=="gluon") return string("g");
+    else if (long_name=="quark") return string("q");
+    else if (long_name=="antiquark") return string("Q");
+    else if (long_name=="quark2") return string("q'");
+    else if (long_name=="up") return string("u");
+    else if (long_name=="upbar") return string("U");
+    else if (long_name=="down") return string("d");
+    else if (long_name=="downbar") return string("D");
+    else return string("***");
+}
 
 string FFF::name()
 {

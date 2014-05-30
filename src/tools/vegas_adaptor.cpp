@@ -180,10 +180,12 @@ bool VegasAdaptor::new_iteration_has_started()
      //:checking whether this is the first point of new iteration
      if (vegas_iteration_number!=vegas_iteration_number_old)
      {
-        
+     
+         
           NOP_in_previous_iteration=vegas_NOP_in_current_iteration;
           vegas_NOP_in_current_iteration = 1;
           vegas_iteration_number_old=vegas_iteration_number;
+          
           return true;
      }
      else 
@@ -201,6 +203,7 @@ void VegasAdaptor::flush()
     vegas_integral_output.clear();
     vegas_error_output.clear();
     vegas_prob_output.clear();
+    //iteration_info_.str(""); // emptying the iteration_info_
 }
 
 

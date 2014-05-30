@@ -46,6 +46,7 @@ public:
     int total_number_of_points() const {return total_number_of_points_;}
      friend ostream& operator<<(ostream&, const VegasAdaptor&);
     string xml();
+    //string iteration_info(){return iteration_info_.str();}
 private:
     double epsrel,epsabs;
     double epsrel_therm,epsabs_therm;
@@ -58,6 +59,8 @@ private:
     int total_number_of_points_;
     string grid_file_name_;
     int gridno;
+    
+   // ..stringstream iteration_info_;
      
 };
 
