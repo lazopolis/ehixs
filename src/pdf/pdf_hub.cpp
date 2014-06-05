@@ -15,10 +15,10 @@ PDFHub::PDFHub(const UserInterface& UI)
     provider_ =  UI.pdf_provider;
     pdf_error_ = UI.pdf_error;
     // Print friendly message
-    cout << "\n[PDFHub::" << __func__
-        << "] Attempting init of '"<< provider_
-        << "' pdf at O(as^" << pert_order_
-        << ") ,error='" << pdf_error_ << "'"<<endl;
+//    cout << "\n[PDFHub::" << __func__
+//        << "] Attempting init of '"<< provider_
+//        << "' pdf at O(as^" << pert_order_
+//        << ") ,error='" << pdf_error_ << "'"<<endl;
     grids_ = new PDFGrid;
     
     #ifdef CONFIGURE_LHAPDF_ON
@@ -27,7 +27,7 @@ PDFHub::PDFHub(const UserInterface& UI)
     initialize_mstw_plain();
     #endif
     
-    cout << "[PDFHub] Success [" << grids_->size() << "] sets!";
+    //cout << "[PDFHub] Success [" << grids_->size() << "] sets!";
     
     
 }
@@ -39,13 +39,13 @@ void PDFHub::initialize_lha_pdf()
     
     for(unsigned grid=0; grid<gridnames.size(); ++grid)
         {
-        cout<<"\n[PDFHub] : initializing "<<gridnames[grid]<<endl;
+        //cout<<"\n[PDFHub] : initializing "<<gridnames[grid]<<endl;
         // initialise the LHAPDF set corresponding to grids[grid]
         int grid_number_for_lhapdf = grid+1;
         LHAPDF::initPDFSet(grid_number_for_lhapdf,
                            gridnames[grid], LHAPDF::LHGRID);
         
-        cout<<"\n[PDFHub] : pdf_error is "<<pdf_error_<<endl;
+        //cout<<"\n[PDFHub] : pdf_error is "<<pdf_error_<<endl;
         // Using the LHAPDF-routine numberPDF, we can determine the number of members of the currently loaded set
         unsigned membernum;
         if (pdf_error_) membernum = LHAPDF::numberPDF()+1;

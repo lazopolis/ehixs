@@ -26,6 +26,8 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
     //       Mtop =  170.9
     
     
+    model_=model;
+    
     cout<<"\nCalcualting ew correction factor";
     const double mtop_pass = 170.9;
     
@@ -102,6 +104,142 @@ vector<double>  GluonFusionEWCoefficients::givecoeff(double x[3],double y[3])
                     -y[2]*dx12*x[0]*x[1]) / den);
     return res;
 }
+
+
+
+
+extern "C" {
+    // electroweak form factors
+    complex<double> fa_massless_(double*,double*, double*,
+                                complex<double>*,complex<double>*);
+    
+}
+
+inline complex<double> FA_massless(const double& s, const double& t, const double& u, const complex<double>& mhsq,const complex<double>& mvsq)
+{ return fa_massless_((double*)&s, (double*)&t, (double*)&u,
+                      (complex<double>*)&mhsq,(complex<double>*)&mvsq); }
+
+double GluonFusionEWCoefficients::EwkUUbar(const double& s,const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
+    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mewk(0.0);
+    
+    
+    double mhsq = model_.higgs.m()*model_.higgs.m();
+    
+    for (int iboson=0;iboson<model_.vector_bosons.size();iboson++)
+    {
+        VectorBoson* V = (VectorBoson*)(model_.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_up = pow(V->cv_up,2.0) + pow(V->ca_up,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<"\n"<<gw_up;
+        Mewk += - mv_sq * gw_up * lambda_v
+        * (  t*t * FA_massless(t,u,s,mhsq,mv_sq)
+           + u*u * FA_massless(u,t,s,mhsq,mv_sq));
+    }
+    
+    
+    
+    double res = prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    if (abs(s+t+u - mhsq)>1e-4)
+    {
+        cout<<s<<" "<<t<<" "<<u<<" "<<mhsq<<" "<<s+t+u<<endl;
+    }
+    return res;
+}
+
+double GluonFusionEWCoefficients::EwkDDbar(const double& s,const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
+    complex<double> Mqcd = 4.0/3.0 *sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mewk(0.0);
+    
+    double mhsq = model_.higgs.m()*model_.higgs.m();
+    for (int iboson=0;iboson<model_.vector_bosons.size();iboson++)
+    {
+        VectorBoson* V = (VectorBoson*)(model_.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_down = pow(V->cv_down,2.0) + pow(V->ca_down,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
+        Mewk += - mv_sq * gw_down * lambda_v
+        * (  t*t * FA_massless(t,u,s,mhsq,mv_sq)
+           + u*u * FA_massless(u,t,s,mhsq,mv_sq));
+    }
+    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    
+}
+
+
+double GluonFusionEWCoefficients::EwkUG(const double& s,const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
+    * 9.0/64.0*u/s;
+    complex<double> Mqcd = 4.0/3.0 *sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mewk(0.0);
+    
+    double mhsq = model_.higgs.m()*model_.higgs.m();
+    for (int iboson=0;iboson<model_.vector_bosons.size();iboson++)
+    {
+        VectorBoson* V = (VectorBoson*)(model_.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_up = pow(V->cv_up,2.0) + pow(V->ca_up,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
+        Mewk += - mv_sq * gw_up * lambda_v
+        * (  s*s * FA_massless(s,t,u,mhsq,mv_sq)
+           + t*t * FA_massless(t,s,u,mhsq,mv_sq));
+    }
+    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    
+}
+
+double GluonFusionEWCoefficients::EwkDG(const double& s,const double& z, const double& lambda)
+{
+    complex<double> FFstar (0.0,0.0);
+    double t = -s * (1.0-z)*lambda;
+    double u = -s * (1.0-z)*(1.0-lambda);
+    
+    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
+    *9.0/64.0*u/s;
+    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mewk(0.0);
+    
+    double mhsq = model_.higgs.m()*model_.higgs.m();
+    for (int iboson=0;iboson<model_.vector_bosons.size();iboson++)
+    {
+        VectorBoson* V = (VectorBoson*)(model_.vector_bosons[iboson]);
+        complex<double> mv_sq = V->cm_sq();
+        complex<double> gw_down = pow(V->cv_down,2.0) + pow(V->ca_down,2.0);
+        complex<double> lambda_v = V->lamda;
+        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
+        Mewk += - mv_sq * gw_down * lambda_v
+        * (  s*s * FA_massless(s,t,u,mhsq,mv_sq)
+           + t*t * FA_massless(t,s,u,mhsq,mv_sq));
+    }
+    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
+    
+}
+
+
+
+
+
+
 //------------------------------------------------------------------------------
 
 

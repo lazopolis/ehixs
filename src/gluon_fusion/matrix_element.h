@@ -8,20 +8,13 @@
 using namespace std;
 
 
-typedef void (*pointer_to_Franz_gluon_fusion)(  const int&,
-                                              const int&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&,
-                                              const double&);
+typedef void (*pointer_to_Franz_gluon_fusion)
+        (  
+        const int&,const int&,const double&,
+        const double&,const double&,const double&,
+        const double&,const double&,const double&,
+        const double&,const double&,const double&,
+        const double&,const double&);
 
 class MeExternalInfo
 {

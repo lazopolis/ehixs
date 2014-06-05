@@ -152,7 +152,7 @@ void Particle::consolidate(CouplingConstant as,const double& mur, int porder,
     else
         {
         
-        cout<<"\n[Particle] "<<name_<<" quark evolution:";
+        cout<<"[ehixs] "<<name_<<" quark evolution:";
         m_->evolve(as,mur,porder,zmass);
         calculate_complex_mass();
         set_Xq(mh);

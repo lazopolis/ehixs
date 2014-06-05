@@ -60,12 +60,12 @@ Production::Production(const UserInterface & UI)
         my_sector_name = "If you see this, the specific production hasn't declared it's sector_name yet.";
         sector_defined=false;
         EC=this;
-        cout<<"\n[Production] : setting up luminosity";
+        //cout<<"\n[Production] : setting up luminosity";
         lumi = new Luminosity(UI);
-        cout<<"\n[Production] : consolidating Model";
+        //cout<<"\n[Production] : consolidating Model";
         //Model.higgs.set_m_at_ref_scale(UI.m_higgs);
     
-        cout<<"\n[Production] : setting up scales and Etot";
+        //cout<<"\n[Production] : setting up scales and Etot";
         
         
 
@@ -104,10 +104,10 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
     //:the vegas variables we need
     xx_vegas = the_hatch->RequestPtr();
     for (unsigned i=0;i<dim_of_integration;i++) the_hatch->RequestVar("VEGAS");
-    cout<<"[Production]dim_of_integration in Production::init_base = "
-        <<dim_of_integration
-        <<"\n[Production] in the_hatch : "
-        <<the_hatch->GetVEGASDim();
+//    cout<<"[Production]dim_of_integration in Production::init_base = "
+//        <<dim_of_integration
+//        <<"\n[Production] in the_hatch : "
+//        <<the_hatch->GetVEGASDim();
      
 }
 

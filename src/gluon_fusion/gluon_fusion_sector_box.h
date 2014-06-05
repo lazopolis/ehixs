@@ -24,6 +24,8 @@ public:
 private://data
     GluonFusionMatrixElementBox* available_matrix_elements;
     vector<SimpleSector*> available_sectors;
+    vector<SimpleSector*> necessary_sectors;
+    
     vector<string> _av_partons;
     WilsonCoefficients _WC;
     BetaConstants _beta;
@@ -42,6 +44,14 @@ private://methods
         const vector<MatrixElement*> & matching_mes);
     vector<FFF> give_possible_F(const string & parton,
                                 int f1order);
+                                
+    void build_ew_sectors();
+
+    void add_simple_sector(const FFF& f1,const FFF& f2, const string& matr_elem_name);
+    MatrixElement* find_matrix_element(const string& the_name);
+    
+    void select_ew_sector(SimpleSector* the_sector, const UserInterface& UI);
+    void select_qcd_sector(SimpleSector* the_sector, const UserInterface& UI);
     
 };
 

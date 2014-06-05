@@ -95,6 +95,11 @@ private://methods
     void choose_decay(const UserInterface & UI);
     void set_production(Production * theproduction);
     void set_decay(Decay * thedecay);
+    
+    void perform_bin_by_bin_mode();
+    void perform_no_adaptation_mode();
+    void perform_default_mode();
+    
     void book_null_event();
     void book_event(const CombinedEvent&);
     void proceed_to_production_phase();
@@ -102,7 +107,6 @@ private://methods
     void perform_decay_alone();
     void book_decay_event(Event *);
     void print_output_intermediate();
-    void calculate_number_of_components();
     void print_output();
 	bool sectors_are_defined_in_production_and_decay();
 	void calculate_dimension_of_integration();

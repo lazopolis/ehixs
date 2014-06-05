@@ -20,7 +20,8 @@ MeExternalInfo::MeExternalInfo(const string & _pi,const string & _pj,const strin
 //------------------------------------------------------------------------------
 
 
-MatrixElement::MatrixElement( MeExternalInfo* info,const string & _kin,
+MatrixElement::MatrixElement( MeExternalInfo* info,
+                             const string & _kin,
                              const string& _str_param,
                              const string& _the_ggf_func,
                              FranzBinder* fr,

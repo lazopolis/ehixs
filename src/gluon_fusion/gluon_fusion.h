@@ -48,37 +48,7 @@ public://methods
                                const double &,const double &,
                                const double &,const double &,
                                const double &);
-    //: all the functions below are public so that pointers to them can be
-    //: accessed by GluonFusionSectorBox
-    void LO();
-    void gg_NLO_SOFT();
-    void gg_NLO_HARD();
-    void gg_NNLO_SOFT();
-    void nlo_me();
-    void NNLO_hard_no_subtraction();
-    void NNLO_hard_with_subtraction();
-    void NNLO_rv_with_subtraction();
-    void NNLO_subtraction(const double& lambda1,const double& lambda2,
-                          const double& lambda3,const double& lambda4);
-    void NNLO_RR_brute_force_wrap();
-    void NNLO_RR_brute_force(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4);
     
-    void LO_exact();
-    void NLO_soft_exact();
-    void gg_NLO_hard_exact();
-    void qg_NLO_hard_exact();
-    void gq_NLO_hard_exact();
-    void qqbar_NLO_hard_exact();
-    
-//    void NLO_ewk_soft();
-//    void NLO_ewk_soft_exact();
-    void NLO_ewk_uubar_h_plus_jet();
-    void NLO_ewk_ddbar_h_plus_jet();
-    void NLO_ewk_ug_h_plus_jet();
-    void NLO_ewk_dg_h_plus_jet();
-    void NLO_ewk_gu_h_plus_jet();
-    void NLO_ewk_gd_h_plus_jet();
-
 
     string sector_name(){return the_sector->name;}
     int number_of_necessary_sectors(){return number_of_necessary_sectors_;}
@@ -117,6 +87,8 @@ private://methods
     void readjust_wilson_coefficient_for_electroweak_effective();
     void readjust_wilson_coefficient_for_exact();
     
+    void print_sector_info_and_exit(const UserInterface&);
+    void print_available_me_and_exit();
     void set_up_beta_constants();
     void prepare_phase_space_dependent_quantities();
     
@@ -140,6 +112,40 @@ private://methods
     
     void push_back_event(const double & sigma);
     
+    //: all the functions below are public so that pointers to them can be
+    //: accessed by GluonFusionSectorBox
+    void LO();
+    void gg_NLO_SOFT();
+    void gg_NLO_HARD();
+    void gg_NNLO_SOFT();
+    void nlo_me();
+    void NNLO_hard_no_subtraction();
+    void NNLO_hard_with_subtraction();
+    void NNLO_rv_with_subtraction();
+    void NNLO_subtraction(const double& lambda1,const double& lambda2,
+                          const double& lambda3,const double& lambda4);
+    void NNLO_RR_brute_force_wrap();
+    void NNLO_RR_brute_force(const double& lambda1,const double& lambda2,const double& lambda3,const double& lambda4);
+    
+    void LO_exact();
+    void NLO_soft_exact();
+    void gg_NLO_hard_exact();
+    void qg_NLO_hard_exact();
+    void gq_NLO_hard_exact();
+    void qqbar_NLO_hard_exact();
+    
+    //    void NLO_ewk_soft();
+    //    void NLO_ewk_soft_exact();
+    void NLO_ewk_uubar_h_plus_jet();
+    void NLO_ewk_ddbar_h_plus_jet();
+    void NLO_ewk_ug_h_plus_jet();
+    void NLO_ewk_dg_h_plus_jet();
+    void NLO_ewk_gu_h_plus_jet();
+    void NLO_ewk_gd_h_plus_jet();
+    void NLO_ewk_h_plus_j_fork(const string&);
+    
+    
+    
     void nlo_partonic_xsections(pointer_to_Franz_gluon_fusion the_franz_function,const double &,int i);
     void rgg2ghEXACT(int pole,double s,double x1,double x2,double z,
                      double lh,double  weight,double nf, double lambda);
@@ -160,10 +166,7 @@ private://methods
     void gq2qh_exact_Q_fin(const double& weight,const double& z,
                            const double& x1,const double&x2,
                            const double& lambda);
-    double EwkUUbar(const double& z, const double& lambda);
-    double EwkDDbar(const double& z, const double& lambda);
-    double EwkUG(const double& z, const double& lambda);
-    double EwkDG(const double& z, const double& lambda);
+    
 };
 
 

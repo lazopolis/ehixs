@@ -24,6 +24,7 @@ public:
     VegasAdaptor(const UserInterface & UI,const pointer_to_Integrand ptr,int dim);
      vector<double> ff_vegas; //: public because it has to be accessed by Integrand
      int number_of_components;//: public because it has to be accessed by Integrand
+     void ConfigureNumberOfComponents(int);
      void call_vegas();
      void call_vegas_final();
     void prepare_for_final_iteration();

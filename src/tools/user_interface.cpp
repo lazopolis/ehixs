@@ -122,7 +122,7 @@ UserInterface::UserInterface()
                                      &only_ew_h_j,false));
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
     options.push_back(new BoolOption("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)","Optional",&bin_by_bin_integration, false));
-    options.push_back(new BoolOption("no_grid_adaptation",0,"switch off grid adaptation in Vegas (defaul is on)","Optional",&no_grid_adaptation, false));
+    options.push_back(new BoolOption("no_grid_adaptation",0,"switch off grid adaptation in Vegas (default is on)","Optional",&no_grid_adaptation, false));
     
     vector<string>empty_vector;
     options.push_back(new CutOption("cut",0,"generic cut option","Required",my_generic_cut, empty_vector));
@@ -253,7 +253,7 @@ void UserInterface::ParseInput(int argc, char * const *argv)
         }
     for(int i=0;i<all_hists.size();i++)
         {
-        cout<<"\n[ehixs] requested histogram : "<<all_hists[i]->print();
+        //cout<<"\n[ehixs] requested histogram : "<<all_hists[i]->print();
         }
      if (help) print_help_message();
 }
@@ -333,9 +333,11 @@ int UserInterface::ParseFile(const string& in, bool verbose)
                                    break;
                                    }
                          
-                         if(!did && verbose) {
-                              std::cout << "[ehixs] Unrecognised option in input file " << in << ": " << s.substr(0,pos) <<" -> it will be ignored"<< std::endl;
-                              return 1;
+                         if(!did && verbose) 
+                         {
+                             stringstream msg;
+                              msg << "Unrecognised option in input file " << in << ": " << s.substr(0,pos);
+                              throw(msg.str());
                          }
                          }
                     }
@@ -416,7 +418,7 @@ void UserInterface::PrintAllOptions() const
 
 vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, bool locverbose)
 {
-    cout<<"\n[ehixs] command line args: ";
+    cout<<"[ehixs] command line args: ";
     for (int i=0;i<argc;i++) cout<<argv[i]<<" ";
     cout<<endl;
      // getopt quirckiness:
@@ -476,8 +478,12 @@ vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, b
                     break;
                     
                     case '?':// getopt_long already printed an error message.
+                       {stringstream msg;
+                       msg << "Unrecognised command line option";
+                       throw(msg.str());
+                       
                     //exit(1);
-                    break;
+                    break;}
                     // short options
                     default:
                     // loop over expected short options

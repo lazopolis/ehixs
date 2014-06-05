@@ -80,12 +80,12 @@ Vegas(UI)
 
 void Process::choose_production(const UserInterface & UI)
 {
-    std::cout<<"\n[ehixs] Process initiated with production "
-            <<UI.production<<endl;
+//    std::cout<<"\n[ehixs] Process initiated with production "
+//            <<UI.production<<endl;
     if (UI.production=="ggF") 
         set_production(new GluonFusion(UI));
-    else if (UI.production=="GammaStarGammaStar")
-        set_production(new GammaStarGammaStar(UI));
+//    else if (UI.production=="GammaStarGammaStar")
+//        set_production(new GammaStarGammaStar(UI));
     else
     {
         cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
@@ -113,7 +113,7 @@ void Process::choose_decay(const UserInterface & UI)
     }
     else
     {
-        std::cout<<"\n[ehixs] Process initiated with decay "<<UI.decay;
+        std::cout<<"[ehixs] Process initiated with decay "<<UI.decay;
         if (UI.decay=="4leptons") set_decay(new Decay_WWZZ(UI));
         else if(UI.decay=="gamma_gamma") set_decay(new Decay_gammagamma(UI));
         else if(UI.decay=="Z_gamma") set_decay(new Decay_H_to_Z_Gamma(UI));
@@ -142,58 +142,75 @@ void Process::perform()
 {
      if (!sectors_are_defined_in_production_and_decay())
           {
-          cout<<"\n[Process] : Sectors are not properly defined. I exit!"<<endl;
+          cout<<"\n[ehixs] : Sectors are not properly defined. I exit!"<<endl;
           exit(1);
           }
-     calculate_number_of_components();     
+    Vegas.ConfigureNumberOfComponents(1);
+      
      
-     if (bin_by_bin_integration_)
-     {
-         for (int chist=0;chist<_histograms->size();chist++)
-         {
-             Vegas.flush();
-             current_histogram_ = _histograms->ptr_to_histogram_with_id(chist);
-             for (current_bin_=0;current_bin_<current_histogram_->size();current_bin_++)
-             {
-                 Vegas.flush();
-                 Vegas.call_vegas();
-                 current_histogram_->set_bin(current_bin_,
-                 Vegas.vegas_integral_output[0],
-                 Vegas.vegas_error_output[0],
-                 Vegas.vegas_prob_output[0],
-                 Vegas.vegas_iteration_number,
-                 Vegas.total_number_of_points());
-                 _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
-                 print_output();
-             }
-         }
-     }
-     else if (no_grid_adaptation_)
-     {
-         Vegas.call_vegas();
-         
-         _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
-         print_output();
-     }
-     else
-     {
-         open_event_filename();
-         if (!my_event_stream.is_open()) 
-            {cout<<"\n couldn't open event file"<<endl;exit(0);}
-     
-         Vegas.call_vegas();
-         //vegas_info_<<"\nAdaptation Phase"<<Vegas.iteration_info();
-         Vegas.prepare_for_final_iteration();
-         final_iteration_ = true;
-         Vegas.call_vegas();
-         _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
-         //vegas_info_<<"\nMain Run Phase"<<Vegas.iteration_info();
-         //cout<<vegas_info_.str();
-         //: this is after the final iteration
-         print_output();
-         close_event_filename();
-     }
-     
+     if (bin_by_bin_integration_) 
+         perform_bin_by_bin_mode();
+     else if (no_grid_adaptation_) 
+         perform_no_adaptation_mode();
+     else   
+         perform_default_mode();
+}
+
+void Process::perform_bin_by_bin_mode()
+{
+    cout<<"[ehixs] mode of operation: bin by bin integration"<<endl;
+    cout<<"[ehixs] there are "<<_histograms->size()
+    <<" histograms"<<endl;
+    for (int chist=0;chist<_histograms->size();chist++)
+    {
+        
+        Vegas.flush();
+        current_histogram_ = _histograms->ptr_to_histogram_with_id(chist);
+        cout<<"[ehixs] evaluating histogram #"<<chist+1
+            <<":" << current_histogram_->info()<<endl;
+        cout<<"[ehixs] with "<<current_histogram_->size()
+        <<" bins " <<endl;
+        for (current_bin_=0;current_bin_<current_histogram_->size();current_bin_++)
+        {
+            cout<<"[ehixs] evaluating histogram #"<<chist+1
+            <<" bin # " << current_bin_+1<<" / "<<current_histogram_->size()<<endl;
+            Vegas.flush();
+            Vegas.call_vegas();
+            current_histogram_->set_bin(current_bin_,
+                                        Vegas.vegas_integral_output[0],
+                                        Vegas.vegas_error_output[0],
+                                        Vegas.vegas_prob_output[0],
+                                        Vegas.vegas_iteration_number,
+                                        Vegas.total_number_of_points());
+            _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
+            print_output();
+        }
+    }
+}
+
+void Process::perform_no_adaptation_mode()
+{
+    cout<<"[ehixs] mode of operation: no adaptation"<<endl;
+    cout<<"[ehixs] main integration"<<endl;
+    Vegas.call_vegas();
+    
+    _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
+    print_output();
+}
+
+void Process::perform_default_mode()
+{
+    cout<<"\n[ehixs] mode of operation: default"<<endl;
+    cout<<"[ehixs] adaptation phase"<<endl;
+    Vegas.call_vegas();    
+    Vegas.prepare_for_final_iteration();
+    final_iteration_ = true;
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs] main integration"<<endl;
+    Vegas.call_vegas();
+    _histograms->update_histograms_end_of_iteration(Vegas.vegas_NOP_in_current_iteration);
+    print_output();
+
 }
 
 bool Process::sectors_are_defined_in_production_and_decay()
@@ -422,20 +439,6 @@ void Process::print_output_intermediate()
      my_local_outfile.close();
 }
 
-void Process::calculate_number_of_components()
-{
-
-     // the first "Nmember" components are for the pdf error
-     Vegas.number_of_components=1;//lumi.pdf_size();
-     //cout<<"\nnumber_of_components = "<<Vegas.number_of_components;
-     
-     //initializing ff_vegas to have number_of_components components
-     for (int i=0;i<Vegas.number_of_components;i++)
-          {
-          Vegas.ff_vegas.push_back(0.0);
-          }
-}
-
 void Process::print_output()
 {
     cout << Vegas;
@@ -444,7 +447,7 @@ void Process::print_output()
 
     if (not(my_UI.output_filename.empty()))
         {
-        cout << "\n writing output at " << my_UI.output_filename << endl;
+        cout << "[ehixs] writing xml output at " << my_UI.output_filename << endl;
         const char * output_fname = my_UI.output_filename.c_str();
         fstream my_local_outfile(output_fname, fstream::out);
         if(my_local_outfile.is_open())
@@ -463,7 +466,7 @@ void Process::print_output()
             
             my_local_outfile << "</ehixs_data>" << endl;
 
-            cout << "\noutput written in "<< my_UI.output_filename<< endl;
+            //cout << "\noutput written in "<< my_UI.output_filename<< endl;
             }
         else
             {

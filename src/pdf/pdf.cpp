@@ -41,9 +41,9 @@ CPDF::CPDF(const PDFGrid& the_grid,const pdf_desc& my_desc,
 :_my_desc(my_desc),interpolation_on_(true)
 {
     // Print friendly message
-    cout << "\n[CPDF::" << __func__
-    << "] interpolating pdf ('"<< _my_desc.i<<","<<_my_desc.j<<","
-    <<" n_as = "<<_my_desc.n_as<<" n_eps = "<<_my_desc.n_eps<<endl;
+//    cout << "\n[CPDF::" << __func__
+//    << "] interpolating pdf ('"<< _my_desc.i<<","<<_my_desc.j<<","
+//    <<" n_as = "<<_my_desc.n_as<<" n_eps = "<<_my_desc.n_eps<<endl;
     for(unsigned k=0; k<the_grid.size(); k++)
         {
         LHAPDF::usePDFMember(the_grid.grid_id(k),the_grid.member_id(k));

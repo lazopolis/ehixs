@@ -13,8 +13,7 @@ GluonFusionSectorBox::GluonFusionSectorBox(const WilsonCoefficients& WC, const B
     //cout<<"\n[GluonFusionSectorBox] : setting up MatrixElements"<<endl;
     
     available_matrix_elements = new GluonFusionMatrixElementBox(rr_treatment);
-    //cout<<"\n[GluonFusionSectorBox] : there are "
-    //    <<available_matrix_elements->size()<<" possible Matrix Elements"<<endl;
+    
     
     _av_partons.push_back("gluon");
     build_sectors("gluon","gluon");
@@ -36,18 +35,69 @@ GluonFusionSectorBox::GluonFusionSectorBox(const WilsonCoefficients& WC, const B
     build_sectors("quark","quark2");
     //cout<<"\n[GluonFusionSectorBox] : after q1q2, "<<available_sectors.size()
     //<<" sectors"<<endl;
-    _av_partons.push_back("up");
-    _av_partons.push_back("upbar");
-    build_sectors("up","upbar");
-    build_sectors("up","gluon");
-    build_sectors("gluon","up");
-    _av_partons.push_back("down");
-    _av_partons.push_back("downbar");
-    build_sectors("down","downbar");
-    build_sectors("down","gluon");
-    build_sectors("gluon","down");
+    build_ew_sectors();
+
+//    _av_partons.push_back("up");
+//    _av_partons.push_back("upbar");
+//    build_sectors("up","upbar");
+//    build_sectors("up","gluon");
+//    build_sectors("gluon","up");
+//    _av_partons.push_back("down");
+//    _av_partons.push_back("downbar");
+//    build_sectors("down","downbar");
+//    build_sectors("down","gluon");
+//    build_sectors("gluon","down");
     
     
+}
+
+
+void GluonFusionSectorBox::build_ew_sectors()
+{
+    
+    
+    FFF up("up","up",0);
+    FFF upbar("upbar","upbar",0);
+    FFF down("down","down",0);
+    FFF downbar("downbar","downbar",0);
+    FFF gluon("gluon","gluon",0);
+    
+    add_simple_sector(up,upbar,"NLO_ewk_uubar_h_plus_jet"); 
+    add_simple_sector(upbar,up,"NLO_ewk_uubar_h_plus_jet");
+    add_simple_sector(down,downbar,"NLO_ewk_ddbar_h_plus_jet");
+    add_simple_sector(downbar,down,"NLO_ewk_ddbar_h_plus_jet");
+    add_simple_sector(up,gluon,"NLO_ewk_ug_h_plus_jet");
+    add_simple_sector(upbar,gluon,"NLO_ewk_ug_h_plus_jet");
+    add_simple_sector(down,gluon,"NLO_ewk_dg_h_plus_jet");
+    add_simple_sector(downbar,gluon,"NLO_ewk_dg_h_plus_jet");
+    add_simple_sector(gluon,up,"NLO_ewk_gu_h_plus_jet");
+    add_simple_sector(gluon,upbar,"NLO_ewk_gu_h_plus_jet");
+    add_simple_sector(gluon,down,"NLO_ewk_gd_h_plus_jet");
+    add_simple_sector(gluon,downbar,"NLO_ewk_gd_h_plus_jet");
+// still missing the bg channels 
+//case(12)	! b g massive mixed QCD/EWK NLO
+//case(13)	! b bar massive mixed QCD/EWK NLO
+
+}
+
+void GluonFusionSectorBox::add_simple_sector(const FFF& f1,const FFF& f2, const string& matr_elem_name)
+{
+    vector<ExpansionTerm*> one;
+    one.push_back(new ExpansionTerm("(1)",1.0,0,0));
+    available_sectors.push_back(
+        new SimpleSector(f1,f2,one,find_matrix_element(matr_elem_name)));
+}
+
+MatrixElement* GluonFusionSectorBox::find_matrix_element(const string& the_name)
+{
+    for (int i=0;i<available_matrix_elements->size();i++)
+    {
+        if (available_matrix_elements->give_me(i)->the_ggf_func==the_name)
+            return available_matrix_elements->give_me(i);
+    }
+
+    cout<<"\n[ehixs]FATAL ERROR: matrix element "<<the_name<<" not found!"<<endl;
+    exit(0);
 }
 
 void GluonFusionSectorBox::build_sectors(const string &parton_left, const string &parton_right)
@@ -229,26 +279,33 @@ void GluonFusionSectorBox::build_sectors_with_fixed_a_order_e_order_and_pdfs(
             else
             {
                 // effective matrix element:
-                // if the WC.exact = true it means we are in
-                // a run with exact matrix elements
-                // so we need to do the LO and NLO effective sectors only if
-                // if WC.ew_soft = true. Then there are ew soft
-                // contributions
-                // so we need to keep the non-pure QCD pieces
+                // if the WC.exact == true it means we are in
+                // a run with exact matrix elements.
+                // We still need the LO and NLO effective sectors 
+                // to combine with N*LO order PDFS which leads to 
+                // NNLO effective convolutions.
                 
-                if (_WC.exact and cur_me->alpha_power()<2)
-                {
-                    
-                    // if there are no ew soft, we kill
-                    // the matrix element alltogether
-                    WCET_vector.clear();
-                    // if there are ew soft contributions then we modify the
-                    // WCET vector as follows
-                    if (_WC.ew_soft)
-                    {
-                        WCET_vector = WCET_vectorEW;
-                    }
-                }
+                // Now, to get the correct ew sectors in the exact run case, we also need to run LO and NLO wit ew_soft coefficients. The way to implement this still needs to be decided...
+//                
+//                // 
+//                // so we need to do the LO and NLO effective sectors only if
+//                // if WC.ew_soft = true. Then there are ew soft
+//                // contributions
+//                // so we need to keep the non-pure QCD pieces
+//                
+//                if (_WC.exact and cur_me->alpha_power()<2)
+//                {
+//                    
+//                    // if there are no ew soft, we kill
+//                    // the matrix element alltogether
+//                    WCET_vector.clear();
+//                    // if there are ew soft contributions then we modify the
+//                    // WCET vector as follows
+//                    if (_WC.ew_soft)
+//                    {
+//                        WCET_vector = WCET_vectorEW;
+//                    }
+//                }
                 
             }
             //: assigning trivial renormalization factor (1)
@@ -339,6 +396,25 @@ vector<string> GluonFusionSectorBox::give_sector_names(const string & pleft,cons
 
 vector<SimpleSector*> GluonFusionSectorBox::give_necessary_sectors(const UserInterface & UI)
 {
+    
+    
+    for (int i=0;i<available_sectors.size();i++)
+    {
+        SimpleSector* the_sector = available_sectors[i];
+//        if (the_sector->ME->me_approximation()=="effective" 
+//            and the_sector->ME->epsilon_power()>0)
+//            cout<<"\nSECTOR CONSIDERED: "<<the_sector->name;
+        if (the_sector->ME->alpha_ew_power()==0)
+            select_qcd_sector(the_sector,UI);
+        else
+            select_ew_sector(the_sector,UI);
+    }
+    return necessary_sectors;
+}
+
+void GluonFusionSectorBox::select_qcd_sector(SimpleSector* the_sector,const UserInterface& UI)
+{
+    
     // this is where the runcard semantics are resolved
     // qcd_perturbative_order
     int min_a_power_requested,max_a_power_requested;
@@ -364,7 +440,52 @@ vector<SimpleSector*> GluonFusionSectorBox::give_necessary_sectors(const UserInt
         min_a_power_requested = UI.alpha_s_power;
         max_a_power_requested = UI.alpha_s_power;
     }
-    // default  option ew_h_plus_j
+
+    bool a_power_fits = the_sector->alpha_power>=min_a_power_requested
+    and the_sector->alpha_power<=max_a_power_requested;
+    
+    bool initial_state_partons_fit=(
+                                    UI.Fleft==the_sector->F1.parton_from
+                                    and UI.Fright==the_sector->F2.parton_from
+                                    )
+    or
+    (UI.Fleft=="none" and UI.Fright=="none");
+    
+    bool e_power_fits = the_sector->epsilon_power==UI.pole;
+    
+    //matrix element approximation
+    bool me_approx_fits = false;
+    if (the_sector->alpha_power==2 or the_sector->alpha_power==3)
+    {
+        me_approx_fits =
+        the_sector->ME->me_approximation()==UI.matrix_element_approximation;
+    }
+    else
+    {
+        me_approx_fits =
+        the_sector->ME->me_approximation()=="effective";
+    }
+    
+    
+    bool pure_qcd_is_not_excluded = UI.alpha_ew_power<1;
+    
+    if (a_power_fits and initial_state_partons_fit and e_power_fits and me_approx_fits and pure_qcd_is_not_excluded)
+    {
+        necessary_sectors.push_back(the_sector);
+    }
+    else
+    {
+//        if (the_sector->ME->me_approximation()=="effective" 
+//            and the_sector->ME->epsilon_power()>0)
+//            cout<<"\nSECTOR FAILED: "<<the_sector->name;
+    }
+
+    
+}
+
+void GluonFusionSectorBox::select_ew_sector(SimpleSector* the_sector, const UserInterface& UI)
+{
+    //note: we rely here on the fact that all ew matrix-elements declared are by default exact, so matrix_element_approximation doesn't affect the selection. 
     int min_aw_power_requested = 0;
     int max_aw_power_requested = 0;
     if (UI.ew_h_plus_j)
@@ -372,82 +493,33 @@ vector<SimpleSector*> GluonFusionSectorBox::give_necessary_sectors(const UserInt
         max_aw_power_requested = 1;
     }
     // advanced option ew_h_plus_j_only
-    if (UI.only_ew_h_j)
+    if (UI.alpha_ew_power!= -1)
     {
-        min_aw_power_requested = 1;
-        max_aw_power_requested = 1;
+        min_aw_power_requested = UI.alpha_ew_power;
+        max_aw_power_requested = UI.alpha_ew_power;
     }
     
-    cout<<"\n[GluonFusionSectorBox] : looking for necessary sectors"<<endl;
-    vector<SimpleSector*> necessary_sectors;
+    bool ew_sectors_are_on = max_aw_power_requested==1;
     
-    for (int i=0;i<available_sectors.size();i++)
-    {
-        SimpleSector* the_sector = available_sectors[i];
-        bool a_power_fits = the_sector->alpha_power>=min_a_power_requested
-        and the_sector->alpha_power<=max_a_power_requested;
-        if (not(a_power_fits)) continue;
-        
-        bool initial_state_partons_fit=(
-                                        UI.Fleft==the_sector->F1.parton_from
-                                        and UI.Fright==the_sector->F2.parton_from
-                                        )
-        or
-        (UI.Fleft=="none" and UI.Fright=="none");
-        if (not(initial_state_partons_fit)) continue;
-        
-        bool e_power_fits = the_sector->epsilon_power==UI.pole;
-        if (not(e_power_fits)) continue;
-        
-        bool aw_fits = the_sector->ME->alpha_ew_power() >= min_aw_power_requested
-        and
-        the_sector->ME->alpha_ew_power() <= max_aw_power_requested;
-        if (not(aw_fits)) continue;
-        
-        string real_life_ME_approx = UI.matrix_element_approximation;
-        // electroweak h+j sector
-        if (the_sector->ME->alpha_ew_power()==1)
-        {
-            real_life_ME_approx == "exact";
-        }
-        // qcd sector
-        else
-        {
-            if (UI.matrix_element_approximation == "effective")
-                real_life_ME_approx = "effective";
-            if (UI.matrix_element_approximation == "effective_enhanced")
-                real_life_ME_approx = "effective";
-            if (UI.matrix_element_approximation == "exact")
-            {
-                if (the_sector->alpha_power == 4)
-                    real_life_ME_approx = "effective";
-                else
-                {
-                    if (UI.ew_soft) real_life_ME_approx = "any";
-                    else real_life_ME_approx = "exact";
-                }
-            }
-        }
-        
-        // trying to match matrix_element_approximation
-        // nnlo MEs all have matrix_element_approximation = effective
-        
-        
-        
-        // in an exact run we might have effective LO and NLO MEs if there
-        // are ew corrections
-        bool me_approx_fits =
-        the_sector->ME->me_approximation()==real_life_ME_approx
-        or real_life_ME_approx == "any";
-        if (not(me_approx_fits)) continue;
+    
+    bool initial_state_partons_fit=(
+                                    UI.Fleft==the_sector->F1.parton_from
+                                    and UI.Fright==the_sector->F2.parton_from
+                                    )
+    or
+    (UI.Fleft=="none" and UI.Fright=="none");
+    
+    bool e_power_fits = the_sector->epsilon_power==UI.pole;
+
+    if (ew_sectors_are_on and initial_state_partons_fit and e_power_fits)
         necessary_sectors.push_back(the_sector);
-    }
     
-    
-    cout<<"\n[GluonFusionSectorBox] : "<<necessary_sectors.size()
-    <<" sectors matched"<<endl;
-    return necessary_sectors;
 }
+
+
+
+
+
 
 
 

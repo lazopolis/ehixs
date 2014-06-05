@@ -230,7 +230,7 @@ void CashedInterpolator::read_grid_from_file(vector<double> & )
      ifstream ifile(cashed_file_name.c_str(),ifstream::in);
      if (ifile)
           {
-          cout<<"[CashedInterpolator] reading pdf grid from file "<<cashed_file_name<<endl;
+          //cout<<"[CashedInterpolator] reading pdf grid from file "<<cashed_file_name<<endl;
           FGrid.clear();
           string buffer;
           //std::getline(ifile,buffer);//:skipping first line
@@ -242,7 +242,7 @@ void CashedInterpolator::read_grid_from_file(vector<double> & )
           }
      else
           {
-          cout<<"\n Unable to read grid file: "<<cashed_file_name<<" despite the fact that the file is there. Will create the grid on the fy"<<endl;
+          cout<<"\n Unable to read grid file: "<<cashed_file_name<<" despite the fact that the file is there. Will create the grid on the fly"<<endl;
           (this->*cur_fill_FGrid)();
           write_fgrid_to_file();
           }

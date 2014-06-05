@@ -106,27 +106,27 @@ string SimpleHistogram::xml()
 ostream& operator<<(ostream& stream, const SimpleHistogram& hist)
 {
     double total = 0;
-    stream << "\n\n<histogram> " << hist._name << endl;
-    stream  << "#      bin     |"
+    stream <<  "[ehixs] " << hist._name << endl;
+    stream  << "[ehixs] #      bin     |"
                   <<"     sigma    |"
                       <<"  error   |"
                     <<"    % error |"
             <<"    chi^2 /   dof   |"
             <<"  # of points "<<endl;
-    stream <<"#--------------------------------------------------------"
+    stream <<"[ehixs] #-------------------------------------------------------"
     <<"----------------------------------"<<endl;
     //: -1 for the overflow bin to be treated separately
     for(unsigned i=0; i<hist._numbins-1; ++i)
         {
-        stream  << "[" << setw(5)<<hist._lowend+hist._binsize*i
+        stream  << "[ehixs][" << setw(5)<<hist._lowend+hist._binsize*i
                 << ", " <<setw(5)<< hist._lowend+hist._binsize*(i+1) << "]"
                 << " | " << hist._all_bins[i] << endl;
         total += hist._all_bins[i];
         }
-    stream << "[  overflow  ] | "<<hist._all_bins[hist._numbins-1] << endl;
-    stream << "total binned = " << total 
+    stream << "[ehixs][  overflow  ] | "<<hist._all_bins[hist._numbins-1] << endl;
+    stream << "[ehixs] total binned = " << total 
             <<"\t|\t total_binned + overflow = "<<total+hist._all_bins[hist._numbins-1]<< endl;
-    stream<<"</histogram>"<<endl;
+    stream<<"[ehixs]"<<endl;
     return stream;
 }
 
@@ -557,13 +557,13 @@ HistogramBox::HistogramBox(const UserInterface& my_UI)
     
     //cout<<"nParseHistograms : requested histogram size = "<<histogram_vector.size()<<endl;
     
-    for (int j=0;j<histogram_vector.size();j++)
-    {
-        cout<<"\n[HistogramBox]new histogram added : "<<histogram_vector[j]->give_name()
-        <<" ["<<histogram_vector[j]->_lowend<<","
-        <<histogram_vector[j]->_highend<<"] with "
-        <<histogram_vector[j]->_numbins<<" bins!"<<endl;
-    }
+//    for (int j=0;j<histogram_vector.size();j++)
+//    {
+//        cout<<"\n[HistogramBox]new histogram added : "<<histogram_vector[j]->give_name()
+//        <<" ["<<histogram_vector[j]->_lowend<<","
+//        <<histogram_vector[j]->_highend<<"] with "
+//        <<histogram_vector[j]->_numbins<<" bins!"<<endl;
+//    }
     
     //    
     //    if (my_UI.requested_histogram>-1)
@@ -572,7 +572,7 @@ HistogramBox::HistogramBox(const UserInterface& my_UI)
     //        histogram_vector.push_back(available_histograms[my_UI.requested_histogram]);
     //        }
     
-    cout<<"[HistogramBox] : number of histograms requested = "<<histogram_vector.size();
+    //cout<<"[HistogramBox] : number of histograms requested = "<<histogram_vector.size();
 }
 
 void HistogramBox::show_histogram_info_and_exit()

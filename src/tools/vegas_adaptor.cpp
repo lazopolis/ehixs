@@ -13,10 +13,14 @@ int Integrand(const int *ndim, const double xx[],
 ostream& operator<<(ostream& stream, const VegasAdaptor& Vegas)
 {
      
-     stream<< "sigma = " << Vegas.vegas_integral_output[0]
-     << "\nerror = " << Vegas.vegas_error_output[0]
-     << " \nprob = " << Vegas.vegas_prob_output[0]
-    <<"\ntotal number of points = "<<Vegas.total_number_of_points();
+     stream <<"[ehixs]"<<endl
+            <<"[ehixs]"<<endl
+            <<"[ehixs] cross section [pb]"<<endl
+        <<"[ehixs] sigma = " << Vegas.vegas_integral_output[0]
+     << " +- " << Vegas.vegas_error_output[0]
+     << " prob = " << Vegas.vegas_prob_output[0]
+    <<" total # of points = "<<Vegas.total_number_of_points()
+    <<endl<<"[ehixs]"<<endl;
      return stream;
 }
 
@@ -43,6 +47,16 @@ void VegasAdaptor::prepare_for_final_iteration()
     ff_vegas[0]=0.0;
 }
 
+void VegasAdaptor::ConfigureNumberOfComponents(int n)
+{
+    // the first "Nmember" components are for the pdf error
+    number_of_components=n;
+    
+    for (int i=0;i<number_of_components;i++)
+    {
+        ff_vegas.push_back(0.0);
+    }   
+}
 
 void VegasAdaptor::call_vegas()
 {
@@ -57,7 +71,6 @@ void VegasAdaptor::call_vegas()
      //:0: Sobol
      //:>0 Ranlux
      int nbatch=10;
-     cout<<"-------------------- Vegas  --------------------\n";
      //
      Vegas(
            number_of_dims,

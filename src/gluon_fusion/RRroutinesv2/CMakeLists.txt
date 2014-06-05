@@ -5,6 +5,7 @@
   
 
 add_library(fortran_ggf_RR 
+                        polylog.f
                          rrq1q22q1q2h/rrq1q22q1q2ht1.f
                          rrq1q22q1q2h/rrq1q22q1q2ht2.f
                          rrqq2qqh/rrqq2qqht1.f

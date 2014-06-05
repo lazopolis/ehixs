@@ -2,7 +2,7 @@
 
 #ifndef ONCE_PTR_TO_GGF
 #define ONCE_PTR_TO_GGF
-Production* ptr_to_GGF; //: static global pointer to use as a handle for plugins (like the fortran or c++ NNLO double real pieces)
+Production* ptr_to_GGF; //: static global pointer to use as a handle for plugins (like the fortran  NNLO double real pieces)
 //Process* ptr_to_process;
 #endif
 
@@ -38,70 +38,26 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
         //pure qcd contributions are removed
         readjust_wilson_coefficient_for_exact();
         }
-    if (UI.ew_soft)
+    if (UI.ew_soft or UI.ew_h_plus_j)
         {
-        readjust_wilson_coefficient_for_electroweak_effective();
+        electroweak_coefficients = new GluonFusionEWCoefficients(Model);
+        if (UI.ew_soft)
+            readjust_wilson_coefficient_for_electroweak_effective();
         }
+        
     set_up_beta_constants();
-    cout<<"\n[GluonFusion] : setting up sectors"<<endl;
+    //cout<<"\n[GluonFusion] : setting up sectors"<<endl;
     all_sectors = new GluonFusionSectorBox(WC,beta,log_mur_sq_over_muf_sq,UI.rr_treatment);
     
     //cout<<"\n hello before Parse"<<endl;
     #include "ggf_cut_initialization.h"
     cuts_->ParseCuts(UI);
     
-    if (UI.info)
-        {
-        
-        vector<SimpleSector*> necessary_sectors=
-                                    all_sectors->give_necessary_sectors(UI);
-        cout<<"\n Sectors that fit your selection criteria:\n";
-        for (int i=0;i<necessary_sectors.size();i++)
-            {
-            cout<<"\n"<<i<<" : "<<necessary_sectors[i]->name;
-            }
-        cout<<"\n\n number of Sectors defined : "<<necessary_sectors.size()<<endl;
-        check_which_sectors_can_be_run_together(necessary_sectors);
-        if (UI.xml_info!="none")
-            {
-            
-                const char * output_fname = UI.xml_info.c_str();
-                fstream my_local_outfile(output_fname, fstream::out);
-                if(my_local_outfile.is_open())
-                    {
-                    my_local_outfile.precision(5);
-                    my_local_outfile << "<ehixs_info " << endl;
-                    my_local_outfile << "\nnumber_of_sectors=\""
-                    <<necessary_sectors.size()<<"\"";
-                    
-                    my_local_outfile << "\n runcard_name=\""<<UI.input_filename
-                    <<"\" >"<<endl;
-                    for (int i=0;i<necessary_sectors.size();i++)
-                        {
-                        my_local_outfile<<"\n<sector id=\""<<i<<"\" name=\""<<necessary_sectors[i]->name<<"\" ></sector>";
-                        }
-                    
-                    my_local_outfile << "</ehixs_info>" << endl;                    
-                    }
-                else
-                    {
-                    cout<<"\nfailbit = "<<my_local_outfile.fail()<<endl;
-                    cout << "Error opening file "<<UI.xml_info.c_str()<<endl;
-                    }
-                my_local_outfile.close();
-                
-            }
-        
-        exit(0);
-        }
+    if (UI.info) print_sector_info_and_exit(UI);
+    if (UI.show_me_list) print_available_me_and_exit();
+
     
-    if (UI.show_me_list)
-        {
-        cout<<"\n ME available:\n This should be re-implemented!!";
-        exit(0);
-        }
-    
-    cout<<"\n[GluonFusion] : finding sector"<<endl;
+    //cout<<"\n[GluonFusion] : finding sector"<<endl;
     find_topology(UI); //: finding topology and setting all appropriate pointers to Channel, Convolution, PartonicMode, PartonicXS, Topology etc.
     if (UI.dummy_process == false)
         {
@@ -112,8 +68,8 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
             determine_parametrization();
            
             allocate_luminosity();
-            cout <<"[GGF] sector \""
-            <<the_sector->name
+            cout <<"\n[ehixs]\n[ehixs] Gluon Fusion: sector "<<endl
+            <<"[ehixs] "<<the_sector->name
             <<endl;
             
             
@@ -135,11 +91,60 @@ GluonFusion::GluonFusion(const UserInterface & UI) : Production(UI)
             the_sector -> setUpPrefactor(Model.alpha_strong()/consts::Pi);
             
             }
+        cout<<"[ehixs]"<<endl;
         
-        cout<<"\n[GGF] a_s used = "<<Model.alpha_strong()
-        <<"(a/Pi)^"<<the_sector->alpha_power<<" = "<<pow(Model.alpha_strong()/consts::Pi,the_sector->alpha_power) ;
         }
 }
+
+void GluonFusion::print_sector_info_and_exit(const UserInterface& UI)
+{
+    vector<SimpleSector*> necessary_sectors=
+    all_sectors->give_necessary_sectors(UI);
+    cout<<"\n Sectors that fit your selection criteria:\n";
+    for (int i=0;i<necessary_sectors.size();i++)
+    {
+        cout<<"\n"<<i<<" : "<<necessary_sectors[i]->name;
+    }
+    cout<<"\n\n number of Sectors defined : "<<necessary_sectors.size()<<endl;
+    //check_which_sectors_can_be_run_together(necessary_sectors);
+    if (UI.xml_info!="none")
+    {
+        const char * output_fname = UI.xml_info.c_str();
+        fstream my_local_outfile(output_fname, fstream::out);
+        if(my_local_outfile.is_open())
+        {
+            my_local_outfile.precision(5);
+            my_local_outfile << "<ehixs_info " << endl;
+            my_local_outfile << "\nnumber_of_sectors=\""
+            <<necessary_sectors.size()<<"\"";
+            
+            my_local_outfile << "\n runcard_name=\""<<UI.input_filename
+            <<"\" >"<<endl;
+            for (int i=0;i<necessary_sectors.size();i++)
+            {
+                my_local_outfile<<"\n<sector id=\""<<i<<"\" name=\""<<necessary_sectors[i]->name<<"\" ></sector>";
+            }
+            
+            my_local_outfile << "</ehixs_info>" << endl;                    
+        }
+        else
+        {
+            cout<<"\nfailbit = "<<my_local_outfile.fail()<<endl;
+            cout << "Error opening file "<<UI.xml_info.c_str()<<endl;
+        }
+        my_local_outfile.close();
+        
+    }
+    
+    exit(0);
+}
+
+void GluonFusion::print_available_me_and_exit()
+{
+    cout<<"[ehixs] This facility is not working currently"<<endl;
+    exit(0);
+}
+
 
 void GluonFusion::initialize_ggf_func_map()
 {
@@ -253,16 +258,9 @@ void GluonFusion::check_which_sectors_can_be_run_together(const vector<SimpleSec
 
 bool GluonFusion::sectors_are_compatible(SimpleSector* s1,SimpleSector* s2)
 {
-    if (/*s1->F1.name()==s2->F1.name() and s1->F2.name()==s2->F2.name() and*/ s1->ME->give_name()==s2->ME->give_name())
+    if (s1->ME->give_name()==s2->ME->give_name())
         {
         return true;
-        }
-    else
-        {
-        //          cout<<endl<<"incompatible: ";
-        //          cout<<endl<<s1->F1.name()<<" vs "<<s2->F1.name()
-        //               <<endl<<s1->F2.name()<<" vs "<<s2->F2.name()
-        //               <<endl<<s1->ME->give_name()<<" vs "<<s2->ME->give_name();
         }
     return false;
 }
@@ -311,7 +309,7 @@ void GluonFusion::find_topology(const UserInterface & UI)
                sector_defined=true;
                the_sector=necessary_sectors[sector_id];
                dim_of_integration=the_sector->ME->dimension;
-               cout<<"[GGF] Dimension of integration for production = "<<dim_of_integration;
+               //cout<<"[GGF] Dimension of integration for production = "<<dim_of_integration;
                }
           else
                {
@@ -396,11 +394,10 @@ void GluonFusion::readjust_wilson_coefficient_for_enhanced_effective()
 
 void GluonFusion::readjust_wilson_coefficient_for_electroweak_effective()
 {
-    GluonFusionEWCoefficients electroweak_coefficients(Model);
     
-    WC.c0 = WC.c0 + electroweak_coefficients.LO() * 1.0;
-    WC.c1 = WC.c1 + electroweak_coefficients.LO() * 7.0/6.0;
-    WC.c2 = WC.c2 + electroweak_coefficients.LO() * 10.0;
+    WC.c0 = WC.c0 + electroweak_coefficients->LO() * 1.0;
+    WC.c1 = WC.c1 + electroweak_coefficients->LO() * 7.0/6.0;
+    WC.c2 = WC.c2 + electroweak_coefficients->LO() * 10.0;
     cout<<"\n[electroweak corrections to WCs] WC0 |WC0|^2 = "
         <<pow(abs(WC.c0),2.0)<<endl;
     
@@ -1348,243 +1345,71 @@ void GluonFusion::qqbar_NLO_hard_exact()
 
 void GluonFusion::NLO_ewk_uubar_h_plus_jet()
 {
-    if (the_sector->ME->epsilon_power()==0)
-        {
-        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-        else
-            {
-        double sigma =   pref_sgg
-                        *ISP.meas
-                        *lumi->LL(0)
-            *the_sector->sector_specific_prefactors_from_a_e_expansion()
-            *EwkUUbar(ISP.z,ISP.lambda);
-        
-        if (ISP.meas==0.0) cout<<"\n* "<<sigma;
-        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-            }
-        }
+    NLO_ewk_h_plus_j_fork("EwkUUbar");
 }
 
 void GluonFusion::NLO_ewk_ddbar_h_plus_jet()
 {
-    if (the_sector->ME->epsilon_power()==0)
-        {
-        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-        else
-            {
-        double sigma =   pref_sgg
-        *ISP.meas
-        *lumi->LL(0)
-        *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *EwkDDbar(ISP.z,ISP.lambda);
-        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-            }
-        }
+    NLO_ewk_h_plus_j_fork("EwkDDbar");
+
 }
 
 
 void GluonFusion::NLO_ewk_ug_h_plus_jet()
 {
-    if (the_sector->ME->epsilon_power()==0)
-        {
-        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-        else
-            {
-        double sigma =   pref_sgg
-        *ISP.meas
-        *lumi->LL(0)
-        *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *EwkUG(ISP.z,ISP.lambda);
-        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-            }
-        }
+    NLO_ewk_h_plus_j_fork("EwkUG");
 }
 
 void GluonFusion::NLO_ewk_dg_h_plus_jet()
 {
-    if (the_sector->ME->epsilon_power()==0)
-        {
-        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-        else
-            {
-        double sigma =   pref_sgg
-        *ISP.meas
-        *lumi->LL(0)
-        *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *EwkDG(ISP.z,ISP.lambda);
-        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-            }
-        }
+    NLO_ewk_h_plus_j_fork("EwkDG");
 }
 
 
 void GluonFusion::NLO_ewk_gu_h_plus_jet()
 {
-    if (the_sector->ME->epsilon_power()==0)
-        {
-        if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
-        else
-            {
-        double sigma =   pref_sgg
-        *ISP.meas
-        *lumi->LL(0)
-        *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *EwkUG(ISP.z,ISP.lambda);
-        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   1.0-ISP.lambda);
-            }
-        }
+    NLO_ewk_h_plus_j_fork("EwkGU");
+    
 }
 
 void GluonFusion::NLO_ewk_gd_h_plus_jet()
 {
+    NLO_ewk_h_plus_j_fork("EwkGD");
+    
+}
+
+void GluonFusion::NLO_ewk_h_plus_j_fork(const string& channel_selector)
+{
+    double ew_me;
+    if (channel_selector == "EwkUUbar") 
+        ew_me = electroweak_coefficients->EwkUUbar(ISP.curs,ISP.z,ISP.lambda);
+    else if (channel_selector == "EwkDDbar") 
+        ew_me = electroweak_coefficients->EwkDDbar(ISP.curs,ISP.z,ISP.lambda);
+    else if (channel_selector == "EwkUG" or channel_selector=="EwkGU") 
+        ew_me = electroweak_coefficients->EwkUG(ISP.curs,ISP.z,ISP.lambda);
+    else if (channel_selector == "EwkDG" or channel_selector=="EwkGD" ) 
+        ew_me = electroweak_coefficients->EwkDG(ISP.curs,ISP.z,ISP.lambda);
+    else {cout<<"\nFatal error: channel_selector in NLO_ewk_h_plus_j_fork not recognized : "<<channel_selector<<endl;exit(0);}
+    double my_lambda = ISP.lambda;
+    if (channel_selector=="EwkGU" or channel_selector=="EwkGD")
+        my_lambda = 1.-ISP.lambda;
+        
     if (the_sector->ME->epsilon_power()==0)
-        {
+    {
         if (ISP.meas==0.0) Jnlo(0.0,ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
         else
-            {
-        double sigma =   pref_sgg
-        *ISP.meas
-        *lumi->LL(0)
-        *the_sector->sector_specific_prefactors_from_a_e_expansion()
-        *EwkDG(ISP.z,ISP.lambda);
-        Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,   1.0-ISP.lambda);
-            }
-        }
-}
-
-
-
-extern "C" {
-    // electroweak form factors
-    complex_double fa_massless_(double*,double*, double*,
-                                complex_double*,complex_double*);
-    
-}
-
-inline complex_double FA_massless(const double& s, const double& t, const double& u, const complex_double& mhsq,const complex_double& mvsq)
-{ return fa_massless_((double*)&s, (double*)&t, (double*)&u,
-                      (complex_double*)&mhsq,(complex_double*)&mvsq); }
-
-double GluonFusion::EwkUUbar(const double& z, const double& lambda)
-{
-    complex<double> FFstar (0.0,0.0);
-    double s = ISP.curs;
-    double t = -s * (1.0-z)*lambda;
-    double u = -s * (1.0-z)*(1.0-lambda);
-    
-    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
-    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(ISP.z,&Model) / s;
-    complex<double> Mewk(0.0);
-    
-    
-    double mhsq = Model.higgs.m()*Model.higgs.m();
-    
-    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
         {
-        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
-        complex<double> mv_sq = V->cm_sq();
-        complex<double> gw_up = pow(V->cv_up,2.0) + pow(V->ca_up,2.0);
-        complex<double> lambda_v = V->lamda;
-        //cout<<"\n"<<gw_up;
-        Mewk += - mv_sq * gw_up * lambda_v
-                    * (  t*t * FA_massless(t,u,s,mhsq,mv_sq)
-                       + u*u * FA_massless(u,t,s,mhsq,mv_sq));
+            double sigma =   pref_sgg
+            *ISP.meas
+            *lumi->LL(0)
+            *the_sector->sector_specific_prefactors_from_a_e_expansion()
+            *electroweak_coefficients->EwkUG(ISP.curs,ISP.z,ISP.lambda);
+            Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,my_lambda);
         }
-  
-    
-    
-    double res = prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
-    if (abs(s+t+u - mhsq)>1e-4)
-        {
-        cout<<s<<" "<<t<<" "<<u<<" "<<mhsq<<" "<<s+t+u
-        <<"\tx1 = "<<ISP.x1<<" x2 = "<<ISP.x2<<"\t res= "<<res*ISP.meas<<endl;
-        }
-    return res;
-}
-
-double GluonFusion::EwkDDbar(const double& z, const double& lambda)
-{
-    complex<double> FFstar (0.0,0.0);
-    double s = ISP.curs;
-    double t = -s * (1.0-z)*lambda;
-    double u = -s * (1.0-z)*(1.0-lambda);
-    
-    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
-    complex<double> Mqcd = 4.0/3.0 *sum_of_Aqqgh(ISP.z,&Model) / s;
-    complex<double> Mewk(0.0);
-    
-    double mhsq = Model.higgs.m()*Model.higgs.m();
-    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
-        {
-        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
-        complex<double> mv_sq = V->cm_sq();
-        complex<double> gw_down = pow(V->cv_down,2.0) + pow(V->ca_down,2.0);
-        complex<double> lambda_v = V->lamda;
-        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
-        Mewk += - mv_sq * gw_down * lambda_v
-        * (  t*t * FA_massless(t,u,s,mhsq,mv_sq)
-           + u*u * FA_massless(u,t,s,mhsq,mv_sq));
-        }
-    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
-    
+    }
 }
 
 
-double GluonFusion::EwkUG(const double& z, const double& lambda)
-{
-    complex<double> FFstar (0.0,0.0);
-    double s = ISP.curs;
-    double t = -s * (1.0-z)*lambda;
-    double u = -s * (1.0-z)*(1.0-lambda);
-    
-    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
-                    * 9.0/64.0*u/s;
-    complex<double> Mqcd = 4.0/3.0 *sum_of_Aqqgh(ISP.z,&Model) / s;
-    complex<double> Mewk(0.0);
-    
-    double mhsq = Model.higgs.m()*Model.higgs.m();
-    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
-        {
-        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
-        complex<double> mv_sq = V->cm_sq();
-        complex<double> gw_up = pow(V->cv_up,2.0) + pow(V->ca_up,2.0);
-        complex<double> lambda_v = V->lamda;
-        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
-        Mewk += - mv_sq * gw_up * lambda_v
-        * (  s*s * FA_massless(s,t,u,mhsq,mv_sq)
-           + t*t * FA_massless(t,s,u,mhsq,mv_sq));
-        }
-    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
-    
-}
-
-double GluonFusion::EwkDG(const double& z, const double& lambda)
-{
-    complex<double> FFstar (0.0,0.0);
-    double s = ISP.curs;
-    double t = -s * (1.0-z)*lambda;
-    double u = -s * (1.0-z)*(1.0-lambda);
-    
-    double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
-                        *9.0/64.0*u/s;
-    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(ISP.z,&Model) / s;
-    complex<double> Mewk(0.0);
-    
-    double mhsq = Model.higgs.m()*Model.higgs.m();
-    for (int iboson=0;iboson<Model.vector_bosons.size();iboson++)
-        {
-        VectorBoson* V = (VectorBoson*)(Model.vector_bosons[iboson]);
-        complex<double> mv_sq = V->cm_sq();
-        complex<double> gw_down = pow(V->cv_down,2.0) + pow(V->ca_down,2.0);
-        complex<double> lambda_v = V->lamda;
-        //cout<<t<<" "<<u<<" "<<s<<" "<<mhsq<<" "<<sqrt(mv_sq)<<endl;
-        Mewk += - mv_sq * gw_down * lambda_v
-        * (  s*s * FA_massless(s,t,u,mhsq,mv_sq)
-           + t*t * FA_massless(t,s,u,mhsq,mv_sq));
-        }
-    return prefactor* real( Mqcd * conj(Mewk) + conj(Mqcd) * Mewk );
-    
-}
 
 
 

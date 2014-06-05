@@ -58,6 +58,8 @@ void CModel::consolidate(const double & a_at_mz,
                          const double & mur_over_mh, int porder,
                          const double& mh)
 {
+    cout<<"[ehixs]"<<endl<<"[ehixs] couplings and masses "<<endl;
+    cout<<"[ehixs]"<<endl;
     higgs.set_pole_mass(mh);
     mu_r_ = mur_over_mh * higgs.m();
     alpha_s = new CouplingConstant(a_at_mz,Z.m());
@@ -66,6 +68,8 @@ void CModel::consolidate(const double & a_at_mz,
     for (int i=0;i<vector_bosons.size();i++)
         vector_bosons[i]->consolidate(*alpha_s,mu_r_,porder,higgs.m(),Z.m());
     alpha_s->evolve(mu_r_,porder,Z.m());
+    cout<<"[ehixs] a_s(m_z) = "<<a_at_mz<<" -> a_s("<<mu_r_<<") = "<<
+        alpha_s->v()<<endl;
     
     // complex masses in gw,sw,cw
     complex<double> gw = sqrt(4.0*sqrt(2.0)*consts::G_fermi * W.cm_sq());
@@ -90,11 +94,13 @@ void CModel::consolidate(const double & a_at_mz,
     Z.ca_up = gw/cw*1.0/2.0;
     Z.ca_down = gw/cw*1.0/2.0;
     Z.lamda = 2.0;
-    cout<<"\n[model] gw, sw^2, cw: "<<gw<<" "<< sw_sq<<" "<< cw<<" "<<consts::G_fermi;
-    cout<<"\n[model] mw = "<<W.m();
+    cout<<"[ehixs] gw = "<<gw<<"\tsw^2 = "<< sw_sq
+        <<"\tcw = "<< cw<<endl;
+    cout<<"[ehixs] G_F = "<<consts::G_fermi<<endl;
+    cout<<"[ehixs] mw = "<<W.m()<<endl;
 
-    cout<<"\n[model] gw_up for W "<<pow(W.cv_up,2.0) + pow(W.ca_up,2.0);
-    cout<<"\n[model] gw_up for Z "<<pow(Z.cv_up,2.0) + pow(Z.ca_up,2.0);
+    cout<<"[ehixs] gw_up for W = "<<pow(W.cv_up,2.0) + pow(W.ca_up,2.0);
+    cout<<"[ehixs] gw_up for Z = "<<pow(Z.cv_up,2.0) + pow(Z.ca_up,2.0);
     
 }
 

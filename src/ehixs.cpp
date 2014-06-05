@@ -32,17 +32,16 @@ void print_logo()
     vmajor = EHIXS_VERSION_MAJOR;
     vminor = EHIXS_VERSION_MINOR;
 #endif
-  cout<<"\n* * * * * * * * * * * * * * * * * * * * * * * * *";
-  cout<<"\n*                                               *";
-  cout<<"\n*                                               *";
-  cout<<"\n*                                               *";
-  cout<<"\n*                ehixs                          *";
-  cout<<"\n*                                               *";
-  cout<<"\n*                version "<<vmajor<<"."<<vminor<<"                    *";
-  cout<<"\n*                                               *";
-  cout<<"\n*                                               *";
-  cout<<"\n* * * * * * * * * * * * * * * * * * * * * * * * *";
-  cout<<"\n\n";
+  cout<<"[ehixs]"<<endl;  
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs]\t\t\tehixs"<<endl;
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs]\t\t\tversion "<<vmajor<<"."<<vminor<<endl;
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs]"<<endl;
+    cout<<"[ehixs]"<<endl;
 }
 
 
@@ -81,13 +80,19 @@ int main(int argc, char** argv)
           cerr << endl << "[ehixs]" << " exception thrown: " << s 
               <<"\n[ehixs] The exception was considered fatal"<< endl;
           }
+     catch(const string& s)
+        {
+            cerr<<"[ehixs] exception thrown :"<<s<<endl;
+        }
      catch(...)
           {
           cerr<<endl<<"Something went wrong but the exception thrown was not a string";
           }
-    cout << "Total running time  = " << myclock.GiveMeasurement()
+    cout<<"[ehixs]"<<endl;
+    cout << "[ehixs] Total running time  = " << myclock.GiveMeasurement()
         //float(clock()-t_init)/CLOCKS_PER_SEC
         << " s" << endl;
+        cout<<"[ehixs]"<<endl;
      return 0;
 }
 
