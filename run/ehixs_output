@@ -1,0 +1,11 @@
+<ehixs_data 
+
+ sigma="-0.120175"
+error="0.000591026" 
+prob="1.02029e-13"
+total_number_of_points="611966"
+
+time="4.9783"
+ secs_per_point="8.1349e-06"
+ runcard_name="test_NLO_effective_qg.card" >
+</ehixs_data>

@@ -45,6 +45,9 @@ void VegasAdaptor::prepare_for_final_iteration()
     nstart_cur=nstart;
     nincrease_cur=nincrease;
     ff_vegas[0]=0.0;
+    vegas_integral_output.clear();
+    vegas_error_output.clear();
+    vegas_prob_output.clear();
 }
 
 void VegasAdaptor::ConfigureNumberOfComponents(int n)
@@ -66,7 +69,7 @@ void VegasAdaptor::call_vegas()
      double prob[number_of_components];
      int neval,fail; 
        
-    gridno = 1;
+     gridno = 1;
      int seed=0;
      //:0: Sobol
      //:>0 Ranlux

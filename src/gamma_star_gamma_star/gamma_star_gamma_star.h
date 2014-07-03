@@ -51,7 +51,9 @@ private:
     CrossSection* the_xs_;
     //int number_of_necessary_sectors_;
 private:
+    // these should be in process
     void info();
+    void xml_info(const char * output_fname);
     void initialize_sector(const UserInterface& UI);
 
 };

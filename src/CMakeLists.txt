@@ -110,7 +110,7 @@ add_subdirectory(avh_olo)
 add_subdirectory(gluon_fusion)
 #add_subdirectory(gluon_fusion_inclusive)
 #add_subdirectory(bottom_fusion)
-#add_subdirectory(gamma_star_gamma_star)
+add_subdirectory(gamma_star_gamma_star)
 #add_subdirectory(ihixs)
 #
 #   decay modes
@@ -136,7 +136,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             decay_h_to_gamma_gamma
             models
             gluon_fusion 
-            #gamma_star_gamma_star 
+            gamma_star_gamma_star 
             tools
             fortran_ggf 
             fortran_ggf_RR

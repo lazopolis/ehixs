@@ -83,7 +83,7 @@ void GluonFusionSectorBox::build_ew_sectors()
 void GluonFusionSectorBox::add_simple_sector(const FFF& f1,const FFF& f2, const string& matr_elem_name)
 {
     vector<ExpansionTerm*> one;
-    one.push_back(new ExpansionTerm("(1)",1.0,0,0));
+    one.push_back(new ExpansionTerm("(a^2)",1.0,2,0));
     available_sectors.push_back(
         new SimpleSector(f1,f2,one,find_matrix_element(matr_elem_name)));
 }
@@ -444,9 +444,14 @@ void GluonFusionSectorBox::select_qcd_sector(SimpleSector* the_sector,const User
     bool a_power_fits = the_sector->alpha_power>=min_a_power_requested
     and the_sector->alpha_power<=max_a_power_requested;
     
+    
+    
+    
     bool initial_state_partons_fit=(
-                                    UI.Fleft==the_sector->F1.parton_from
-                                    and UI.Fright==the_sector->F2.parton_from
+                                    flavor_match(UI.Fleft,the_sector->F1.parton_from)
+                                    and 
+                                    flavor_match(UI.Fright,the_sector->F2.parton_from)
+                
                                     )
     or
     (UI.Fleft=="none" and UI.Fright=="none");
@@ -457,13 +462,17 @@ void GluonFusionSectorBox::select_qcd_sector(SimpleSector* the_sector,const User
     bool me_approx_fits = false;
     if (the_sector->alpha_power==2 or the_sector->alpha_power==3)
     {
+        string compound_approx = UI.matrix_element_approximation;
+        if (compound_approx=="effective_enhanced")
+            compound_approx="effective";
         me_approx_fits =
-        the_sector->ME->me_approximation()==UI.matrix_element_approximation;
+        the_sector->ME->me_approximation()==compound_approx;
     }
     else
     {
         me_approx_fits =
-        the_sector->ME->me_approximation()=="effective";
+        the_sector->ME->me_approximation()=="effective"
+        ;
     }
     
     
@@ -481,6 +490,33 @@ void GluonFusionSectorBox::select_qcd_sector(SimpleSector* the_sector,const User
     }
 
     
+}
+
+bool GluonFusionSectorBox::flavor_match(const string& ui_fl, const string& me_fl)
+{
+    if (ui_fl=="gluon")
+    {
+        if (me_fl=="gluon") return true;
+        else return false;
+    }
+    else if (ui_fl=="quark")
+    {
+        string synonyms[5]={"quark","up","down","upbar","downbar"};
+        for (int i=0;i<5;i++) 
+            {
+            if (me_fl==synonyms[i]) return true;
+            }
+        return false;
+    }
+    else if (ui_fl=="antiquark")
+    {
+        string synonyms[5]={"antiquark","up","down","upbar","downbar"};
+        for (int i=0;i<5;i++) 
+        {
+            if (me_fl==synonyms[i]) return true;
+        }
+        return false;
+    }
 }
 
 void GluonFusionSectorBox::select_ew_sector(SimpleSector* the_sector, const UserInterface& UI)
@@ -503,8 +539,9 @@ void GluonFusionSectorBox::select_ew_sector(SimpleSector* the_sector, const User
     
     
     bool initial_state_partons_fit=(
-                                    UI.Fleft==the_sector->F1.parton_from
-                                    and UI.Fright==the_sector->F2.parton_from
+                                    flavor_match(UI.Fleft,the_sector->F1.parton_from)
+                                    and 
+                                    flavor_match(UI.Fright,the_sector->F2.parton_from)
                                     )
     or
     (UI.Fleft=="none" and UI.Fright=="none");

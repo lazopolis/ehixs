@@ -19,7 +19,6 @@ double fjet_(double* x1,double *x2,double *s12,double *s13,double *s23,double *s
      double ns34=(*s34);
      double z=(*s12-ns13-ns14-ns23-ns24+ns34)/(*s12);
      
-     
      if ((*w)!=(*w))
           {
           cout<<setprecision(16);

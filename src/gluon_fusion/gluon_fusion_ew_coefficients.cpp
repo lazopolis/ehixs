@@ -80,7 +80,7 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
         complex<double> xt = -Wt/pow(sqrt(1.0-Wt)+1.0,2.0);
         complex<double> born_special = born(xt);
         NLO_ew_coeff_ = (sqrt(1.0+res)-1.0 ) * born_special;
-        cout<<"\n NLO ew coeff = "<<NLO_ew_coeff_;
+        cout<<"NLO ew coeff = "<<NLO_ew_coeff_<<endl;
     }
 }
 
@@ -151,6 +151,7 @@ double GluonFusionEWCoefficients::EwkUUbar(const double& s,const double& z, cons
     {
         cout<<s<<" "<<t<<" "<<u<<" "<<mhsq<<" "<<s+t+u<<endl;
     }
+    
     return res;
 }
 

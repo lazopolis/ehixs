@@ -79,6 +79,7 @@ private://data
     Decay *my_decay;
     Production* my_production;
     fstream my_event_stream;
+    bool events_writing_;
     TimeKeeper myclock_;
     
     int decay_particle_id_;
@@ -115,6 +116,8 @@ private://methods
     //: event printing
     void open_event_filename();
     void close_event_filename();
+    void write_event(const CombinedEvent& the_event);
+
 };
 
 

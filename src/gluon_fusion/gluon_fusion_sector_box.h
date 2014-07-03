@@ -52,7 +52,8 @@ private://methods
     
     void select_ew_sector(SimpleSector* the_sector, const UserInterface& UI);
     void select_qcd_sector(SimpleSector* the_sector, const UserInterface& UI);
-    
+    bool flavor_match(const string& ui_fl,const string& me_fl);
+
 };
 
 #endif

@@ -1,0 +1,70 @@
+# example runcard for ehixs
+#
+Etot = 8000
+muf_over_mhiggs = 1.0
+mur_over_mhiggs = 1.0
+# ggF, GammaStarGammaStar
+production = ggF
+#
+#bin_by_bin_integration = true
+#---------- selecting initial state channels
+# the flavor of the parton from the left
+# if not declared all flavors are considered
+Fleft = gluon
+#the flavor of the parton from the right
+# if not declared all flavors are considered
+Fright = gluon
+#
+#---------- ggf specific options
+#
+m_higgs = 125.0
+#rr_treatment = split
+matrix_element_approximation = effective
+qcd_perturbative_order = NNLO
+perturbative_order = 2
+#ew_soft = false
+#ew_h_plus_j = false
+#ew_h_plus_j_only = true
+#alpha_s_power = 4
+#alpha_ew_power = 1
+#sector_for_production = 30
+#ew_soft = true
+#
+#---------- decays for gg->h
+#
+#decay = 4leptons
+#leptonic_decay_mode_in_wwzz = eemumu
+#decay = gamma_gamma
+#decay = Z_gamma
+#
+#---------- histograms
+#
+#histogram = [HistogramHiggsPt,2,0.0,220.0]
+#histogram = [HistogramHiggsY,10,-5.0,5.0]
+#histogram = [GstarX1,20,0,1.0]
+#histogram = [GstarX2,20,0,1.0]
+#
+#---------- cuts
+#
+#cut = [CutHiggsPT,-1.0]
+#cut = [CutHiggsPTVeto,10.0]
+#cut = [LeadingPhotonPt,57.5]
+#cut = [ZeroJetVeto,60.0]
+#cut = [LeadingPhotonPt,20.0]
+#cut = [CutGAMMA1PT,60.0]
+#
+#---------- vegas variables
+#
+epsrel_therm = 0.005
+epsabs_therm = 0.0001
+nstart_therm = 10000
+mineval_therm = 10000
+maxeval_therm = 10000000
+nincrease_therm = 1000
+#
+epsrel = 0.001
+epsabs = 0.0001
+nstart = 10000
+mineval = 10000
+nincrease =1000
+maxeval = 300000

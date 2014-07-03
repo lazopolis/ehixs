@@ -189,7 +189,7 @@ void  Luminosity::set_cur_lumiLO(const double &x1,const double &x2)
         for (unsigned i=0;i<pdf_size();i++)
             {
             locres=0.0;
-            //cout<<"[Luminosity] : for member 1 ";
+            //cout<<"[Luminosity] : for member "<<i;
             for (unsigned k=0;k<pairs.size();k++)
                 {
                 //cout<<"; pair #"<<k;

@@ -1,0 +1,17 @@
+reset
+set xrange[0:]
+#set yrange[1e-10:]
+set term png truecolor
+set output "qqbar_channel.png"
+#set boxwidth width*0.9
+set tics out nomirror
+set xlabel "x"
+set ylabel "cross section (pb)"
+set title "Higgs pT at NLO"
+#set logscale y 
+#set style fill transparent solid 0.3 noborder
+plot "ew_test_eff/HistogramHiggsPt_channels" using ($1 + 5):($6) smooth freq with boxes lc rgb "blue" t "effective",\
+"ew_test_eff_enhanced/HistogramHiggsPt_channels" using ($1 + 5):($6) smooth freq with boxes lc rgb "red" t "effective enhanced",\
+"ew_test/HistogramHiggsPt_channels" using ($1 + 5):($6) smooth freq with boxes lc rgb "green" t "exact",\
+"ew_test/HistogramHiggsPt_channels" using ($1 + 5):($6 + $7) smooth freq with boxes lc rgb "black" t "exact+ew"
+

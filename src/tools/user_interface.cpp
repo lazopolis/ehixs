@@ -123,6 +123,7 @@ UserInterface::UserInterface()
     options.push_back(new BoolOption("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
     options.push_back(new BoolOption("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)","Optional",&bin_by_bin_integration, false));
     options.push_back(new BoolOption("no_grid_adaptation",0,"switch off grid adaptation in Vegas (default is on)","Optional",&no_grid_adaptation, false));
+    options.push_back(new BoolOption("write_events",0,"write events to file (default is off)","Optional",&write_events, false));
     
     vector<string>empty_vector;
     options.push_back(new CutOption("cut",0,"generic cut option","Required",my_generic_cut, empty_vector));

@@ -1,5 +1,6 @@
 #include "gluon_fusion_parametrization.h"
 #include<math.h>
+#include<iostream>
 using namespace std;
 
 
@@ -129,6 +130,11 @@ void GluonFusionParametrization::parametrization_for_NLO_kinematics(double* xx_v
     {
         meas=0.0;
     }
+    if (x1*x2+1e-16<tau_)
+        {
+            cout<<"\n x1*x2="<<x1*x2<<" < tau=" <<tau_<<endl;
+            //exit(0);
+        }
     // cout<<"\n % x1="<<x1<<"\t"<<xx_vegas[0]<<"\n tau_="<<tau_;
     curs=pow(mh_,2.0)/z;
     

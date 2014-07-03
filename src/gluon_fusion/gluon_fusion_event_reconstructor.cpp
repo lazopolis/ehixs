@@ -41,7 +41,6 @@ void EventReconstructor::NLO_event_kinematics(const double& sigma,
     {
         
         
-        
         //     ----------------- Higgs and gluon momenta ----------------------
         const double shat = pow(Etot,2.0)*x1*x2;
         const double pt3 = sqrt(s13*s23/shat); //gluon 1

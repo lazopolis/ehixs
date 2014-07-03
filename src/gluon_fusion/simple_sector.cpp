@@ -25,6 +25,10 @@ SimpleSector::SimpleSector(const FFF& _f1,const FFF& _f2,const vector<ExpansionT
 }
 
 
+void SimpleSector::add_pair(int i,int j,pdf_pair_list & curlumi)
+{
+    add_pair(i,i,j,j,curlumi);
+}
 
 void SimpleSector::add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi)
 {
@@ -61,31 +65,83 @@ void SimpleSector::double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi)
 
 void SimpleSector::uubar(pdf_pair_list& curlumi)
 {
-    // lhapdf id numbers for cbar, ubar, u, c
-    int upflavors[4] = {-4,-2,2,4};
-    
-    for (int s=0;s<4;s++)
-    {
-        int qq = upflavors[s];
-        // the pdf combination for u ubar is always LO
-        add_pair(qq,qq,-qq,-qq,curlumi);
-    }
-    
+    add_pair(2,-2,curlumi);
+    add_pair(4,-4,curlumi);
+}
+
+void SimpleSector::ubaru(pdf_pair_list& curlumi)
+{
+    add_pair(-2,2,curlumi);
+    add_pair(-4,4,curlumi);
 }
 
 void SimpleSector::ddbar(pdf_pair_list& curlumi)
 {
-    // lhapdf id numbers for bbar,sbar,dbar,d,s,b
-    int downflavors[6] = {-5,-3,-1,1,3,5};
-    
-    for (int s=0;s<6;s++)
-    {
-        int qq = downflavors[s];
-        // the pdf combination for u ubar is always LO
-        add_pair(qq,qq,-qq,-qq,curlumi);
-    }
-    
+    add_pair(1,-1,curlumi);
+    add_pair(3,-3,curlumi);
+    add_pair(5,-5,curlumi);
+
 }
+
+void SimpleSector::dbard(pdf_pair_list& curlumi)
+{
+    add_pair(-1,1,curlumi);
+    add_pair(-3,3,curlumi);
+    add_pair(-5,5,curlumi);
+}
+
+void SimpleSector::ug(pdf_pair_list& curlumi)
+{
+    add_pair(2,0,curlumi);
+    add_pair(4,0,curlumi);    
+}
+
+void SimpleSector::ubarg(pdf_pair_list& curlumi)
+{
+    add_pair(-2,0,curlumi);
+    add_pair(-4,0,curlumi);    
+}
+
+void SimpleSector::gu(pdf_pair_list& curlumi)
+{
+    add_pair(0,2,curlumi);
+    add_pair(0,4,curlumi);    
+}
+
+void SimpleSector::gubar(pdf_pair_list& curlumi)
+{
+    add_pair(0,-2,curlumi);
+    add_pair(0,-4,curlumi);    
+}
+
+void SimpleSector::dg(pdf_pair_list& curlumi)
+{
+    add_pair(1,0,curlumi);
+    add_pair(3,0,curlumi);    
+    add_pair(5,0,curlumi);    
+}
+
+void SimpleSector::gd(pdf_pair_list& curlumi)
+{
+    add_pair(0,1,curlumi);
+    add_pair(0,3,curlumi);    
+    add_pair(0,5,curlumi);    
+}
+
+void SimpleSector::dbarg(pdf_pair_list& curlumi)
+{
+    add_pair(-1,0,curlumi);
+    add_pair(-3,0,curlumi);    
+    add_pair(-5,0,curlumi);    
+}
+
+void SimpleSector::gdbar(pdf_pair_list& curlumi)
+{
+    add_pair(0,-1,curlumi);
+    add_pair(0,-3,curlumi);    
+    add_pair(0,-5,curlumi);    
+}
+
 
 int SimpleSector::give_pid(const string & name)
 {
@@ -123,7 +179,26 @@ pdf_pair_list SimpleSector::give_list_of_pdf_pairs()
         uubar(curlumi);
     else if (F1.parton_i == "down" and F2.parton_i == "downbar")
         ddbar(curlumi);
-    
+    else if (F1.parton_i == "upbar" and F2.parton_i == "up")
+        ubaru(curlumi);
+    else if (F1.parton_i == "downbar" and F2.parton_i == "down")
+        dbard(curlumi);
+    else if (F1.parton_i == "up" and F2.parton_i == "gluon")
+        ug(curlumi);
+    else if (F1.parton_i == "upbar" and F2.parton_i == "gluon")
+        ubarg(curlumi);
+    else if (F1.parton_i == "down" and F2.parton_i == "gluon")
+        dg(curlumi);
+    else if (F1.parton_i == "downbar" and F2.parton_i == "gluon")
+        dbarg(curlumi);
+    else if (F2.parton_i == "up" and F1.parton_i == "gluon")
+        gu(curlumi);
+    else if (F2.parton_i == "upbar" and F1.parton_i == "gluon")
+        gubar(curlumi);
+    else if (F2.parton_i == "down" and F1.parton_i == "gluon")
+        gd(curlumi);
+    else if (F2.parton_i == "downbar" and F1.parton_i == "gluon")
+        gdbar(curlumi);
     return curlumi;
 }
 
@@ -134,6 +209,7 @@ void SimpleSector::setUpPrefactor(const double & a_s_over_pi)
     {
         _prefactor = _prefactor * factors[i]->give_value();
     }
+    
     _prefactor = _prefactor * pow(a_s_over_pi,alpha_power);
 }
 

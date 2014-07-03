@@ -162,6 +162,7 @@ void GluonFusion::initialize_ggf_func_map()
     ggf_func_map_["gg_NLO_hard_exact"] = &GluonFusion::gg_NLO_hard_exact;
     ggf_func_map_["qg_NLO_hard_exact"] = &GluonFusion::qg_NLO_hard_exact;
     ggf_func_map_["gq_NLO_hard_exact"] = &GluonFusion::gq_NLO_hard_exact;
+    ggf_func_map_["qqbar_NLO_hard_exact"] = &GluonFusion::qqbar_NLO_hard_exact;
     ggf_func_map_["NLO_ewk_uubar_h_plus_jet"] = &GluonFusion::NLO_ewk_uubar_h_plus_jet;
     ggf_func_map_["NLO_ewk_ddbar_h_plus_jet"] = &GluonFusion::NLO_ewk_ddbar_h_plus_jet;
     ggf_func_map_["NLO_ewk_ug_h_plus_jet"] = &GluonFusion::NLO_ewk_ug_h_plus_jet;
@@ -346,6 +347,8 @@ void GluonFusion::allocate_luminosity()
           //cout<<"\n pair #"<<i+1;
           pair<pdf_desc,pdf_desc> cur_pair=list_of_pdf_pairs.give_one_pair(i);
           lumi->add_pair(cur_pair.first,cur_pair.second);
+          cout<<"\n[ehixs] luminosity : "
+              <<cur_pair.first.name()<<" "<<cur_pair.second.name();
           }     
 }
 
@@ -677,19 +680,13 @@ void GluonFusion::gg_NLO_HARD()
                          *1.0/(1.0-ISP.z)
                          *the_sector->sector_specific_prefactors_from_a_e_expansion()
                          ;
+        
           double weightLO = pref_sgg
                          *ISP.measLO
                          *lumi->LL_LO(0)
                          *1.0/(1.0-ISP.z)
                          *the_sector->sector_specific_prefactors_from_a_e_expansion()
                          ;
-          
-          double weightFancy = pref_sgg
-          *ISP.measLO
-          *lumi->LL_LO(0)
-          //*1.0/(1.0-ISP.z)
-          *the_sector->sector_specific_prefactors_from_a_e_expansion()
-          ;
 
           if (the_sector->ME->epsilon_power()== -1)
                {
@@ -740,13 +737,7 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-//                    rgg2ght1(ts,1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
-//                             -log_muf_sq_over_mh_sq,
-//                             +2.0*weightFancy,
-//                             consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-                     //e^0 * (-2*log(1-z))
-                    
-                    
+                                        
                     double extra_weight = -2.0*ISP.Log_1mz;
                     rgg2ght1(ts,0,ISP.curs,ISP.x1,ISP.x2,  ISP.z,
                              -log_muf_sq_over_mh_sq,
@@ -756,11 +747,7 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO*extra_weight,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-//                    rgg2ght1(ts,0,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
-//                             -log_muf_sq_over_mh_sq,
-//                             2.0*weightFancy*extra_weight,
-//                             consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-                     // 1/e * 2 * (log(1-z))^2
+
                     
                      double extra_weight2 = 2.0*pow(ISP.Log_1mz,2.0);
                     rgg2ght1(ts,-1,ISP.curs,ISP.x1,ISP.x2,  ISP.z,
@@ -771,10 +758,6 @@ void GluonFusion::gg_NLO_HARD()
                              -log_muf_sq_over_mh_sq,
                              -weightLO*extra_weight2,
                              consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
-//                    rgg2ght1(ts,-1,ISP.cursLO,ISP.x1LO,ISP.x2LO,1.0,
-//                             -log_muf_sq_over_mh_sq,
-//                              2.0*weightFancy*extra_weight2,
-//                             consts::nf,ISP.lambda,0.0,0.0,0.0,dummyres);
                     
                     }
 
@@ -1296,8 +1279,12 @@ void GluonFusion::qqbar_NLO_hard_exact()
         * the_sector->sector_specific_prefactors_from_a_e_expansion()
         * ISP.meas
         * lumi->LL(0);
+        //old inclusive implementation
+//        double sigma = 32.0 / 27.0 * pow(1.0-ISP.z,3.0) / ISP.z
+//                        *sum_of_abs_sq_of_Aqqgh(ISP.z,&Model);
         double sigma = 32.0 / 27.0 * pow(1.0-ISP.z,3.0) / ISP.z
-                        *sum_of_abs_sq_of_Aqqgh(ISP.z,&Model);
+            *(pow(ISP.lambda,2.)+pow(1.-ISP.lambda,2.))*3./2.
+            *sum_of_abs_sq_of_Aqqgh(ISP.z,&Model);
         Jnlo(sigma * weight, ISP.z,  ISP.x1,     ISP.x2,   ISP.lambda);
         }
     
@@ -1403,8 +1390,10 @@ void GluonFusion::NLO_ewk_h_plus_j_fork(const string& channel_selector)
             *ISP.meas
             *lumi->LL(0)
             *the_sector->sector_specific_prefactors_from_a_e_expansion()
-            *electroweak_coefficients->EwkUG(ISP.curs,ISP.z,ISP.lambda);
+            *ew_me;
             Jnlo(sigma , ISP.z,  ISP.x1,     ISP.x2,my_lambda);
+//            cout<<"\n pref_sgg = "<<pref_sgg<<" "<<ISP.meas<<" "<<lumi->LL(0)<<" "<<the_sector->sector_specific_prefactors_from_a_e_expansion()
+//            <<" "<<sigma;
         }
     }
 }

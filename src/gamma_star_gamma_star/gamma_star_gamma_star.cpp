@@ -16,7 +16,13 @@ GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI
 {
     SetNumberOfParticles();
     create_matrix_elements();
-    if (UI.info) info();
+    if (UI.info) 
+    {
+        info();
+//        if (UI.xml_info)
+//            xml_info();
+        exit(0);
+    }
     else initialize_sector(UI);
 }
 
@@ -30,7 +36,7 @@ void GammaStarGammaStar::initialize_sector(const UserInterface& UI)
         dim_of_integration=the_xs_->Dimension();
         #include "gstar_2_cut_initialization.h"
         cuts_->ParseCuts(UI);
-        cout <<"\nCrossSection name : "<<*the_xs_<<endl;
+        cout <<"[ehixs] CrossSection name : "<<*the_xs_<<endl;
         the_xs_->SetEventBox(event_box);
         the_xs_->PassEColliderSq(pow(UI.Etot,2.0));
         the_xs_->AllocateLuminosity(lumi);
@@ -57,15 +63,18 @@ available_xs_.push_back(new GstarGstarMeNLOSoft);
 available_xs_.push_back(new GstarGstarMeNLOHard);
 available_xs_.push_back(new GstarGstarMeNLOConv(1));
 available_xs_.push_back(new GstarGstarMeNLOConv(2));
+available_xs_.push_back(new GstarGstarMENLOHardQuarkGluon);
+available_xs_.push_back(new GstarGstarMeNLOConvQuarkGluon);
+
 available_xs_.push_back(new GstarGstarMeNNLOSoft);
 available_xs_.push_back(new GstarGstarMeNNLOHard);
 available_xs_.push_back(new GstarGstarMeNNLOConvLeft);
 available_xs_.push_back(new GstarGstarMeNNLOConvRight);
 available_xs_.push_back(new GstarGstarMeNNLO_R_remnant);
-available_xs_.push_back(new GstarGstarMeNNLOMueller);
-available_xs_.push_back(new GstarGstarMeNNLO_IL_Romain);
-available_xs_.push_back(new GstarGstarMENLOHardQuarkGluon);
-available_xs_.push_back(new GstarGstarMeNLOConvQuarkGluon);
+
+//available_xs_.push_back(new GstarGstarMeNNLOMueller);
+//available_xs_.push_back(new GstarGstarMeNNLO_IL_Romain);
+
 
 }
 
@@ -79,7 +88,35 @@ void GammaStarGammaStar::info()
         cout<<"\n"<<i<<" : "<<*available_xs_[i];
         }
     cout<<endl<<endl;
-    exit(0);
+}
+
+void GammaStarGammaStar::xml_info(const char * output_fname)
+{
+
+//            
+//    fstream my_local_outfile(output_fname, fstream::out);
+//    if(my_local_outfile.is_open())
+//    {
+//        my_local_outfile.precision(5);
+//        my_local_outfile << "<ehixs_info " << endl;
+//        my_local_outfile << "\nnumber_of_sectors=\""
+//        <<available_xs_.size()<<"\"";
+//            
+//        my_local_outfile << "\n runcard_name=\""<<UI.input_filename
+//            <<"\" >"<<endl;
+//        for (int i=0;i<necessary_sectors.size();i++)
+//        {
+//            my_local_outfile<<"\n<sector id=\""<<i<<"\" name=\""<<necessary_sectors[i]->name<<"\" ></sector>";
+//        }
+//    
+//        my_local_outfile << "</ehixs_info>" << endl;                    
+//    }
+//    else
+//    {
+//        cout<<"\nfailbit = "<<my_local_outfile.fail()<<endl;
+//        cout << "Error opening file "<<UI.xml_info.c_str()<<endl;
+//    }
+//    my_local_outfile.close();
 }
 
 void GammaStarGammaStar::evaluate_sector()

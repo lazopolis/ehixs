@@ -76,6 +76,9 @@ Vegas(UI)
     no_grid_adaptation_ = UI.no_grid_adaptation;
     current_bin_ =0;
     
+    if (UI.write_events) events_writing_=true;
+    else events_writing_ = false;
+    
 }
 
 void Process::choose_production(const UserInterface & UI)
@@ -84,8 +87,8 @@ void Process::choose_production(const UserInterface & UI)
 //            <<UI.production<<endl;
     if (UI.production=="ggF") 
         set_production(new GluonFusion(UI));
-//    else if (UI.production=="GammaStarGammaStar")
-//        set_production(new GammaStarGammaStar(UI));
+    else if (UI.production=="GammaStarGammaStar")
+        set_production(new GammaStarGammaStar(UI));
     else
     {
         cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
@@ -146,7 +149,8 @@ void Process::perform()
           exit(1);
           }
     Vegas.ConfigureNumberOfComponents(1);
-      
+    
+    if (events_writing_) open_event_filename();
      
      if (bin_by_bin_integration_) 
          perform_bin_by_bin_mode();
@@ -154,6 +158,9 @@ void Process::perform()
          perform_no_adaptation_mode();
      else   
          perform_default_mode();
+    
+    if (events_writing_) close_event_filename();
+
 }
 
 void Process::perform_bin_by_bin_mode()
@@ -257,7 +264,8 @@ void Process::Evaluate_integral(const double xx[])
          //_histograms->print_running_f();
          _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_previous_iteration);
          print_output_intermediate();
-         my_event_stream<<Vegas.NOP_in_previous_iteration<<"$"<<endl;
+         if (events_writing_)
+             my_event_stream<<'\n#'<<Vegas.NOP_in_previous_iteration<<endl;
          }
      
      //: copying vegas random variables from xx to TheHatch 
@@ -358,6 +366,8 @@ void Process::perform_decay_alone()//: no production was defined
 
 void Process::book_event(const CombinedEvent& the_event)
 {
+    if (events_writing_) write_event(the_event);
+
     if (bin_by_bin_integration_)
     {
         if (current_histogram_->the_event_is_in_ith_bin(current_bin_,the_event))
@@ -400,6 +410,12 @@ void Process::open_event_filename()
      const char * output_fname = event_filename.c_str();
      my_event_stream.open(output_fname, fstream::out);
 }
+
+void Process::write_event(const CombinedEvent& the_event)
+{
+    my_event_stream<<the_event;
+}
+
 
 void Process::close_event_filename()
 {

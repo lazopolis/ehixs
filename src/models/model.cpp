@@ -99,8 +99,10 @@ void CModel::consolidate(const double & a_at_mz,
     cout<<"[ehixs] G_F = "<<consts::G_fermi<<endl;
     cout<<"[ehixs] mw = "<<W.m()<<endl;
 
-    cout<<"[ehixs] gw_up for W = "<<pow(W.cv_up,2.0) + pow(W.ca_up,2.0);
-    cout<<"[ehixs] gw_up for Z = "<<pow(Z.cv_up,2.0) + pow(Z.ca_up,2.0);
+    cout<<"[ehixs] gw_up for W = "<<pow(W.cv_up,2.0) + pow(W.ca_up,2.0)<<endl;
+    cout<<"[ehixs] gw_up for Z = "<<pow(Z.cv_up,2.0) + pow(Z.ca_up,2.0)<<endl;
+    cout<<"[ehixs] lambda for W = "<<W.lamda<<endl;
+    cout<<"[ehixs] lambda for Z = "<<Z.lamda<<endl;
     
 }
 

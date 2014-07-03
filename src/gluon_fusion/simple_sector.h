@@ -17,10 +17,8 @@ public:
     friend ostream& operator<<(ostream&, const SimpleSector&);
     string name;
     
-    void add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi);
-    void single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
-    void double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
-    int give_pid(const string & name);
+    
+    
     pdf_pair_list give_list_of_pdf_pairs();
     
     void setUpPrefactor(const double & a_s_over_pi);
@@ -30,7 +28,25 @@ private:
 private://methods
     void uubar(pdf_pair_list& curlumi);
     void ddbar(pdf_pair_list& curlumi);
+    void ubaru(pdf_pair_list& curlumi);
+    void dbard(pdf_pair_list& curlumi);
+    void ug(pdf_pair_list& curlumi);
+    void dg(pdf_pair_list& curlumi);
+    void ubarg(pdf_pair_list& curlumi);
+    void dbarg(pdf_pair_list& curlumi);
     
+    void gu(pdf_pair_list& curlumi);
+    void gubar(pdf_pair_list& curlumi);
+    void gd(pdf_pair_list& curlumi);
+    void gdbar(pdf_pair_list& curlumi);
+
+    void single_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
+    void double_quark(int i,int j,int k,int m,pdf_pair_list & curlumi);
+    
+    void add_pair(int i,int j,pdf_pair_list & curlumi);
+    void add_pair(int i,int j,int k,int m,pdf_pair_list & curlumi);
+    
+    int give_pid(const string & name);
 };
 
 #endif
