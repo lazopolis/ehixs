@@ -3,7 +3,7 @@
 
 #include "convolutions.h" // for FF
 #include "kinematic_variables.h"
-
+#include "cross_section.h"
 
 class GstarGstarBorn
 {
@@ -19,55 +19,22 @@ private:
 
 
 
-class CrossSection
+
+class Gstar2CrossSection : public CrossSection
 {
 public:
-    virtual void Evaluate(double*)=0;
-    virtual void Configure()=0;
-    void PassEColliderSq(const double& smaximum)
-    {smax=smaximum;}
-    void AllocateLuminosity(Luminosity* lumi)
-    {
-        lumi_box_.MatchPDFs(info_.ISF.left, info_.ISF.right,pdf_selection_);
-        lumi_box_.AllocateLuminosity(lumi);
-    }
-    void PassAlphaStrong(const double& a_s_over_pi)
-    {
-    a_s_over_pi_=a_s_over_pi;
-    cout<<"\n[CrossSection]: a_s = "<<a_s_over_pi_* consts::Pi;
-    }
-    void PassScales(const double& mur,const double& muf)
-    {mur_=mur; muf_=muf;}
-    void SetEventBox(EventBox& event_box)
-    {event_box_=&event_box;}
-    int Dimension(){return dimension_;}
+    void AllocateLuminosity(Luminosity* lumi);
     
-    //specific to gstar^2
-    virtual void PassMasses(const double& m3, const double& m4)=0;
-    
-    friend ostream& operator<<(ostream& stream, const CrossSection&);
 protected:
-    NewMeExternalInfo info_;
-    int dimension_;
-    EventBox* event_box_;
-    
-    double smax;
-    string pdf_selection_;
-    double a_s_over_pi_;
-    double mur_;
-    double muf_;
     LuminosityBox lumi_box_;
-    string name_;
 protected:
-    double LL(const double& x1,const double& x2)
-    {
-        
-        return lumi_box_.give(x1,x2)
-        *pow(a_s_over_pi_,info_.alpha_power);
-    }
+    double LL(const double& x1,const double& x2);
+    
 };
 
-class GstarGstarMe: public CrossSection
+
+
+class GstarGstarMe: public Gstar2CrossSection
 {
 public:
     GstarGstarMe();

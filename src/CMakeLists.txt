@@ -13,6 +13,7 @@ set (ehixstests_VERSION_MINOR 9)
 #   (don't forget to remove the '#' before 'SET(..)'
 #
 #SET(LHAPDF_DIR my_lhapdf_directory)
+SET(LHAPDF_DIR /Users/lazopolis/other_codes/lhapdf6)
 #
 #
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -60,7 +61,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${CHAPLIN_SOURCES}
                     ${LHAPDF_DIR}/include
                     ${CUBA_DIR}
-                    ${EHIXS_SRC_DIR}/bottom_fusion
+                    ${EHIXS_SRC_DIR}/new_b_bbar
                     ${EHIXS_SRC_DIR}/gluon_fusion
                     ${EHIXS_SRC_DIR}/gamma_star_gamma_star
                     ${EHIXS_SRC_DIR}/gluon_fusion_inclusive
@@ -85,7 +86,6 @@ include_directories(${EHIXS_SRC_DIR}
 
 link_directories(
                 ${LHAPDF_DIR}/lib/
-                ${LHAPDF_DIR}
                )
 
 
@@ -107,11 +107,12 @@ add_subdirectory(avh_olo)
 #
 #   production modes
 #
-add_subdirectory(gluon_fusion)
+#add_subdirectory(gluon_fusion)
 #add_subdirectory(gluon_fusion_inclusive)
 #add_subdirectory(bottom_fusion)
+add_subdirectory(new_b_bbar)
 add_subdirectory(gamma_star_gamma_star)
-#add_subdirectory(ihixs)
+add_subdirectory(ihixs)
 #
 #   decay modes
 #
@@ -124,8 +125,18 @@ add_subdirectory(decay_wwzz)
 #find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
 #This will check the environment for a variable named LHAPDF_PATH. 
 #If it exists, you can then use
-#target_link_libraries(mytarget ${LHAPDF})
+#target_link_libraries(ehixs ${LHAPDF})
 #If it does not, it can be set through the CMake GUI.
+
+SET(GGF_LIBS gluon_fusion
+            fortran_ggf 
+            fortran_ggf_RR_gg2gg
+            fortran_ggf_RR_gg2qqbar
+            fortran_ggf_RR_qg2qg
+            fortran_ggf_RR_gq2qg
+            fortran_ggf_RR_qqbar
+            fortran_ggf_RR_qq)
+
 
 SET(LIBRARIES_FOR_GLOBAL_TESTS 
             #test_utils 
@@ -135,17 +146,19 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             higgs_zerfal 
             decay_h_to_gamma_gamma
             models
-            gluon_fusion 
-            gamma_star_gamma_star 
             tools
-            fortran_ggf 
-            fortran_ggf_RR
+            #
+            gamma_star_gamma_star 
+            #
+            GGF_LIBS
             #fortran_bbh
+            bbh
+            #
             chaplin
             pdf
             avh_olo
             mincuba
-            gtest 
+            #gtest 
             LHAPDF
             ${LHAPDF})
 

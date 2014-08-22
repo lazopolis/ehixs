@@ -1,5 +1,5 @@
 
-
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
 
 double polylog(int i,const complex<double>& z);
 

@@ -11,29 +11,23 @@ using namespace std;
 #include "gstar_2_cuts.h"
 
 
-////: move everything to Production except the create_matrix_element function
-GammaStarGammaStar::GammaStarGammaStar(const UserInterface & UI) : Production(UI)
+int GammaStarGammaStar::dimension_of_integration()
 {
-    SetNumberOfParticles();
-    create_matrix_elements();
-    if (UI.info) 
+    if (is_sector_defined()) return the_xs_->Dimension();
+    else
     {
-        info();
-//        if (UI.xml_info)
-//            xml_info();
+        cout<<"\nError: you asked for the dimension of integration, but the sector is not yet defined!"<<endl;
         exit(0);
     }
-    else initialize_sector(UI);
 }
 
 
-void GammaStarGammaStar::initialize_sector(const UserInterface& UI)
+void GammaStarGammaStar::SelectAndConfigureSector(const UserInterface& UI)
 {
     find_the_xs(UI);    
     if (is_sector_defined())
     {
         // dimension is already set in constructors
-        dim_of_integration=the_xs_->Dimension();
         #include "gstar_2_cut_initialization.h"
         cuts_->ParseCuts(UI);
         cout <<"[ehixs] CrossSection name : "<<*the_xs_<<endl;
@@ -47,6 +41,25 @@ void GammaStarGammaStar::initialize_sector(const UserInterface& UI)
         the_xs_->Configure();        
     }
     cout<<"\n[sector] end of construction phase"<<endl;
+}
+
+void GammaStarGammaStar::find_the_xs(const UserInterface & UI)
+{
+    int sector_id=atoi(UI.sector_for_production.c_str());
+    if (sector_id>-1 and sector_id<available_xs_.size())
+    {
+        sector_defined=true;
+        the_xs_=available_xs_[sector_id];
+    }
+    else
+    {
+        cout<<"\n[find_sector] The sector id number you asked for, "<<sector_id
+        <<", was outside the bounds [0,"
+        << available_xs_.size()<<"]";
+        cout<<"\n[find_sector] Please run with UI.info=true"
+        <<" or --info to get the list of sector names"<<endl;
+        throw "\n[find_sector] Can't proceed!\n";
+    }
 }
 
 
@@ -127,33 +140,6 @@ void GammaStarGammaStar::evaluate_sector()
 }
 
 
-//: this can be moved in production
-void GammaStarGammaStar::find_the_xs(const UserInterface & UI)
-{
-    if (UI.sector_for_production=="none")
-        {
-        cout<<"\n[find_sector] Error: you haven't declared a sector_for_production"<<endl;
-        throw "\n[find_sector] Can't proceed!\n";
-        }
-    else
-        {
-        int sector_id=atoi(UI.sector_for_production.c_str());
-        if (sector_id>-1 and sector_id<available_xs_.size())
-            {
-            sector_defined=true;
-            the_xs_=available_xs_[sector_id];
-            }
-        else
-            {
-            cout<<"\n[find_sector] The sector id number you asked for, "<<sector_id
-            <<", was outside the bounds [0,"
-            << available_xs_.size()<<"]";
-            cout<<"\n[find_sector] Please run with UI.info=true"
-            <<" or --info to get the list of sector names"<<endl;
-            throw "\n[find_sector] Can't proceed!\n";
-            }
-        }
-}
 
 
 

@@ -57,7 +57,6 @@ public://methods
 	
     double total_xs(){return Vegas.vegas_integral_output[0];}
     double total_err(){return Vegas.vegas_error_output[0];}
-    string sector_info();
     vector<string> give_sector_names(const string & pleft,
                                      const string & pright,
                                      const string & myorder,
@@ -65,8 +64,7 @@ public://methods
     int number_of_active_histograms(){return _histograms->size();}
     CHistogram* ptr_to_histogram_with_id(unsigned m)
                     {return _histograms->ptr_to_histogram_with_id(m);}
-    int number_of_necessary_sectors(){return my_production->number_of_necessary_sectors();}
-    string sector_name(){return my_production->sector_name();}
+    
 public://data
     VegasAdaptor Vegas;
     //: public so that histograms from different sectors can be compared
@@ -94,7 +92,6 @@ private://data
 private://methods
     void choose_production(const UserInterface & UI);
     void choose_decay(const UserInterface & UI);
-    void set_production(Production * theproduction);
     void set_decay(Decay * thedecay);
     
     void perform_bin_by_bin_mode();

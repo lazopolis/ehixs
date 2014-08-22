@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "math.h"
 #include<iostream>
+#include <stdlib.h>     /* srand, rand */
 using namespace std;
 void EventReconstructor::Configure(const double& Etotal,EventBox* evbox,const double& mh)
 {

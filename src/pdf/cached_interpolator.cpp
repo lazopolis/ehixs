@@ -47,18 +47,111 @@ member(member_)
      set_up_fgrid_and_coefficients();
 }
 
+void CashedInterpolator::disambiguateFgrid()
+{
+    //: PDF convolutions are defined in two ways:
+    //: (a) F_i(n_as,n_eps)
+    //: (b) F_i_from_j(n_as,n_eps)
+    if (jprtn == 100)//: case (a)
+    {
+        if ((n_as == 0) && (n_eps == 0))//: LO
+        {
+            if (abs(iprtn)==6 or abs(iprtn)==7)//: summing over u,d,s,c or the anti's
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_LO_sum_light;
+            else if (abs(iprtn)<6) //: (anti-) quark or gluon, no summation
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_LO_nosum;
+            else
+            {
+                cerr << "Error: CPDF: flavour number = (" << iprtn << ") not supported (also: weird)!";
+                exit(1);
+            }
+        }
+        else if ((n_as == 1) && (n_eps == 1))//: NLO
+        {
+            if(iprtn == 0)//: gluon
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_gluon_new;
+            else if ((abs(iprtn) == 6) or (abs(iprtn)==7))//: summing over u,d,s,c or the anti's
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_quark_summed;
+            else //: quark, no summation
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_quark;
+        }
+        else if((n_as == 2) && ((n_eps == 1)|(n_eps == 2))) //:NNLO
+        {
+            if (n_eps == 1)//: 1/eps
+            {
+                if(iprtn == 0)
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_gluon;
+                else if (abs(iprtn)==6 or abs(iprtn)==7)//: summing over u,d,s,c or the anti's
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark_summed;
+                else //: quark, no summation
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark;
+            }
+            else if (n_eps == 2) //: 1/eps^2
+            {
+                if(iprtn == 0)
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_gluon;
+                else if (abs(iprtn)==6 or abs(iprtn)==7)//: summing over u,d,s,c or the anti's
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark_summed;
+                else //: quark, no summation
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark;
+            }
+        }
+        else
+        {
+            cerr << "Error: CPDF: (n_as,n_eps) = (" << n_as << "," << n_eps << ") not supported!";
+            exit(1);
+        }
+    } // end of case (a)
+    else //: case (b), see above
+    {
+        if ((n_as == 0) && (n_eps == 0))//: LO no sum
+            cur_fill_FGrid = &CashedInterpolator::ffgrid_LO_nosum;
+        else if ((n_as == 1) && (n_eps == 1))//: NLO
+        {
+            if(iprtn == 0)//: gluon
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_gluon_new;
+            else //: quarks
+                cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_quark_from_X;
+        }
+        else if((n_as == 2) && ((n_eps == 1)|(n_eps == 2)))//: NNLO
+        {
+            if (n_eps == 1) //: 1/eps
+            {
+                if(iprtn == 0) //: gluon
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_gluon_from_X;
+                else //: quarks
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark_from_X;
+            }
+            else if (n_eps == 2) //: 1/eps^2
+            {
+                if(iprtn == 0) //: gluon
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_gluon_from_X;
+                else //: quarks
+                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark_from_X;
+            }
+        }
+        else
+        {
+            cerr << "CPDF: (n_as,n_eps) = (" << n_as+"," << n_eps+") not supported!";
+            exit(1);
+        }
+    }
+    
+}
+
+
 void CashedInterpolator::set_up_fgrid_and_coefficients()
 {
      my_cashing_status = "CachedInterpolator: no cashing attempted";
      NumberOfPoints = NUMBER_OF_POINTS_IN_INTERPOLATION;
      //NumberOfPoints=5;
      xmin = 1e-6; // !!! seems to be quite generally the default value for any lhapdf set
-     
+    
      fill_XGrid();
      fill_FGrid();
-     
+    
      vector<double> temp;
-     
+    
      for(int ix=0;ix<NumberOfPoints;ix++)
           {
           
@@ -84,97 +177,7 @@ void CashedInterpolator::set_up_fgrid_and_coefficients()
           }
      
 }
-void CashedInterpolator::disambiguateFgrid()
-{
-     //: PDF convolutions are defined in two ways:
-     //: (a) F_i(n_as,n_eps)
-     //: (b) F_i_from_j(n_as,n_eps)
-     if (jprtn == 100)//: case (a)
-          {
-          if ((n_as == 0) && (n_eps == 0))//: LO
-               {
-               if (abs(iprtn)==6 or abs(iprtn)==7)//: summing over u,d,s,c or the anti's
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_LO_sum_light;
-               else if (abs(iprtn)<6) //: (anti-) quark or gluon, no summation
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_LO_nosum;
-               else
-                    {
-                    cerr << "Error: CPDF: flavour number = (" << iprtn << ") not supported (also: weird)!";
-                    exit(1);
-                    }
-               }
-          else if ((n_as == 1) && (n_eps == 1))//: NLO
-               {
-               if(iprtn == 0)//: gluon
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_gluon_new;
-               else if ((abs(iprtn) == 6) or (abs(iprtn)==7))//: summing over u,d,s,c or the anti's
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_quark_summed;
-               else //: quark, no summation
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_quark;
-               }
-          else if((n_as == 2) && ((n_eps == 1)|(n_eps == 2))) //:NNLO
-               {
-               if (n_eps == 1)//: 1/eps
-                    {
-                    if(iprtn == 0)
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_gluon;
-                    else if (abs(iprtn)==6 or abs(iprtn)==7)//: summing over u,d,s,c or the anti's
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark_summed;
-                    else //: quark, no summation
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark;
-                    }
-               else if (n_eps == 2) //: 1/eps^2
-                    {
-                    if(iprtn == 0)
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_gluon;
-                    else if (abs(iprtn)==6 or abs(iprtn)==7)//: summing over u,d,s,c or the anti's
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark_summed;
-                    else //: quark, no summation
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark;
-                    }
-               }
-          else
-               {
-               cerr << "Error: CPDF: (n_as,n_eps) = (" << n_as << "," << n_eps << ") not supported!";
-               exit(1);
-               }
-          } // end of case (a)
-     else //: case (b), see above
-          {
-          if ((n_as == 0) && (n_eps == 0))//: LO no sum
-               cur_fill_FGrid = &CashedInterpolator::ffgrid_LO_nosum;
-          else if ((n_as == 1) && (n_eps == 1))//: NLO
-               {
-               if(iprtn == 0)//: gluon
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_gluon_new;
-               else //: quarks
-                    cur_fill_FGrid = &CashedInterpolator::ffgrid_NLO_quark_from_X;
-               }
-          else if((n_as == 2) && ((n_eps == 1)|(n_eps == 2)))//: NNLO
-               {
-               if (n_eps == 1) //: 1/eps
-                    {
-                    if(iprtn == 0) //: gluon
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_gluon_from_X;
-                    else //: quarks
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_21_quark_from_X;
-                    }
-               else if (n_eps == 2) //: 1/eps^2
-                    {
-                    if(iprtn == 0) //: gluon
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_gluon_from_X;
-                    else //: quarks
-                         cur_fill_FGrid = &CashedInterpolator::ffgrid_NNLO_22_quark_from_X;
-                    }
-               }
-          else
-               {
-               cerr << "CPDF: (n_as,n_eps) = (" << n_as+"," << n_eps+") not supported!";
-               exit(1);
-               }
-          }
-    
-}
+
 
 
 void CashedInterpolator::fill_FGrid()

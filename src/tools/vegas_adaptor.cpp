@@ -1,6 +1,6 @@
 
 #include "vegas_adaptor.h"
-#include "cuba.h"
+#include "mincuba.h"
 #include "math.h"
 #include "sstream"
 
@@ -60,6 +60,7 @@ void VegasAdaptor::ConfigureNumberOfComponents(int n)
         ff_vegas.push_back(0.0);
     }   
 }
+
 
 void VegasAdaptor::call_vegas()
 {
@@ -338,8 +339,8 @@ void CoolInt::check_whether_we_need_to_update_bins(unsigned new_iter_number)
         {
         for (unsigned i=0;i<_vector_of_xs.size();i++)
             _vector_of_xs[i]->end_of_iteration_update();
-        cout<<"\n new iteration. Previous iteration value = "
-            <<_vector_of_xs[0]->value()<<" +- "<<_vector_of_xs[0]->error();
+        //cout<<"\n new iteration. Previous iteration value = "
+        //    <<_vector_of_xs[0]->value()<<" +- "<<_vector_of_xs[0]->error();
         }
 }
 

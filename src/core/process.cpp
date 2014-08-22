@@ -67,7 +67,7 @@ Vegas(UI)
     
     if (UI.cut_info)
         {
-        my_production->cuts_->show_cut_info_and_exit();
+        my_production->show_cut_info_and_exit();
         my_decay->cuts_->show_cut_info_and_exit();
         }
     
@@ -85,28 +85,24 @@ void Process::choose_production(const UserInterface & UI)
 {
 //    std::cout<<"\n[ehixs] Process initiated with production "
 //            <<UI.production<<endl;
-    if (UI.production=="ggF") 
-        set_production(new GluonFusion(UI));
+    if (UI.production=="ggF")
+    {cout<<"\nError: ggF temporarily unavailable"<<endl;exit(0);}
+        //my_production = new GluonFusion;
     else if (UI.production=="GammaStarGammaStar")
-        set_production(new GammaStarGammaStar(UI));
+        my_production = new GammaStarGammaStar;
+    else if (UI.production=="bbH")
+        my_production = new BottomFusion;
     else
     {
         cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
         throw "non-implemented process";
     }
-    
-}
-
-
-void Process::set_production(Production * theproduction)
-{
-    my_production = theproduction;
+    my_production->Configure(UI);
     my_production->set_up_the_hatch(&the_hatch);
     Vegas.set_number_of_dimensions(the_hatch.GetVEGASDim());
     decay_particle_id_ = my_production->event_box.DecayParticleId();
     production_is_defined=true;
 }
-
 
 void Process::choose_decay(const UserInterface & UI)
 {
@@ -238,18 +234,6 @@ bool Process::sectors_are_defined_in_production_and_decay()
      else return false;
 }
 
-vector<string> Process::give_sector_names(const string & pleft,const string & pright,const string & myorder,const int & eord,const string & _me_approx)
-{
-     if (production_is_defined)
-          {
-          return my_production->give_sector_names(pleft,pright,myorder,eord,_me_approx);
-          }
-     else
-          {
-          cout<<"\n production is not defined, and you asked for sector names!! I exit! "<<endl;
-          exit(1);
-          }
-}
 
 
 void Process::Evaluate_integral(const double xx[])
@@ -265,7 +249,7 @@ void Process::Evaluate_integral(const double xx[])
          _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_previous_iteration);
          print_output_intermediate();
          if (events_writing_)
-             my_event_stream<<'\n#'<<Vegas.NOP_in_previous_iteration<<endl;
+             my_event_stream<<"\n#"<<Vegas.NOP_in_previous_iteration<<endl;
          }
      
      //: copying vegas random variables from xx to TheHatch 
@@ -495,30 +479,6 @@ void Process::print_output()
     //_histograms->write_to_histogram_file();
      
      
-}
-
-
-string Process::sector_info()
-{
-     string res="production: ";
-     if (production_is_defined)
-          {
-          res += my_production->sector_name();
-          }
-     else
-          {
-          res += "none";
-          }
-     res += " | decay: ";
-     if (decay_is_defined)
-          {
-          res += my_decay->sector_name();
-          }
-     else
-          {
-          res += "none";
-          }
-     return res;
 }
 
 

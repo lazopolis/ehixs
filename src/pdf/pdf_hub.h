@@ -26,7 +26,7 @@ private:
     vector<double> _alpha_s_at_mz;
     PDFGrid* grids_;
     vector<CPDF*> all_pdfs_;
-    
+    bool convolutions_by_interpolation;
 private://methods
     vector<string> determine_grids();
     void initialize_lha_pdf();

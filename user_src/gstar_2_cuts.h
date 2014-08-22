@@ -1,5 +1,5 @@
-#ifndef GLUON_FUSION_CUT_H
-#define GLGLUON_FUSION_CUT_HUON
+#ifndef GSTAR_CUT_H
+#define GSTAR_CUT_H
 
 #include "momenta.h"
 #include "cut.h"

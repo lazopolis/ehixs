@@ -54,7 +54,7 @@ CModel::CModel()
 
 
 
-void CModel::consolidate(const double & a_at_mz,
+void CModel::Configure(const double & a_at_mz,
                          const double & mur_over_mh, int porder,
                          const double& mh)
 {

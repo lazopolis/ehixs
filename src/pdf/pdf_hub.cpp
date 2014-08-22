@@ -14,11 +14,8 @@ PDFHub::PDFHub(const UserInterface& UI)
     pert_order_ =  UI.perturbative_order;
     provider_ =  UI.pdf_provider;
     pdf_error_ = UI.pdf_error;
-    // Print friendly message
-//    cout << "\n[PDFHub::" << __func__
-//        << "] Attempting init of '"<< provider_
-//        << "' pdf at O(as^" << pert_order_
-//        << ") ,error='" << pdf_error_ << "'"<<endl;
+    convolutions_by_interpolation = UI.convolutions_by_interpolation;
+    
     grids_ = new PDFGrid;
     
     #ifdef CONFIGURE_LHAPDF_ON
@@ -26,10 +23,6 @@ PDFHub::PDFHub(const UserInterface& UI)
     #else
     initialize_mstw_plain();
     #endif
-    
-    //cout << "[PDFHub] Success [" << grids_->size() << "] sets!";
-    
-    
 }
 
 void PDFHub::initialize_lha_pdf()
@@ -42,9 +35,12 @@ void PDFHub::initialize_lha_pdf()
         //cout<<"\n[PDFHub] : initializing "<<gridnames[grid]<<endl;
         // initialise the LHAPDF set corresponding to grids[grid]
         int grid_number_for_lhapdf = grid+1;
-        LHAPDF::initPDFSet(grid_number_for_lhapdf,
-                           gridnames[grid], LHAPDF::LHGRID);
-        
+        //LHAPDF::initPDFSet(grid_number_for_lhapdf,
+        //                   gridnames[grid], LHAPDF::LHGRID);
+        //lhapdf6 interface
+        LHAPDF::PDF* pdf = LHAPDF::mkPDF(gridnames[grid], 0);
+            
+            
         //cout<<"\n[PDFHub] : pdf_error is "<<pdf_error_<<endl;
         // Using the LHAPDF-routine numberPDF, we can determine the number of members of the currently loaded set
         unsigned membernum;
@@ -65,8 +61,12 @@ void PDFHub::initialize_lha_pdf()
             LHAPDF::usePDFMember(grid_number_for_lhapdf,member);
             
             // retrieve the alpha_s of this member !!! hardcoded m_z ok?
-            _alpha_s_at_mz.push_back(LHAPDF::alphasPDF(91.1876));
-            
+            //_alpha_s_at_mz.push_back(LHAPDF::alphasPDF(91.1876));
+            //lhapdf6 interface
+            _alpha_s_at_mz.push_back(pdf->alphaS().alphasQ(91.1876));
+
+                
+                
             grids_->add(gridnames[grid],grid_number_for_lhapdf,member);
             
             }
@@ -91,7 +91,7 @@ CPDF* PDFHub::construct_or_locate_pdf(const pdf_desc& my_pdf_desc)
         if (all_pdfs_[i]->is(my_pdf_desc)) return all_pdfs_[i];
         }
     //: if we reach here, the requested pdf was not found, so we create it
-    all_pdfs_.push_back(new CPDF(*grids_,my_pdf_desc,Nf_,muf_,mur_));
+    all_pdfs_.push_back(new CPDF(*grids_,my_pdf_desc,Nf_,muf_,mur_,convolutions_by_interpolation));
     return all_pdfs_[all_pdfs_.size()-1];
 }
 

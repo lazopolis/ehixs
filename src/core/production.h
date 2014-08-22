@@ -26,69 +26,78 @@ using namespace std;
 class Production
 {
 public://methods
-	Production(const UserInterface & UI);
-	~Production(){};
+	void Configure(const UserInterface & UI);
     void  perform();
-    int dimension_of_integration(){return dim_of_integration;}
-    virtual string sector_name(){return my_sector_name;}
-    //: functions
+
+    bool is_sector_defined(){return sector_defined;}
+    void set_up_the_hatch(TheHatch*);
+    bool this_event_passes_cuts(int i)
+    {return cuts_->passes_cuts(event_box.ptr_to_event(i));}
+    void show_cut_info_and_exit(){cuts_->show_cut_info_and_exit();}
+    
+    //: pure virtual functions
+    virtual int dimension_of_integration()=0;
     virtual void SetNumberOfParticles() = 0;
     virtual void SetDecayParticleIdInEventBox()=0;
-    virtual int number_of_necessary_sectors() = 0;
-    virtual void evaluate_sector()=0; // overloaded in daughter class
+    //virtual int number_of_necessary_sectors() = 0;
+    virtual void evaluate_sector()=0;
+    virtual void create_matrix_elements()=0;
+    virtual void info()=0;
+    virtual void SelectAndConfigureSector(const UserInterface&)=0;
+    virtual void SetModelDependentParameters()=0;
+    virtual double alpha_s_at_mz_from_lhapdfs()=0;
+    /*
     virtual void book_production_event(const double &,const double &,
                                        const double &,const double &,
                                        const double &,const double &,
                                        const double &,const double &,
                                        const double &)=0;//: public to integrate with fortran Fjet
+    */
     
-    
-    double y_b(){return 0.0;}//this should be corrected!!
-    virtual vector<string> give_sector_names(const string & pleft,
+    //double y_b(){return 0.0;}//this should be corrected!!
+    /*
+     virtual vector<string> give_sector_names(const string & pleft,
                                              const string & pright,
                                              const string & myorder,
                                              const int &,const string &)=0;
-    bool is_sector_defined(){return sector_defined;}
-    void set_up_the_hatch(TheHatch*);
-    bool this_event_passes_cuts(int i)
-        {return cuts_->passes_cuts(event_box.ptr_to_event(i));}
+     */
     
-public://data
-	CutBox* cuts_;
+    
+public:// data
+	
     EventBox event_box;
-    
-    
     //: Model is public because Process needs to sync a_s
     //: between production and decay
     CModel Model;
-protected://: data
-    
-    
+protected:// data
     double* xx_vegas;
-    Luminosity *lumi;
-//    double alpha_s_vector;
-//    double alpha_s_at_mz_vector;
-//	double yukawa_b_;
+    CutBox* cuts_;
     bool sector_defined;
-    //: kinematic variables
-    double Etot;
-    //: scales
-	double mu_f;
-	double mu_r;
-	//: logs
-	double log_muf_sq_over_mh_sq;
-	double log_mur_sq_over_mh_sq;
-	double log_muf_sq_over_mt_sq;
-	double log_mur_sq_over_muf_sq;
-    double log_one_minus_tau;
     
-    int dim_of_integration;
-    string my_sector_name;//: similar to dim of integration
-	double ptbuf; //: set in constructor to almost zero, used in kinematics
+    
+    
+    
+    
+    
+//    //: kinematic variables
+//    double Etot;
+//    //: scales
+//	double mu_f;
+//	double mu_r;
+//	//: logs
+//	double log_muf_sq_over_mh_sq;
+//	double log_mur_sq_over_mh_sq;
+//	double log_muf_sq_over_mt_sq;
+//	double log_mur_sq_over_muf_sq;
+//    double log_one_minus_tau;
+//    
+//    int dim_of_integration;
+//    string my_sector_name;//: similar to dim of integration
+//	double ptbuf; //: set in constructor to almost zero, used in kinematics
 };
 
 
-
+/*
 class ProductionMockUp:public Production
 {
 public: 
@@ -172,7 +181,7 @@ protected:
 
 
 
-
+*/
 
 
 

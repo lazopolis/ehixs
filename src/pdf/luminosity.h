@@ -10,6 +10,31 @@
 #include "user_interface.h"
 using namespace std;
 
+#include "LHAPDF/LHAPDF.h"
+
+class NewLuminosity{
+public:
+    NewLuminosity(const UserInterface& UI);
+    ~NewLuminosity(){delete pdf_;}
+    
+    void add_pair(int left,int right)
+    {
+        pairs.push_back(pair<int,int>(left,right));
+    }
+    
+    double give(const double& x1,const double& x2);
+private:
+    LHAPDF::PDF* pdf_;
+    double muf_;
+    vector<pair<int,int> > pairs;
+private:
+    string determine_gridname(const string& provider, int order);
+};
+
+
+
+
+
 class LuminositySinglePair
 {
 public:
@@ -19,6 +44,9 @@ private:
     CPDF* left_;
     CPDF* right_;
 };
+
+
+
 
 
 class Luminosity
@@ -34,6 +62,10 @@ public://methods
     void add_pair(const pdf_desc & , const pdf_desc &);
     void set_cur_lumi(const double &x1,const double &x2);
     void set_cur_lumiLO(const double &x1,const double &x2);
+    
+    void set_cur_lumi(const vector<double> &x1,const vector<double> &x2);
+    void set_cur_lumiLO(const vector<double> &x1,const vector<double> &x2);
+    
     double LL(unsigned i) {return _local_current_luminosity[i];}
     double LL_LO(unsigned i) {return _local_current_luminosity_LO[i];}
 
@@ -47,7 +79,9 @@ private://data
     vector<double> _local_current_luminosity_LO;
     PDFHub* pdfHub;
     vector<LuminositySinglePair*> all_single_pairs_;
-private://methods    
+private://methods
+    void set_specific_lumi(const vector<double>& x1, const vector<double>& x2, vector<double>* which_lumi);
+    void set_specific_lumi(const double& x1, const double& x2, vector<double>* which_lumi);
 
 };
 

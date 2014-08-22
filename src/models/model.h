@@ -16,7 +16,7 @@ public:
 //     vector<double> alpha_strong;//: a_s (not over Pi)
 //     vector<double> alpha_strong_at_mz;//: a_s @ m_z (not over Pi)!!
      
-     void consolidate(const double& a_at_mz,const double & mur_over_mh,
+     void Configure(const double& a_at_mz,const double & mur_over_mh,
                       int porder,const double& mh);
     double alpha_strong(){return alpha_s->v();}
 //    void evolve_quark_masses(const double & mur,int porder);

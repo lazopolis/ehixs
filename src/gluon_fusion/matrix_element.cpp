@@ -1,6 +1,9 @@
 
 #include "matrix_element.h"
 
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
+
+
 MeExternalInfo::MeExternalInfo(const string & _pi,const string & _pj,const string& _pord,
                                const string & _name, int _epower,
                                const string & _me_approximation,int alpha_ew_pow)

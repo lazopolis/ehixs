@@ -10,7 +10,220 @@
 using namespace std;
 
 #include "gtest/gtest.h"
-#include "exact_lo_inclusive.h"
+//#include "exact_lo_inclusive.h"
+#include "inclusive_process.h"
+
+
+class IntegratedLuminosity: public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        UI.m_higgs = 125.0;
+        UI.perturbative_order = 2;
+        UI.pdf_provider = "MSTW";
+        UI.pdf_error = false;
+        UI.Etot = 8000.0;
+        UI.muf_over_mhiggs=1.0;
+        UI.mur_over_mhiggs=1.0;
+        
+        lumi = new Luminosity(UI);
+        lumi_stack = new LuminosityStack;
+        lumi_stack->set(lumi,"gg");
+    }
+    
+    double expectation(const double& expected){
+        myintegral->Configure(lumi_stack,pow(125.0,2.0)/pow(8000.0,2.0));
+        myintegral->call_vegas();
+        return(fabs(myintegral->result()-expected)<myintegral->error());
+    }
+    
+    void set_IL(LuminosityIntegral* myint){myintegral=myint;}
+    
+    LuminosityIntegral* myintegral;
+    UserInterface UI;
+    Luminosity* lumi;
+    LuminosityStack* lumi_stack;
+};
+
+
+
+TEST_F(IntegratedLuminosity,Delta)
+{
+    set_IL(new LuminosityIntegralDelta);
+    EXPECT_TRUE(expectation(5.20185e+05));
+}
+
+TEST_F(IntegratedLuminosity,DD0)
+{
+    set_IL(new LuminosityIntegralDD0);
+    EXPECT_TRUE(expectation(-7.64862e+05));
+}
+
+TEST_F(IntegratedLuminosity,DD1)
+{
+    set_IL(new LuminosityIntegralDD1);
+    EXPECT_TRUE(expectation(8.80170e+05));
+}
+
+TEST_F(IntegratedLuminosity,DD2)
+{
+    set_IL(new LuminosityIntegralDD2);
+    EXPECT_TRUE(expectation(-1.87170e+06));
+}
+
+TEST_F(IntegratedLuminosity,DD3)
+{
+    set_IL(new LuminosityIntegralDD3);
+    EXPECT_TRUE(expectation(5.78286e+06));
+}
+
+TEST_F(IntegratedLuminosity,DD4)
+{
+    set_IL(new LuminosityIntegralDD4);
+    EXPECT_TRUE(expectation(-2.34549e+07));
+}
+
+TEST_F(IntegratedLuminosity,DD5)
+{
+    set_IL(new LuminosityIntegralDD5);
+    EXPECT_TRUE(expectation(1.18069e+08));
+}
+
+
+class IntegratedLuminosityQG: public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        UI.m_higgs = 125.0;
+        UI.perturbative_order = 2;
+        UI.pdf_provider = "MSTW";
+        UI.pdf_error = false;
+        UI.Etot = 8000.0;
+        UI.muf_over_mhiggs=1.0;
+        UI.mur_over_mhiggs=1.0;
+        
+        lumi = new Luminosity(UI);
+        lumi_stack = new LuminosityStack;
+        lumi_stack->set(lumi,"qg");
+    }
+    
+    double expectation(const double& expected){
+        myintegral->Configure(lumi_stack,pow(125.0,2.0)/pow(8000.0,2.0));
+        myintegral->call_vegas();
+        return(fabs(myintegral->result()-expected)<myintegral->error());
+    }
+    
+    void set_IL(LuminosityIntegral* myint){myintegral=myint;}
+    
+    LuminosityIntegral* myintegral;
+    UserInterface UI;
+    Luminosity* lumi;
+    LuminosityStack* lumi_stack;
+};
+
+
+TEST_F(IntegratedLuminosityQG,DD0)
+{
+    set_IL(new LuminosityIntegralDD0);
+    EXPECT_TRUE(expectation(-1.31482e+06));
+}
+
+TEST_F(IntegratedLuminosityQG,DD1)
+{
+    set_IL(new LuminosityIntegralDD1);
+    EXPECT_TRUE(expectation(1.48384e+06));
+}
+
+TEST_F(IntegratedLuminosityQG,DD2)
+{
+    set_IL(new LuminosityIntegralDD2);
+    EXPECT_TRUE(expectation(-3.12945e+06));
+}
+
+TEST_F(IntegratedLuminosityQG,DD3)
+{
+    set_IL(new LuminosityIntegralDD3);
+    EXPECT_TRUE(expectation(9.61899e+06));
+}
+
+TEST_F(IntegratedLuminosityQG,DD4)
+{
+    set_IL(new LuminosityIntegralDD4);
+    EXPECT_TRUE(expectation(-3.89307e+07));
+}
+
+TEST_F(IntegratedLuminosityQG,DD5)
+{
+    set_IL(new LuminosityIntegralDD5);
+    EXPECT_TRUE(expectation(1.95766e+08));
+}
+
+class IntegratedLuminosityQQB: public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        UI.m_higgs = 125.0;
+        UI.perturbative_order = 2;
+        UI.pdf_provider = "MSTW";
+        UI.pdf_error = false;
+        UI.Etot = 8000.0;
+        UI.muf_over_mhiggs=1.0;
+        UI.mur_over_mhiggs=1.0;
+        
+        lumi = new Luminosity(UI);
+        lumi_stack = new LuminosityStack;
+        lumi_stack->set(lumi,"qqb");
+    }
+    
+    double expectation(const double& expected){
+        myintegral->Configure(lumi_stack,pow(125.0,2.0)/pow(8000.0,2.0));
+        myintegral->call_vegas();
+        return(fabs(myintegral->result()-expected)<myintegral->error());
+    }
+    
+    void set_IL(LuminosityIntegral* myint){myintegral=myint;}
+    
+    LuminosityIntegral* myintegral;
+    UserInterface UI;
+    Luminosity* lumi;
+    LuminosityStack* lumi_stack;
+};
+
+
+TEST_F(IntegratedLuminosityQQB,DD0)
+{
+    set_IL(new LuminosityIntegralDD0);
+    EXPECT_TRUE(expectation(-5.11636e+04));
+}
+
+TEST_F(IntegratedLuminosityQQB,DD1)
+{
+    set_IL(new LuminosityIntegralDD1);
+    EXPECT_TRUE(expectation(5.67120e+04));
+}
+
+TEST_F(IntegratedLuminosityQQB,DD2)
+{
+    set_IL(new LuminosityIntegralDD2);
+    EXPECT_TRUE(expectation(-1.18621e+05));
+}
+
+TEST_F(IntegratedLuminosityQQB,DD3)
+{
+    set_IL(new LuminosityIntegralDD3);
+    EXPECT_TRUE(expectation(3.63193e+05));
+}
+
+TEST_F(IntegratedLuminosityQQB,DD4)
+{
+    set_IL(new LuminosityIntegralDD4);
+    EXPECT_TRUE(expectation(-1.46729e+06));
+}
+
+TEST_F(IntegratedLuminosityQQB,DD5)
+{
+    set_IL(new LuminosityIntegralDD5);
+    EXPECT_TRUE(expectation(7.37160e+06));
+}
+
+
 
 /*
 TEST(interpolator_test,nlo_reg)
@@ -40,7 +253,7 @@ TEST(interpolator_test,nnlo_reg)
      EXPECT_LT(fabs(xs-expected_xs)/fabs(expected_xs),err);
 }
 */
-
+/*
 TEST(ISP,type_0_x1LO)
 {
 
@@ -372,7 +585,7 @@ TEST(PDFerror,harlander_top_only_8TeV)
     cout<<"\n actual = "<<actual<<" \t expected = "<<expected<<endl;
     EXPECT_LT(fabs(actual-expected)/fabs(expected),err);
 }
-
+*/
 
 int main(int argc, char**argv)
 {

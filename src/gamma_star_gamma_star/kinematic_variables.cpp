@@ -1,6 +1,7 @@
 #include "kinematic_variables.h"
 #include <string>       // std::string
 #include <iostream>     // std::cout
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
 #include <sstream>  
 #include "math.h"
 #include <iomanip>
@@ -49,43 +50,6 @@ ostream& operator<<(ostream& stream, const KinematicVariables& kk)
 
 
 
-void FMomentum::zboost(const double& bb)
-{
-//    if (bb>1.0-1e-16) cout<<"\nzboost too close to light cone, bb = "<<bb;
-    const double gb = 1.0/sqrt(1.0-bb*bb);
-    const double E  =    gb*p[0]   -bb*gb*p[3];
-    const double pz = -bb*gb*p[0]  +gb*p[3];
-    p[0]=E;
-    p[3]=pz;
-}
-
-void FMomentum::boost(const double& bx,const double& by,const double& bz)
-{
-    const double bsq = bx*bx+by*by+bz*bz;
-    if (1.-bsq<0.0)
-        {
-            cout<<"\n Error in boost: bsq>1 : "<<bx<<","<<by<<","<<bz;
-            exit(1);
-        }
-    const double g = 1.0/sqrt(1.0-bsq);
-    const double d = g*g/(g+1.0);
-    const double L[4][4] = {
-        {g,     -g*bx,          -g*by,      -g*bz},
-        {-g*bx, 1.0+d*bx*bx,    d*bx*by,     d*bx*bz},
-        {-g*by, d*by*bx,        1.0+d*by*by, d*by*bz},
-        {-g*bz, d*bz*bx,        d*bz*by,     1.0+d*bz*bz}
-    };
-    double newp[4];
-    for (int i=0;i<4;i++)
-    {
-        newp[i]=0.0;
-        for (int j=0;j<4;j++)
-            newp[i] += L[i][j]*p[j];
-    }
-    for (int i=0;i<4;i++) p[i] = newp[i];
-}
-
-
 
 void BjorkenXs::generate(const double& tau,const double& v0, const double& v1)
 {
@@ -95,56 +59,6 @@ void BjorkenXs::generate(const double& tau,const double& v0, const double& v1)
     x1_ = sqrt(u)*exp(rho);
     x2_ = sqrt(u)*exp(-rho);
     jacobian_ = -log(u)*u*(1.0-tau)*(-log(tau));
-}
-
-void KinematicInvariants::compute_dimensionless_invariants()
-{
-const double s12 = s_ij_[index(1)][index(2)];
-for (int i=1;i<max_+1;i++)
-    {
-    q_i_[index(i)] = s_i_[index(i)]/ s12;
-    for (int j=1;j<i;j++)
-        {
-            q_ij_[index(j)][index(i)] = s_ij_[index(j)][index(i)]/s12;
-        }
-    }
-}
-
-int KinematicInvariants::index(int i) const
-{
-    check_size(i);
-    return i-1;
-}
-
-int KinematicInvariants::max(int i,int j) const
-{
-    if (i<j) return j;
-    if (j<i) return i;
-    cout<<"\n Error in Kinematic Invariants: you asked for s"
-        <<i<<j
-        <<" which is illegal (use s("<<i<<") for masses)"
-        <<endl;
-    exit(1);
-} 
-
-int KinematicInvariants::min(int i,int j) const 
-{
-    if (i<j) return i;
-    if (j<i) return j;
-    cout<<"\n Error in Kinematic Invariants: you asked for s"
-    <<i<<j
-    <<" which is illegal (use s("<<i<<") for masses)"
-    <<endl;
-    exit(1);
-}
-
-void KinematicInvariants::check_size(int i) const 
-{
-if (i>max_)
-    {
-        cout<<"\nError in Kinematic Invariants: you tried to set an invariant with index "<<i<<" while the maximum allowed is "<<max_<<endl;
-        exit(1);
-    }
 }
 
 void KinematicVariables::generate_bjorken_xs(double* xx_vegas)

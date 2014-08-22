@@ -75,14 +75,24 @@ double Power(const double x,int i)
 }
 
 
-ostream& operator<<(ostream& stream, const CrossSection& XS)
+
+
+void Gstar2CrossSection::AllocateLuminosity(Luminosity* lumi)
 {
-    stream<<XS.info_.name<<"("<<XS.info_.ISF.left<<","<<XS.info_.ISF.right
-    <<"): a^"<<XS.info_.alpha_power
-    <<" ,dim="<<XS.dimension_;
-    
-    return stream;
+    lumi_box_.MatchPDFs(info_.ISF.left, info_.ISF.right,pdf_selection_);
+    lumi_box_.AllocateLuminosity(lumi);
 }
+
+double Gstar2CrossSection::LL(const double& x1,const double& x2)
+{
+    
+    return lumi_box_.give(x1,x2)
+    *pow(a_s_over_pi_,info_.alpha_power);
+}
+
+
+
+
 
 
 GstarGstarMe::GstarGstarMe()

@@ -1,6 +1,6 @@
 
 
-SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.6.0)
+SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.7.0)
 
 
 include_directories(
@@ -8,96 +8,112 @@ include_directories(
                     )
 
 link_directories(
-                ${GTEST_DIR}/build/
+                ${GTEST_DIR}/mybuild/
                )
 
-add_library(test_utils test_utils.cpp)
+#add_library(test_utils test_utils.cpp)
 
-add_executable(UI_test 
-            test_UI.cpp)
-target_link_libraries(UI_test 
-                        tools gtest)
-
-
-add_executable(nlo_poles_test  ggf_pole_cancelation_nlo_test.cpp)
-target_link_libraries(nlo_poles_test ${LIBRARIES_FOR_GLOBAL_TESTS})  
+#add_executable(UI_test
+#            test_UI.cpp)
+#target_link_libraries(UI_test
+#                        tools gtest)
 
 
-add_executable(nlo_gg_xs_test ggf_nlo_gg_channel_xsection_test.cpp)
-target_link_libraries(nlo_gg_xs_test ${LIBRARIES_FOR_GLOBAL_TESTS})
+#add_executable(nlo_poles_test  ggf_pole_cancelation_nlo_test.cpp)
+#target_link_libraries(nlo_poles_test ${LIBRARIES_FOR_GLOBAL_TESTS})
+
+
+#add_executable(nlo_gg_xs_test ggf_nlo_gg_channel_xsection_test.cpp)
+#target_link_libraries(nlo_gg_xs_test ${LIBRARIES_FOR_GLOBAL_TESTS})
   
 
-add_executable(nnlo_q1q2_pole_test 
-            ggf_NNLO_q1q2_pole_cancelation_test.cpp)
-target_link_libraries(nnlo_q1q2_pole_test
-			${LIBRARIES_FOR_GLOBAL_TESTS})
+#add_executable(nnlo_q1q2_pole_test
+#            ggf_NNLO_q1q2_pole_cancelation_test.cpp)
+#target_link_libraries(nnlo_q1q2_pole_test
+#			${LIBRARIES_FOR_GLOBAL_TESTS})
   
-add_executable(nnlo_qq_test 
-            ggf_nnlo_qq_test.cpp)
-target_link_libraries(nnlo_qq_test
-			${LIBRARIES_FOR_GLOBAL_TESTS})  
+#add_executable(nnlo_qq_test
+#            ggf_nnlo_qq_test.cpp)
+#target_link_libraries(nnlo_qq_test
+#			${LIBRARIES_FOR_GLOBAL_TESTS})
 
-add_executable(nnlo_qqbar_test 
-            ggf_nnlo_qqbar_test.cpp)
-target_link_libraries(nnlo_qqbar_test
-			${LIBRARIES_FOR_GLOBAL_TESTS})
+#add_executable(nnlo_qqbar_test
+#            ggf_nnlo_qqbar_test.cpp)
+#target_link_libraries(nnlo_qqbar_test
+#			${LIBRARIES_FOR_GLOBAL_TESTS})
  
 
-add_executable(nnlo_qg_test 
-            quark_gluon_nnlo_test.cpp)
-target_link_libraries(nnlo_qg_test
-			${LIBRARIES_FOR_GLOBAL_TESTS})  
+#add_executable(nnlo_qg_test
+#            quark_gluon_nnlo_test.cpp)
+#target_link_libraries(nnlo_qg_test
+#			${LIBRARIES_FOR_GLOBAL_TESTS})
 
-add_executable(nnlo_gg_test 
-            gluon_gluon_nnlo_test.cpp)
-target_link_libraries(nnlo_gg_test
-			${LIBRARIES_FOR_GLOBAL_TESTS})  
+#add_executable(nnlo_gg_test
+#            gluon_gluon_nnlo_test.cpp)
+#target_link_libraries(nnlo_gg_test
+#			${LIBRARIES_FOR_GLOBAL_TESTS})
 
-add_executable(nnlo_gq_test 
-            gluon_quark_nnlo_test.cpp)
-target_link_libraries(nnlo_gq_test
-			${LIBRARIES_FOR_GLOBAL_TESTS}) 
+#add_executable(nnlo_gq_test
+#            gluon_quark_nnlo_test.cpp)
+#target_link_libraries(nnlo_gq_test
+#			${LIBRARIES_FOR_GLOBAL_TESTS})
 
-add_executable(nlo_exact_test 
-            nlo_exact_test.cpp)
-target_link_libraries(nlo_exact_test 
-            ${LIBRARIES_FOR_GLOBAL_TESTS})
+#add_executable(nlo_exact_test
+#            nlo_exact_test.cpp)
+#target_link_libraries(nlo_exact_test
+#            ${LIBRARIES_FOR_GLOBAL_TESTS})
 			
 
-add_executable(one_d_interpolator_test 
-            one_d_interpolator_test.cpp)
-target_link_libraries(one_d_interpolator_test 
-            tools pdf gtest avh_olo LHAPDF ${LHAPDF})
+#add_executable(one_d_interpolator_test
+#            one_d_interpolator_test.cpp)
+#target_link_libraries(one_d_interpolator_test
+#            tools pdf gtest avh_olo LHAPDF ${LHAPDF})
             
 
-add_executable(nlo_exact_virtual 
+add_executable(nlo_exact_virtual
             exact_virtual_test.cpp)
 target_link_libraries(nlo_exact_virtual
-                    gluon_fusion fortran_ggf fortran_ggf_RR 
+                    gluon_fusion fortran_ggf 
+                    fortran_ggf_RR_gg2gg
+            fortran_ggf_RR_gg2qqbar
+            fortran_ggf_RR_qg2qg
+            fortran_ggf_RR_gq2qg
+            fortran_ggf_RR_qqbar
+            fortran_ggf_RR_qq
                     models avh_olo chaplin tools
                     mincuba gtest)
 
+#add_executable(live_convolution_test
+#            live_convolution_test.cpp)
+#target_link_libraries(live_convolution_test
+#                    pdf tools mincuba LHAPDF ${LHAPDF}
+#                    gtest)
 
-
-
-add_executable(off_line_histograming 
-            off_line_histograming.cpp)
-target_link_libraries(off_line_histograming
-            tools gtest)
-
-
-add_executable(iggf 
+add_executable(test_ihixs
             iggf.cpp)
-target_link_libraries(iggf
-            gtest ggf_inclusive
-			chaplin tools models mincuba pdf LHAPDF ${LHAPDF}
-			)
+target_link_libraries(test_ihixs
+                    ihixs_lib
+                    pdf tools mincuba LHAPDF ${LHAPDF}
+                    gtest)
+
+#add_executable(off_line_histograming
+#            off_line_histograming.cpp)
+#target_link_libraries(off_line_histograming
+#            tools gtest)
+
+
+#add_executable(iggf
+#            iggf.cpp)
+#target_link_libraries(iggf
+#            gtest ggf_inclusive
+#			chaplin tools models mincuba pdf LHAPDF ${LHAPDF}
+#			)
 
 
 
             
-add_executable(gstar2_nlo_test ${EHIXS_SRC_DIR}/gamma_star_gamma_star/gtests.cpp)
-target_link_libraries(gstar2_nlo_test
-                    gamma_star_gamma_star
-                    tools pdf LHAPDF chaplin
-                    gtest)
+#add_executable(gstar2_nlo_test ${EHIXS_SRC_DIR}/gamma_star_gamma_star/gtests.cpp)
+#target_link_libraries(gstar2_nlo_test
+#                    gamma_star_gamma_star
+#                    tools pdf LHAPDF chaplin
+#                    gtest)

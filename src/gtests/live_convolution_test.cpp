@@ -1,65 +1,143 @@
 
-
-/** testing pdfs, and in particular the new interpolator class CashedInterpolator.h as compared to the old interpolator.h by Ste:
- *
- * Achilleas Lazopoulos, lazopoli@phys.ethz.ch
- */
+//    testing convolutions on the fly vs standard interpolated ones
+//    Achilleas Lazopoulos, lazopoli@phys.ethz.ch
+//    
 
 #include <iostream>
 #include <cmath>
-
+#include <string>
 using namespace std;
 
-#include "pdf.h"
-
 #include "gtest/gtest.h"
+#include "pdf_hub.h"
+#include "vegas_adaptor.h"
 
 
 
 
-
-
-
-class TestingNloReal: public CoolInt
+class ConvolutionIntegral: public CoolInt
 {
 public:
-    TestingNloReal():CoolInt(){};
+    ConvolutionIntegral():CoolInt(){};
     double evaluateIntegral(const double xx[]);
+    void setPdf(CPDF* ze_pdf){the_pdf = ze_pdf;}
+    void set_x(const double& xx){the_x=xx;}
 private:
+    CPDF* the_pdf;
+    double the_x;
 };
 
-double TestingNloReal::evaluateIntegral(const double xx[])
+double ConvolutionIntegral::evaluateIntegral(const double xx[])
 {
-    double z=0.732;
-    double lambda = xx[0];
-    complex<double> born = born_exact_summed_over_quarks(_model);
+    vector<double> xv;
+    xv.push_back(the_x);
+    xv.push_back(xx[0]);
+    return the_pdf->give_f(xv,0);
     
-    return (
-            pow(z,4.0)/2.0*sum_of_abs_sq_of_Aqi(z,lambda,_model)
-            - pow(1.0-z+z*z,2.0) * pow(abs(born),2.0)
-            )
-    /lambda/(1.0-lambda)  + 11.0/6.0 * pow(1.0-z,4.0);
-}
-
-
-TEST(ggf_nlo_exact_real, DISABLED_large_mt_limit)
-{
-    CModel* Model = new CModel();
-    Model->quarks[0]->set_pole_mass(2000.0);
-    Model->quarks[1]->set_Y(0.0);
-    
-    Model->consolidate(0.117, 1.0, 1,125.0);
-    
-    
-    TestingNloReal my_dude;
-    my_dude.setModel(Model);
-    my_dude.call_vegas();
-    cout<<"\nres="<<my_dude.result()<<endl;
-    EXPECT_LT(abs(my_dude.result()),1e-5);
 }
 
 
 
 
+class TestingLiveColvolutions: public ::testing::TestWithParam<int > {
+protected:
+    virtual void SetUp() {
+        CI.setParams(1,0.01,1e-10,
+                     1000,100000000,1000,100);
+        UI_interpolator.m_higgs = 125.0;
+        UI_interpolator.perturbative_order = 2;
+        UI_interpolator.pdf_provider = "MSTW";
+        UI_interpolator.pdf_error = false;
+        UI_interpolator.Etot = 8000.0;
+        UI_interpolator.muf_over_mhiggs=1.0;
+        UI_interpolator.mur_over_mhiggs=1.0;
+        UI_interpolator.convolutions_by_interpolation = true;
+        interpolated = new PDFHub(UI_interpolator);
+        
+        UI_live.m_higgs = 125.0;
+        UI_live.perturbative_order = 2;
+        UI_live.pdf_provider = "MSTW";
+        UI_live.pdf_error = false;
+        UI_live.Etot = 8000.0;
+        UI_live.muf_over_mhiggs=1.0;
+        UI_live.mur_over_mhiggs=1.0;
+        UI_live.convolutions_by_interpolation = false;
+        live = new PDFHub(UI_live);
+        
+        err = 1e-3;
+    }
+    
+    void set_pdfs(const pdf_desc& the_desc)
+        {
+            f_interpolated  = interpolated->construct_or_locate_pdf(the_desc);
+            f_live = live->construct_or_locate_pdf(the_desc);
+            CI.setPdf(f_live);
+        }
+    
+    double diff(const double& x,int i, int j)
+        {
+            set_pdfs(pdf_desc(i,j,1,1));
+            CI.set_x(x);
+            CI.call_vegas();
+            err = CI.error();
+            cout<<"\n interpolated ("<<x<<")="<<f_interpolated->give_f(x,0)
+            <<"\t integrated_live ("<<x<<")="<<CI.result()<<endl;
+            return ( fabs(f_interpolated->give_f(x,0)-CI.result()) < err ) ;
+        
+        }
+
+    UserInterface UI_interpolator;
+    UserInterface UI_live;
+    PDFHub* interpolated;
+    PDFHub* live;
+    CPDF* f_interpolated;
+    CPDF* f_live;
+    ConvolutionIntegral CI;
+    double err;
+};
+
+
+
+//TEST_F(TestingLiveColvolutions,F_0_0_0_0)
+//{
+//    set_pdfs(pdf_desc(0,0,0,0));
+//    EXPECT_LT(fabs(diff(0.234)),err);
+//}
+
+TEST_P(TestingLiveColvolutions,F_0_x_1_1)
+{
+    EXPECT_TRUE(diff(0.234,0,GetParam()));
+}
+
+INSTANTIATE_TEST_CASE_P(F_0_x_1_1,
+                        TestingLiveColvolutions,
+                        ::testing::Range(-5,6));
+
+
+TEST_P(TestingLiveColvolutions,F_x_x_1_1)
+{
+    EXPECT_TRUE(diff(0.234,GetParam(),GetParam()));
+}
+INSTANTIATE_TEST_CASE_P(F_x_x_1_1,
+                        TestingLiveColvolutions,
+                        ::testing::Range(-5,6));
+
+TEST_P(TestingLiveColvolutions,F_x_0_1_1)
+{
+    EXPECT_TRUE(diff(0.234,GetParam(),0));
+}
+INSTANTIATE_TEST_CASE_P(F_x_0_1_1,
+                        TestingLiveColvolutions,
+                        ::testing::Range(-5,6));
+
+int main(int argc, char**argv)
+{
+    cout << "\ntesting ehixs\n" << endl;
+    
+    ::testing::InitGoogleTest(&argc, argv);
+    return  RUN_ALL_TESTS();
+    
+    return 0;
+}
 
 

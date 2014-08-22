@@ -15,9 +15,12 @@ namespace consts
      const double convert_GeV_to_pb=0.389379304*1e9;
      const double convert_GeV_to_fb=0.389379304*1e12;
      
-     const double z2=1.644934066848226;
-     const double z3=1.202056903159594;
-     const double z4=1.082323233711138;  
+     const double z2 = 1.644934066848226;
+     const double z3 = 1.202056903159594;
+     const double z4 = 1.082323233711138;
+     const double z5 = 1.036927755143370;
+     const double z6 = 1.017343061984448;
+    
      const double nf=5.0;
     
     const double beta_zero = 11.0/4.0-consts::nf/6.0;
