@@ -64,7 +64,10 @@ void VegasAdaptor::ConfigureNumberOfComponents(int n)
 
 void VegasAdaptor::call_vegas()
 {
-     //cout<<"\n["<<__func__<<"]";
+    cout<<"\n["<<__func__<<"] Calling Vegas "<<endl;
+    cout<<"\n["<<__func__<<"] dimension of integration =  "
+        <<number_of_dims <<endl;
+    
      double integral[number_of_components];
      double error[number_of_components];
      double prob[number_of_components];

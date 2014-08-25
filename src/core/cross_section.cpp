@@ -29,7 +29,11 @@ void CrossSection::SetEColliderSq(const double& smaximum)
 void CrossSection::SetEventBox(EventBox& event_box)
 {event_box_=&event_box;}
 
-
+int CrossSection::Dimension()
+{
+    SetDimension();
+    return dimension_;
+}
 
 
 

@@ -1,6 +1,7 @@
 #ifndef FMOMENTUM_H
 #define FMOMENTUM_H
-
+#include <iostream>      // std::stringstream
+using namespace std;
 
 class FMomentum{
 public:
@@ -15,6 +16,7 @@ public:
     double operator*(const FMomentum& Q){return p[0]*Q[0]-p[1]*Q[1]-p[2]*Q[2]-p[3]*Q[3];}
     friend ostream& operator<<(ostream&, const FMomentum&);
 };
+
 
 
 #endif

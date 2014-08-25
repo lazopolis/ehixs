@@ -23,6 +23,8 @@ public:
     }
     
     double give(const double& x1,const double& x2);
+    
+    double alpha_s_at_mz(){return pdf_->alphasQ(91.1876);}
 private:
     LHAPDF::PDF* pdf_;
     double muf_;

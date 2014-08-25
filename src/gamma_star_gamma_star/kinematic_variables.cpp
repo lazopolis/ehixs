@@ -7,27 +7,7 @@
 #include <iomanip>
 using namespace std;
 
-ostream& operator<<(ostream& stream, const FMomentum& x)
-{
-    return stream<<setprecision(8)<<"("
-                <<x.p[0]<<","
-                <<x.p[1]<<","
-                <<x.p[2]<<","
-                <<x.p[3]<<")";
-}
 
-ostream& operator<<(ostream& stream, const KinematicInvariants& kk)
-{
-    for (int i=1;i<kk.max_+1;i++)
-    {
-        for (int j=i+1;j<kk.max_+1;j++)
-        {
-            stream<<"\n s"<<i<<j<<" = "<<kk.s(i,j)<<",";
-        }
-    }
-    for (int i=1;i<kk.max_+1;i++) stream<<"\n s"<<i<<" = "<<kk.s(i)<<",";
-    return stream;
-}
 
 ostream& operator<<(ostream& stream, const KinematicVariables& kk)
 {

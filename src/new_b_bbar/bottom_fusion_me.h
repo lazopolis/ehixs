@@ -8,11 +8,15 @@
 class BottomFusionCrossSection : public CrossSection
 {
 public:
-    
+    double alpha_s_at_mz_from_lhapdfs(){return lumi->alpha_s_at_mz();}
+    void SetHiggsMass(const double& mh){mh_ = mh;}
 protected:
 
     void JF(const double&,const BottomFusionKinematics& kv);
     void JF();
+protected:
+    NewLuminosity* lumi;
+    double mh_;
 };
 
 
@@ -23,8 +27,7 @@ public:
     BottomFusion_bb();
     void AllocateLuminosity(const UserInterface&);
     
-protected:
-    NewLuminosity* lumi;
+
 protected:
     double LL(const double& x1,const double& x2);
     
@@ -42,6 +45,7 @@ public:
     void Configure();
     void Evaluate(double* xx_vegas);
     virtual double eval_me(const KinematicInvariants&)=0;
+    void SetDimension(){dimension_ = 1;}
 protected:
     BottomFusionKinematicsLO kk_;
 };

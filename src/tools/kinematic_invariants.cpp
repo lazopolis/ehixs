@@ -1,5 +1,7 @@
 #include "kinematic_invariants.h"
 
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
+
 
 void KinematicInvariants::compute_dimensionless_invariants()
 {
@@ -50,5 +52,21 @@ void KinematicInvariants::check_size(int i) const
         exit(1);
     }
 }
+
+
+
+ostream& operator<<(ostream& stream, const KinematicInvariants& kk)
+{
+    for (int i=1;i<kk.max_+1;i++)
+    {
+        for (int j=i+1;j<kk.max_+1;j++)
+        {
+            stream<<"\n s"<<i<<j<<" = "<<kk.s(i,j)<<",";
+        }
+    }
+    for (int i=1;i<kk.max_+1;i++) stream<<"\n s"<<i<<" = "<<kk.s(i)<<",";
+    return stream;
+}
+
 
 

@@ -1,6 +1,8 @@
 #include "fmomentum.h"
-
-
+#include <iomanip> // setprecison()
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
+#include "math.h" /* sqrt */
+using namespace std;
 
 void FMomentum::zboost(const double& bb)
 {
@@ -38,5 +40,13 @@ void FMomentum::boost(const double& bx,const double& by,const double& bz)
     for (int i=0;i<4;i++) p[i] = newp[i];
 }
 
+ostream& operator<<(ostream& stream, const FMomentum& x)
+{
+    return stream<<setprecision(8)<<"("
+    <<x.p[0]<<","
+    <<x.p[1]<<","
+    <<x.p[2]<<","
+    <<x.p[3]<<")";
+}
 
 

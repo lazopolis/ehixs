@@ -1,6 +1,6 @@
 
 #include<math.h> 
-
+#include <iomanip> // setprecison()
 
 #include "bottom_fusion_kinematics.h"
 
@@ -14,11 +14,12 @@ void BottomFusionKinematics::SetNumberOfParticles(int num_of_particles)
 
 void BottomFusionKinematics::SetBoundaries(const double& mh_sq,const double& S)
 {
-    //
+    cout<<"\n[in BottomFusionKinematics] configuration: mh_sq = "<<mh_sq;
     S_=S;
     mh_sq_=mh_sq;
     // definition of tau
     tau_= mh_sq_ / S_;
+    cout<<"\t tau="<<tau_<<endl;
 }
 
 void BottomFusionKinematicsLO::generate_kinematics(double* xx_vegas)
@@ -30,6 +31,29 @@ void BottomFusionKinematicsLO::generate_kinematics(double* xx_vegas)
     jacobian = (1.-tau_) / x1_ ;
     
 }
+
+
+ostream& operator<<(ostream& stream, const BottomFusionKinematics& kk)
+{
+    
+    return stream << setprecision(16)
+    <<"\n-------"
+    <<kk.kin_inv_
+    <<"\n tau = "<<kk.tau_<<","
+
+    <<"\n x1 = "<<kk.x1()<<","
+    <<"\n x2 = "<<kk.x2()<<","
+    <<"\n p1 = "<<kk.p1<<","
+    <<"\n p2 = "<<kk.p2<<","
+    <<"\n p3 = "<<kk.p3<<","
+    <<"\n p4 = "<<kk.p4<<","
+    <<"\n p5 = "<<kk.p5
+    ;
+}
+
+
+
+
 
 void BottomFusionKinematicsLO::generate_bjorken_xs(const double& xx0)
 {

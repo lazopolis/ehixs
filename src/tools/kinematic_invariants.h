@@ -1,6 +1,8 @@
 #ifndef KINEMATIC_INVARIANTS_H
 #define KINEMATIC_INVARIANTS_H
 
+#include <iostream>
+using namespace std;
 
 class KinematicInvariants{
 public:

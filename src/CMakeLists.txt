@@ -111,7 +111,7 @@ add_subdirectory(avh_olo)
 #add_subdirectory(gluon_fusion_inclusive)
 #add_subdirectory(bottom_fusion)
 add_subdirectory(new_b_bbar)
-add_subdirectory(gamma_star_gamma_star)
+#add_subdirectory(gamma_star_gamma_star)
 add_subdirectory(ihixs)
 #
 #   decay modes
@@ -148,9 +148,9 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             models
             tools
             #
-            gamma_star_gamma_star 
+            #gamma_star_gamma_star 
             #
-            GGF_LIBS
+            #GGF_LIBS
             #fortran_bbh
             bbh
             #

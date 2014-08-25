@@ -46,7 +46,7 @@ BottomFusion_bb::BottomFusion_bb()
     //refacator: move this to the LO daughter class
     number_of_particles_ = 5;
     //info_ = new NewMeExternalInfo;
-    dimension_ = 4;
+    //dimension_ = 4;
     
     //info_.ISF = InitialStateFlavors("u","ub");
     //pdf_selection_ = "same flavor";
@@ -61,8 +61,14 @@ void BottomFusion_bb_Delta::Configure()
 {
     kk_.SetNumberOfParticles(3);
     //refactor: make a ConfigureBase function and move smin setting there
-    //smin = pow(mh,2.0);
+    const double smin = pow(mh_,2.0);
+    cout<<"\n *** mh_sq = "<<smin<<endl;
     kk_.SetBoundaries(smin,smax);
+    
+    const double Nc = 3;
+    const double yukawa_bottom = 1.0;
+    prefactor_ = consts::Pi * pow(yukawa_bottom,2.0)/2./Nc/pow(mh_,2.)
+                *consts::convert_GeV_to_pb;
 }
 
 

@@ -13,7 +13,7 @@ public:
     double determine_xval(const CombinedEvent& ce)
     {
 
-    double* ph = ce.production->ParticleMomentum(5);
+    double* ph = ce.production->ParticleMomentum(3);
     double ptH = sqrt(ph[1]*ph[1]+ph[2]*ph[2]);
     return ptH;
     }
@@ -30,7 +30,7 @@ public:
     double determine_xval(const CombinedEvent& ce)
     {
     
-    double* h = ce.production->ParticleMomentum(5);
+    double* h = ce.production->ParticleMomentum(3);
     const double E=h[0];
     const double pz=h[3];
     //cout<<"\t  "<<pz;

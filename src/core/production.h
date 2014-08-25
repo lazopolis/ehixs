@@ -22,10 +22,11 @@ using namespace std;
 
 #include "momenta.h"
 #include "event.h"
-
+#include "cross_section.h"
 class Production
 {
 public://methods
+    ~Production();
 	void Configure(const UserInterface & UI);
     void  perform();
 
@@ -36,16 +37,15 @@ public://methods
     void show_cut_info_and_exit(){cuts_->show_cut_info_and_exit();}
     
     //: pure virtual functions
-    virtual int dimension_of_integration()=0;
+    
     virtual void SetNumberOfParticles() = 0;
     virtual void SetDecayParticleIdInEventBox()=0;
     //virtual int number_of_necessary_sectors() = 0;
-    virtual void evaluate_sector()=0;
+    
     virtual void create_matrix_elements()=0;
-    virtual void info()=0;
-    virtual void SelectAndConfigureSector(const UserInterface&)=0;
-    virtual void SetModelDependentParameters()=0;
-    virtual double alpha_s_at_mz_from_lhapdfs()=0;
+    virtual void ConfigureCuts()=0;
+    virtual void SetProcessSpecificParameters()=0;
+    
     /*
     virtual void book_production_event(const double &,const double &,
                                        const double &,const double &,
@@ -62,7 +62,12 @@ public://methods
                                              const int &,const string &)=0;
      */
     
-    
+    void evaluate_sector();
+    int dimension_of_integration();
+    double alpha_s_at_mz_from_lhapdfs();
+    void info();
+    void xml_info(const char * output_fname);
+
 public:// data
 	
     EventBox event_box;
@@ -73,6 +78,12 @@ protected:// data
     double* xx_vegas;
     CutBox* cuts_;
     bool sector_defined;
+protected://data
+    vector<CrossSection*> available_xs_;
+    CrossSection* the_xs_;
+protected://methods
+    void find_the_xs(const UserInterface & UI);
+    
     
     
     

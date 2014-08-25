@@ -15,30 +15,25 @@
 class BottomFusion : public Production
 {
 public:
-    ~BottomFusion();
     //: virtual obligations from production
-    int dimension_of_integration();
     void SetNumberOfParticles() {event_box.SetNumberOfParticles(5);}
     void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(3);}
-    void evaluate_sector();
     void create_matrix_elements();
-    void info();
-    void SelectAndConfigureSector(const UserInterface&);
-    double alpha_s_at_mz_from_lhapdfs();
-    void SetModelDependentParameters();
+    void ConfigureCuts();
+    void SetProcessSpecificParameters();
     
-private://data
-    vector<BottomFusionCrossSection*> available_xs_;
-    BottomFusionCrossSection* the_xs_;
+//private://data
+//    vector<BottomFusionCrossSection*> available_xs_;
+//    BottomFusionCrossSection* the_xs_;
 private://methods
-    void find_the_xs(const UserInterface & UI);
-    void allocate_luminosity();
+    //void find_the_xs(const UserInterface & UI);
+    //void allocate_luminosity();
     
     //int number_of_necessary_sectors_;
 private:
     // these should be in process
-    void xml_info(const char * output_fname);
-    void initialize_sector(const UserInterface& UI);
+    
+    //void initialize_sector(const UserInterface& UI);
     
 };
 
