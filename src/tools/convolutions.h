@@ -10,31 +10,74 @@ using namespace std;
 #include "event.h"
 #include "luminosity.h"
 
-
 //typedef  pair<string,string> stringpair;
 
 //class FxFxA;
 
-class InitialStateFlavors
+///@struct InitialStateFlavors
+///\brief  Container for information about initial state flavors
+struct InitialStateFlavors
 {
-public:
-    InitialStateFlavors(){};
-    InitialStateFlavors(const string& lef,const string& rig)
-    {left = lef;right=rig;}
+
+    ///@name Data members
+    //@{
+
     string left;
     string right;
+
+    //@}
+
+    ///@name Member functions
+    //@{
+
+    InitialStateFlavors():
+    left(),right()
+    {}
+
+    InitialStateFlavors(const InitialStateFlavors& that):
+    left(that.left),right(that.right)
+    {}
+
+    InitialStateFlavors(const string& lef,const string& rig):
+    left(lef),right(rig)
+    {}
+
+    ~InitialStateFlavors(){}
+
+    //@}
 };
 
-class NewMeExternalInfo
+///@struct NewMeExternalInfo
+///\brief  Container for information about matrix elements
+///\todo   Take "New" out of the name?
+struct NewMeExternalInfo
 {
-public:
-    NewMeExternalInfo(){};
-public:
+    ///@name Data members
+    //@{
+
     string name;
     InitialStateFlavors ISF;
     int alpha_power;
+
     //int epsilon_power_min;
     //int epsilon_power_max;
+
+    //@}
+
+    ///@name Member functions
+    //@{
+
+    NewMeExternalInfo():
+    name(),ISF(),alpha_power()
+    {}
+
+    NewMeExternalInfo(const NewMeExternalInfo& that):
+    name(that.name),ISF(that.ISF),alpha_power(that.alpha_power)
+    {}
+
+    ~NewMeExternalInfo(){}
+
+    //@}
 };
 
 class pdf_desc_pair

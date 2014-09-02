@@ -23,14 +23,19 @@ using namespace std;
 #include "momenta.h"
 #include "event.h"
 #include "cross_section.h"
+
+///@class Production
 class Production
 {
 public://methods
     ~Production();
-	void Configure(const UserInterface & UI);
-    void  perform();
+	void Configure(const UserInterface& UI);
+    void perform();
 
-    bool is_sector_defined(){return sector_defined;}
+    bool is_sector_defined() const
+    {
+        return sector_defined;
+    }
     void set_up_the_hatch(TheHatch*);
     bool this_event_passes_cuts(int i)
     {return cuts_->passes_cuts(event_box.ptr_to_event(i));}
@@ -38,7 +43,7 @@ public://methods
     
     //: pure virtual functions
     
-    virtual void SetNumberOfParticles() = 0;
+    virtual void SetNumberOfParticles()=0;
     virtual void SetDecayParticleIdInEventBox()=0;
     //virtual int number_of_necessary_sectors() = 0;
     
@@ -66,7 +71,7 @@ public://methods
     int dimension_of_integration();
     double alpha_s_at_mz_from_lhapdfs();
     void info();
-    void xml_info(const char * output_fname);
+    void xml_info(const char* output_fname);
 
 public:// data
 	
@@ -82,7 +87,7 @@ protected://data
     vector<CrossSection*> available_xs_;
     CrossSection* the_xs_;
 protected://methods
-    void find_the_xs(const UserInterface & UI);
+    void find_the_xs(const UserInterface& UI);
     
     
     

@@ -19,7 +19,7 @@ using namespace std;
 void BottomFusion::create_matrix_elements()
 {
     available_xs_.push_back(new BottomFusion_bb_LO);
-    //available_xs_.push_back(new BottomFusionNLOSoft);
+    available_xs_.push_back(new BottomFusion_bb_NLO_Soft);
     //available_xs_.push_back(new BottomFusionNLOHard);
     //available_xs_.push_back(new BottomFusionNNLORV);
 }

@@ -4,58 +4,118 @@
 #include "cross_section.h"
 #include "bottom_fusion_kinematics.h"
 
+/**
+
+ @class BottomFusionCrossSection
+ Mother class for any subprocess contributing to Higgs production via bottom fusion
+
+ */
 
 class BottomFusionCrossSection : public CrossSection
 {
+
 public:
+
     double alpha_s_at_mz_from_lhapdfs(){return lumi->alpha_s_at_mz();}
     void SetHiggsMass(const double& mh){mh_ = mh;}
-protected:
 
+protected://??
+
+    /**
+     Jet function
+     */
     void JF(const double&,const BottomFusionKinematics& kv);
     void JF();
-protected:
+
+protected://??
+
     NewLuminosity* lumi;
     double mh_;
+
 };
 
+/**
 
+ @class BottomFusion_bb
+ Mother class for subprocesses with bbar initial state
+
+ */
 
 class BottomFusion_bb: public BottomFusionCrossSection
 {
+
 public:
+
     BottomFusion_bb();
     void AllocateLuminosity(const UserInterface&);
-    
 
-protected:
+protected://??
+
     double LL(const double& x1,const double& x2);
-    
-    
-protected:
+
+protected://??
+
     int number_of_particles_;
     double smin;
     double prefactor_;
     
 };
 
-class BottomFusion_bb_Delta: public BottomFusion_bb
+/**
+
+ @class BottomFusion_bb_Delta
+ Mother class for subprocesses with bbar initial state and delta-like kinematics
+ 
+ */
+
+class BottomFusion_bb_Delta : public BottomFusion_bb
 {
+
 public:
+
     void Configure();
     void Evaluate(double* xx_vegas);
     virtual double eval_me(const KinematicInvariants&)=0;
     void SetDimension(){dimension_ = 1;}
+
 protected:
+
     BottomFusionKinematicsLO kk_;
+
 };
 
+/**
+
+ @class BottomFusion_bb_LO
+ LO matrix element for bbar->H
+
+ */
 
 class BottomFusion_bb_LO : public BottomFusion_bb_Delta
 {
+
 public:
+
     BottomFusion_bb_LO();
     double eval_me(const KinematicInvariants&);
+
+};
+
+/**
+
+ @class BottomFusion_bb_NLO_Soft
+ LO matrix element for bbar->H
+
+ */
+
+class BottomFusion_bb_NLO_Soft : public BottomFusion_bb_Delta
+{
+
+public:
+
+    BottomFusion_bb_NLO_Soft();  ///< Standard constructor
+    double eval_me(const KinematicInvariants&); ///< Actual matrix element computation
+    
 };
 
 

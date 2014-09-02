@@ -580,7 +580,7 @@
 		56B183EA19B5EA720034E0DD /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		56B183EB19B5EA720034E0DD /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion.cpp; sourceTree = "<group>"; };
-		56B183EE19B5EA720034E0DD /* bottom_fusion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion.h; sourceTree = "<group>"; };
+		56B183EE19B5EA720034E0DD /* bottom_fusion.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion.h; sourceTree = "<group>"; tabWidth = 4; };
 		56B183EF19B5EA720034E0DD /* bottom_fusion_kinematics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion_kinematics.cpp; sourceTree = "<group>"; };
 		56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion_kinematics.h; sourceTree = "<group>"; };
 		56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion_me.cpp; sourceTree = "<group>"; };
@@ -659,7 +659,9 @@
 				56B181C919B5EA710034E0DD /* src */,
 				56B1842219B5EA720034E0DD /* user_src */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		56B1818219B5EA710034E0DD /* cmake_builds */ = {
 			isa = PBXGroup;
@@ -1867,6 +1869,7 @@
 				56B17ECC19B5EA090034E0DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

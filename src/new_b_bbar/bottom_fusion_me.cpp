@@ -1,5 +1,6 @@
-
 #include "bottom_fusion_me.h"
+
+// BottomFusionCrossSection
 
 void BottomFusionCrossSection::JF(const double& w,const BottomFusionKinematics& kv)
 {
@@ -24,7 +25,19 @@ void BottomFusionCrossSection::JF()
     event_box_->AddNewEvent(0.0);
 }
 
+// BottomFusion_bb
 
+BottomFusion_bb::BottomFusion_bb()
+{
+    //refactor: move this to the LO daughter class
+    number_of_particles_ = 5;
+    //info_ = new NewMeExternalInfo;
+    //dimension_ = 4;
+
+    //info_.ISF = InitialStateFlavors("u","ub");
+    //pdf_selection_ = "same flavor";
+    info_.ISF = InitialStateFlavors("b","bbar");
+}
 
 void BottomFusion_bb::AllocateLuminosity(const UserInterface& UI)
 {
@@ -38,24 +51,7 @@ double BottomFusion_bb::LL(const double& x1,const double& x2)
     return lumi->give(x1,x2);
 }
 
-
-
-
-BottomFusion_bb::BottomFusion_bb()
-{
-    //refacator: move this to the LO daughter class
-    number_of_particles_ = 5;
-    //info_ = new NewMeExternalInfo;
-    //dimension_ = 4;
-    
-    //info_.ISF = InitialStateFlavors("u","ub");
-    //pdf_selection_ = "same flavor";
-    info_.ISF = InitialStateFlavors("b","bbar");
-}
-
-
-
-
+// BottomFusion_bb_Delta
 
 void BottomFusion_bb_Delta::Configure()
 {
@@ -70,7 +66,6 @@ void BottomFusion_bb_Delta::Configure()
     prefactor_ = consts::Pi * pow(yukawa_bottom,2.0)/2./Nc/pow(mh_,2.)
                 *consts::convert_GeV_to_pb;
 }
-
 
 void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
 {
@@ -94,11 +89,28 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
     }
     
 }
+
+// BottomFusion_bb_LO
+
 BottomFusion_bb_LO::BottomFusion_bb_LO():BottomFusion_bb_Delta()
 {
     info_.name = "Born";
 }
+
 double BottomFusion_bb_LO::eval_me(const KinematicInvariants& kinvar)
+{
+    return 1.0;
+}
+
+// BottomFusion_bb_NLO
+
+BottomFusion_bb_NLO_Soft::BottomFusion_bb_NLO_Soft()
+{
+    info_.alpha_power = 1;
+    info_.name = "NLO Soft";
+}
+
+double BottomFusion_bb_NLO_Soft::eval_me(const KinematicInvariants& kinvar)
 {
     return 1.0;
 }

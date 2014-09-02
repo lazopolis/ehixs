@@ -1,15 +1,18 @@
-
-#include<math.h> 
+#include<math.h>
 #include <iomanip> // setprecison()
-
 #include "bottom_fusion_kinematics.h"
 
+//BottomFusionKinematics
 
-void BottomFusionKinematics::SetNumberOfParticles(int num_of_particles)
+void BottomFusionKinematics::SetNumberOfParticles(const int num_of_particles)
 {
-    // the kinematic invariants class needs to know how many particles are there
-    kin_inv_.SetMaxMomentumID(num_of_particles);
-    num_of_particles_ = num_of_particles;
+    if (num_of_particles < 3 || num_of_particles > 5) throw;
+    else {
+            // the kinematic invariants class needs to know how many particles are there
+            kin_inv_.SetMaxMomentumID(num_of_particles);
+            num_of_particles_ = num_of_particles;
+        }
+    return;
 }
 
 void BottomFusionKinematics::SetBoundaries(const double& mh_sq,const double& S)
