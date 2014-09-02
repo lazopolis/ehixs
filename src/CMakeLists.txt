@@ -13,7 +13,6 @@ set (ehixstests_VERSION_MINOR 9)
 #   (don't forget to remove the '#' before 'SET(..)'
 #
 #SET(LHAPDF_DIR my_lhapdf_directory)
-SET(LHAPDF_DIR /Users/lazopolis/other_codes/lhapdf6)
 #
 #
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
