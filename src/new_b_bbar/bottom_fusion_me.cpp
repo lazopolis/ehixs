@@ -77,11 +77,10 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
         const double me_sq = eval_me(kk_.invariants());
         const double sigma = prefactor_ * kk_.jacobian
         * myxlumi
-        * 1.0/2.0/kk_.s(1,2)
+        * 1.0/(2.0*kk_.s(1,2)) //flux
         * me_sq
         ;
         JF(sigma,kk_);
-        //cout<<kk_;
     }
     else
     {
@@ -112,7 +111,8 @@ BottomFusion_bb_NLO_Soft::BottomFusion_bb_NLO_Soft()
 
 double BottomFusion_bb_NLO_Soft::eval_me(const KinematicInvariants& kinvar)
 {
-    return 1.0;
+    const double z = kinvar.s(3)/kinvar.s(1,2);
+    return 0.;
 }
 
 

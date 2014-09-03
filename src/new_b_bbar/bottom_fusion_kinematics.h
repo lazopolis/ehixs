@@ -46,7 +46,7 @@ public:
 
     ///Default constructor
     BottomFusionKinematics():
-        num_of_particles(3), x1_(1.), x2_(1.), kin_inv_(), tau_(0.), S_(0.), mh_sq_(0.)
+        num_of_particles_(3), x1_(1.), x2_(1.), kin_inv_(), tau_(0.), S_(0.), mh_sq_(0.)
     {}
 
     //@}
@@ -104,32 +104,101 @@ public:
 
 };
 
-// LO kinematics: p1+p2 -> p3=ph and nothing else
-class BottomFusionKinematicsLO: public BottomFusionKinematics
+///\note Maybe the way to organize this is with templatized BottomFusionKinematics<unsigned int nExtraParticles>
+///      and template argument resolution of methods...
+
+/**
+ *
+ * \class BottomFusionKinematicsLO
+ *
+ * Class for subprocesses with kinematics p1+p2 -> p3=ph and nothing else
+ *
+ */
+
+class BottomFusionKinematicsLO : public BottomFusionKinematics
 {
+
 public:
+
+    ///\name Initialization function
+    //@{
+
     void generate_kinematics(double* xx_vegas);
+
+    //@}
+
 private:
+
+    ///\name Auxiliary functions
+    //@{
+
     void set_up_momenta_at_lab();
     void generate_bjorken_xs(const double&);
     void compute_invariants();
+
+    //@}
+
 };
 
-// NLO kinematics: p1+p2->p3+p4
-/*
-class BottomFusionKinematicsNLO: public BottomFusionKinematics
+/**
+ *
+ * \class BottomFusionKinematicsNLO
+ *
+ * Class for subprocesses with kinematics p1+p2 -> p3+p4
+ *
+ */
+
+class BottomFusionKinematicsNLO : public BottomFusionKinematics
 {
+
 public:
+
+    ///\name Constructors
+    //@{
+
+    ///Default constructor
+    BottomFusionKinematicsNLO() :
+    z_(1.),lambda_(0.),phi_(0.)
+    {}
+
+    ///Copy constructor
+    BottomFusionKinematicsNLO(const BottomFusionKinematicsNLO& that) :
+    z_(that.z_),lambda_(that.lambda_),phi_(that.phi_)
+    {}
+
+    ///Destructor
+    ~BottomFusionKinematicsNLO() {}
+
+    //@}
+
+    ///\name Initialization function
+    //@{
+
     void generate_kinematics(double* xx_vegas);
-    double z;
-    double lambda;
+
+    //@}
+
 private:
+
+    ///\name Data members
+    //@{
+
+    double z_;
+    double lambda_;
+    double phi_;
+    ///\note Achilleas had phi_g also. Unnecessary?
+
+    //@}
+
+    ///\name Auxiliary functions
+    //@{
+
+    void set_up_momenta_at_lab();
+    void generate_bjorken_xs(const double&);
+    void compute_invariants();
     
+    //@}
     
-    double phi;
-    double phi_g;
 };
-*/
+
 #endif
-
-
