@@ -35,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		56ACB9DE19B9D2F100B67E27 /* kinematics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kinematics.h; sourceTree = "<group>"; };
+		56ACB9DF19B9FBB700B67E27 /* fourmomentum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fourmomentum.h; sourceTree = "<group>"; };
 		56B1818519B5EA710034E0DD /* info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = info.txt; sourceTree = "<group>"; };
 		56B1818619B5EA710034E0DD /* MSTW2008nnlo68cl_0_0_0_0_0_100_100_5 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MSTW2008nnlo68cl_0_0_0_0_0_100_100_5; sourceTree = "<group>"; };
 		56B1818719B5EA710034E0DD /* MSTW2008nnlo68cl_0_0_0_0_0_12.5_12.5_5 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MSTW2008nnlo68cl_0_0_0_0_0_12.5_12.5_5; sourceTree = "<group>"; };
@@ -1716,6 +1718,8 @@
 				56B1841619B5EA720034E0DD /* histograms.hpp */,
 				56B1841719B5EA720034E0DD /* hub.cpp */,
 				56B1841819B5EA720034E0DD /* hub.hpp */,
+				56ACB9DE19B9D2F100B67E27 /* kinematics.h */,
+				56ACB9DF19B9FBB700B67E27 /* fourmomentum.h */,
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
 				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
 				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
@@ -2102,7 +2106,10 @@
 					/usr/local/include,
 				);
 				MACH_O_TYPE = staticlib;
-				OTHER_CFLAGS = "-c";
+				OTHER_CFLAGS = (
+					"-I/opt/local/include",
+					"-c",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2117,7 +2124,10 @@
 					/usr/local/include,
 				);
 				MACH_O_TYPE = staticlib;
-				OTHER_CFLAGS = "-c";
+				OTHER_CFLAGS = (
+					"-I/opt/local/include",
+					"-c",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2130,8 +2140,13 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				OTHER_CFLAGS = "-c";
+				OTHER_CFLAGS = (
+					"-I/opt/local/include/",
+					"-c",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include /opt/local/include";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "/usr/local/include /opt/local/include";
 			};
 			name = Debug;
 		};
@@ -2139,8 +2154,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				OTHER_CFLAGS = "-c";
+				OTHER_CFLAGS = (
+					"-I/opt/local/include/",
+					"-c",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include /opt/local/include";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "/usr/local/include /opt/local/include";
 			};
 			name = Release;
 		};
@@ -2152,7 +2172,11 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				OTHER_CFLAGS = "-c";
+				OTHER_CFLAGS = (
+					"-I/opt/local/include",
+					"-I/usr/local/include",
+					"-c",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2161,7 +2185,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				OTHER_CFLAGS = "-c";
+				OTHER_CFLAGS = (
+					"-I/opt/local/include",
+					"-I/usr/local/include",
+					"-c",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2216,6 +2244,7 @@
 				56E358D619B74013004E03CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		56E358EE19B744D2004E03CA /* Build configuration list for PBXNativeTarget "core" */ = {
 			isa = XCConfigurationList;
@@ -2224,6 +2253,7 @@
 				56E358F019B744D2004E03CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		56E358FA19B7455A004E03CA /* Build configuration list for PBXNativeTarget "pdf" */ = {
 			isa = XCConfigurationList;
@@ -2232,6 +2262,7 @@
 				56E358FC19B7455A004E03CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		56E3590919B745B3004E03CA /* Build configuration list for PBXNativeTarget "tools" */ = {
 			isa = XCConfigurationList;
@@ -2240,6 +2271,7 @@
 				56E3590B19B745B3004E03CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

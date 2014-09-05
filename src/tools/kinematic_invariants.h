@@ -37,6 +37,7 @@ private:
     int index(int) const;
 };
 
+// why is this here and the implementation of generate in kinematic_variables.cpp, not even in tools??
 class BjorkenXs{
 public:
     void generate(const double& tau,const double& v0, const double& v1);

@@ -2,27 +2,25 @@
 
 // BottomFusionCrossSection
 
-void BottomFusionCrossSection::JF(const double& w,const BottomFusionKinematics& kv)
+void BottomFusionCrossSection::JF(const double& w,const vector<FMomentum>& kv)
 {
     if (w!=w)
     {
         cout<<"\nerror: nan as event weight. w="<<w;
-        cout<<kv;
+        //cout<<kv;
         cout<<endl;
         exit(1);
     }
     event_box_->AddNewEvent(w);
-    event_box_->SetP(1,kv.p1.p[0],kv.p1.p[1],kv.p1.p[2],kv.p1.p[3]);
-    event_box_->SetP(2,kv.p2.p[0],kv.p2.p[1],kv.p2.p[2],kv.p2.p[3]);
-    event_box_->SetP(3,kv.p3.p[0],kv.p3.p[1],kv.p3.p[2],kv.p3.p[3]);
-    event_box_->SetP(4,kv.p4.p[0],kv.p4.p[1],kv.p4.p[2],kv.p4.p[3]);
-    event_box_->SetP(5,kv.p5.p[0],kv.p5.p[1],kv.p5.p[2],kv.p5.p[3]);
-    
+    for (size_t i = 0; i < kv.size(); ++i)
+        event_box_->SetP(i+1,kv[i](0),kv[i](1),kv[i](2),kv[i](3));
+    return;
 }
 
 void BottomFusionCrossSection::JF()
 {
     event_box_->AddNewEvent(0.0);
+    return;
 }
 
 // BottomFusion_bb
@@ -51,15 +49,16 @@ double BottomFusion_bb::LL(const double& x1,const double& x2)
     return lumi->give(x1,x2);
 }
 
+/// \todo Destructor deleting lumi missing!!!
+
 // BottomFusion_bb_Delta
 
 void BottomFusion_bb_Delta::Configure()
 {
-    kk_.SetNumberOfParticles(3);
     //refactor: make a ConfigureBase function and move smin setting there
     const double smin = pow(mh_,2.0);
     cout<<"\n *** mh_sq = "<<smin<<endl;
-    kk_.SetBoundaries(smin,smax);
+    kk_.setBoundaries(smin,smax);
     
     const double Nc = 3;
     const double yukawa_bottom = 1.0;
@@ -70,17 +69,17 @@ void BottomFusion_bb_Delta::Configure()
 void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
 {
     
-    kk_.generate_kinematics(xx_vegas);
+    kk_.generate(xx_vegas);
     const double myxlumi = LL(kk_.x1(),kk_.x2());
     if (myxlumi!=0.0)
     {
-        const double me_sq = eval_me(kk_.invariants());
+        const double me_sq = eval_me(kk_);
         const double sigma = prefactor_ * kk_.jacobian
         * myxlumi
         * 1.0/(2.0*kk_.s(1,2)) //flux
         * me_sq
         ;
-        JF(sigma,kk_);
+        JF(sigma,kk_.p);
     }
     else
     {
@@ -111,7 +110,7 @@ BottomFusion_bb_NLO_Soft::BottomFusion_bb_NLO_Soft()
 
 double BottomFusion_bb_NLO_Soft::eval_me(const KinematicInvariants& kinvar)
 {
-    const double z = kinvar.s(3)/kinvar.s(1,2);
+    const double z = kinvar.q(3,3);
     return 0.;
 }
 

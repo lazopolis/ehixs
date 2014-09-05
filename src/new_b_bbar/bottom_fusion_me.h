@@ -5,10 +5,10 @@
 #include "bottom_fusion_kinematics.h"
 
 /**
-
- @class BottomFusionCrossSection
- Mother class for any subprocess contributing to Higgs production via bottom fusion
-
+ *
+ * \class BottomFusionCrossSection
+ * \brief Mother class for any subprocess contributing to Higgs production via bottom fusion
+ *
  */
 
 class BottomFusionCrossSection : public CrossSection
@@ -16,56 +16,89 @@ class BottomFusionCrossSection : public CrossSection
 
 public:
 
+    /// \name Input functions
+    /// @{
+    
+    // Get the strong coupling alphas from the PDF set
     double alpha_s_at_mz_from_lhapdfs(){return lumi->alpha_s_at_mz();}
+    // Set the Higgs mass
     void SetHiggsMass(const double& mh){mh_ = mh;}
+    
+    /// @}
 
-protected://??
-
-    /**
-     Jet function
-     */
-    void JF(const double&,const BottomFusionKinematics& kv);
+protected:
+    
+    /// \name Data members
+    /// @{
+    
+    NewLuminosity* lumi;    ///< Pointer to the luminosity object
+    double mh_;             ///< Higgs mass
+    
+    /// @}
+    
+    /// \name Measurement function
+    /// @{
+    
+    // Contructs the event with weight w and kinematic variables kv
+    void JF(const double& w,const vector<FMomentum>& kv);
+    // Fills the event-box with an event with weight 0
     void JF();
-
-protected://??
-
-    NewLuminosity* lumi;
-    double mh_;
-
-};
-
-/**
-
- @class BottomFusion_bb
- Mother class for subprocesses with bbar initial state
-
- */
-
-class BottomFusion_bb: public BottomFusionCrossSection
-{
-
-public:
-
-    BottomFusion_bb();
-    void AllocateLuminosity(const UserInterface&);
-
-protected://??
-
-    double LL(const double& x1,const double& x2);
-
-protected://??
-
-    int number_of_particles_;
-    double smin;
-    double prefactor_;
+    
+    /// @}
     
 };
 
 /**
+ *
+ * \class BottomFusion_bb
+ * \brief Mother class for subprocesses with bbar initial state
+ *
+ */
 
- @class BottomFusion_bb_Delta
- Mother class for subprocesses with bbar initial state and delta-like kinematics
- 
+class BottomFusion_bb : public BottomFusionCrossSection
+{
+
+public:
+
+    /// \name Constructor
+    /// @{
+    
+    BottomFusion_bb();
+
+    /// @}
+    
+    /// \name Member functions
+    /// @{
+    
+    void AllocateLuminosity(const UserInterface&);
+
+    /// @}
+    
+protected:
+    
+    /// \name Data members
+    /// @{
+    
+    int number_of_particles_;   ///< Number of particles
+    double smin;                ///< Minimum s?
+    double prefactor_;          ///< Constant prefactor of the cross section
+    
+    /// @}
+    
+    /// \name Luminosity
+    /// @{
+
+    double LL(const double& x1,const double& x2);
+
+    /// @}
+    
+};
+
+/**
+ *
+ * \class BottomFusion_bb_Delta
+ * Mother class for subprocesses with bbar initial state and delta-like kinematics
+ *
  */
 
 class BottomFusion_bb_Delta : public BottomFusion_bb
@@ -73,22 +106,38 @@ class BottomFusion_bb_Delta : public BottomFusion_bb
 
 public:
 
-    void Configure();
-    void Evaluate(double* xx_vegas);
-    virtual double eval_me(const KinematicInvariants&)=0;
+    /// \name Input functions
+    /// @{
+    
     void SetDimension(){dimension_ = 1;}
+    void Evaluate(double* xx_vegas);
+    void Configure();
+    
+    /// @}
 
+    /// \name Output functions
+    /// @{
+    
+    virtual double eval_me(const KinematicInvariants&)=0;
+
+    /// @}
+    
 protected:
 
-    BottomFusionKinematicsLO kk_;
+    /// \name Data members
+    /// @{
+    
+    BottomFusionKinematics<0> kk_;
+    
+    /// @}
 
 };
 
 /**
-
- @class BottomFusion_bb_LO
- LO matrix element for bbar->H
-
+ *
+ * \class BottomFusion_bb_LO
+ * LO matrix element for bbar->H
+ *
  */
 
 class BottomFusion_bb_LO : public BottomFusion_bb_Delta
@@ -102,10 +151,10 @@ public:
 };
 
 /**
-
- @class BottomFusion_bb_NLO_Soft
- LO matrix element for bbar->H
-
+ *
+ * \class BottomFusion_bb_NLO_Soft
+ * LO matrix element for bbar->H
+ *
  */
 
 class BottomFusion_bb_NLO_Soft : public BottomFusion_bb_Delta

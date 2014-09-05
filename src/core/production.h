@@ -24,7 +24,7 @@ using namespace std;
 #include "event.h"
 #include "cross_section.h"
 
-///@class Production
+///\class Production
 class Production
 {
 public://methods

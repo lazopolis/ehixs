@@ -1,204 +1,197 @@
 #ifndef BOTTOM_FUSION_KINEMATICS_H
 #define BOTTOM_FUSION_KINEMATICS_H
 
-#include "fmomentum.h"
-#include "kinematic_invariants.h"
-#include <sstream>      // std::stringstream
+#include "kinematics.h"
+#include "fourmomentum.h"
+//#include <sstream>      // std::stringstream
 using namespace std;
 
 /**
  *
  * \class BottomFusionKinematics
- *
- * manages four momenta and s_ij for the current phase space point
- * inheritance determines how many particles are there in the final state
+ * \brief Manages four momenta and invariants for the current phase space point
  *
  */
 
-class BottomFusionKinematics{
-
-protected:
-
-    ///\name Data members
-    //@{
-
-    int num_of_particles_;          //< Number of particles
-    double x1_, x2_;                //< Bjorken xvariables
-    KinematicInvariants kin_inv_;   //< Kinematic invariants
-    double tau_;
-    double S_;                      //< Collider center of mass energy (squared)
-    double mh_sq_;                  //< Squared Higgs mass
-
-    //@}
+template<size_t extraParticles> class BottomFusionKinematics : public KinematicInvariants
+{
 
 public:
 
-    ///\name Data members
-    //@{
+    static const size_t minParticles = 3;
+    static const size_t randomsN = 2 + 3 * (extraParticles+minParticles-2) - 4;
 
-    double jacobian;                //< Jacobian
-    FMomentum p1, p2, p3, p4, p5;   //< Four-momenta for the five particles
+    /// \name Data members
+    /// @{
 
-    //@}
+    /// Jacobian
+    double jacobian;
+    
+    /// Four-momenta, conventions are:
+    /// - p[1] = parton from hadron 1
+    /// - p[2] = parton from hadron 2
+    /// - p[3] = Higgs
+    /// - others = extra partons in the final state
+    vector<FMomentum> p;
 
-    ///\name Constructors and destructor
-    //@{
+    /// @}
 
-    ///Default constructor
-    BottomFusionKinematics():
-        num_of_particles_(3), x1_(1.), x2_(1.), kin_inv_(), tau_(0.), S_(0.), mh_sq_(0.)
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
+    BottomFusionKinematics() :
+        KinematicInvariants(), _x1(1.), _x2(1.), _mH2(0.), _tau(0.), jacobian(1.), p()
     {}
 
-    //@}
+    /// @}
 
-    ///\name Input functions
-    //@{
+    /// \name Input functions
+    /// @{
 
-    ///Sets the number of particles, which has to be between 3 and 5
-    void SetNumberOfParticles(const int num_of_particles);
-    
-    ///Sets the mh_sq and the collider S from outside
-    void SetBoundaries(const double& mh_sq,const double& S);
+    /// Sets the mh_sq and the collider S from outside
+    void setBoundaries(const double& mh_sq,const double& S);
 
-    //@}
+    /// Generate kinematics according to random variables
+    void generate(const double* const randoms);
 
-    ///\name Output functions
-    //@{
+    /// @}
 
-    ///Return the first Bjorken x
-    double x1() const {return x1_;}
-    ///Return the second Bjorken x
-    double x2() const {return x2_;}
+    /// \name Output functions
+    /// @{
 
-    ///\name Dimensionful invariants s_ij
-    //@{
-    ///Return s_ij
-    double s(const int i,const int j) const {return kin_inv_.s(i,j);}
-    ///Return s_i, which is defined to be p_i^2
-    double s(const int i) const {return kin_inv_.s(i);}
-    //@}
-
-    ///\name Dimensionless invariants q_ij
-    ///\note Good for complicated matrix elements
-    //@{
-    ///Return q_ij = s_ij / s_12
-    double q(const int i,const int j) const {return kin_inv_.q(i,j);}
-    ///Return q_i = s_i / s_12
-    double q(const int i) const {return kin_inv_.q(i);}
-    //@}
-
-    ///Return all kinematic invariants
-    KinematicInvariants invariants() const {return kin_inv_;}
+    /// Return the first Bjorken x
+    double x1() const {return _x1;}
+    /// Return the second Bjorken x
+    double x2() const {return _x2;}
 
     ///Stream operator
     friend ostream& operator<<(ostream&, const BottomFusionKinematics&);
 
-    //@}
+    ///@}
 
-    ///\name Pure virtual functions
-    //@{
-
-    virtual void generate_kinematics(double* xx_vegas)=0;
-
-    //@}
-
-};
-
-///\note Maybe the way to organize this is with templatized BottomFusionKinematics<unsigned int nExtraParticles>
-///      and template argument resolution of methods...
-
-/**
- *
- * \class BottomFusionKinematicsLO
- *
- * Class for subprocesses with kinematics p1+p2 -> p3=ph and nothing else
- *
- */
-
-class BottomFusionKinematicsLO : public BottomFusionKinematics
-{
-
-public:
-
-    ///\name Initialization function
-    //@{
-
-    void generate_kinematics(double* xx_vegas);
-
-    //@}
-
-private:
-
-    ///\name Auxiliary functions
-    //@{
-
-    void set_up_momenta_at_lab();
-    void generate_bjorken_xs(const double&);
-    void compute_invariants();
-
-    //@}
-
-};
-
-/**
- *
- * \class BottomFusionKinematicsNLO
- *
- * Class for subprocesses with kinematics p1+p2 -> p3+p4
- *
- */
-
-class BottomFusionKinematicsNLO : public BottomFusionKinematics
-{
-
-public:
-
-    ///\name Constructors
-    //@{
-
-    ///Default constructor
-    BottomFusionKinematicsNLO() :
-    z_(1.),lambda_(0.),phi_(0.)
-    {}
-
-    ///Copy constructor
-    BottomFusionKinematicsNLO(const BottomFusionKinematicsNLO& that) :
-    z_(that.z_),lambda_(that.lambda_),phi_(that.phi_)
-    {}
-
-    ///Destructor
-    ~BottomFusionKinematicsNLO() {}
-
-    //@}
-
-    ///\name Initialization function
-    //@{
-
-    void generate_kinematics(double* xx_vegas);
-
-    //@}
-
-private:
-
-    ///\name Data members
-    //@{
-
-    double z_;
-    double lambda_;
-    double phi_;
-    ///\note Achilleas had phi_g also. Unnecessary?
-
-    //@}
-
-    ///\name Auxiliary functions
-    //@{
-
-    void set_up_momenta_at_lab();
-    void generate_bjorken_xs(const double&);
-    void compute_invariants();
+protected:
     
-    //@}
+    /// \name Data members
+    /// @{
+    
+    double _x1, _x2;    // < Bjorken x variables
+    double _mH2;        // < Squared Higgs mass
+    double _S;          // < Center of mass collider energy squared
+    double _tau;        // < Shorthand for mH^2/S
+    
+    /// @}
+
+    /// \name Auxiliary functions
+    /// @{
+    
+    /// Generate Bjorken x's
+    void generate_x(const double* const randoms);
+    /// Generate momenta
+    void generate_p(const double* const randoms);
+    
+    ///Stream operator
+    friend ostream& operator<<(ostream&, const BottomFusionKinematics&);
+    
+    ///@}
     
 };
+
+template<size_t extraParticles>
+void BottomFusionKinematics<extraParticles>::setBoundaries(const double& mh_sq,const double& S)
+{
+    cout<<"\n[in BottomFusionKinematics] configuration: mh_sq = "<<mh_sq;
+    _mH2 = mh_sq;
+    _S = S;
+    // definition of tau
+    _tau = _mH2 / S;
+    cout<<"\t tau="<<_tau<<endl;
+}
+
+template<size_t extraParticles>
+ostream& operator<<(ostream& stream, const BottomFusionKinematics<extraParticles>& kk)
+{
+    
+    stream << setprecision(16)
+    <<"\n-------"
+    <<static_cast<KinematicInvariants>(kk)
+    <<"\n tau = "<<kk.tau_<<","
+    <<"\n x1 = "<<kk.x1()<<","
+    <<"\n x2 = "<<kk.x2()<<",";
+    for (size_t i = 0; i < kk.minParticles()+extraParticles; ++i)
+        stream << "\n p" << i << " = " << kk.p[i] << ",";
+    return stream;
+}
+
+template<>
+void BottomFusionKinematics<0>::generate_x(const double* const randoms)
+{
+    // we are at LO so s_12 = mh^2
+    // we could generate x_1 in [0,1] and then check that x1>tau
+    // instead we generate x1 flat in [tau,1] which is slightly more efficient
+    // actually we should generate x1 in a more efficient way
+    _x1 = _tau + (1.-_tau) * randoms[0];
+    // x2 = tau / x1 always at LO
+    _x2 = _tau / _x1 ;
+    
+    jacobian = (1.-_tau) / _x1;
+    
+    return;
+}
+
+template<size_t extraParticles>
+void BottomFusionKinematics<extraParticles>::generate_x(const double* const randoms)
+{
+    // dumbest way possible: flat distribution
+    const double x1x2 = _tau + (1.-_tau) * randoms[0];
+    _x2 = randoms[1]*x1x2;
+    
+    jacobian = 2.*consts::Pi*(1.-_tau) / _x1;
+    
+    return;
+}
+
+template<>
+void BottomFusionKinematics<0>::generate_p(const double* const randoms)
+{
+    const double E = sqrt(_S)/2.;
+    p[1] = FMomentum( _x1 * E, 0., 0.,  _x1 * E);
+    p[2] = FMomentum( _x2 * E, 0., 0., -_x2 * E);
+    p[3] = p[1]+p[2];
+    return;
+}
+
+template<>
+void BottomFusionKinematics<1>::generate_p(const double* const randoms)
+{
+    // with one extra particle and p4 = (1-z) [lambdabar p1 + lambda p2 + sqrt(lambda*lambdabar) s12 eperp]
+    // (in the CM frame) we still define z = mH^2 / s12 with z in (0,1)
+    const double E = sqrt(_S)/2.;
+    const double phi = randoms[0];
+    p[1] = FMomentum( _x1 * E, 0., 0.,  _x1 * E);
+    p[2] = FMomentum( _x2 * E, 0., 0., -_x2 * E);
+    p[3] = p[1]+p[2];
+    p[4] = p[1];
+    return;
+    
+}
+
+template<>
+void BottomFusionKinematics<0>::generate(const double* const randoms)
+{
+    BottomFusionKinematics<0>::generate_x(randoms);
+    BottomFusionKinematics<0>::generate_p(NULL);
+    static_cast<KinematicInvariants> (*this) = p;
+    return;
+}
+
+template<size_t extraParticles>
+void BottomFusionKinematics<extraParticles>::generate(const double* const randoms)
+{
+    BottomFusionKinematics<extraParticles>::generate_x(randoms);
+    BottomFusionKinematics<extraParticles>::generate_p(&randoms[2]);
+    static_cast<KinematicInvariants> (*this) = p;
+    return;
+}
 
 #endif

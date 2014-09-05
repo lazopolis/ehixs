@@ -14,21 +14,21 @@ using namespace std;
 
 //class FxFxA;
 
-///@struct InitialStateFlavors
+///\struct InitialStateFlavors
 ///\brief  Container for information about initial state flavors
 struct InitialStateFlavors
 {
 
     ///@name Data members
-    //@{
+    ///@{
 
     string left;
     string right;
 
-    //@}
+    ///@}
 
     ///@name Member functions
-    //@{
+    ///@{
 
     InitialStateFlavors():
     left(),right()
@@ -44,16 +44,16 @@ struct InitialStateFlavors
 
     ~InitialStateFlavors(){}
 
-    //@}
+    ///@}
 };
 
-///@struct NewMeExternalInfo
+///\struct NewMeExternalInfo
 ///\brief  Container for information about matrix elements
 ///\todo   Take "New" out of the name?
 struct NewMeExternalInfo
 {
     ///@name Data members
-    //@{
+    ///@{
 
     string name;
     InitialStateFlavors ISF;
@@ -62,10 +62,10 @@ struct NewMeExternalInfo
     //int epsilon_power_min;
     //int epsilon_power_max;
 
-    //@}
+    ///@}
 
     ///@name Member functions
-    //@{
+    ///@{
 
     NewMeExternalInfo():
     name(),ISF(),alpha_power()
@@ -77,7 +77,7 @@ struct NewMeExternalInfo
 
     ~NewMeExternalInfo(){}
 
-    //@}
+    ///@}
 };
 
 class pdf_desc_pair
