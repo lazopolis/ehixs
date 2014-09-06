@@ -2,8 +2,6 @@
 #define BOTTOM_FUSION_KINEMATICS_H
 
 #include "kinematics.h"
-#include "fourmomentum.h"
-//#include <sstream>      // std::stringstream
 using namespace std;
 
 /**
@@ -49,8 +47,8 @@ public:
     /// \name Input functions
     /// @{
 
-    /// Sets the mh_sq and the collider S from outside
-    void setBoundaries(const double& mh_sq,const double& S);
+    /// Sets mH2 and the collider S from outside
+    void setBoundaries(const double& mH2,const double& S);
 
     /// Generate kinematics according to random variables
     void generate(const double* const randoms);
@@ -98,10 +96,10 @@ protected:
 };
 
 template<size_t extraParticles>
-void BottomFusionKinematics<extraParticles>::setBoundaries(const double& mh_sq,const double& S)
+void BottomFusionKinematics<extraParticles>::setBoundaries(const double& mH2,const double& S)
 {
-    cout<<"\n[in BottomFusionKinematics] configuration: mh_sq = "<<mh_sq;
-    _mH2 = mh_sq;
+    cout<<"\n[in BottomFusionKinematics] configuration: mH2 = "<<mH2;
+    _mH2 = mH2;
     _S = S;
     // definition of tau
     _tau = _mH2 / S;
@@ -144,9 +142,9 @@ void BottomFusionKinematics<extraParticles>::generate_x(const double* const rand
 {
     // dumbest way possible: flat distribution
     const double x1x2 = _tau + (1.-_tau) * randoms[0];
-    _x2 = randoms[1]*x1x2;
+    _x2 = randoms[1] * x1x2;
     
-    jacobian = 2.*consts::Pi*(1.-_tau) / _x1;
+    jacobian = (1.-_tau) * x1x2;
     
     return;
 }
@@ -155,25 +153,33 @@ template<>
 void BottomFusionKinematics<0>::generate_p(const double* const randoms)
 {
     const double E = sqrt(_S)/2.;
-    p[1] = FMomentum( _x1 * E, 0., 0.,  _x1 * E);
-    p[2] = FMomentum( _x2 * E, 0., 0., -_x2 * E);
-    p[3] = p[1]+p[2];
+    p[1] = _x1 * E * FMomentum(1., 0., 0.,  1.);
+    p[2] = _x2 * E * FMomentum(1., 0., 0., -1.);
+    p[3] = p[1] + p[2];
     return;
 }
 
 template<>
 void BottomFusionKinematics<1>::generate_p(const double* const randoms)
 {
-    // with one extra particle and p4 = (1-z) [lambdabar p1 + lambda p2 + sqrt(lambda*lambdabar) s12 eperp]
-    // (in the CM frame) we still define z = mH^2 / s12 with z in (0,1)
+    // with one extra particle we set
+    // p4 = (1-z) [lambdabar p1 + lambda p2 + sqrt(lambda*lambdabar) s12 eperp]
+    // (this is covariant and holds in any reference frame if p1, p2 and eperp are transformed)
+    // we still define z = mH^2 / s12 with z in (0,1)
     const double E = sqrt(_S)/2.;
-    const double phi = randoms[0];
-    p[1] = FMomentum( _x1 * E, 0., 0.,  _x1 * E);
-    p[2] = FMomentum( _x2 * E, 0., 0., -_x2 * E);
-    p[3] = p[1]+p[2];
-    p[4] = p[1];
+    const double phi = 2.*consts::Pi*randoms[0];
+    const double lambda = randoms[1];
+    const double z = _tau / (_x1*_x2);
+    const double sllbar = sqrt(lambda*(1.-lambda))*_x1*_x2*E;
+    p[1] = _x1 * E * FMomentum(1., 0., 0.,  1.);
+    p[2] = _x2 * E * FMomentum(1., 0., 0., -1.);
+    p[4] = (1.-z)*(
+                   (1.-lambda) * p[1] +
+                   lambda * p[2] +
+                   sllbar * FMomentum(0.,cos(phi),sin(phi),0.)
+                   );
+    p[3] = p[1] + p[2] - p[4];
     return;
-    
 }
 
 template<>
