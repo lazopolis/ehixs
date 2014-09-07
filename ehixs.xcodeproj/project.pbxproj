@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		56E358D819B74058004E03CA /* bottom_fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */; };
-		56E358D919B74058004E03CA /* bottom_fusion_kinematics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183EF19B5EA720034E0DD /* bottom_fusion_kinematics.cpp */; };
 		56E358DA19B74058004E03CA /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
 		56E358F119B74507004E03CA /* cross_section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* cross_section.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
@@ -610,7 +609,6 @@
 		56B183EB19B5EA720034E0DD /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion.cpp; sourceTree = "<group>"; };
 		56B183EE19B5EA720034E0DD /* bottom_fusion.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion.h; sourceTree = "<group>"; tabWidth = 4; };
-		56B183EF19B5EA720034E0DD /* bottom_fusion_kinematics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion_kinematics.cpp; sourceTree = "<group>"; };
 		56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion_kinematics.h; sourceTree = "<group>"; };
 		56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion_me.cpp; sourceTree = "<group>"; };
 		56B183F219B5EA720034E0DD /* bottom_fusion_me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion_me.h; sourceTree = "<group>"; };
@@ -1664,7 +1662,6 @@
 			children = (
 				56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */,
 				56B183EE19B5EA720034E0DD /* bottom_fusion.h */,
-				56B183EF19B5EA720034E0DD /* bottom_fusion_kinematics.cpp */,
 				56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */,
 				56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */,
 				56B183F219B5EA720034E0DD /* bottom_fusion_me.h */,
@@ -1952,7 +1949,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				56E358D819B74058004E03CA /* bottom_fusion.cpp in Sources */,
-				56E358D919B74058004E03CA /* bottom_fusion_kinematics.cpp in Sources */,
 				56E358DA19B74058004E03CA /* bottom_fusion_me.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
