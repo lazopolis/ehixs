@@ -27,7 +27,7 @@ public:
     double jacobian;
     
     /// Bundle of Four-momenta
-    vector<FMomentum>& ps = _p;
+    vector<FourVector>& ps = _p;
 
     /// Return the first Bjorken x
     const double& x1 = _x1;
@@ -64,7 +64,7 @@ public:
     /// - p[2] = parton from hadron 2
     /// - p[3] = Higgs
     /// - others = extra partons in the final state
-    FMomentum& p(const size_t& i)
+    FourVector& p(const size_t& i)
     {
         return _p[i-1];
     }
@@ -81,7 +81,7 @@ public:
     /// @{
 
     /// Read-only version of Four-momenta
-    const FMomentum& p(const size_t& i) const
+    const FourVector& p(const size_t& i) const
     {
         return _p[i-1];
     }
@@ -101,7 +101,7 @@ protected:
     double _mH2;        // < Squared Higgs mass
     double _S;          // < Center of mass collider energy squared
     double _tau;        // < Shorthand for mH^2/S
-    vector<FMomentum> _p;   // < Momenta of particles
+    vector<FourVector> _p;   // < Momenta of particles
 
     /// @}
 
@@ -175,8 +175,8 @@ template<>
 inline void BottomFusionKinematics<0>::generateP(const double* const randoms)
 {
     const double E = sqrt(_S)/2.;
-    p(1) = x1 * E * FMomentum(1., 0., 0.,  1.);
-    p(2) = x2 * E * FMomentum(1., 0., 0., -1.);
+    p(1) = x1 * E * FourVector(1., 0., 0.,  1.);
+    p(2) = x2 * E * FourVector(1., 0., 0., -1.);
     p(3) = p(1) + p(2);
     return;
 }
@@ -193,12 +193,12 @@ inline void BottomFusionKinematics<1>::generateP(const double* const randoms)
     const double lambda = randoms[1];
     const double z = _tau / (x1*x2);
     const double sllbar = sqrt(lambda*(1.-lambda))*x1*x2*E;
-    p(1) = x1 * E * FMomentum(1., 0., 0.,  1.);
-    p(2) = x2 * E * FMomentum(1., 0., 0., -1.);
+    p(1) = x1 * E * FourVector(1., 0., 0.,  1.);
+    p(2) = x2 * E * FourVector(1., 0., 0., -1.);
     p(4) = (1.-z)*(
                    (1.-lambda) * p(1) +
                    lambda * p(2) +
-                   sllbar * FMomentum(0.,cos(phi),sin(phi),0.)
+                   sllbar * FourVector(0.,cos(phi),sin(phi),0.)
                    );
     p(3) = p(1) + p(2) - p(4);
     return;

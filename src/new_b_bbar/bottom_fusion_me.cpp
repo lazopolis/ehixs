@@ -2,7 +2,7 @@
 
 // BottomFusionCrossSection
 
-void BottomFusionCrossSection::JF(const double& w,const vector<FMomentum>& kv)
+void BottomFusionCrossSection::JF(const double& w,const vector<FourVector>& kv)
 {
     if (w!=w)
     {

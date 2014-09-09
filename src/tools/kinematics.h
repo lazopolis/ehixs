@@ -9,12 +9,8 @@
 #ifndef KINEMATICS_H
 #define KINEMATICS_H
 
-#include "fourmomentum.h"
+#include "fourvector.h"
 #include <vector>
-//#include <iostream>
-//#include <iomanip>  // setprecison()
-//#include <stdlib.h> // exit, EXIT_FAILURE
-//#include "math.h"   // sqrt
 using namespace std;
 
 /**
@@ -50,10 +46,10 @@ public:
     {}
 
     /// Constructor from momentum set
-    KinematicInvariants(const vector<FMomentum>& p) :
+    KinematicInvariants(const vector<FourVector>& p) :
     _n(p.size()), _s(p.size()), _q(p.size())
     {
-        const double s12 = s(p[1],p[2]);
+        const double s12 = s(p[0],p[1]);
         for (size_t i = 0; i < _n; ++i)
             for (size_t j = 0; j < _n-i; ++j)
             {
@@ -70,15 +66,18 @@ public:
     
     /// \name Input functions
     /// @{
-    
-    void set(const vector<FMomentum>& p)
+
+
+    /// \note This is not efficient at all, because it forces reallocation
+    /// \todo Rewrite it!
+    void set(const vector<FourVector>& p)
     {
         if ( _n != 0 ) clear();
         _n = p.size();
         _s = vector< vector<double> >(_n);
         _q = vector< vector<double> >(_n);
 
-        const double s12 = s(p[1],p[2]);
+        const double s12 = s(p[0],p[1]);
         for (size_t i = 0; i < _n; ++i)
             for (size_t j = 0; j < _n-i; ++j)
             {
@@ -135,7 +134,7 @@ private:
     /// @{
 
     /// Compute the kinematic invariant associated with p1 and p2, i.e. (p1+p2)^2
-    double s(const FMomentum& p1, const FMomentum& p2)
+    double s(const FourVector& p1, const FourVector& p2) const
     {
         return p1*p1+2.*p1*p2+p2*p2;
     }

@@ -40,7 +40,7 @@ protected:
     /// @{
     
     // Contructs the event with weight w and kinematic variables kv
-    void JF(const double& w,const vector<FMomentum>& kv);
+    void JF(const double& w,const vector<FourVector>& kv);
     // Fills the event-box with an event with weight 0
     void JF();
     
