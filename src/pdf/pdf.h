@@ -1,4 +1,4 @@
-/** \file CPDF.h
+/** \file PDF.h
   *
   */
 

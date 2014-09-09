@@ -16,8 +16,10 @@ public:
     double weight(){return weight_;}
     void SetWeight(const double& w){weight_ = w;}
     void SetP(int i,const double& E,const double& px, const double& py, const double& pz);
+    //const vector<FourVector>& p;
     double* ParticleMomentum(int i){return p_[i-1];}
 private:
+//    vector<FourVector> _p;
     double weight_;
     double p_[MAX_NUMBER_OF_PARTICLES][4];
     };
@@ -37,6 +39,7 @@ public:
 class EventBox{
 public:
     EventBox();
+    /// \todo delete?
     void SetDecayParticleId(int k){decay_particle_id_=k;}
     int DecayParticleId(){return decay_particle_id_;}
     void SetNumberOfParticles(int n);

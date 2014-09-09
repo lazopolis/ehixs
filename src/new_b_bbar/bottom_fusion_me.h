@@ -80,7 +80,7 @@ protected:
     /// @{
     
     int number_of_particles_;   ///< Number of particles
-    double smin;                ///< Minimum s?
+    double smin;                ///< Minimum s
     double prefactor_;          ///< Constant prefactor of the cross section
     
     /// @}

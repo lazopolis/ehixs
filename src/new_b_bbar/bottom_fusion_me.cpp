@@ -13,7 +13,7 @@ void BottomFusionCrossSection::JF(const double& w,const vector<FMomentum>& kv)
     }
     event_box_->AddNewEvent(w);
     for (size_t i = 0; i < kv.size(); ++i)
-        event_box_->SetP(i+1,kv[i](0),kv[i](1),kv[i](2),kv[i](3));
+        event_box_->SetP(i+1,kv[i][0],kv[i][1],kv[i][2],kv[i][3]);
     return;
 }
 
@@ -70,7 +70,7 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
 {
     
     kk_.generate(xx_vegas);
-    const double myxlumi = LL(kk_.x1(),kk_.x2());
+    const double myxlumi = LL(kk_.x1,kk_.x2);
     if (myxlumi!=0.0)
     {
         const double me_sq = eval_me(kk_);
@@ -79,7 +79,7 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
         * 1.0/(2.0*kk_.s(1,2)) //flux
         * me_sq
         ;
-        JF(sigma,kk_.p);
+        JF(sigma,kk_.ps);
     }
     else
     {

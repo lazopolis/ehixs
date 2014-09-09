@@ -25,7 +25,7 @@ using namespace std;
  *
  */
 
-class FMomentum
+class FMomentum : public array<double,4>
 {
     
 public:
@@ -35,19 +35,19 @@ public:
     
     /// Default constructor
     FMomentum() :
-    _p()
+    array<double, 4>()
     {}
     
     /// Constructor with values
     FMomentum(const double& p0, const double& p1, const double& p2, const double& p3) :
-    _p({p0,p1,p2,p3})
+    array<double, 4>({p0,p1,p2,p3})
     {}
     
     /// Copy constructor
-    FMomentum(const FMomentum& k) :
-    _p(k._p)
+    FMomentum(const FMomentum& that) :
+    array<double, 4>()
     {}
-    
+
     /// Destructor
     ~FMomentum()
     {}
@@ -58,28 +58,23 @@ public:
     /// @{
     
     /// Direct handle on components
-    double& operator[](const int i)
-    {
-        return _p[i];
-    }
+    //double& operator[](const size_t i)
+    //{
+    //    return _p[i];
+    //}
     
     /// Value of components
-    double operator()(const int i) const
-    {
-        return _p[i];
-    }
+    //double operator()(const size_t i) const
+    //{
+    //    return _p[i];
+    //}
     
     /// Prints the fourmomentum to an output stream
     friend ostream& operator<<(ostream& stream, const FMomentum& x)
     {
         return stream
         <<setprecision(8)
-        <<"("
-        <<x._p[0]<<","
-        <<x._p[1]<<","
-        <<x._p[2]<<","
-        <<x._p[3]
-        <<")";
+        <<"("<<x[0]<<","<<x[1]<<","<<x[2]<<","<<x[3]<<")";
     }
     
     /// @}
@@ -88,73 +83,69 @@ public:
     /// @{
     
     /// Assignment operator
-    FMomentum& operator=(const FMomentum& that)
-    {
-        _p = that._p;
-        return *this;
-    }
+    //FMomentum& operator=(const FMomentum& that)
+    //{
+    //    _p = that._p;
+    //    return (*this);
+    //}
     
     /// Expicitly set the momentum by component
     FMomentum& operator=(initializer_list<double>& that)
     {
-        if (that.size()!=_p.size())
+        if (that.size()!=size())
         {
             cerr << "Tried to assign more than 4 components to a FMomentum object." << endl;
             throw;
         }
         size_t i = 0;
         for (initializer_list<double>::iterator it = that.begin(); it<that.end(); ++it)
-            _p[i++] = *it;
+            (*this)[i++] = *it;
         return *this;
     }
+
+    /// Compare two momenta
+    //bool operator==(const FMomentum& that) const
+    //{
+    //    return (_p[0] == that[0]) && (_p[1] == that[1]) && (_p[2] == that(2)) && (_p[3] == that(3));
+    //}
     
     /// Compare two momenta
-    bool operator==(const FMomentum& that) const
-    {
-        return (_p[0] == that(0)) && (_p[1] == that(1)) && (_p[2] == that(2)) && (_p[3] == that(3));
-    }
-    
-    /// Compare two momenta
-    bool operator!=(const FMomentum& that) const
-    {
-        return !(*this == that);
-    }
+    //bool operator!=(const FMomentum& that) const
+    //{
+    //    return !(*this == that);
+    //}
     
     /// Multiply this momentum for a number
-    const FMomentum operator*(const double& that)
+    FMomentum operator*(const double& that) const
     {
-        return FMomentum(that*_p[0],that*_p[1],that*_p[2],that*_p[3]);
+        return FMomentum(that*operator[](0),that*operator[](1),that*operator[](2),that*operator[](3));
     }
     
-    friend const FMomentum operator*(const double a, const FMomentum& b)
+    friend FMomentum operator*(const double a, const FMomentum& b)
     {
-        return FMomentum(a*b(0),a*b(1),a*b(2),a*b(3));
+        return FMomentum(a*b[0],a*b[1],a*b[2],a*b[3]);
     }
     
     /// Divide this momentum by a number
-    const FMomentum operator/(const double& that)
+    FMomentum operator/(const double& that) const
     {
         const double div = 1. / that;
-        return FMomentum(div*_p[0],div*_p[1],div*_p[2],div*_p[3]);
+        return FMomentum(div*operator[](0),div*operator[](1),div*operator[](2),div*operator[](3));
     }
     
     /// Multiply this momentum for a number
-    const FMomentum& operator*=(const double& that)
+    FMomentum& operator*=(const double& that)
     {
-        _p[0]*=that;
-        _p[1]*=that;
-        _p[2]*=that;
-        _p[3]*=that;
+        for (FMomentum::iterator it = begin(); it<end(); ++it)
+            (*it) *= that;
         return *this;
     }
     
     /// Divide this momentum by a number
-    const FMomentum& operator/=(const double& that)
+    FMomentum& operator/=(const double& that)
     {
-        _p[0]/=that;
-        _p[1]/=that;
-        _p[2]/=that;
-        _p[3]/=that;
+        for (FMomentum::iterator it = begin(); it<end(); ++it)
+            (*it) /= that;
         return *this;
     }
     
@@ -167,32 +158,28 @@ public:
     /// Add this momentum to another one
     FMomentum operator+(const FMomentum& that) const
     {
-        return FMomentum(_p[0]+that(0),_p[1]+that(1),_p[2]+that(2),_p[3]+that(3));
+        return FMomentum(operator[](0)+that[0],operator[](1)+that[1],operator[](2)+that[2],operator[](3)+that[3]);
     }
     
     /// Subtract a momentum from this one
     FMomentum operator-(const FMomentum& that) const
     {
-        return FMomentum(_p[0]-that(0),_p[1]-that(1),_p[2]-that(2),_p[3]-that(3));
+        return (*this)+(-that);
     }
-    
+
     /// Add another momentum to this one
     const FMomentum& operator+=(const FMomentum& that)
     {
-        _p[0]+=that(0);
-        _p[1]+=that(1);
-        _p[2]+=that(2);
-        _p[3]+=that(3);
+        for (size_t i = 0; i<4; ++i)
+            operator[](i)+=that[i];
         return *this;
     }
     
     /// Subtract another momentum from this one
     const FMomentum& operator-=(const FMomentum& that)
     {
-        _p[0]-=that(0);
-        _p[1]-=that(1);
-        _p[2]-=that(2);
-        _p[3]-=that(3);
+        for (size_t i = 0; i<4; ++i)
+            operator[](i)-=that[i];
         return *this;
     }
    
@@ -218,9 +205,9 @@ public:
         {
             newp[i]=0.0;
             for (int j=0;j<4;j++)
-                newp[i] += L[i][j]*_p[j];
+                newp[i] += L[i][j]*operator[](j);
         }
-        for (int i=0;i<4;i++) _p[i] = newp[i];
+        for (int i=0;i<4;i++) operator[](i) = newp[i];
     }
 
 
@@ -233,30 +220,21 @@ public:
             throw;
         } else {
             const double gamma = 1. / _1_gamma;
-            const double E  = + gamma*_p[0] - beta*gamma*_p[3];
-            const double pz = - beta*gamma*_p[0] + gamma*_p[3];
-            _p[0]=E;
-            _p[3]=pz;
+            const double E  = + gamma*operator[](0) - beta*gamma*operator[](3);
+            const double pz = - beta*gamma*operator[](0) + gamma*operator[](3);
+            operator[](0)=E;
+            operator[](3)=pz;
         }
     }
     
     /// Scalar product with another momentum
     double operator*(const FMomentum& q) const
     {
-        return _p[0]*q(0)-_p[1]*q(1)-_p[2]*q(2)-_p[3]*q(3);
+        return operator[](0)*q[0]-operator[](1)*q[1]-operator[](2)*q[2]-operator[](3)*q[3];
     }
     
     /// @}
     
-private:
-    
-    /// \name Data members
-    /// @{
-    
-    array<double,4> _p;
-    
-    /// @}
-
 };
 
 #endif

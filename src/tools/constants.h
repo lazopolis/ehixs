@@ -6,6 +6,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include "math.h"
+#include <vector>
+#include <iostream>
 
 namespace consts
 {
@@ -36,14 +38,44 @@ namespace consts
 }
 
 /**
- * \namespace SU3
- * \brief     Namespace containing constants that are characteristic of the SU(3) group
+ * \namespace QCD
+ * \brief     Namespace containing constants that are characteristic of QCD
  */
-namespace SU3
+namespace QCD
 {
+    const size_t Nc = 3;            ///< N_c is the number of colors
     const double CA = 3.;           ///< C_A is the Casimir of the adjoint representation
     const long double CF = 4./3.;   ///< C_F is the Casimir of the fundamental representation
     const double TF = 0.5;          ///< T_F is the normalization factor of SU(3) matrices
+
+    const size_t Nf = 5;
+
+    enum Flavor {
+        d = 1,
+        u = 2,
+        s = 3,
+        c = 4,
+        b = 5,
+        t = 6,
+        g = 0,
+        dbar = -1,
+        ubar = -2,
+        sbar = -3,
+        cbar = -4,
+        bbar = -5,
+        tbar = -6
+    };
+
+
+
+//    const vector<const double> beta
+//    {
+//        11./4.-Nf/6.,
+//        51./8.-19./24.*Nf
+//    };
 };
+
+QCD::Flavor antiParticle(const QCD::Flavor& p);
+std::ostream& operator<<(std::ostream& myStream, const QCD::Flavor& flavor);
 
 #endif // CONSTANTS_H

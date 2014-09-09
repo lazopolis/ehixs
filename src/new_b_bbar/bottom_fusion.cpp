@@ -18,6 +18,7 @@ using namespace std;
 // all of them should inherit from CrossSection
 void BottomFusion::create_matrix_elements()
 {
+    //available_xs_.push_back(BottomFusion_bb_LO::info_);
     available_xs_.push_back(new BottomFusion_bb_LO);
     available_xs_.push_back(new BottomFusion_bb_NLO_Soft);
     //available_xs_.push_back(new BottomFusionNLOHard);
@@ -37,7 +38,7 @@ void BottomFusion::SetProcessSpecificParameters()
     //: we need to make yukawa bottom an evolved coupling at Model first
     //the_xs_->SetYukawaBottom(Model.yukawa_bottom);
     the_bb_xs_->SetHiggsMass(Model.higgs.m());
-    
+
 }
 
 void BottomFusion::ConfigureCuts()
@@ -45,21 +46,7 @@ void BottomFusion::ConfigureCuts()
     // The file includes the explicit declarations of cut objects.
     // The cuts declared there are available, not actually active.
     // They can be activated in runcard. The parsing of runcard for cuts
-    // is done in Production, after the call to this function. 
-    #include "bbh_cut_initialization.h"
+    // is done in Production, after the call to this function.
+#include "bbh_cut_initialization.h"
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

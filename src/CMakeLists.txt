@@ -50,7 +50,7 @@ else (Fortran_COMPILER_NAME STREQUAL "gfortran")
   set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g")
 endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
-set (CMAKE_CXX_FLAGS "  -DGTEST_HAS_PTHREAD=0 -pthread")
+set (CMAKE_CXX_FLAGS "-std=c++11  -DGTEST_HAS_PTHREAD=0 -pthread")
 
 SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 

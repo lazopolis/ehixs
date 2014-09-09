@@ -11,7 +11,8 @@ using namespace std;
  *
  */
 
-template<size_t extraParticles> class BottomFusionKinematics : public KinematicInvariants
+template<size_t extraParticles>
+class BottomFusionKinematics : public KinematicInvariants
 {
 
 public:
@@ -25,12 +26,13 @@ public:
     /// Jacobian
     double jacobian;
     
-    /// Four-momenta, conventions are:
-    /// - p[1] = parton from hadron 1
-    /// - p[2] = parton from hadron 2
-    /// - p[3] = Higgs
-    /// - others = extra partons in the final state
-    vector<FMomentum> p;
+    /// Bundle of Four-momenta
+    vector<FMomentum>& ps = _p;
+
+    /// Return the first Bjorken x
+    const double& x1 = _x1;
+    /// Return the second Bjorken x
+    const double& x2 = _x2;
 
     /// @}
 
@@ -39,13 +41,13 @@ public:
 
     /// Default constructor
     BottomFusionKinematics() :
-        KinematicInvariants(), _x1(1.), _x2(1.), _mH2(0.), _tau(0.), jacobian(1.), p()
+        KinematicInvariants(), _x1(1.), _x2(1.), _mH2(0.), _tau(0.), jacobian(1.), _p(minParticles+extraParticles)
     {}
 
     /// Copy constructor
     BottomFusionKinematics(const BottomFusionKinematics& that) :
         KinematicInvariants(that), _x1(that._x1), _x2(that._x2),
-        _mH2(that._mH2), _tau(that._tau), jacobian(that._jacobian), p(that.p)
+        _mH2(that._mH2), _tau(that._tau), jacobian(that._jacobian), _p(that._p)
     {}
     
     /// Destructor
@@ -56,6 +58,16 @@ public:
 
     /// \name Input functions
     /// @{
+
+    /// Four-momenta, conventions are:
+    /// - p[1] = parton from hadron 1
+    /// - p[2] = parton from hadron 2
+    /// - p[3] = Higgs
+    /// - others = extra partons in the final state
+    FMomentum& p(const size_t& i)
+    {
+        return _p[i-1];
+    }
 
     /// Sets mH2 and the collider S from outside
     void setBoundaries(const double& mH2,const double& S);
@@ -68,13 +80,15 @@ public:
     /// \name Output functions
     /// @{
 
-    /// Return the first Bjorken x
-    double x1() const {return _x1;}
-    /// Return the second Bjorken x
-    double x2() const {return _x2;}
+    /// Read-only version of Four-momenta
+    const FMomentum& p(const size_t& i) const
+    {
+        return _p[i-1];
+    }
 
     ///Stream operator
-    friend ostream& operator<<(ostream&, const BottomFusionKinematics&);
+    template<size_t extra>
+    friend ostream& operator<<(ostream&, const BottomFusionKinematics<extra>&);
 
     ///@}
 
@@ -87,7 +101,8 @@ protected:
     double _mH2;        // < Squared Higgs mass
     double _S;          // < Center of mass collider energy squared
     double _tau;        // < Shorthand for mH^2/S
-    
+    vector<FMomentum> _p;   // < Momenta of particles
+
     /// @}
 
     /// \name Auxiliary functions
@@ -98,9 +113,6 @@ protected:
     /// Generate momenta
     void generateP(const double* const randoms);
     
-    ///Stream operator
-    friend ostream& operator<<(ostream&, const BottomFusionKinematics&);
-    
     ///@}
     
 };
@@ -108,7 +120,7 @@ protected:
 template<size_t extraParticles>
 void BottomFusionKinematics<extraParticles>::setBoundaries(const double& mH2,const double& S)
 {
-    cout<<"\n[in BottomFusionKinematics] configuration: mH2 = "<<mH2;
+    cout<<"\n[in BottomFusionKinematics] configuration: mH = "<<sqrt(mH2);
     _mH2 = mH2;
     _S = S;
     // definition of tau
@@ -123,16 +135,16 @@ ostream& operator<<(ostream& stream, const BottomFusionKinematics<extraParticles
     stream << setprecision(16)
     <<"\n-------"
     <<static_cast<KinematicInvariants>(kk)
-    <<"\n tau = "<<kk.tau_<<","
-    <<"\n x1 = "<<kk.x1()<<","
-    <<"\n x2 = "<<kk.x2()<<",";
-    for (size_t i = 0; i < kk.minParticles()+extraParticles; ++i)
-        stream << "\n p" << i << " = " << kk.p[i] << ",";
+    <<"\n tau = "<<kk._tau<<","
+    <<"\n x1 = "<<kk.x1<<","
+    <<"\n x2 = "<<kk.x2<<",";
+    for (size_t i = 1; i <= kk.minParticles+extraParticles; ++i)
+        stream << "\n p" << i << " = " << kk.p(i) << ",";
     return stream;
 }
 
 template<>
-void BottomFusionKinematics<0>::generateX(const double* const randoms)
+inline void BottomFusionKinematics<0>::generateX(const double* const randoms)
 {
     // we are at LO so s_12 = mh^2
     // we could generate x_1 in [0,1] and then check that x1>tau
@@ -148,7 +160,7 @@ void BottomFusionKinematics<0>::generateX(const double* const randoms)
 }
 
 template<size_t extraParticles>
-void BottomFusionKinematics<extraParticles>::generateX(const double* const randoms)
+inline void BottomFusionKinematics<extraParticles>::generateX(const double* const randoms)
 {
     // dumbest way possible: flat distribution
     const double x1x2 = _tau + (1.-_tau) * randoms[0];
@@ -160,17 +172,17 @@ void BottomFusionKinematics<extraParticles>::generateX(const double* const rando
 }
 
 template<>
-void BottomFusionKinematics<0>::generateP(const double* const randoms)
+inline void BottomFusionKinematics<0>::generateP(const double* const randoms)
 {
     const double E = sqrt(_S)/2.;
-    p[1] = _x1 * E * FMomentum(1., 0., 0.,  1.);
-    p[2] = _x2 * E * FMomentum(1., 0., 0., -1.);
-    p[3] = p[1] + p[2];
+    p(1) = x1 * E * FMomentum(1., 0., 0.,  1.);
+    p(2) = x2 * E * FMomentum(1., 0., 0., -1.);
+    p(3) = p(1) + p(2);
     return;
 }
 
 template<>
-void BottomFusionKinematics<1>::generateP(const double* const randoms)
+inline void BottomFusionKinematics<1>::generateP(const double* const randoms)
 {
     // with one extra particle we set
     // p4 = (1-z) [lambdabar p1 + lambda p2 + sqrt(lambda*lambdabar) s12 eperp]
@@ -179,34 +191,34 @@ void BottomFusionKinematics<1>::generateP(const double* const randoms)
     const double E = sqrt(_S)/2.;
     const double phi = 2.*consts::Pi*randoms[0];
     const double lambda = randoms[1];
-    const double z = _tau / (_x1*_x2);
-    const double sllbar = sqrt(lambda*(1.-lambda))*_x1*_x2*E;
-    p[1] = _x1 * E * FMomentum(1., 0., 0.,  1.);
-    p[2] = _x2 * E * FMomentum(1., 0., 0., -1.);
-    p[4] = (1.-z)*(
-                   (1.-lambda) * p[1] +
-                   lambda * p[2] +
+    const double z = _tau / (x1*x2);
+    const double sllbar = sqrt(lambda*(1.-lambda))*x1*x2*E;
+    p(1) = x1 * E * FMomentum(1., 0., 0.,  1.);
+    p(2) = x2 * E * FMomentum(1., 0., 0., -1.);
+    p(4) = (1.-z)*(
+                   (1.-lambda) * p(1) +
+                   lambda * p(2) +
                    sllbar * FMomentum(0.,cos(phi),sin(phi),0.)
                    );
-    p[3] = p[1] + p[2] - p[4];
+    p(3) = p(1) + p(2) - p(4);
     return;
 }
 
 template<>
-void BottomFusionKinematics<0>::generate(const double* const randoms)
+inline void BottomFusionKinematics<0>::generate(const double* const randoms)
 {
     BottomFusionKinematics<0>::generateX(randoms);
     BottomFusionKinematics<0>::generateP(NULL);
-    static_cast<KinematicInvariants> (*this) = p;
+    set(_p);
     return;
 }
 
 template<size_t extraParticles>
-void BottomFusionKinematics<extraParticles>::generate(const double* const randoms)
+inline void BottomFusionKinematics<extraParticles>::generate(const double* const randoms)
 {
     BottomFusionKinematics<extraParticles>::generateX(randoms);
     BottomFusionKinematics<extraParticles>::generateP(&randoms[2]);
-    static_cast<KinematicInvariants> (*this) = p;
+    set(_p);
     return;
 }
 

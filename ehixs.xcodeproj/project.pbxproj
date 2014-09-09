@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		56E358D819B74058004E03CA /* bottom_fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */; };
-		56E358DA19B74058004E03CA /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
+		56A6B44719BD9DD700400267 /* bottom_fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */; };
+		56A6B44819BD9DD700400267 /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
+		56A6B45219BE0B2C00400267 /* constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45119BE0B2C00400267 /* constants.cpp */; };
 		56E358F119B74507004E03CA /* cross_section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* cross_section.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
 		56E358F319B74507004E03CA /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826919B5EA710034E0DD /* process.cpp */; };
@@ -34,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libbottomfusion copy.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		56A6B45119BE0B2C00400267 /* constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constants.cpp; sourceTree = "<group>"; };
 		56ACB9DE19B9D2F100B67E27 /* kinematics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kinematics.h; sourceTree = "<group>"; };
 		56ACB9DF19B9FBB700B67E27 /* fourmomentum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fourmomentum.h; sourceTree = "<group>"; };
 		56B1818519B5EA710034E0DD /* info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = info.txt; sourceTree = "<group>"; };
@@ -607,7 +610,7 @@
 		56B183E919B5EA720034E0DD /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 		56B183EA19B5EA720034E0DD /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		56B183EB19B5EA720034E0DD /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
-		56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion.cpp; sourceTree = "<group>"; };
+		56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion.cpp; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 1; };
 		56B183EE19B5EA720034E0DD /* bottom_fusion.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion.h; sourceTree = "<group>"; tabWidth = 4; };
 		56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion_kinematics.h; sourceTree = "<group>"; };
 		56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion_me.cpp; sourceTree = "<group>"; };
@@ -672,7 +675,6 @@
 		56B1843319B5EA720034E0DD /* decay_WWZZ_cut_initialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decay_WWZZ_cut_initialization.h; sourceTree = "<group>"; };
 		56B1843419B5EA720034E0DD /* decay_WWZZ_cuts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decay_WWZZ_cuts.h; sourceTree = "<group>"; };
 		56B1843619B5EBE00034E0DD /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		56E358D319B74013004E03CA /* libbottomfusion.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libbottomfusion.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		56E358E719B74147004E03CA /* libchaplin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libchaplin.a; path = cmake_builds/chaplin/libchaplin.a; sourceTree = "<group>"; };
 		56E358ED19B744D2004E03CA /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		56E358F919B7455A004E03CA /* libpdf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdf.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -680,7 +682,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		56E358D019B74013004E03CA /* Frameworks */ = {
+		56A6B44919BD9DD700400267 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1699,6 +1701,7 @@
 				56B1840619B5EA720034E0DD /* bin.h */,
 				56B1840719B5EA720034E0DD /* CMakeLists.txt */,
 				56B1840819B5EA720034E0DD /* constants.h */,
+				56A6B45119BE0B2C00400267 /* constants.cpp */,
 				56B1840919B5EA720034E0DD /* convolutions.cpp */,
 				56B1840A19B5EA720034E0DD /* convolutions.h */,
 				56B1840B19B5EA720034E0DD /* cut.cpp */,
@@ -1709,6 +1712,7 @@
 				56B1841019B5EA720034E0DD /* event.h */,
 				56B1841119B5EA720034E0DD /* fmomentum.cpp */,
 				56B1841219B5EA720034E0DD /* fmomentum.h */,
+				56ACB9DF19B9FBB700B67E27 /* fourmomentum.h */,
 				56B1841319B5EA720034E0DD /* fvector.h */,
 				56B1841419B5EA720034E0DD /* histogram.cpp */,
 				56B1841519B5EA720034E0DD /* histogram.h */,
@@ -1716,7 +1720,6 @@
 				56B1841719B5EA720034E0DD /* hub.cpp */,
 				56B1841819B5EA720034E0DD /* hub.hpp */,
 				56ACB9DE19B9D2F100B67E27 /* kinematics.h */,
-				56ACB9DF19B9FBB700B67E27 /* fourmomentum.h */,
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
 				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
 				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
@@ -1786,10 +1789,10 @@
 		56E358D419B74013004E03CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				56E358D319B74013004E03CA /* libbottomfusion.dylib */,
 				56E358ED19B744D2004E03CA /* libcore.a */,
 				56E358F919B7455A004E03CA /* libpdf.a */,
 				56E3590819B745B3004E03CA /* libtools.a */,
+				56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1797,7 +1800,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		56E358D119B74013004E03CA /* Headers */ = {
+		56A6B44A19BD9DD700400267 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1845,13 +1848,13 @@
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
-		56E358D219B74013004E03CA /* bottomfusion */ = {
+		56A6B44519BD9DD700400267 /* bottomfusion */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 56E358D719B74013004E03CA /* Build configuration list for PBXNativeTarget "bottomfusion" */;
+			buildConfigurationList = 56A6B44B19BD9DD700400267 /* Build configuration list for PBXNativeTarget "bottomfusion" */;
 			buildPhases = (
-				56E358CF19B74013004E03CA /* Sources */,
-				56E358D019B74013004E03CA /* Frameworks */,
-				56E358D119B74013004E03CA /* Headers */,
+				56A6B44619BD9DD700400267 /* Sources */,
+				56A6B44919BD9DD700400267 /* Frameworks */,
+				56A6B44A19BD9DD700400267 /* Headers */,
 			);
 			buildRules = (
 			);
@@ -1859,7 +1862,7 @@
 			);
 			name = bottomfusion;
 			productName = bottomfusion;
-			productReference = 56E358D319B74013004E03CA /* libbottomfusion.dylib */;
+			productReference = 56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		56E358EC19B744D2004E03CA /* core */ = {
@@ -1935,21 +1938,21 @@
 			projectRoot = "";
 			targets = (
 				56B17EC719B5EA090034E0DD /* ehixs */,
-				56E358D219B74013004E03CA /* bottomfusion */,
 				56E358EC19B744D2004E03CA /* core */,
 				56E358F819B7455A004E03CA /* pdf */,
 				56E3590719B745B3004E03CA /* tools */,
+				56A6B44519BD9DD700400267 /* bottomfusion */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		56E358CF19B74013004E03CA /* Sources */ = {
+		56A6B44619BD9DD700400267 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56E358D819B74058004E03CA /* bottom_fusion.cpp in Sources */,
-				56E358DA19B74058004E03CA /* bottom_fusion_me.cpp in Sources */,
+				56A6B44719BD9DD700400267 /* bottom_fusion.cpp in Sources */,
+				56A6B44819BD9DD700400267 /* bottom_fusion_me.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1993,12 +1996,53 @@
 				56E3591419B745D3004E03CA /* kinematic_invariants.cpp in Sources */,
 				56E3591519B745D3004E03CA /* user_interface.cpp in Sources */,
 				56E3591619B745D3004E03CA /* vegas_adaptor.cpp in Sources */,
+				56A6B45219BE0B2C00400267 /* constants.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		56A6B44C19BD9DD700400267 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode5.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				MACH_O_TYPE = staticlib;
+				OTHER_CFLAGS = (
+					"-I/opt/local/include",
+					"-c",
+				);
+				PRODUCT_NAME = "bottomfusion copy";
+			};
+			name = Debug;
+		};
+		56A6B44D19BD9DD700400267 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode5.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				MACH_O_TYPE = staticlib;
+				OTHER_CFLAGS = (
+					"-I/opt/local/include",
+					"-c",
+				);
+				PRODUCT_NAME = "bottomfusion copy";
+			};
+			name = Release;
+		};
 		56B17EC819B5EA090034E0DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2088,46 +2132,6 @@
 			};
 			name = Release;
 		};
-		56E358D519B74013004E03CA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode5.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/usr/local/include,
-				);
-				MACH_O_TYPE = staticlib;
-				OTHER_CFLAGS = (
-					"-I/opt/local/include",
-					"-c",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		56E358D619B74013004E03CA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode5.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/usr/local/include,
-				);
-				MACH_O_TYPE = staticlib;
-				OTHER_CFLAGS = (
-					"-I/opt/local/include",
-					"-c",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		56E358EF19B744D2004E03CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2200,6 +2204,7 @@
 				);
 				OTHER_CFLAGS = "-c";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 			};
 			name = Debug;
 		};
@@ -2209,12 +2214,22 @@
 				EXECUTABLE_PREFIX = lib;
 				OTHER_CFLAGS = "-c";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		56A6B44B19BD9DD700400267 /* Build configuration list for PBXNativeTarget "bottomfusion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56A6B44C19BD9DD700400267 /* Debug */,
+				56A6B44D19BD9DD700400267 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		56B17EC619B5EA090034E0DD /* Build configuration list for PBXProject "ehixs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2229,15 +2244,6 @@
 			buildConfigurations = (
 				56B17ECB19B5EA090034E0DD /* Debug */,
 				56B17ECC19B5EA090034E0DD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		56E358D719B74013004E03CA /* Build configuration list for PBXNativeTarget "bottomfusion" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				56E358D519B74013004E03CA /* Debug */,
-				56E358D619B74013004E03CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
