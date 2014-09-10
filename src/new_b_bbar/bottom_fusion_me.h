@@ -14,32 +14,12 @@
 class BottomFusionCrossSection : public CrossSection
 {
 
-public:
-
-    /// \name Input functions
-    /// @{
-    
-    // Set the Higgs mass
-    void SetHiggsMass(const double& mh){mh_ = mh;}
-    
-    /// @}
-
 protected:
     
     /// \name Data members
     /// @{
     
     double mh_;             ///< Higgs mass
-    
-    /// @}
-    
-    /// \name Measurement function
-    /// @{
-    
-    // Contructs the event with weight w and kinematic variables kv
-    void JF(const double& w,const vector<FourVector>& kv);
-    // Fills the event-box with an event with weight 0
-    void JF();
     
     /// @}
     
@@ -67,7 +47,7 @@ public:
     /// \name Member functions
     /// @{
     
-    void AllocateLuminosity(const UserInterface&);
+    NewLuminosity* AllocateLuminosity(const UserInterface&);
 
     /// @}
     
@@ -76,17 +56,9 @@ protected:
     /// \name Data members
     /// @{
     
-    int number_of_particles_;   ///< Number of particles
     double smin;                ///< Minimum s
     double prefactor_;          ///< Constant prefactor of the cross section
     
-    /// @}
-    
-    /// \name Luminosity
-    /// @{
-
-    double LL(const double& x1,const double& x2);
-
     /// @}
     
 };

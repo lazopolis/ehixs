@@ -85,10 +85,7 @@ void Production::Configure(const UserInterface & UI)
             cuts_->ParseCuts(UI);
             cout <<"[ehixs] CrossSection name : "<<*the_xs_<<endl;
             the_xs_->SetEventBox(event_box);
-            the_xs_->SetEColliderSq(pow(UI.Etot,2.0));
-            the_xs_->AllocateLuminosity(UI);
-            the_xs_->startRunning(UI);
-            the_xs_->SetScales(UI.mur,UI.muf);
+            the_xs_->initialize(UI);
             the_xs_->Configure();
             
         }
