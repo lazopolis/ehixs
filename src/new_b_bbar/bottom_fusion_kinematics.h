@@ -2,7 +2,7 @@
 #define BOTTOM_FUSION_KINEMATICS_H
 
 #include "kinematics.h"
-#include "kinematicvariables.h"
+//#include "kinematicvariables.h"
 using namespace std;
 
 /**
