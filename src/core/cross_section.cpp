@@ -7,34 +7,41 @@ using namespace std;
 
 ostream& operator<<(ostream& stream, const CrossSection& XS)
 {
-    stream<<XS.info_.name<<"("<<XS.info_.ISF.left<<","<<XS.info_.ISF.right
-    <<"): a^"<<XS.info_.alpha_power
-    <<" ,dim="<<XS.dimension_;
+    stream<<XS._info.name<<"("<<XS._info.ISF.left<<","<<XS._info.ISF.right
+    <<"): a^"<<XS._info.alpha_power
+    <<" ,dim="<<XS.dimension();
     
     return stream;
 }
 
-void CrossSection::SetAlphaStrong(const double& a_s_over_pi)
+void CrossSection::startRunning(const UserInterface& UI)
 {
-    a_s_over_pi_=a_s_over_pi;
-    cout<<"\n[CrossSection]: a_s = "<<a_s_over_pi_* consts::Pi;
+   _model.Configure(
+                    _lumi->alpha_s_at_mz(),
+                    UI.mur_over_mhiggs,
+                    UI.perturbative_order,
+                    UI.m_higgs
+                    );
+   _as_pi = _model.alpha_strong()/consts::Pi;
+   cout << "\n[CrossSection]: a_s(MZ) = " << _as_pi * consts::Pi;
+   return;
 }
 
 void CrossSection::SetScales(const double& mur,const double& muf)
-{mur_=mur; muf_=muf;}
-
-void CrossSection::SetEColliderSq(const double& smaximum)
-{smax=smaximum;}
-
-void CrossSection::SetEventBox(EventBox& event_box)
-{event_box_=&event_box;}
-
-int CrossSection::Dimension()
 {
-    SetDimension();
-    return dimension_;
+   _muR = mur;
+   _muF = muf;
+   return;
 }
 
+void CrossSection::SetEColliderSq(const double& smaximum)
+{
+   _smax=smaximum;
+   return;
+}
 
-
+void CrossSection::SetEventBox(EventBox& event_box)
+{
+   event_box_=&event_box;
+}
 

@@ -58,6 +58,10 @@ Production::~Production()
         delete available_xs_[i];
 }
 
+const CModel& Production::model()
+{
+   return the_xs_->model;
+}
 
 void Production::Configure(const UserInterface & UI)
 {
@@ -83,14 +87,8 @@ void Production::Configure(const UserInterface & UI)
             the_xs_->SetEventBox(event_box);
             the_xs_->SetEColliderSq(pow(UI.Etot,2.0));
             the_xs_->AllocateLuminosity(UI);
-            
+            the_xs_->startRunning(UI);
             the_xs_->SetScales(UI.mur,UI.muf);
-            Model.Configure(alpha_s_at_mz_from_lhapdfs(),
-                            UI.mur_over_mhiggs,
-                            UI.perturbative_order,
-                            UI.m_higgs);
-            the_xs_->SetAlphaStrong(Model.alpha_strong()/consts::Pi);
-            SetProcessSpecificParameters();
             the_xs_->Configure();
             
         }
@@ -132,7 +130,7 @@ void Production::find_the_xs(const UserInterface & UI)
 // dimension_of_integration depends on the particular integral (e.g. the LO is one-dimensional, the nlo and nnlo are higher), so it's setting is delegated to the particular cross section object that is requested by the user
 int Production::dimension_of_integration()
 {
-    if (is_sector_defined()) return the_xs_->Dimension();
+    if (is_sector_defined()) return the_xs_->dimension();
     else
     {
         cout<<"\nError: you asked for the dimension of integration, but the sector is not yet defined!"<<endl;
@@ -140,12 +138,6 @@ int Production::dimension_of_integration()
     }
 }
 
-
-double Production::alpha_s_at_mz_from_lhapdfs()
-{
-    //set guard for the case the_xs_ is not assigned
-    return the_xs_->alpha_s_at_mz_from_lhapdfs();
-}
 
 void Production::set_up_the_hatch(TheHatch* the_hatch)
 {

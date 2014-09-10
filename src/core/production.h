@@ -49,7 +49,6 @@ public://methods
     
     virtual void create_matrix_elements()=0;
     virtual void ConfigureCuts()=0;
-    virtual void SetProcessSpecificParameters()=0;
     
     /*
     virtual void book_production_event(const double &,const double &,
@@ -69,7 +68,7 @@ public://methods
     
     void evaluate_sector();
     int dimension_of_integration();
-    double alpha_s_at_mz_from_lhapdfs();
+    const CModel& model();
     void info();
     void xml_info(const char* output_fname);
 
@@ -78,7 +77,7 @@ public:// data
     EventBox event_box;
     //: Model is public because Process needs to sync a_s
     //: between production and decay
-    CModel Model;
+    //CModel Model;
 protected:// data
     double* xx_vegas;
     CutBox* cuts_;

@@ -132,7 +132,7 @@ void Process::set_decay(Decay * thedecay)
     my_decay->set_up_the_hatch(&the_hatch);
     Vegas.set_number_of_dimensions(the_hatch.GetVEGASDim());
     decay_is_defined=true;
-    if (production_is_defined) my_decay->SetModel(my_production->Model);
+    if (production_is_defined) my_decay->SetModel(my_production->model());
     
 }
 

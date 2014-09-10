@@ -26,21 +26,6 @@ void BottomFusion::create_matrix_elements()
 }
 
 
-void BottomFusion::SetProcessSpecificParameters()
-{
-    // here we need to use setter functions of the derived class
-    // (BottomFusionCrossSection) and I found no better way to do this than
-    // explicit downcasting: I create a new pointer to the derived class,
-    // I cast the the_xs_ pointer (of the base class) statically to the derived
-    // and assign it to the new pointer. Then I use that pointer to call
-    // the functions specific to bbH.
-    BottomFusionCrossSection * the_bb_xs_ = static_cast<BottomFusionCrossSection*>(the_xs_);
-    //: we need to make yukawa bottom an evolved coupling at Model first
-    //the_xs_->SetYukawaBottom(Model.yukawa_bottom);
-    the_bb_xs_->SetHiggsMass(Model.higgs.m());
-
-}
-
 void BottomFusion::ConfigureCuts()
 {
     // The file includes the explicit declarations of cut objects.

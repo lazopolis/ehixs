@@ -34,19 +34,21 @@ BottomFusion_bb::BottomFusion_bb()
 
     //info_.ISF = InitialStateFlavors("u","ub");
     //pdf_selection_ = "same flavor";
-    info_.ISF = InitialStateFlavors("b","bbar");
+    _info.ISF = InitialStateFlavors("b","bbar");
 }
 
 void BottomFusion_bb::AllocateLuminosity(const UserInterface& UI)
 {
-    lumi = new NewLuminosity(UI);
-    lumi->add_pair(-5,5);
-    lumi->add_pair(5,-5);
+    _lumi = new NewLuminosity(UI);
+    _lumi->add_pair(-5,5);
+    _lumi->add_pair(5,-5);
+   // bad hack
+   mh_ = UI.m_higgs;
 }
 
 double BottomFusion_bb::LL(const double& x1,const double& x2)
 {
-    return lumi->give(x1,x2);
+    return _lumi->give(x1,x2);
 }
 
 /// \todo Destructor deleting lumi missing!!!
@@ -58,7 +60,7 @@ void BottomFusion_bb_Delta::Configure()
     //refactor: make a ConfigureBase function and move smin setting there
     const double smin = pow(mh_,2.0);
     cout<<"\n *** mh_sq = "<<smin<<endl;
-    kk_.setBoundaries(smin,smax);
+    kk_.setBoundaries(smin,_smax);
     
     const double Nc = 3;
     const double yukawa_bottom = 1.0;
@@ -92,7 +94,7 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
 
 BottomFusion_bb_LO::BottomFusion_bb_LO():BottomFusion_bb_Delta()
 {
-    info_.name = "Born";
+    _info.name = "Born";
 }
 
 double BottomFusion_bb_LO::eval_me(const KinematicInvariants& kinvar)
@@ -104,8 +106,8 @@ double BottomFusion_bb_LO::eval_me(const KinematicInvariants& kinvar)
 
 BottomFusion_bb_NLO_Soft::BottomFusion_bb_NLO_Soft()
 {
-    info_.alpha_power = 1;
-    info_.name = "NLO Soft";
+    _info.alpha_power = 1;
+    _info.name = "NLO Soft";
 }
 
 double BottomFusion_bb_NLO_Soft::eval_me(const KinematicInvariants& kinvar)

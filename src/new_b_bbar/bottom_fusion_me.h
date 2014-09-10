@@ -19,8 +19,6 @@ public:
     /// \name Input functions
     /// @{
     
-    // Get the strong coupling alphas from the PDF set
-    double alpha_s_at_mz_from_lhapdfs(){return lumi->alpha_s_at_mz();}
     // Set the Higgs mass
     void SetHiggsMass(const double& mh){mh_ = mh;}
     
@@ -31,7 +29,6 @@ protected:
     /// \name Data members
     /// @{
     
-    NewLuminosity* lumi;    ///< Pointer to the luminosity object
     double mh_;             ///< Higgs mass
     
     /// @}
@@ -109,7 +106,11 @@ public:
     /// \name Input functions
     /// @{
     
-    void SetDimension(){dimension_ = 1;}
+    size_t dimension() const
+    {
+        return 1;
+    }
+    
     void Evaluate(double* xx_vegas);
     void Configure();
     

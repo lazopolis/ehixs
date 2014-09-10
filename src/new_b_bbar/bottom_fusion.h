@@ -20,7 +20,6 @@ public:
     void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(3);}
     void create_matrix_elements();
     void ConfigureCuts();
-    void SetProcessSpecificParameters();
     
 //private://data
 //    vector<BottomFusionCrossSection*> available_xs_;
