@@ -9,5 +9,5 @@ add_library(tools
                     kinematic_invariants.cpp
                     user_interface.cpp
                     epsilon_series.cpp
-                    fmomentum.cpp
+                    fourvector.cpp
                     )

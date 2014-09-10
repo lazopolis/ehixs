@@ -1,7 +1,7 @@
 #ifndef GSTAR_CUT_H
 #define GSTAR_CUT_H
 
-#include "momenta.h"
+//#include "momenta.h"
 #include "cut.h"
 //class CCut
 //{

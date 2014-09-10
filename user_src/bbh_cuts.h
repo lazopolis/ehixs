@@ -1,7 +1,7 @@
 #ifndef BBH_CUT_H
 #define BBH_CUT_H
 
-#include "momenta.h"
+//#include "momenta.h"
 #include "cut.h"
 //class CCut
 //{

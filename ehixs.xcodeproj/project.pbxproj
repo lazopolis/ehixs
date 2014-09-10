@@ -10,6 +10,7 @@
 		56A6B44719BD9DD700400267 /* bottom_fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */; };
 		56A6B44819BD9DD700400267 /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
 		56A6B45219BE0B2C00400267 /* constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45119BE0B2C00400267 /* constants.cpp */; };
+		56A6B45419BF58B800400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; };
 		56E358F119B74507004E03CA /* cross_section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* cross_section.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
 		56E358F319B74507004E03CA /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826919B5EA710034E0DD /* process.cpp */; };
@@ -26,7 +27,6 @@
 		56E3590E19B745D3004E03CA /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840B19B5EA720034E0DD /* cut.cpp */; };
 		56E3590F19B745D3004E03CA /* epsilon_series.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840D19B5EA720034E0DD /* epsilon_series.cpp */; };
 		56E3591019B745D3004E03CA /* event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840F19B5EA720034E0DD /* event.cpp */; };
-		56E3591119B745D3004E03CA /* fmomentum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841119B5EA720034E0DD /* fmomentum.cpp */; };
 		56E3591219B745D3004E03CA /* histogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841419B5EA720034E0DD /* histogram.cpp */; };
 		56E3591319B745D3004E03CA /* hub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841719B5EA720034E0DD /* hub.cpp */; };
 		56E3591419B745D3004E03CA /* kinematic_invariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */; };
@@ -37,6 +37,7 @@
 /* Begin PBXFileReference section */
 		56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libbottomfusion copy.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B45119BE0B2C00400267 /* constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constants.cpp; sourceTree = "<group>"; };
+		56A6B45319BF58B800400267 /* fourvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector.cpp; sourceTree = "<group>"; };
 		56ACB9DE19B9D2F100B67E27 /* kinematics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = kinematics.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		56ACB9DF19B9FBB700B67E27 /* fourvector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fourvector.h; sourceTree = "<group>"; };
 		56B1818519B5EA710034E0DD /* info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = info.txt; sourceTree = "<group>"; };
@@ -643,9 +644,6 @@
 		56B1840E19B5EA720034E0DD /* epsilon_series.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = epsilon_series.h; sourceTree = "<group>"; };
 		56B1840F19B5EA720034E0DD /* event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = event.cpp; sourceTree = "<group>"; };
 		56B1841019B5EA720034E0DD /* event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = event.h; sourceTree = "<group>"; };
-		56B1841119B5EA720034E0DD /* fmomentum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = fmomentum.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		56B1841219B5EA720034E0DD /* fmomentum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = fmomentum.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		56B1841319B5EA720034E0DD /* fvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fvector.h; sourceTree = "<group>"; };
 		56B1841419B5EA720034E0DD /* histogram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = histogram.cpp; sourceTree = "<group>"; };
 		56B1841519B5EA720034E0DD /* histogram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = histogram.h; sourceTree = "<group>"; };
 		56B1841619B5EA720034E0DD /* histograms.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = histograms.hpp; sourceTree = "<group>"; };
@@ -654,7 +652,6 @@
 		56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interface_to_amplitudes.h; sourceTree = "<group>"; };
 		56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kinematic_invariants.cpp; sourceTree = "<group>"; };
 		56B1841B19B5EA720034E0DD /* kinematic_invariants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematic_invariants.h; sourceTree = "<group>"; };
-		56B1841C19B5EA720034E0DD /* momenta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = momenta.h; sourceTree = "<group>"; };
 		56B1841D19B5EA720034E0DD /* timekeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timekeeper.h; sourceTree = "<group>"; };
 		56B1841E19B5EA720034E0DD /* user_interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = user_interface.cpp; sourceTree = "<group>"; };
 		56B1841F19B5EA720034E0DD /* user_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = user_interface.h; sourceTree = "<group>"; };
@@ -1710,10 +1707,8 @@
 				56B1840E19B5EA720034E0DD /* epsilon_series.h */,
 				56B1840F19B5EA720034E0DD /* event.cpp */,
 				56B1841019B5EA720034E0DD /* event.h */,
-				56B1841119B5EA720034E0DD /* fmomentum.cpp */,
-				56B1841219B5EA720034E0DD /* fmomentum.h */,
+				56A6B45319BF58B800400267 /* fourvector.cpp */,
 				56ACB9DF19B9FBB700B67E27 /* fourvector.h */,
-				56B1841319B5EA720034E0DD /* fvector.h */,
 				56B1841419B5EA720034E0DD /* histogram.cpp */,
 				56B1841519B5EA720034E0DD /* histogram.h */,
 				56B1841619B5EA720034E0DD /* histograms.hpp */,
@@ -1723,7 +1718,6 @@
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
 				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
 				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
-				56B1841C19B5EA720034E0DD /* momenta.h */,
 				56B1841D19B5EA720034E0DD /* timekeeper.h */,
 				56B1841E19B5EA720034E0DD /* user_interface.cpp */,
 				56B1841F19B5EA720034E0DD /* user_interface.h */,
@@ -1990,8 +1984,8 @@
 				56E3590E19B745D3004E03CA /* cut.cpp in Sources */,
 				56E3590F19B745D3004E03CA /* epsilon_series.cpp in Sources */,
 				56E3591019B745D3004E03CA /* event.cpp in Sources */,
-				56E3591119B745D3004E03CA /* fmomentum.cpp in Sources */,
 				56E3591219B745D3004E03CA /* histogram.cpp in Sources */,
+				56A6B45419BF58B800400267 /* fourvector.cpp in Sources */,
 				56E3591319B745D3004E03CA /* hub.cpp in Sources */,
 				56E3591419B745D3004E03CA /* kinematic_invariants.cpp in Sources */,
 				56E3591519B745D3004E03CA /* user_interface.cpp in Sources */,

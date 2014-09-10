@@ -28,5 +28,3 @@ std::ostream& operator<<(std::ostream& myStream, const QCD::Flavor& flavor)
     }
     return myStream;
 }
-
-#endif // CONSTANTS_H

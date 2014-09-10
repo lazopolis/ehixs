@@ -20,7 +20,7 @@ using namespace std;
 //#include "Decay.h"
 //#include "VegasAdaptor.h"
 
-#include "momenta.h"
+//#include "momenta.h"
 #include "event.h"
 #include "cross_section.h"
 
