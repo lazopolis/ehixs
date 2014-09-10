@@ -176,6 +176,12 @@ public:
         return operator[](0)*q[0]-operator[](1)*q[1]-operator[](2)*q[2]-operator[](3)*q[3];
     }
 
+    /// Square of a momentum
+    friend double square(const FourVector& q)
+    {
+        return q*q;
+    }
+
     /// @}
 
 private:

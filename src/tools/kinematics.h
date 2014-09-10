@@ -54,11 +54,12 @@ public:
             for (size_t j = 0; j < _n-i; ++j)
             {
                 _s[i].push_back(s(p[i],p[j]));
-                _q[i].push_back(s(p[i],p[j])/s12);
+                _q[i].push_back(_s[i][j]/s12);
             }
         return;
     }
-    
+
+    /// Destructor
     ~KinematicInvariants()
     {} // vector should be able to destroy all of its elements
     
@@ -67,22 +68,18 @@ public:
     /// \name Input functions
     /// @{
 
-
-    /// \note This is not efficient at all, because it forces reallocation
-    /// \todo Rewrite it!
+    /// Computes the kinematic invariants based on a set of momenta
     void set(const vector<FourVector>& p)
     {
-        if ( _n != 0 ) clear();
-        _n = p.size();
-        _s = vector< vector<double> >(_n);
-        _q = vector< vector<double> >(_n);
-
+        // Checks whether it is necessary to resize matrices
+        if ( _n != p.size() ) resize(p.size());
+        // Fills matrices with new values
         const double s12 = s(p[0],p[1]);
         for (size_t i = 0; i < _n; ++i)
             for (size_t j = 0; j < _n-i; ++j)
             {
-                _s[i].push_back(s(p[i],p[j]));
-                _q[i].push_back(s(p[i],p[j])/s12);
+                _s[i][j]=s(p[i],p[j]);
+                _q[i][j]=_s[i][j]/s12;
             }
         return;
     }
@@ -91,7 +88,8 @@ public:
     
     /// \name Output functions
     /// @{
-    
+
+    /// Return the dimensionful kinematic invariant corresponding to a pair
     double s(const size_t i, const size_t j) const
     {
         if ( i>0 && j>0 && i<=_n && j<=_n )
@@ -100,6 +98,7 @@ public:
         exit(1);
     }
     
+    /// Return the dimensionless kinematic invariant corresponding to a pair
     double q(const size_t i, const size_t j) const
     {
         if ( i>0 && j>0 && i<=_n && j<=_n )
@@ -107,7 +106,8 @@ public:
         cerr << "Trying to read out of the Kinematic Invariants matrix" << endl;
         exit(1);
     }
-    
+
+    /// Print the whole matrix of kinematic invariants
     friend ostream& operator<<(ostream& stream, const KinematicInvariants& kk)
     {
         for (int i = 1; i <= kk._n; ++i)
@@ -136,19 +136,20 @@ private:
     /// Compute the kinematic invariant associated with p1 and p2, i.e. (p1+p2)^2
     double s(const FourVector& p1, const FourVector& p2) const
     {
-        return p1*p1+2.*p1*p2+p2*p2;
+        return square(p1+p2);
     }
 
-    /// Clear the whole object
-    void clear()
+    /// Changes the size of the arrays
+    void resize(const size_t n)
     {
-        if (_n==0) return;
+        _n = n;
+        _s.resize(_n);
+        _q.resize(_n);
         for (size_t i = 0; i < _n; ++i)
         {
-            _s.pop_back();
-            _q.pop_back();
+            _s[i].resize(_n-i,0.);
+            _q[i].resize(_n-i,0.);
         }
-        _n=0;
         return;
     }
 

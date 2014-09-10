@@ -11,6 +11,8 @@
 		56A6B44819BD9DD700400267 /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
 		56A6B45219BE0B2C00400267 /* constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45119BE0B2C00400267 /* constants.cpp */; };
 		56A6B45419BF58B800400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; };
+		56A6B45719C04DEF00400267 /* kinematic_variables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45619C04DEF00400267 /* kinematic_variables.h */; };
+		56A6B45919C04EC500400267 /* kinematicvariables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45819C04EC500400267 /* kinematicvariables.h */; };
 		56E358F119B74507004E03CA /* cross_section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* cross_section.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
 		56E358F319B74507004E03CA /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826919B5EA710034E0DD /* process.cpp */; };
@@ -38,6 +40,8 @@
 		56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libbottomfusion copy.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B45119BE0B2C00400267 /* constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constants.cpp; sourceTree = "<group>"; };
 		56A6B45319BF58B800400267 /* fourvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector.cpp; sourceTree = "<group>"; };
+		56A6B45619C04DEF00400267 /* kinematic_variables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematic_variables.h; sourceTree = "<group>"; };
+		56A6B45819C04EC500400267 /* kinematicvariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematicvariables.h; sourceTree = "<group>"; };
 		56ACB9DE19B9D2F100B67E27 /* kinematics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = kinematics.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		56ACB9DF19B9FBB700B67E27 /* fourvector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fourvector.h; sourceTree = "<group>"; };
 		56B1818519B5EA710034E0DD /* info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = info.txt; sourceTree = "<group>"; };
@@ -1662,6 +1666,7 @@
 				56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */,
 				56B183EE19B5EA720034E0DD /* bottom_fusion.h */,
 				56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */,
+				56A6B45819C04EC500400267 /* kinematicvariables.h */,
 				56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */,
 				56B183F219B5EA720034E0DD /* bottom_fusion_me.h */,
 				56B183F319B5EA720034E0DD /* CMakeLists.txt */,
@@ -1714,10 +1719,11 @@
 				56B1841619B5EA720034E0DD /* histograms.hpp */,
 				56B1841719B5EA720034E0DD /* hub.cpp */,
 				56B1841819B5EA720034E0DD /* hub.hpp */,
-				56ACB9DE19B9D2F100B67E27 /* kinematics.h */,
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
+				56ACB9DE19B9D2F100B67E27 /* kinematics.h */,
 				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
 				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
+				56A6B45619C04DEF00400267 /* kinematic_variables.h */,
 				56B1841D19B5EA720034E0DD /* timekeeper.h */,
 				56B1841E19B5EA720034E0DD /* user_interface.cpp */,
 				56B1841F19B5EA720034E0DD /* user_interface.h */,
@@ -1819,6 +1825,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56A6B45919C04EC500400267 /* kinematicvariables.h in Headers */,
+				56A6B45719C04DEF00400267 /* kinematic_variables.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
