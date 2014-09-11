@@ -1,6 +1,8 @@
 #ifndef HIGGS_ZERFAL_INTERFACE
 #define HIGGS_ZERFAL_INTERFACE
 
+#include "fourvector.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,7 +28,7 @@ extern "C" {
 #endif
 //
 inline void higgszerfall(
-                         double* pH,
+                         FourVector& pH,
                          const double& mw,const double& mz,const double& mt,
                          const double& gamw,
                          const double& gamz,
@@ -35,11 +37,13 @@ inline void higgszerfall(
                          const int& decaymode,     // decay mode 0:
                          double* decay_xx_vegas,// passing vegas variables
                          double& decay_weight,  // the weight of the decay will be set here
-                         double* p1,double* p2,double* p3,double* p4
+                         vector<FourVector> p
                          )
 {
+    double _pH[4] = {pH[0],pH[1],pH[2],pH[3]};
+    double _p1[4], _p2[4], _p3[4], _p4[4];
     higgszerfall_(
-                  (double*) pH,(double*) &mw,(double*) &mz,(double*) &mt,
+                  (double*) _pH,(double*) &mw,(double*) &mz,(double*) &mt,
                   (double*) &gamw,
                   (double*) &gamz,
                   (double*) &GF,
@@ -47,9 +51,13 @@ inline void higgszerfall(
                   (int*) &decaymode,     // decay mode 0:
                   (double*) decay_xx_vegas,// passing vegas variables
                   (double*) &decay_weight,  // the weight of the decay will be set here
-                  (double*) p1,
-                  (double*) p2,(double*) p3,(double*) p4
+                  (double*) _p1, (double*) _p2, (double*) _p3, (double*) _p4
                   );
+    pH = FourVector(_pH);
+    p.push_back(FourVector(_p1));
+    p.push_back(FourVector(_p2));
+    p.push_back(FourVector(_p3));
+    p.push_back(FourVector(_p4));
 }
 
 

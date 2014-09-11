@@ -66,7 +66,7 @@ const CModel& Production::model()
 void Production::Configure(const UserInterface & UI)
 {
     cuts_ = new CutBox();
-    SetNumberOfParticles();
+    //SetNumberOfParticles();
     create_matrix_elements();
     if (UI.info)
     {
@@ -150,7 +150,7 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
 
 void Production::evaluate_sector()
 {
-    event_box.CleanUp();
+    event_box.clear();
     the_xs_->Evaluate(xx_vegas);
     
 }

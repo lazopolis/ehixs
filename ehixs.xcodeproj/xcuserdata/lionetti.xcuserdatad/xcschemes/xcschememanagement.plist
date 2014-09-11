@@ -24,6 +24,11 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
+		<key>test.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>tools.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -33,6 +38,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>56A6B44519BD9DD700400267</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>56A6B45E19C1BF5400400267</key>
 		<dict>
 			<key>primary</key>
 			<true/>

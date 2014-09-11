@@ -21,12 +21,25 @@
 #include "constants.h"  // Pi
 using namespace std;
 
+/**
+ * \enum  Axis
+ * \brief Shorthand for calling axes
+ */
+enum Axis : unsigned short
+{
+    x = 1,
+    y = 2,
+    z = 3
+};
+
+/// Cycles between axes
+Axis operator+(const Axis& a, const Axis& b);
 
 /**
  *
  * \class FourVector
  * \brief Object that represents a four-vector
- * \todo  Write tests
+ * \todo  Finish tests
  *
  */
 
@@ -35,24 +48,6 @@ class FourVector : public array<double,4>
 
 public:
     
-    /**
-     * \enum  Axis
-     * \brief Shorthand for calling axes
-     */
-    enum axis
-    {
-        x = 1,
-        y = 2,
-        z = 3
-    };
-
-    /// Cycles between axes
-    /// \todo Rethink this nasty implementation
-    friend axis operator+(const axis& a, const axis& b){
-        if (a+b<=3) return static_cast<axis>(static_cast<size_t>(a)+static_cast<size_t>(b));
-        else return static_cast<axis>(static_cast<size_t>(static_cast<int>(a)+static_cast<int>(b)-3));
-    }
-
     /// \name Constructors
     /// @{
     
@@ -66,9 +61,13 @@ public:
     array<double, 4>({p0,p1,p2,p3})
     {}
 
+    FourVector(const double p[4]) :
+    array<double, 4>({p[0],p[1],p[2],p[3]})
+    {}
+
     /// Copy constructor
     FourVector(const FourVector& that) :
-    array<double, 4>()
+    array<double, 4>(that)
     {}
 
     /// Destructor
@@ -84,24 +83,31 @@ public:
     double abs(void) const;
 
     /// Return the azimuthal angle of the four-vector
-    double phi(const axis a = axis::z) const;
+    double phi(const Axis a = Axis::z) const;
 
-    /// Return the rapidity of the four-vector wrt the axis a
-    double Y(const axis a = axis::z) const
+    /// Return the rapidity of the four-vector wrt the Axis a
+    double Y(const Axis a = Axis::z) const
     {
         return 0.5*log( (operator[](0)+operator[](a)) / (operator[](0)-operator[](a)) );
     }
 
-    /// Return the modulus of the rapidity of the four-vector wrt the axis a
-    double absY(const axis a = axis::z) const
+    /// Return the modulus of the rapidity of the four-vector wrt the Axis a
+    double absY(const Axis a = Axis::z) const
     {
-        return std::abs(Y(a));
+        return std::fabs(Y(a));
     }
 
-    /// Return the pseudorapidity of the four-vector wrt the axis a
-    double eta(const axis a = axis::z) const;
+    /// Return the pseudorapidity of the four-vector wrt the Axis a
+    double eta(const Axis a = Axis::z) const;
+
+    /// Return the transverse component of the four-vector wrt the Axis a
+    double T(const Axis a = Axis::z) const
+    {
+        return sqrt(pow(operator[](a+Axis::x),2.)+pow(operator[](a+Axis::y),2.));
+    }
 
     /// Compute the JADE distance of two FourVectors
+    /// Warning: yJADE was not tested yet
     double yJADE(const FourVector& p2) const;
 
     /// Prints the fourmomentum to an output stream
@@ -120,9 +126,11 @@ public:
     {
         return FourVector(that*operator[](0),that*operator[](1),that*operator[](2),that*operator[](3));
     }
-    friend FourVector operator*(const double a, const FourVector& b)
+
+    /// Multiply the vector v for a number k
+    friend FourVector operator*(const double k, const FourVector& v)
     {
-        return FourVector(a*b[0],a*b[1],a*b[2],a*b[3]);
+        return FourVector(k*v[0],k*v[1],k*v[2],k*v[3]);
     }
 
     /// Divide this momentum by a number
@@ -159,16 +167,18 @@ public:
     const FourVector& operator-=(const FourVector& that);
 
     /// Generic boost with velocity (bx,by,bz)
+    /// beware of the sign ambiguity in the velocity
     FourVector& boost(const double& bx,const double& by,const double& bz);
 
-    /// Boost along a specific axis a with velocity b
-    FourVector& boost(const double& b, const axis a = axis::z);
+    /// Boost along a specific Axis a with velocity b
+    /// beware of the sign ambiguity in the velocity
+    FourVector& boost(const double& b, const Axis a = Axis::z);
 
-    /// Boost along a specific axis a with rapidity eta
-    FourVector& rapBoost(const double& eta, const axis a = axis::z);
+    /// Boost along a specific Axis a with rapidity eta
+    FourVector& rapBoost(const double& eta, const Axis a = Axis::z);
 
-    /// Rotate around the axis a by an angle theta
-    FourVector& rotate(const double& theta, const axis a = axis::z);
+    /// Rotate around the Axis a by an angle theta
+    FourVector& rotate(const double& theta, const Axis a = Axis::z);
 
     /// Scalar product with another momentum
     double operator*(const FourVector& q) const

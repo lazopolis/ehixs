@@ -38,12 +38,12 @@ public://methods
     }
     void set_up_the_hatch(TheHatch*);
     bool this_event_passes_cuts(int i)
-    {return cuts_->passes_cuts(event_box.ptr_to_event(i));}
+    {return cuts_->passes_cuts(event_box(i));}
     void show_cut_info_and_exit(){cuts_->show_cut_info_and_exit();}
     
     //: pure virtual functions
     
-    virtual void SetNumberOfParticles()=0;
+    //virtual void SetNumberOfParticles()=0;
     virtual void SetDecayParticleIdInEventBox()=0;
     //virtual int number_of_necessary_sectors() = 0;
     

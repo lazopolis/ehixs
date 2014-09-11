@@ -1,3 +1,4 @@
+#include "event.h"
 #include "decay_h_to_gamma_gamma.h"
 #include "higgs_zerfal.h"
 #include "decay_gamma_gamma_cuts.h"
@@ -12,25 +13,19 @@ Decay_gammagamma::Decay_gammagamma(const UserInterface & UI)
 
 void Decay_gammagamma::do_decay()
 {
-    double  PH_rest[4] ={Model.higgs.m(),0.0,0.0,0.0};
-    do_decay(PH_rest);
-    
+    do_decay(FourVector(Model.higgs.m(), 0., 0., 0.));
 }
 
 
-void Decay_gammagamma::do_decay(double* PH)
+void Decay_gammagamma::do_decay(FourVector PH)
 {
-    event_box.CleanUp();
+    event_box.clear();
     
     int decaymode = 1;
     // decay mode 1:HZZeemm | 2: HZZllll | 3: HWWlnln | 4: HWWZZlnln
     //double pH[4]={PH->E(),PH->px(),PH->py(),PH->pz()};
-    
         
-    double p1[4];
-    double p2[4];
-    double p3[4];
-    double p4[4];
+    vector<FourVector> p;
     double decay_weight = 0.0;
     
     double alpha_QED = 1.0/129.0;
@@ -42,18 +37,16 @@ void Decay_gammagamma::do_decay(double* PH)
                  decay_mode_,
                  decay_xx_vegas,// passing vegas variables
                  decay_weight,  // the weight of the decay will be set here
-                 p1,p2,p3,p4
+                 p
                  );  // the four-momenta of the final state particles
     // as set by HiggsZerfall
     //double* gamma1 = p1;
     //cout<<"\n** gamma1 = "<<gamma1[0]<<" "<<gamma1[1]<<" "<<gamma1[2]<<" "<<gamma1[3];
     //cout<<"\n[decay]: w = "<<decay_weight<<endl;
     
-    decay_weight = decay_weight / Model.higgs.width();
+    decay_weight /= Model.higgs.width();
     //decay_weight = 1e-2;
-    event_box.AddNewEvent(decay_weight);
-    event_box.SetP(1,p1[0],p1[1],p1[2],p1[3]);
-    event_box.SetP(2,p2[0],p2[1],p2[2],p2[3]);
+    event_box.add(decay_weight,p);
 
 }
 

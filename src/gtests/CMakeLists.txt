@@ -1,15 +1,13 @@
 
-
-SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.7.0)
-
-
-include_directories(
-                ${GTEST_DIR}/include
-                    )
-
-link_directories(
-                ${GTEST_DIR}/mybuild/
-               )
+#SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.7.0)
+#
+#include_directories(
+#                ${GTEST_DIR}/include
+#                    )
+#
+#link_directories(
+#                ${GTEST_DIR}/mybuild/
+#               )
 
 #add_library(test_utils test_utils.cpp)
 
@@ -70,18 +68,18 @@ link_directories(
 #            tools pdf gtest avh_olo LHAPDF ${LHAPDF})
             
 
-add_executable(nlo_exact_virtual
-            exact_virtual_test.cpp)
-target_link_libraries(nlo_exact_virtual
-                    gluon_fusion fortran_ggf 
-                    fortran_ggf_RR_gg2gg
-            fortran_ggf_RR_gg2qqbar
-            fortran_ggf_RR_qg2qg
-            fortran_ggf_RR_gq2qg
-            fortran_ggf_RR_qqbar
-            fortran_ggf_RR_qq
-                    models avh_olo chaplin tools
-                    mincuba gtest)
+#add_executable(nlo_exact_virtual
+#            exact_virtual_test.cpp)
+#target_link_libraries(nlo_exact_virtual
+#                    gluon_fusion fortran_ggf
+#                    fortran_ggf_RR_gg2gg
+#            fortran_ggf_RR_gg2qqbar
+#            fortran_ggf_RR_qg2qg
+#            fortran_ggf_RR_gq2qg
+#            fortran_ggf_RR_qqbar
+#            fortran_ggf_RR_qq
+#                    models avh_olo chaplin tools
+#                    mincuba gtest)
 
 #add_executable(live_convolution_test
 #            live_convolution_test.cpp)
@@ -89,12 +87,12 @@ target_link_libraries(nlo_exact_virtual
 #                    pdf tools mincuba LHAPDF ${LHAPDF}
 #                    gtest)
 
-add_executable(test_ihixs
-            iggf.cpp)
-target_link_libraries(test_ihixs
-                    ihixs_lib
-                    pdf tools mincuba LHAPDF ${LHAPDF}
-                    gtest)
+#add_executable(test_ihixs
+#            iggf.cpp)
+#target_link_libraries(test_ihixs
+#                    ihixs_lib
+#                    pdf tools mincuba LHAPDF ${LHAPDF}
+#                    gtest)
 
 #add_executable(off_line_histograming
 #            off_line_histograming.cpp)
@@ -108,12 +106,19 @@ target_link_libraries(test_ihixs
 #            gtest ggf_inclusive
 #			chaplin tools models mincuba pdf LHAPDF ${LHAPDF}
 #			)
-
-
-
             
 #add_executable(gstar2_nlo_test ${EHIXS_SRC_DIR}/gamma_star_gamma_star/gtests.cpp)
 #target_link_libraries(gstar2_nlo_test
 #                    gamma_star_gamma_star
 #                    tools pdf LHAPDF chaplin
 #                    gtest)
+
+add_executable(
+            fourvector_test
+            fourvector_test.cpp
+            )
+target_link_libraries(
+                    fourvector_test
+                    gtest
+                    tools
+                    )

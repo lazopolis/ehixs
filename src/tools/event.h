@@ -1,61 +1,83 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-#include <vector>
-#include <math.h> // for fabs
 #include <ostream>
+#include "FourVector.h"
 using namespace std;
-
-#define MAX_NUMBER_OF_PARTICLES 10
 
 class Event
 {
 public:
-    Event(const double& weight){weight_ = weight;}
-    virtual ~Event(){}
-    double weight(){return weight_;}
-    void SetWeight(const double& w){weight_ = w;}
-    void SetP(int i,const double& E,const double& px, const double& py, const double& pz);
-    //const vector<FourVector>& p;
-    double* ParticleMomentum(int i){return p_[i-1];}
+
+    Event() :
+    _p(), _weight(0.)
+    {}
+
+    Event(const double& weight, const vector<FourVector>& momenta) :
+    _p(momenta), _weight(weight)
+    {}
+
+    virtual ~Event()
+    {}
+
+    const double& weight = _weight;
+    const vector<FourVector>& p = _p;
+
+    Event& operator=(const Event& that)
+    {
+        _weight = that._weight;
+        _p = that._p;
+        return *this;
+    }
+
 private:
-//    vector<FourVector> _p;
-    double weight_;
-    double p_[MAX_NUMBER_OF_PARTICLES][4];
-    };
+
+    double _weight;
+    vector<FourVector> _p;
+
+};
 
 
 class CombinedEvent
 {
 public:
+
     CombinedEvent(Event* prod,Event* dec)
-    :production(prod),decay(dec){};
+    :production(prod),decay(dec)
+    {}
+
     Event* production;
     Event* decay;
     double weight() const ;
     friend ostream& operator<<(ostream&, const CombinedEvent&);
 };
 
-class EventBox{
+class EventBox
+{
 public:
     EventBox();
-    /// \todo delete?
-    void SetDecayParticleId(int k){decay_particle_id_=k;}
-    int DecayParticleId(){return decay_particle_id_;}
-    void SetNumberOfParticles(int n);
-    int size(){return effective_size_;}
-    void SetP(int i,const double& E,const double& px, const double& py, const double& pz);
-    void SetWeight(const double& w){events_[current_event_pointer_].SetWeight(w);}
-    //void AddNewEvent();
-    void AddNewEvent(const double& weight);
-    Event* ptr_to_event(int i);
-    void CleanUp(){effective_size_=0;current_event_pointer_=0;}
+    size_t decayParticleId;
+    void add(const double& inWeight, const vector<FourVector>& inP);
+    void add()
+    {
+        add(0.,vector<FourVector>());
+        return;
+    }
+    Event* operator()(const size_t i)
+    {
+        return &_events.at(i);
+    }
+    void clear()
+    {
+        _current = 0;
+    }
+    size_t size() const
+    {
+        return _current;
+    }
 private:
-    vector<Event> events_;
-    int number_of_particles_;
-    int decay_particle_id_;
-    int effective_size_;
-    int current_event_pointer_;
+    vector<Event> _events;
+    size_t _current;
 };
 
 #endif

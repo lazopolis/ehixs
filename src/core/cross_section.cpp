@@ -40,23 +40,3 @@ void CrossSection::SetEventBox(EventBox& event_box)
    event_box_=&event_box;
 }
 
-void CrossSection::JF(const double& w, const vector<FourVector>& kv)
-{
-    if (w!=w)
-    {
-        cerr << endl << "Error: nan as event weight. w=" << w << endl;
-        exit(1);
-    }
-    event_box_->AddNewEvent(w);
-    for (size_t i = 0; i < kv.size(); ++i)
-        event_box_->SetP(i+1,kv[i][0],kv[i][1],kv[i][2],kv[i][3]);
-    return;
-}
-
-void CrossSection::JF()
-{
-    event_box_->AddNewEvent(0.0);
-    return;
-}
-
-

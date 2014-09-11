@@ -12,6 +12,13 @@
 #include "fourvector.h"
 using namespace std;
 
+/// Cycles between axes
+Axis operator+(const Axis& a, const Axis& b)
+{
+    const int foo = (static_cast<int>(a)+static_cast<int>(b))%3;
+    if ( foo == 0 ) return Axis::z;
+    else return static_cast<Axis>(foo);
+}
 
 /// \class FourVector
 
@@ -28,11 +35,11 @@ double FourVector::abs(void) const
 }
 
 /// Return the azimuthal angle of the four-vector
-double FourVector::phi(const axis a) const
+double FourVector::phi(const Axis a) const
 {
    double res = 0.;
-   const axis x = a+axis::x;
-   const axis y = a+axis::y;
+   const Axis x = a+Axis::x;
+   const Axis y = a+Axis::y;
    // handle special values
    if(operator[](x)==0.)
    {
@@ -58,8 +65,8 @@ double FourVector::phi(const axis a) const
    return res;
 }
 
-/// Return the pseudorapidity of the four-vector wrt the axis a
-double FourVector::eta(const axis a) const
+/// Return the pseudorapidity of the four-vector wrt the Axis a
+double FourVector::eta(const Axis a) const
 {
    const double modulus = abs();
    return 0.5*log( (modulus+operator[](a)) / (modulus-operator[](a)) );
@@ -158,26 +165,26 @@ FourVector& FourVector::boost(const double& bx,const double& by,const double& bz
    const double bzx = (g-1)*bz*bx/bsq;
    // Set this vector to its boosted value and return its reference
    return operator=({
-      g*operator[](0) - g*bx*operator[](1) - g*by*operator[](2) - g*bz*operator[](3),
-      -bx*g*operator[](0) +  bxx*operator[](1) +  bxy*operator[](2) +  bzx*operator[](3),
-      -by*g*operator[](0) +  bxy*operator[](1) +  byy*operator[](2) +  byz*operator[](3),
-      -bz*g*operator[](0) +  bzx*operator[](1) +  byz*operator[](2) +  bzz*operator[](3)
+      g*operator[](0)    + g*bx*operator[](1) + g*by*operator[](2) + g*bz*operator[](3),
+      bx*g*operator[](0) +  bxx*operator[](1) +  bxy*operator[](2) +  bzx*operator[](3),
+      by*g*operator[](0) +  bxy*operator[](1) +  byy*operator[](2) +  byz*operator[](3),
+      bz*g*operator[](0) +  bzx*operator[](1) +  byz*operator[](2) +  bzz*operator[](3)
    });
 }
 
-/// Boost along a specific axis a with velocity b
-FourVector& FourVector::boost(const double& b, const axis a)
+/// Boost along a specific Axis a with velocity b
+FourVector& FourVector::boost(const double& b, const Axis a)
 {
    const double g = gamma(b*b);
-   const double E =     g*operator[](0) - b*g*operator[](a);
-   const double p = - b*g*operator[](0) +   g*operator[](a);
+   const double E =   g*operator[](0) + b*g*operator[](a);
+   const double p = b*g*operator[](0) +   g*operator[](a);
    operator[](0) = E;
    operator[](a) = p;
    return *this;
 }
 
-/// Boost along a specific axis a with rapidity eta
-FourVector& FourVector::rapBoost(const double& eta, const axis a)
+/// Boost along a specific Axis a with rapidity eta
+FourVector& FourVector::rapBoost(const double& eta, const Axis a)
 {
    const double Sh = sinh(eta);
    const double Ch = cosh(eta);
@@ -188,18 +195,18 @@ FourVector& FourVector::rapBoost(const double& eta, const axis a)
    return *this;
 }
 
-/// Rotate around the axis a by an angle theta
-FourVector& FourVector::rotate(const double& theta, const axis a)
+/// Rotate around the Axis a by an angle theta
+FourVector& FourVector::rotate(const double& theta, const Axis a)
 {
    // Compute sine and cosine
    const double s = sin(theta);
    const double c = cos(theta);
    // Rotate
-   const double pi =  c*operator[](a+axis::x) + s*operator[](a+axis::y);
-   const double pj = -s*operator[](a+axis::x) + c*operator[](a+axis::y);
+   const double pi = c*operator[](a+Axis::x) - s*operator[](a+Axis::y);
+   const double pj = s*operator[](a+Axis::x) + c*operator[](a+Axis::y);
    // Set
-   operator[](a+axis::x) = pi;
-   operator[](a+axis::y) = pj;
+   operator[](a+Axis::x) = pi;
+   operator[](a+Axis::y) = pj;
    return *this;
 }
 
@@ -214,7 +221,8 @@ double FourVector::gamma(const double b2)
       exit(1);
    }
    const double _1_gamma = sqrt(1.-b2);
-   if (_1_gamma <= DBL_MIN) {
+   if (_1_gamma <= DBL_MIN)
+   {
       cerr << "Error in velocity: too large for numerical precision." << endl;
       exit(1);
    }

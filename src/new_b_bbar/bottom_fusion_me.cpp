@@ -46,11 +46,11 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
         * 1.0/(2.0*kk_.s(1,2)) //flux
         * me_sq
         ;
-        JF(sigma,kk_.ps);
+        event_box_->add(sigma, kk_.ps);
     }
     else
     {
-        JF();
+        event_box_->add();
     }
     
 }

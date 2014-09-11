@@ -12,8 +12,7 @@ set (ehixstests_VERSION_MINOR 9)
 #   please edit below to set the absolute path for lhapdf 
 #   (don't forget to remove the '#' before 'SET(..)'
 #
-#SET(LHAPDF_DIR my_lhapdf_directory)
-#
+#   SET(LHAPDF_DIR my_lhapdf_directory)
 #
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
@@ -50,7 +49,7 @@ else (Fortran_COMPILER_NAME STREQUAL "gfortran")
   set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g")
 endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
-set (CMAKE_CXX_FLAGS "-std=c++11  -DGTEST_HAS_PTHREAD=0 -pthread")
+set (CMAKE_CXX_FLAGS " -std=c++11 -DGTEST_HAS_PTHREAD=0 -pthread")
 
 SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
@@ -102,7 +101,7 @@ add_subdirectory(avh_olo)
 #
 #   testing with gtests
 #
-#add_subdirectory(gtests)
+add_subdirectory(gtests)
 #
 #   production modes
 #
@@ -167,9 +166,3 @@ target_link_libraries(ehixs
             ${LIBRARIES_FOR_GLOBAL_TESTS})
 
 set(CMAKE_BUILD_TYPE Release)
-
-
-
-
-
-

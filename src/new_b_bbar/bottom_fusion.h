@@ -16,8 +16,7 @@ class BottomFusion : public Production
 {
 public:
     //: virtual obligations from production
-    void SetNumberOfParticles() {event_box.SetNumberOfParticles(5);}
-    void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(3);}
+    void SetDecayParticleIdInEventBox(){event_box.decayParticleId = 3;}
     void create_matrix_elements();
     void ConfigureCuts();
     
