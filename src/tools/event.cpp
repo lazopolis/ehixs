@@ -23,7 +23,7 @@ EventBox::EventBox()
 
 void EventBox::add(const double& inWeight, const vector<FourVector>& inP)
 {
-    if ( ++_current != _events.size() ) _events[_current-1] = Event(inWeight,inP);
+    if ( _current++ != _events.size() ) _events[_current-1] = Event(inWeight,inP);
     else _events.push_back(Event(inWeight,inP));
     return;
 }

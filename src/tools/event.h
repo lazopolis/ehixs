@@ -1,3 +1,13 @@
+/**
+ *
+ * \file   event.h
+ * \author Achilleas, Simone
+ * \date   September 2014
+ * Created by Achilleas
+ * Revised by Simone in Sep 2014
+ *
+ */
+
 #ifndef EVENT_H
 #define EVENT_H
 
@@ -5,24 +15,63 @@
 #include "FourVector.h"
 using namespace std;
 
+/**
+ *
+ * \class Event
+ * \brief Container for weight and essential kinematics of a generated event
+ * \todo  Solve seg fault in operator=
+ *
+ */
+
 class Event
 {
 public:
 
+    /// \name Constructors
+    /// @{
+
+    /// Default constructor
     Event() :
     _p(), _weight(0.)
     {}
 
+    /// Constructor with data
     Event(const double& weight, const vector<FourVector>& momenta) :
     _p(momenta), _weight(weight)
     {}
 
-    virtual ~Event()
+    /// Copy constructor
+    Event(const Event& that) :
+    _p(that._p), _weight(that._weight)
     {}
 
-    const double& weight = _weight;
-    const vector<FourVector>& p = _p;
+    /// Destructor
+    ~Event()
+    {}
 
+    /// @}
+
+    /// \name Read-only data
+    /// @{
+
+    const double& weight = _weight;     /// < Weight of the event
+    const vector<FourVector>& p = _p;   /// < Set of four-momenta
+
+    /// @}
+
+    /// \name Input/output functions
+    /// @{
+
+    /// Print event information
+    friend ostream& operator<<(ostream& stream, const Event& event)
+    {
+        stream << "----\nEvent with weight " << event.weight << "\nFourMomenta:\n";
+        for (size_t i = 0; i<event.p.size(); ++i)
+            stream << "\tp" << i+1 << " = " << event.p[i] << endl;
+        return stream << "----\n";
+    }
+
+    /// Assignment operator
     Event& operator=(const Event& that)
     {
         _weight = that._weight;
@@ -30,10 +79,17 @@ public:
         return *this;
     }
 
+    /// @}
+
 private:
 
-    double _weight;
-    vector<FourVector> _p;
+    /// \name Data members
+    /// @{
+
+    double _weight;         /// < Weight of the event
+    vector<FourVector> _p;  /// < Set of four-momenta
+
+    /// @}
 
 };
 

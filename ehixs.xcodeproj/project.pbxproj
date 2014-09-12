@@ -13,8 +13,9 @@
 		56A6B45419BF58B800400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; };
 		56A6B45719C04DEF00400267 /* kinematic_variables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45619C04DEF00400267 /* kinematic_variables.h */; };
 		56A6B45919C04EC500400267 /* kinematicvariables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45819C04EC500400267 /* kinematicvariables.h */; };
-		56A6B46819C1BFAB00400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
-		56A6B46919C1BFE400400267 /* fourvector_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45A19C1BF2800400267 /* fourvector_test.cpp */; };
+		56A6B46C19C2E82300400267 /* event_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B46B19C2E5DA00400267 /* event_test.cpp */; };
+		56A6B46D19C2E82300400267 /* event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840F19B5EA720034E0DD /* event.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
+		56A6B46E19C2E8DC00400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
 		56E358F119B74507004E03CA /* cross_section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* cross_section.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
 		56E358F319B74507004E03CA /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826919B5EA710034E0DD /* process.cpp */; };
@@ -58,6 +59,8 @@
 		56A6B45819C04EC500400267 /* kinematicvariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematicvariables.h; sourceTree = "<group>"; };
 		56A6B45A19C1BF2800400267 /* fourvector_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector_test.cpp; sourceTree = "<group>"; };
 		56A6B45F19C1BF5400400267 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
+		56A6B46A19C2E4C100400267 /* xcodetest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xcodetest.h; sourceTree = "<group>"; };
+		56A6B46B19C2E5DA00400267 /* event_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = event_test.cpp; sourceTree = "<group>"; };
 		56ACB9DE19B9D2F100B67E27 /* kinematics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = kinematics.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		56ACB9DF19B9FBB700B67E27 /* fourvector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fourvector.h; sourceTree = "<group>"; };
 		56B1818519B5EA710034E0DD /* info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = info.txt; sourceTree = "<group>"; };
@@ -1579,7 +1582,9 @@
 			isa = PBXGroup;
 			children = (
 				56B1839E19B5EA720034E0DD /* CMakeLists.txt */,
+				56A6B46B19C2E5DA00400267 /* event_test.cpp */,
 				56B1839F19B5EA720034E0DD /* exact_virtual_test.cpp */,
+				56A6B45A19C1BF2800400267 /* fourvector_test.cpp */,
 				56B183A019B5EA720034E0DD /* ggf_headers.h */,
 				56B183A119B5EA720034E0DD /* ggf_nlo_gg_channel_xsection_test.cpp */,
 				56B183A219B5EA720034E0DD /* ggf_NNLO_q1q2_pole_cancelation_test.cpp */,
@@ -1596,12 +1601,12 @@
 				56B183AD19B5EA720034E0DD /* off_line_histograming.cpp */,
 				56B183AE19B5EA720034E0DD /* one_d_interpolator_test.cpp */,
 				56B183AF19B5EA720034E0DD /* pdf_test.cpp */,
-				56A6B45A19C1BF2800400267 /* fourvector_test.cpp */,
 				56B183B019B5EA720034E0DD /* quark_gluon_nnlo_test.cpp */,
 				56B183B119B5EA720034E0DD /* test_UI.cpp */,
 				56B183B219B5EA720034E0DD /* test_utils.cpp */,
 				56B183B319B5EA720034E0DD /* test_utils.h */,
 				56B183B419B5EA720034E0DD /* tests.cpp */,
+				56A6B46A19C2E4C100400267 /* xcodetest.h */,
 			);
 			path = gtests;
 			sourceTree = "<group>";
@@ -2005,8 +2010,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56A6B46819C1BFAB00400267 /* fourvector.cpp in Sources */,
-				56A6B46919C1BFE400400267 /* fourvector_test.cpp in Sources */,
+				56A6B46E19C2E8DC00400267 /* fourvector.cpp in Sources */,
+				56A6B46D19C2E82300400267 /* event.cpp in Sources */,
+				56A6B46C19C2E82300400267 /* event_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
