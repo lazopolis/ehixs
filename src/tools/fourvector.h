@@ -22,9 +22,12 @@
 using namespace std;
 
 /**
+ *
  * \enum  Axis
  * \brief Shorthand for calling axes
+ *
  */
+
 enum Axis : unsigned short
 {
     x = 1,

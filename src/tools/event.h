@@ -19,7 +19,7 @@ using namespace std;
  *
  * \class Event
  * \brief Container for weight and essential kinematics of a generated event
- * \todo  Solve seg fault in operator=
+ * \todo  Complete tests
  *
  */
 
@@ -93,24 +93,19 @@ private:
 
 };
 
-
-class CombinedEvent
-{
-public:
-
-    CombinedEvent(Event* prod,Event* dec)
-    :production(prod),decay(dec)
-    {}
-
-    Event* production;
-    Event* decay;
-    double weight() const ;
-    friend ostream& operator<<(ostream&, const CombinedEvent&);
-};
+/**
+ *
+ * \class EventBox
+ * \brief Vector of events optimized for minimal reallocation of memory
+ * \todo  Assess speed loss with typedef vector<Event> EventBox
+ *
+ */
 
 class EventBox
 {
+
 public:
+
     EventBox();
     size_t decayParticleId;
     void add(const double& inWeight, const vector<FourVector>& inP);
@@ -134,6 +129,27 @@ public:
 private:
     vector<Event> _events;
     size_t _current;
+};
+
+/**
+ *
+ * \class CombinedEvent
+ * \brief Container for combined production+decay event
+ *
+ */
+
+class CombinedEvent
+{
+public:
+
+    CombinedEvent(Event* prod,Event* dec)
+    :production(prod),decay(dec)
+    {}
+
+    Event* production;
+    Event* decay;
+    double weight() const ;
+    friend ostream& operator<<(ostream&, const CombinedEvent&);
 };
 
 #endif

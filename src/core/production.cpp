@@ -8,63 +8,14 @@
 //Process* ptr_to_process;
 #endif
 
-
-//: Franz's functions communicate with the rest of the code via this fjet_ . Note that there is a global pointer passed around!
-/*
-TO MOVE TO GLUON FUSION
- 
-double fjet_(double* x1,double *x2,double *s12,double *s13,double *s23,double *s14,double *s24,double *s34,double *w)
-{
-     double ns13= -(*s13);
-     double ns14= -(*s14);
-     double ns23= -(*s23);
-     double ns24= -(*s24);
-     double ns34=(*s34);
-     double z=(*s12-ns13-ns14-ns23-ns24+ns34)/(*s12);
-     
-     if ((*w)!=(*w))
-          {
-          cout<<setprecision(16);
-          cout<<"\n Nan found coming from franz: "<<(*w)
-               <<"\t kinematics: "
-               <<"x1="<<*x1<<" "
-          <<"x2="<<*x2<<" "
-          <<"z="<<z<<" "
-          <<"s12="<<(*s12)<<" "
-          <<"s13="<<ns13<<" "
-          <<"s23="<<ns23<<" "
-          <<"s14="<<ns14<<" "
-          <<"s24="<<ns24<<" "
-          <<"s34="<<ns34<<endl;
-          cout<<setprecision(8);
-          exit(1);
-          }
-     
-     EC->book_production_event(*w,
-                                       *x1,
-                                       *x2,
-                                       z,
-                                       ns13,ns23,ns14,ns24,ns34);
-     
-     //cout<<"\n*w="<<*w;
-     return 1;//: VERY IMPORTANT TOP RETURN 1 here 
-}
-*/
-//-----------------------------------------------------------------------------
-
-Production::~Production()
-{
-    for (int i=0;i<available_xs_.size();i++)
-        delete available_xs_[i];
-}
-
 const CModel& Production::model()
 {
    return the_xs_->model;
 }
 
-void Production::Configure(const UserInterface & UI)
+void Production::Configure(const UserInterface& UI)
 {
+    if (sectors().empty()) cout << "sectors is empty!" << endl;
     cuts_ = new CutBox();
     //SetNumberOfParticles();
     create_matrix_elements();
@@ -77,13 +28,13 @@ void Production::Configure(const UserInterface & UI)
     }
     else
     {
-        sector_defined=false;
+        delete the_xs_;
         find_the_xs(UI);
         if (is_sector_defined())
         {
             ConfigureCuts();
             cuts_->ParseCuts(UI);
-            cout <<"[ehixs] CrossSection name : "<<*the_xs_<<endl;
+            cout << "[ehixs] CrossSection name : " << sectors()[_active] << endl;
             the_xs_->SetEventBox(event_box);
             the_xs_->initialize(UI);
             the_xs_->Configure();
@@ -104,18 +55,18 @@ void Production::find_the_xs(const UserInterface & UI)
     }
     else
     {
-        int sector_id=atoi(UI.sector_for_production.c_str());
-        if (sector_id>-1 and sector_id<available_xs_.size())
+        size_t sector_id=atoi(UI.sector_for_production.c_str());
+        if (sector_id>-1 and sector_id<sectors().size())
         {
-            sector_defined=true;
-            the_xs_=available_xs_[sector_id];
+            the_xs_ = sectors()[sector_id]->create();
+            _active = sector_id;
         }
         else
         {
             cout<<"\n[find_sector] The sector id number you asked for, "
             <<sector_id
             <<", was outside the bounds [0,"
-            << available_xs_.size()<<"]";
+            << sectors().size() << "]";
             cout<<"\n[find_sector] Please run with UI.info=true"
             <<" or --info to get the list of sector names"<<endl;
             throw "\n[find_sector] Can't proceed!\n";
@@ -125,9 +76,9 @@ void Production::find_the_xs(const UserInterface & UI)
 
 
 // dimension_of_integration depends on the particular integral (e.g. the LO is one-dimensional, the nlo and nnlo are higher), so it's setting is delegated to the particular cross section object that is requested by the user
-int Production::dimension_of_integration()
+size_t Production::dimension_of_integration()
 {
-    if (is_sector_defined()) return the_xs_->dimension();
+    if (is_sector_defined()) return sectors()[_active]->dim;
     else
     {
         cout<<"\nError: you asked for the dimension of integration, but the sector is not yet defined!"<<endl;
@@ -148,6 +99,11 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
      
 }
 
+void Production::registerit(BaseSector* maker)
+{
+    sectors().push_back(maker);
+}
+
 void Production::evaluate_sector()
 {
     event_box.clear();
@@ -155,14 +111,16 @@ void Production::evaluate_sector()
     
 }
 
-
+vector<BaseSector*>& Production::sectors()
+{
+    static vector<BaseSector*> sectorList;
+    return sectorList;
+}
 
 void Production::info()
 {
-    for (int i=0;i<available_xs_.size();i++)
-    {
-        cout<<"\n"<<i<<" : "<<*available_xs_[i];
-    }
+    for (size_t i = 0; i < sectors().size(); ++i)
+        cout << "\n" << i << " : " << sectors()[i];
     cout<<endl<<endl;
 }
 

@@ -11,7 +11,7 @@
  *
  */
 
-class BottomFusionCrossSection : public CrossSection
+class BottomFusionCrossSection : public XSection
 {
 
 protected:
@@ -137,8 +137,7 @@ public:
 
     BottomFusion_bb_NLO_Soft();  ///< Standard constructor
     double eval_me(const KinematicInvariants&); ///< Actual matrix element computation
-    
-};
 
+};
 
 #endif

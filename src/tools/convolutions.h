@@ -1,85 +1,67 @@
 
 #ifndef CONVOLUTIONS_H
 #define CONVOLUTIONS_H
-#include<string>
-#include<vector>
-#include<list>
-#include<complex>
-//#include "splitting_kernels.h"
-using namespace std;
+
+#include <string>
+#include <vector>
+#include <list>
+#include <complex>
 #include "event.h"
 #include "luminosity.h"
+#include "constants.h"
+using namespace std;
 
-//typedef  pair<string,string> stringpair;
+/**
+ *
+ * \struct InitialStateFlavors
+ * \brief  Container for information about initial state flavors
+ *
+ */
 
-//class FxFxA;
-
-///\struct InitialStateFlavors
-///\brief  Container for information about initial state flavors
 struct InitialStateFlavors
 {
 
-    ///@name Data members
-    ///@{
+    /// \name Data members
+    /// @{
 
-    string left;
-    string right;
+    QCD::Flavor left;   /// < Left parton flavor
+    QCD::Flavor right;  /// < Right parton flavor
 
-    ///@}
+    /// @}
 
-    ///@name Member functions
-    ///@{
+    /// \name Constructors and destructor
+    /// @{
 
-    InitialStateFlavors():
-    left(),right()
+    /// Default constructor
+    InitialStateFlavors() :
+    left(), right()
     {}
 
-    InitialStateFlavors(const InitialStateFlavors& that):
-    left(that.left),right(that.right)
+    /// Copy constructor
+    InitialStateFlavors(const InitialStateFlavors& that) :
+    left(that.left), right(that.right)
     {}
 
-    InitialStateFlavors(const string& lef,const string& rig):
-    left(lef),right(rig)
+    /// Constructor with data
+    InitialStateFlavors(const QCD::Flavor lef, const QCD::Flavor rig) :
+    left(lef), right(rig)
     {}
 
-    ~InitialStateFlavors(){}
+    /// Destructor
+    ~InitialStateFlavors()
+    {}
 
-    ///@}
+    /// Prints initial state flavors
+    friend ostream& operator<<(ostream& stream, const InitialStateFlavors& isf)
+    {
+        return stream << "(" << isf.left << "," << isf.right << ")";
+    }
+
+    /// @}
+
 };
 
-///\struct NewMeExternalInfo
-///\brief  Container for information about matrix elements
-///\todo   Take "New" out of the name?
-struct NewMeExternalInfo
-{
-    ///@name Data members
-    ///@{
-
-    string name;
-    InitialStateFlavors ISF;
-    int alpha_power;
-
-    //int epsilon_power_min;
-    //int epsilon_power_max;
-
-    ///@}
-
-    ///@name Member functions
-    ///@{
-
-    NewMeExternalInfo():
-    name(),ISF(),alpha_power()
-    {}
-
-    NewMeExternalInfo(const NewMeExternalInfo& that):
-    name(that.name),ISF(that.ISF),alpha_power(that.alpha_power)
-    {}
-
-    ~NewMeExternalInfo(){}
-
-    ///@}
-};
-
+/// \note !!??
 class pdf_desc_pair
 {
 public:
@@ -133,6 +115,7 @@ struct WilsonCoefficients{
     bool ew_soft;
 };
 
+/// \note Beta constants already defined in constants?!?
 struct BetaConstants{
     double zero,one,two,three;
 };

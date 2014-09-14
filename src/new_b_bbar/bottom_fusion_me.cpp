@@ -2,11 +2,10 @@
 
 // BottomFusion_bb
 
-BottomFusion_bb::BottomFusion_bb()
-{
-    //refactor: move this to the LO daughter class
-    _info.ISF = InitialStateFlavors("b","bbar");
-}
+//BottomFusion_bb::BottomFusion_bb()
+//{
+//    info.ISF = InitialStateFlavors("b","bbar");
+//}
 
 NewLuminosity* BottomFusion_bb::AllocateLuminosity(const UserInterface& UI)
 {
@@ -57,10 +56,10 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
 
 // BottomFusion_bb_LO
 
-BottomFusion_bb_LO::BottomFusion_bb_LO():BottomFusion_bb_Delta()
-{
-    _info.name = "Born";
-}
+//BottomFusion_bb_LO::BottomFusion_bb_LO():BottomFusion_bb_Delta()
+//{
+//    _info.name = "Born";
+//}
 
 double BottomFusion_bb_LO::eval_me(const KinematicInvariants& kinvar)
 {
@@ -70,10 +69,7 @@ double BottomFusion_bb_LO::eval_me(const KinematicInvariants& kinvar)
 // BottomFusion_bb_NLO
 
 BottomFusion_bb_NLO_Soft::BottomFusion_bb_NLO_Soft()
-{
-    _info.alpha_power = 1;
-    _info.name = "NLO Soft";
-}
+{}
 
 double BottomFusion_bb_NLO_Soft::eval_me(const KinematicInvariants& kinvar)
 {
