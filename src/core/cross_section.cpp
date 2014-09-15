@@ -3,23 +3,6 @@
 #include "production.h"
 #include <sstream>
 
-//void XSectionFactory::registerit(BaseXSectionMaker* maker)
-//{
-//    bookkeeper().push_back(maker);
-//}
-//
-//XSection* XSectionFactory::create(const size_t n)
-//{
-//    if (n < bookkeeper().size()) return bookkeeper()[n]->create();
-//    else return (XSection*) NULL;
-//}
-//
-//vector<BaseSector*>& XSectionFactory::bookkeeper()
-//{
-//    static vector<BaseSector*> xSectionBook;
-//    return xSectionBook;
-//}
-
 void XSection::initialize(const UserInterface& UI)
 {
     // Getting general parameters from the user interface
@@ -43,18 +26,4 @@ void XSection::initialize(const UserInterface& UI)
 void XSection::SetEventBox(EventBox& event_box)
 {
    event_box_=&event_box;
-}
-
-BaseSector::BaseSector():
-name(), isf(), alpha_power(), dim()
-{
-    Production::registerit(this);
-    return;
-}
-
-BaseSector::BaseSector(const string& iname, const InitialStateFlavors& iisf, const int ialphapow, const size_t idim):
-name(iname), isf(iisf), alpha_power(ialphapow), dim(idim)
-{
-    Production::registerit(this);
-    return;
 }

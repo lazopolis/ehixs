@@ -40,7 +40,7 @@ public:
     /// \name Constructor
     /// @{
     
-    BottomFusion_bb();
+    //BottomFusion_bb();
 
     /// @}
     
@@ -77,20 +77,15 @@ public:
 
     /// \name Input functions
     /// @{
-    
-    size_t dimension() const
-    {
-        return 1;
-    }
-    
+
     void Evaluate(double* xx_vegas);
     void Configure();
-    
+
     /// @}
 
     /// \name Output functions
     /// @{
-    
+
     virtual double eval_me(const KinematicInvariants&)=0;
 
     /// @}
@@ -118,7 +113,7 @@ class BottomFusion_bb_LO : public BottomFusion_bb_Delta
 
 public:
 
-    BottomFusion_bb_LO();
+//    BottomFusion_bb_LO();
     double eval_me(const KinematicInvariants&);
 
 };

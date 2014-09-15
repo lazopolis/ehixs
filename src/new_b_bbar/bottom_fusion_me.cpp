@@ -66,6 +66,14 @@ double BottomFusion_bb_LO::eval_me(const KinematicInvariants& kinvar)
     return 1.0;
 }
 
+template<>
+const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
+                                                   "Born",
+                                                    InitialStateFlavors(QCD::Flavor::b, QCD::Flavor::bbar),
+                                                    0,
+                                                    1
+                                                   );
+
 // BottomFusion_bb_NLO
 
 BottomFusion_bb_NLO_Soft::BottomFusion_bb_NLO_Soft()

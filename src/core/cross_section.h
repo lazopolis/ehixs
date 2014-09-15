@@ -11,6 +11,78 @@
 #include "fourvector.h"
 using namespace std;
 
+struct BaseXSectionMaker;
+template<typename XSectionType>
+class XSectionMaker;
+
+/**
+ *
+ * \struct SectorInfo
+ * \brief  Container for information about sectors
+ *
+ */
+
+struct SectorInfo
+{
+
+    /// \name Data Members
+    /// @{
+
+    string name;                /// < The name of the sector
+    InitialStateFlavors isf;    /// < Initial state flavors for this sector
+    int alpha_power;            /// < Power of the strong coupling
+    size_t dim;                 /// < Dimension of integration for this sector
+
+    /// @}
+
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
+    SectorInfo() :
+    name(), isf(), alpha_power(), dim()
+    {}
+
+    /// Constructor with data
+    SectorInfo(const string& iName, const InitialStateFlavors& iIsf, const int iAlphaPow, const size_t iDim) :
+    name(iName), isf(iIsf), alpha_power(iAlphaPow), dim(iDim)
+    {}
+
+    /// Copy constructor
+    SectorInfo(const SectorInfo& that) :
+    name(that.name), isf(that.isf), alpha_power(that.alpha_power), dim(that.dim)
+    {}
+
+    /// Destructor
+    ~SectorInfo()
+    {}
+
+    /// @}
+
+    /// \name Output functions
+    /// @{
+
+    /// Print out the information about a sector
+    friend ostream& operator<<(ostream& stream, const SectorInfo& info)
+    {
+        return stream
+        << info.name << " "
+        << info.isf << ": "
+        << "a^" << info.alpha_power << ", "
+        << "dim=" << info.dim;
+    }
+
+    /// @}
+
+};
+
+/**
+ *
+ * \class XSection
+ * \brief Base object for cross section evaluation
+ *
+ */
+
 class XSection
 {
 public:
@@ -27,9 +99,10 @@ public:
 
     void SetEventBox(EventBox& event_box);
 
-    friend ostream& operator<<(ostream& stream, const XSection&);
+    //friend ostream& operator<<(ostream& stream, const XSection&);
 
     const CModel& model = _model;
+    const SectorInfo* info;
 
 protected:
 
@@ -44,53 +117,31 @@ protected:
     double _as_pi;
     double _muR;
     double _muF;
-    
+
     /// @}
     
 };
 
-//class XSectionFactory
-//{
-//public:
-//    static XSection* create(const size_t n);
-//    static void registerit(BaseSector* maker);
-//private:
-//    static vector<BaseSector*>& bookkeeper();
-//};
-
-
 /**
  *
- * \struct BaseSector
- * \brief  Container for information about sectors
+ * \struct BaseXSectionMaker
+ * \brief  Base class for sector booking
  *
  */
 
-struct BaseSector
+struct BaseXSectionMaker
 {
-
-    /// \name Data members
-    /// @{
-
-    string name;
-    InitialStateFlavors isf;
-    int alpha_power;
-    size_t dim;
-
-    /// @}
 
     /// \name Constructors and destructor
     /// @{
 
-    BaseSector();
-
-    BaseSector(const string& iname, const InitialStateFlavors& iisf, const int ialphapow, const size_t idim);
-
-    BaseSector(const BaseSector& that):
-    name(that.name), isf(that.isf), alpha_power(that.alpha_power), dim(that.dim)
+    BaseXSectionMaker()
     {}
 
-    ~BaseSector()
+    BaseXSectionMaker(const BaseXSectionMaker& that)
+    {}
+
+    ~BaseXSectionMaker()
     {}
 
     /// @}
@@ -99,34 +150,49 @@ struct BaseSector
     /// @{
 
     virtual XSection* create() = 0;
+    virtual const SectorInfo& info() const = 0;
 
-    friend ostream& operator<<(ostream& stream, const BaseSector& info)
-    {
-        return stream
-        << info.name << " "
-        << info.isf << ": "
-        << "a^" << info.alpha_power << ", "
-        << "dim=" << info.dim;
-    }
-    
     /// @}
-    
+
 };
 
 template<typename XSectionType>
-class Sector : public BaseSector
+class XSectionMaker : public BaseXSectionMaker
 {
-    static const string name;
-    static const InitialStateFlavors isf;
-    static const int alpha_power;
-    static const size_t dim;
+    static bool _isAlive;
+
 public:
-    Sector() : BaseSector(name, isf, alpha_power, dim) {}
-    virtual XSection* create() {return new XSectionType;};
+
+    static const SectorInfo _info;
+    XSectionMaker() :
+    BaseXSectionMaker()
+    {
+        if (_isAlive) cerr << "[Sector] : Creating multiple cross section makers. You sure?" << endl;
+        else _isAlive = true;
+        return;
+    }
+
+    ~XSectionMaker()
+    {
+        _isAlive = false;
+        return;
+    }
+
+    virtual XSection* create()
+    {
+        XSectionType* foo = new XSectionType;
+        foo->info = &_info;
+        return foo;
+    };
+
+    virtual const SectorInfo& info() const
+    {
+        return _info;
+    }
+
 };
 
+template<typename XSectionType>
+bool XSectionMaker<XSectionType>::_isAlive = false;
+
 #endif
-
-
-
-
