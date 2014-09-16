@@ -3,7 +3,7 @@
 
 #include "convolutions.h" // for FF
 #include "kinematic_variables.h"
-#include "cross_section.h"
+#include "xsection.h"
 
 class GstarGstarBorn
 {

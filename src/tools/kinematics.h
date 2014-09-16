@@ -15,6 +15,34 @@ using namespace std;
 
 /**
  *
+ * \class Momenta
+ * \brief Container for the set of momenta in an event
+ *
+ * With respect to a typedef, this class has the advantage that it overloads
+ * vector<FourVector>'s operator[] so that the numbering of momenta is the
+ * usual one starting from 1.
+ *
+ */
+
+class Momenta : public vector<FourVector>
+{
+
+public:
+
+    const FourVector& operator[](const size_t& i) const
+    {
+        return vector<FourVector>::operator[](i-1);
+    }
+
+    FourVector& operator[](const size_t& i)
+    {
+        return vector<FourVector>::operator[](i-1);
+    }
+
+};
+
+/**
+ *
  * \class KinematicInvariants
  * \brief Container for kinematic invariants
  *
@@ -30,7 +58,7 @@ public:
 
     /// Default constructor
     KinematicInvariants(const size_t n = 0) :
-    _n(n), _s(), _q()
+    _n(n), _s(n), _q(n)
     {
         for (size_t i = 0; i < _n; ++i)
         {
@@ -46,14 +74,14 @@ public:
     {}
 
     /// Constructor from momentum set
-    KinematicInvariants(const vector<FourVector>& p) :
+    KinematicInvariants(const Momenta& p) :
     _n(p.size()), _s(p.size()), _q(p.size())
     {
-        const double s12 = s(p[0],p[1]);
+        const double s12 = s(p[1],p[2]);
         for (size_t i = 0; i < _n; ++i)
             for (size_t j = 0; j < _n-i; ++j)
             {
-                _s[i].push_back(s(p[i],p[j]));
+                _s[i].push_back(s(p[i+1],p[j+1]));
                 _q[i].push_back(_s[i][j]/s12);
             }
         return;
@@ -69,16 +97,16 @@ public:
     /// @{
 
     /// Computes the kinematic invariants based on a set of momenta
-    void set(const vector<FourVector>& p)
+    void set(const Momenta& p)
     {
         // Checks whether it is necessary to resize matrices
         if ( _n != p.size() ) resize(p.size());
         // Fills matrices with new values
-        const double s12 = s(p[0],p[1]);
+        const double s12 = s(p[1],p[2]);
         for (size_t i = 0; i < _n; ++i)
             for (size_t j = 0; j < _n-i; ++j)
             {
-                _s[i][j]=s(p[i],p[j]);
+                _s[i][j]=s(p[i+1],p[j+1]);
                 _q[i][j]=_s[i][j]/s12;
             }
         return;

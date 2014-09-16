@@ -16,7 +16,7 @@
 		56A6B46C19C2E82300400267 /* event_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B46B19C2E5DA00400267 /* event_test.cpp */; };
 		56A6B46D19C2E82300400267 /* event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840F19B5EA720034E0DD /* event.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
 		56A6B46E19C2E8DC00400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
-		56E358F119B74507004E03CA /* cross_section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* cross_section.cpp */; };
+		56E358F119B74507004E03CA /* xsection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* xsection.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
 		56E358F319B74507004E03CA /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826919B5EA710034E0DD /* process.cpp */; };
 		56E358F419B74507004E03CA /* production.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826B19B5EA710034E0DD /* production.cpp */; };
@@ -52,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5620E3E419C72C330060E9BB /* bjorken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bjorken.h; sourceTree = "<group>"; };
+		5620E3E519C72C540060E9BB /* parametrizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parametrizations.h; sourceTree = "<group>"; };
 		56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libbottomfusion copy.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B45119BE0B2C00400267 /* constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constants.cpp; sourceTree = "<group>"; };
 		56A6B45319BF58B800400267 /* fourvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector.cpp; sourceTree = "<group>"; };
@@ -269,8 +271,8 @@
 		56B1826119B5EA710034E0DD /* HPL4else.f */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.fortran; path = HPL4else.f; sourceTree = "<group>"; };
 		56B1826219B5EA710034E0DD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		56B1826419B5EA710034E0DD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		56B1826519B5EA710034E0DD /* cross_section.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cross_section.cpp; sourceTree = "<group>"; };
-		56B1826619B5EA710034E0DD /* cross_section.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cross_section.h; sourceTree = "<group>"; };
+		56B1826519B5EA710034E0DD /* xsection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xsection.cpp; sourceTree = "<group>"; };
+		56B1826619B5EA710034E0DD /* xsection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xsection.h; sourceTree = "<group>"; };
 		56B1826719B5EA710034E0DD /* decay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = decay.cpp; sourceTree = "<group>"; };
 		56B1826819B5EA710034E0DD /* decay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decay.h; sourceTree = "<group>"; };
 		56B1826919B5EA710034E0DD /* process.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = process.cpp; sourceTree = "<group>"; };
@@ -1133,8 +1135,8 @@
 			isa = PBXGroup;
 			children = (
 				56B1826419B5EA710034E0DD /* CMakeLists.txt */,
-				56B1826519B5EA710034E0DD /* cross_section.cpp */,
-				56B1826619B5EA710034E0DD /* cross_section.h */,
+				56B1826519B5EA710034E0DD /* xsection.cpp */,
+				56B1826619B5EA710034E0DD /* xsection.h */,
 				56B1826719B5EA710034E0DD /* decay.cpp */,
 				56B1826819B5EA710034E0DD /* decay.h */,
 				56B1826919B5EA710034E0DD /* process.cpp */,
@@ -1750,6 +1752,8 @@
 				56B1841819B5EA720034E0DD /* hub.hpp */,
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
 				56ACB9DE19B9D2F100B67E27 /* kinematics.h */,
+				5620E3E519C72C540060E9BB /* parametrizations.h */,
+				5620E3E419C72C330060E9BB /* bjorken.h */,
 				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
 				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
 				56A6B45619C04DEF00400267 /* kinematic_variables.h */,
@@ -2020,7 +2024,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56E358F119B74507004E03CA /* cross_section.cpp in Sources */,
+				56E358F119B74507004E03CA /* xsection.cpp in Sources */,
 				56E358F219B74507004E03CA /* decay.cpp in Sources */,
 				56E358F319B74507004E03CA /* process.cpp in Sources */,
 				56E358F419B74507004E03CA /* production.cpp in Sources */,
@@ -2319,6 +2323,7 @@
 				56A6B46719C1BF5400400267 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		56B17EC619B5EA090034E0DD /* Build configuration list for PBXProject "ehixs" */ = {
 			isa = XCConfigurationList;

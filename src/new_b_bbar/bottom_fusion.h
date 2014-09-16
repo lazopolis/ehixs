@@ -6,7 +6,7 @@
 
 // including base class
 #include "production.h"
-#include "cross_section.h"
+#include "xsection.h"
 #include "bottom_fusion_me.h"
 
 class BottomFusion : public Production

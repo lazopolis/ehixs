@@ -1,28 +1,26 @@
-
-
+/**
+ *
+ * \file    production.h
+ * \ingroup core
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    September 2014
+ *
+ */
 
 #ifndef PRODUCTION_H
 #define PRODUCTION_H
 
 #include <iostream>
-using namespace std;
-
-
 #include "model.h"
-//#include "chaplin.h"
-//#include "fvector.h"
-//#include "CConstants.h"
 #include "cut.h"
 #include "interface_to_amplitudes.h"
 #include "user_interface.h"
 #include "luminosity.h"
 #include "hub.hpp"
-//#include "Decay.h"
-//#include "VegasAdaptor.h"
-
-//#include "momenta.h"
 #include "event.h"
-#include "cross_section.h"
+#include "xsection.h"
+using namespace std;
 
 ///\class Production
 class Production
@@ -33,9 +31,21 @@ public:
     /// \name Constructors and destructor
     /// @{
 
+    /// Default constructor
     Production() :
     event_box(), xx_vegas(NULL), cuts_(), the_xs_(NULL), sectors()
     {}
+
+    /// Copy constructor
+    Production(const Production& that) :
+    event_box(that.event_box), xx_vegas(that.xx_vegas), cuts_(that.cuts_), the_xs_(that.the_xs_), sectors(that.sectors)
+    {}
+
+    /// Destructor
+    ~Production()
+    {
+        delete the_xs_;
+    }
 
     /// @}
 
@@ -67,18 +77,16 @@ public:
     void info();
     void xml_info(const char* output_fname);
 
-public:// data
-	
     EventBox event_box;
 
-protected:// data
+protected:
 
     double* xx_vegas;
     CutBox cuts_;
     XSection* the_xs_;
     vector<BaseXSectionMaker*> sectors;
 
-protected://methods
+private:
 
     void find_the_xs(const UserInterface& UI);
 

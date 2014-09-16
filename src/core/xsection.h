@@ -1,19 +1,21 @@
-#ifndef CROSS_SECTION_H
-#define CROSS_SECTION_H
+/**
+ *
+ * \file    xsection.h
+ * \ingroup core
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    September 2014
+ *
+ */
+
+#ifndef XSECTION_H
+#define XSECTION_H
 
 #include <map>
 #include <string>
-#include "convolutions.h"
-//#include "luminosity.h"
-//#include "event.h"
-//#include "production.h"
-#include "model.h"
-#include "fourvector.h"
+#include "convolutions.h"   // InitialStateFlavors, EventBox, NewLuminosity
+#include "model.h"          // Model
 using namespace std;
-
-struct BaseXSectionMaker;
-template<typename XSectionType>
-class XSectionMaker;
 
 /**
  *
@@ -99,8 +101,6 @@ public:
 
     void SetEventBox(EventBox& event_box);
 
-    //friend ostream& operator<<(ostream& stream, const XSection&);
-
     const CModel& model = _model;
     const SectorInfo* info;
 
@@ -125,7 +125,7 @@ protected:
 /**
  *
  * \struct BaseXSectionMaker
- * \brief  Base class for sector booking
+ * \brief  Base class for booking cross sections
  *
  */
 
@@ -135,12 +135,15 @@ struct BaseXSectionMaker
     /// \name Constructors and destructor
     /// @{
 
+    /// Default constructor
     BaseXSectionMaker()
     {}
 
+    /// Copy constructor
     BaseXSectionMaker(const BaseXSectionMaker& that)
     {}
 
+    /// Destructor
     ~BaseXSectionMaker()
     {}
 
@@ -149,50 +152,74 @@ struct BaseXSectionMaker
     /// \name Member functions
     /// @{
 
+    /// Calls the constructor for a specific type of cross section
     virtual XSection* create() = 0;
+
+    /// Returns information about the cross section
     virtual const SectorInfo& info() const = 0;
 
     /// @}
 
 };
 
+/**
+ *
+ * \struct XSectionMaker
+ * \brief  Templatized creator object for different types of cross sections
+ *
+ */
+
 template<typename XSectionType>
-class XSectionMaker : public BaseXSectionMaker
+struct XSectionMaker : public BaseXSectionMaker
 {
-    static bool _isAlive;
 
 public:
 
-    static const SectorInfo _info;
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
     XSectionMaker() :
     BaseXSectionMaker()
-    {
-        if (_isAlive) cerr << "[Sector] : Creating multiple cross section makers. You sure?" << endl;
-        else _isAlive = true;
-        return;
-    }
+    {}
 
+    /// Copy constructor
+    XSectionMaker(const XSectionMaker& that) :
+    BaseXSectionMaker()
+    {}
+
+    /// Destructor
     ~XSectionMaker()
-    {
-        _isAlive = false;
-        return;
-    }
+    {}
 
+    /// @}
+
+    /// \name Member functions
+    /// @{
+
+    /// Calls the constructor for a specific type of cross section
     virtual XSection* create()
     {
         XSectionType* foo = new XSectionType;
         foo->info = &_info;
-        return foo;
+        return dynamic_cast<XSection*>(foo);
     };
 
+    /// Returns information about the cross section
     virtual const SectorInfo& info() const
     {
         return _info;
     }
 
-};
+    /// @}
 
-template<typename XSectionType>
-bool XSectionMaker<XSectionType>::_isAlive = false;
+    /// \name Data members
+    /// @{
+
+    static const SectorInfo _info;  /// < Information about this specific type of cross section
+
+    /// @}
+
+};
 
 #endif

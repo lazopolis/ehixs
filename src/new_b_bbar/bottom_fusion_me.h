@@ -1,8 +1,8 @@
 #ifndef BOTTOM_FUSION_ME_H
 #define BOTTOM_FUSION_ME_H
 
-#include "cross_section.h"
-#include "bottom_fusion_kinematics.h"
+#include "xsection.h"
+#include "kinematicvariables.h"
 
 /**
  *
@@ -95,7 +95,7 @@ protected:
     /// \name Data members
     /// @{
     
-    BottomFusionKinematics<0> kk_;
+    KinematicVariables<OneXGenerator,deltaPG> kk_;
     
     /// @}
 

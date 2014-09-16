@@ -1,11 +1,11 @@
 /**
  *
- * \file   fourvector.h
- * \author Achilleas, Romain, Simone
- * \date   September 2014
- * Created by Achilleas in Apr 2009
- * Revised by Romain in Jan 2012
- * Revised by Simone in Sep 2014
+ * \file    fourvector.h
+ * \ingroup tools
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \author  Romain Mueller
+ * \date    September 2014
  *
  */
 
@@ -64,8 +64,14 @@ public:
     array<double, 4>({p0,p1,p2,p3})
     {}
 
+    /// Constructor from ordinary array
     FourVector(const double p[4]) :
     array<double, 4>({p[0],p[1],p[2],p[3]})
+    {}
+
+    /// Constructor from STL array
+    FourVector(const array<double,4> p) :
+    array<double, 4>(p)
     {}
 
     /// Copy constructor

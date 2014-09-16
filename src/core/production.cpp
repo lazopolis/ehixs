@@ -1,3 +1,13 @@
+/**
+ *
+ * \file    production.cpp
+ * \ingroup core
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    September 2014
+ *
+ */
+
 #include "production.h"
 #include <stdlib.h> //: for exit()
 
@@ -39,7 +49,7 @@ void Production::Configure(const UserInterface& UI)
 }
 
 
-void Production::find_the_xs(const UserInterface & UI)
+void Production::find_the_xs(const UserInterface& UI)
 {
     if (UI.sector_for_production=="none")
     {
@@ -79,21 +89,19 @@ size_t Production::dimension_of_integration()
 
 void Production::set_up_the_hatch(TheHatch* the_hatch)
 {
-
     //: setting up the hatch array that will be used to store
     //:the vegas variables we need
     xx_vegas = the_hatch->RequestPtr();
-    for (unsigned i=0;i<dimension_of_integration();i++)
+    for (size_t i = 0; i < dimension_of_integration(); ++i)
         the_hatch->RequestVar("VEGAS");
-
-     
+    return;
 }
 
 void Production::evaluate_sector()
 {
     event_box.clear();
     the_xs_->Evaluate(xx_vegas);
-    
+    return;
 }
 
 void Production::info()
@@ -106,5 +114,5 @@ void Production::info()
 
 void Production::xml_info(const char * output_fname)
 {
-    
+    //???!?!
 }

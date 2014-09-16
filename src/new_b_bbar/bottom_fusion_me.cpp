@@ -23,9 +23,8 @@ NewLuminosity* BottomFusion_bb::AllocateLuminosity(const UserInterface& UI)
 void BottomFusion_bb_Delta::Configure()
 {
     //refactor: make a ConfigureBase function and move smin setting there
-    const double smin = pow(mh_,2.0);
-    cout<<"\n *** mh_sq = "<<smin<<endl;
-    kk_.setBoundaries(smin,_smax);
+    cout<<"\n *** mh = "<<mh_<<endl;
+    kk_.setParameters(_smax,vector<double>({mh_}));
     
     const double yukawa_bottom = 1.0;
     prefactor_ = consts::Pi * pow(yukawa_bottom,2.0)/2./QCD::Nc/pow(mh_,2.)
@@ -45,7 +44,7 @@ void BottomFusion_bb_Delta::Evaluate(double* xx_vegas)
         * 1.0/(2.0*kk_.s(1,2)) //flux
         * me_sq
         ;
-        event_box_->add(sigma, kk_.ps);
+        event_box_->add(sigma, kk_.p);
     }
     else
     {

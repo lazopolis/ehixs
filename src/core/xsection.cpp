@@ -1,7 +1,15 @@
+/**
+ *
+ * \file    xsection.cpp
+ * \ingroup core
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    September 2014
+ *
+ */
 
-#include "cross_section.h"
+#include "xsection.h"
 #include "production.h"
-#include <sstream>
 
 void XSection::initialize(const UserInterface& UI)
 {

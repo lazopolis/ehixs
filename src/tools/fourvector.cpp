@@ -1,16 +1,15 @@
 /**
  *
- * \file   fourvector.cpp
- * \author Achilleas, Romain, Simone
- * \date   September 2014
- * Created by Achilleas in Apr 2009
- * Revised by Romain in Jan 2012
- * Revised by Simone in Sep 2014
+ * \file    fourvector.cpp
+ * \ingroup tools
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \author  Romain Mueller
+ * \date    September 2014
  *
  */
 
 #include "fourvector.h"
-using namespace std;
 
 /// Cycles between axes
 Axis operator+(const Axis& a, const Axis& b)
