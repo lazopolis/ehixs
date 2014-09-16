@@ -120,5 +120,5 @@ add_executable(
 target_link_libraries(
                     fourvector_test
                     gtest
-                    tools
+                    kinematics
                     )

@@ -8,6 +8,8 @@
 #include "kinematics.h"
 using namespace std;
 
+/// \deprecated You should use kinematicvariables.h instead
+
 class KinematicVariables : public KinematicInvariants, vector<FourMomentum>
 {
 public:

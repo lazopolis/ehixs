@@ -10,12 +10,10 @@
 		56A6B44719BD9DD700400267 /* bottom_fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */; };
 		56A6B44819BD9DD700400267 /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
 		56A6B45219BE0B2C00400267 /* constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45119BE0B2C00400267 /* constants.cpp */; };
-		56A6B45419BF58B800400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; };
 		56A6B45719C04DEF00400267 /* kinematic_variables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45619C04DEF00400267 /* kinematic_variables.h */; };
 		56A6B45919C04EC500400267 /* kinematicvariables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45819C04EC500400267 /* kinematicvariables.h */; };
 		56A6B46C19C2E82300400267 /* event_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B46B19C2E5DA00400267 /* event_test.cpp */; };
 		56A6B46D19C2E82300400267 /* event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840F19B5EA720034E0DD /* event.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
-		56A6B46E19C2E8DC00400267 /* fourvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45319BF58B800400267 /* fourvector.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
 		56E358F119B74507004E03CA /* xsection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* xsection.cpp */; };
 		56E358F219B74507004E03CA /* decay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826719B5EA710034E0DD /* decay.cpp */; };
 		56E358F319B74507004E03CA /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826919B5EA710034E0DD /* process.cpp */; };
@@ -52,19 +50,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5620E3E419C72C330060E9BB /* bjorken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bjorken.h; sourceTree = "<group>"; };
-		5620E3E519C72C540060E9BB /* parametrizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parametrizations.h; sourceTree = "<group>"; };
+		5620E3E819C87D1C0060E9BB /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = src/kinematics/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		5620E3E919C87F2E0060E9BB /* bjorken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bjorken.cpp; sourceTree = "<group>"; };
+		5620E3EA19C87F2E0060E9BB /* bjorken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bjorken.h; sourceTree = "<group>"; };
+		5620E3EB19C87F2E0060E9BB /* fourvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector.cpp; sourceTree = "<group>"; };
+		5620E3EC19C87F2E0060E9BB /* fourvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fourvector.h; sourceTree = "<group>"; };
+		5620E3ED19C87F2E0060E9BB /* invariants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = invariants.cpp; sourceTree = "<group>"; };
+		5620E3EE19C87F2E0060E9BB /* invariants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = invariants.h; sourceTree = "<group>"; };
+		5620E3EF19C87F2F0060E9BB /* parametrizations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parametrizations.cpp; sourceTree = "<group>"; };
+		5620E3F019C87F2F0060E9BB /* parametrizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parametrizations.h; sourceTree = "<group>"; };
 		56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libbottomfusion copy.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B45119BE0B2C00400267 /* constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constants.cpp; sourceTree = "<group>"; };
-		56A6B45319BF58B800400267 /* fourvector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector.cpp; sourceTree = "<group>"; };
 		56A6B45619C04DEF00400267 /* kinematic_variables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematic_variables.h; sourceTree = "<group>"; };
 		56A6B45819C04EC500400267 /* kinematicvariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematicvariables.h; sourceTree = "<group>"; };
 		56A6B45A19C1BF2800400267 /* fourvector_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector_test.cpp; sourceTree = "<group>"; };
 		56A6B45F19C1BF5400400267 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B46A19C2E4C100400267 /* xcodetest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xcodetest.h; sourceTree = "<group>"; };
 		56A6B46B19C2E5DA00400267 /* event_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = event_test.cpp; sourceTree = "<group>"; };
-		56ACB9DE19B9D2F100B67E27 /* kinematics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = kinematics.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		56ACB9DF19B9FBB700B67E27 /* fourvector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fourvector.h; sourceTree = "<group>"; };
 		56B1818519B5EA710034E0DD /* info.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = info.txt; sourceTree = "<group>"; };
 		56B1818619B5EA710034E0DD /* MSTW2008nnlo68cl_0_0_0_0_0_100_100_5 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MSTW2008nnlo68cl_0_0_0_0_0_100_100_5; sourceTree = "<group>"; };
 		56B1818719B5EA710034E0DD /* MSTW2008nnlo68cl_0_0_0_0_0_12.5_12.5_5 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MSTW2008nnlo68cl_0_0_0_0_0_12.5_12.5_5; sourceTree = "<group>"; };
@@ -742,6 +744,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5620E3E719C87CBE0060E9BB /* kinematics */ = {
+			isa = PBXGroup;
+			children = (
+				5620E3E919C87F2E0060E9BB /* bjorken.cpp */,
+				5620E3EA19C87F2E0060E9BB /* bjorken.h */,
+				5620E3E819C87D1C0060E9BB /* CMakeLists.txt */,
+				5620E3EB19C87F2E0060E9BB /* fourvector.cpp */,
+				5620E3EC19C87F2E0060E9BB /* fourvector.h */,
+				5620E3ED19C87F2E0060E9BB /* invariants.cpp */,
+				5620E3EE19C87F2E0060E9BB /* invariants.h */,
+				5620E3EF19C87F2F0060E9BB /* parametrizations.cpp */,
+				5620E3F019C87F2F0060E9BB /* parametrizations.h */,
+			);
+			path = kinematics;
+			sourceTree = "<group>";
+		};
 		56B17EC219B5EA090034E0DD = {
 			isa = PBXGroup;
 			children = (
@@ -867,6 +885,7 @@
 				56B1839D19B5EA720034E0DD /* gtests */,
 				56B183B519B5EA720034E0DD /* ihixs */,
 				56B183B919B5EA720034E0DD /* ihixs.cpp */,
+				5620E3E719C87CBE0060E9BB /* kinematics */,
 				56B183BA19B5EA720034E0DD /* legacy */,
 				56B183D819B5EA720034E0DD /* mincuba */,
 				56B183E619B5EA720034E0DD /* models */,
@@ -1135,14 +1154,14 @@
 			isa = PBXGroup;
 			children = (
 				56B1826419B5EA710034E0DD /* CMakeLists.txt */,
-				56B1826519B5EA710034E0DD /* xsection.cpp */,
-				56B1826619B5EA710034E0DD /* xsection.h */,
 				56B1826719B5EA710034E0DD /* decay.cpp */,
 				56B1826819B5EA710034E0DD /* decay.h */,
 				56B1826919B5EA710034E0DD /* process.cpp */,
 				56B1826A19B5EA710034E0DD /* process.h */,
 				56B1826B19B5EA710034E0DD /* production.cpp */,
 				56B1826C19B5EA710034E0DD /* production.h */,
+				56B1826519B5EA710034E0DD /* xsection.cpp */,
+				56B1826619B5EA710034E0DD /* xsection.h */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -1743,17 +1762,12 @@
 				56B1840E19B5EA720034E0DD /* epsilon_series.h */,
 				56B1840F19B5EA720034E0DD /* event.cpp */,
 				56B1841019B5EA720034E0DD /* event.h */,
-				56A6B45319BF58B800400267 /* fourvector.cpp */,
-				56ACB9DF19B9FBB700B67E27 /* fourvector.h */,
 				56B1841419B5EA720034E0DD /* histogram.cpp */,
 				56B1841519B5EA720034E0DD /* histogram.h */,
 				56B1841619B5EA720034E0DD /* histograms.hpp */,
 				56B1841719B5EA720034E0DD /* hub.cpp */,
 				56B1841819B5EA720034E0DD /* hub.hpp */,
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
-				56ACB9DE19B9D2F100B67E27 /* kinematics.h */,
-				5620E3E519C72C540060E9BB /* parametrizations.h */,
-				5620E3E419C72C330060E9BB /* bjorken.h */,
 				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
 				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
 				56A6B45619C04DEF00400267 /* kinematic_variables.h */,
@@ -2014,7 +2028,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56A6B46E19C2E8DC00400267 /* fourvector.cpp in Sources */,
 				56A6B46D19C2E82300400267 /* event.cpp in Sources */,
 				56A6B46C19C2E82300400267 /* event_test.cpp in Sources */,
 			);
@@ -2055,7 +2068,6 @@
 				56E3590F19B745D3004E03CA /* epsilon_series.cpp in Sources */,
 				56E3591019B745D3004E03CA /* event.cpp in Sources */,
 				56E3591219B745D3004E03CA /* histogram.cpp in Sources */,
-				56A6B45419BF58B800400267 /* fourvector.cpp in Sources */,
 				56E3591319B745D3004E03CA /* hub.cpp in Sources */,
 				56E3591419B745D3004E03CA /* kinematic_invariants.cpp in Sources */,
 				56E3591519B745D3004E03CA /* user_interface.cpp in Sources */,

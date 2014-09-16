@@ -1,7 +1,7 @@
 /**
  *
  * \file    fourvector.h
- * \ingroup tools
+ * \ingroup kinematics
  * \author  Achilleas Lazopoulos
  * \author  Simone Lionetti
  * \author  Romain Mueller
@@ -213,6 +213,34 @@ private:
 
     /// @}
 
+};
+
+/**
+ *
+ * \class Momenta
+ * \brief Container for the set of momenta in an event
+ *
+ * With respect to a typedef, this class has the advantage that it overloads
+ * vector<FourVector>'s operator[] so that the numbering of momenta is the
+ * usual one starting from 1.
+ *
+ */
+
+class Momenta : public vector<FourVector>
+{
+
+public:
+
+    const FourVector& operator[](const size_t& i) const
+    {
+        return vector<FourVector>::operator[](i-1);
+    }
+
+    FourVector& operator[](const size_t& i)
+    {
+        return vector<FourVector>::operator[](i-1);
+    }
+    
 };
 
 #endif

@@ -1,13 +1,16 @@
 /**
+ *
  * \file    kinematicvariables.h
  * \author  Simone Lionetti
  * \date    September 2014
+ *
  */
 
-#ifndef KINEMATIC_VARIABLES_H
-#define KINEMATIC_VARIABLES_H
+#ifndef KINEMATICVARIABLES_H
+#define KINEMATICVARIABLES_H
 
-#include "kinematics.h"
+#include <stdlib.h>
+#include "invariants.h"
 #include "bjorken.h"
 #include "parametrizations.h"
 using namespace std;
@@ -16,7 +19,7 @@ using namespace std;
  *
  * \class KinematicVariables
  * \brief Manages generic collider kinematic variables
- * \note  Should the name be changed to ColliderKinematics?
+ *
  * This class contains four momenta, invariants and Bjorken xs for the current phase space point
  * along with the information needed to generate them from Vegas
  *
@@ -31,10 +34,14 @@ public:
     /// \name Data members
     /// @{
 
-    /// Return the first Bjorken x
-    const double& x1 = _x.x1;
-    /// Return the second Bjorken x
-    const double& x2 = _x.x2;
+    const double& x1 = _x.x1;   /// < Alias for the 1st Bjorken x
+    const double& x2 = _x.x2;   /// < Alias for the 2nd Bjorken x
+
+    /// Four-momenta, conventions are:
+    /// - p[1] = parton from hadron 1
+    /// - p[2] = parton from hadron 2
+    /// - p[i>2] = particles in the final state
+    const Momenta& p = _p;
 
     /// @}
 
@@ -43,14 +50,26 @@ public:
 
     /// Default constructor
     KinematicVariables() :
-    KinematicInvariants(), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x)
-    {}
+    KinematicInvariants(), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x),
+    _S(), _m(), _x(), _p(), _jacobian()
+    {
+        // Check consistency of generators passed by template
+        if ( _xGen.Nran() + _pGen.Nran() != Ndof() )
+        {
+            cerr << "Generators are not compatible with the kinematic structure." << endl;
+            exit(1);
+        }
+        // Prepare array of four-momenta of the correct length
+        _p.resize(Ntot());
+        return;
+    }
 
     /// Copy constructor
-    //KinematicVariables(const KinematicVariables& that) :
-    //KinematicInvariants(that), _S(that._S), _m(that._m), _x(that._x), _p(that._p)
-    //{}
-    
+    KinematicVariables(const KinematicVariables& that) :
+    KinematicInvariants(that), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x),
+    _S(that._S), _m(that._m), _x(that._x), _p(that._p), _jacobian(that._jacobian)
+    {}
+
     /// Destructor
     ~KinematicVariables()
     {}
@@ -60,29 +79,17 @@ public:
     /// \name Input/output functions
     /// @{
 
-    /// Minimum number of final state particles
-    //virtual const size_t minFSparticles(void) const = 0;
-
-    /// Number of extra final state partons from real emission
-    //virtual const size_t realEmissions(void) const = 0;
-
     /// Total number of final state particles
-    //const size_t nFS(void) const
-    //{
-    //    return minFSparticles()+realEmissions();
-    //}
+    const size_t Ntot(void) const
+    {
+        return _pGen.Nfs()+2;
+    }
 
     /// Number of degrees of freedom
-    //const size_t nDOF(void) const
-    //{
-    //    return 2 + 3 * nFS() - 4;
-    //}
-
-    /// Four-momenta, conventions are:
-    /// - p[1] = parton from hadron 1
-    /// - p[2] = parton from hadron 2
-    /// - p[i>2] = particles in the final state
-    const Momenta& p = _p;
+    const size_t Ndof(void) const
+    {
+        return 2 + 3 * _pGen.Nfs() - 4;
+    }
 
     /// Generate kinematics according to random variables
     virtual void generate(const double* const randoms);
@@ -98,10 +105,9 @@ public:
         _m = m;
         double sumOfMasses = 0.;
         for (vector<double>::const_iterator it = _m.begin(); it < _m.end(); ++it)
-            sumOfMasses = (*it)*(*it);
+            sumOfMasses += (*it)*(*it);
         _xGen.setParameters(sumOfMasses/_S);
         _pGen.setParameters(_S,_m);
-        _p.resize(_pGen.N());
         return;
     }
 
@@ -112,23 +118,20 @@ protected:
     /// \name Data members
     /// @{
     
+    xGenerator _xGen;   /// < Generator for the Bjorken x variables
+    pGenerator _pGen;   /// < Generator for the set of four-momenta
+
     double _S;          /// < Center of mass collider energy squared
     vector<double> _m;  /// < Minimum value of the ratio smin/S = x1*x2
     Bjorken _x;         /// < Bjorken x variables
     Momenta _p;         /// < Momenta of particles
     double _jacobian;   /// < Jacobian
-    xGenerator _xGen;
-    pGenerator _pGen;
 
     /// @}
 
-    /// \name Auxiliary functions
-    /// @{
-    
-    ///@}
-    
 };
 
+/// Generate kinematics according to random variables
 template <class xGenerator, class pGenerator>
 inline void KinematicVariables<xGenerator,pGenerator>::generate(const double* const randoms)
 {
@@ -138,75 +141,5 @@ inline void KinematicVariables<xGenerator,pGenerator>::generate(const double* co
     set(_p);
     return;
 }
-
-
-/**
- *
- * \class DeltaKinematics
- * \brief Collider kinematic variables for delta-like processes
- *
- * Manages kinematics for processes with one and only one final-state particle
- * This information is sufficient to completely determine the momenta
- *
- */
-
-//template<class xGenerator>
-//class DeltaKinematics : public KinematicVariables<xGenerator,deltaPG>
-//{
-//
-//public:
-//
-//    /// \name Constructors and destructor
-//    /// @{
-//
-//    /// Default constructor
-//    DeltaKinematics() :
-//    KinematicVariables()
-//    {}
-//
-//    /// Copy constructor
-//    DeltaKinematics(const DeltaKinematics& that) :
-//    KinematicVariables(that)
-//    {}
-//
-//    /// Destructor
-//    ~DeltaKinematics()
-//    {}
-//
-//    /// @}
-//
-//    /// \name Input/output functions
-//    /// @{
-//
-//    /// Minimum number of final state particles
-//    const size_t minFSparticles(void) const
-//    {
-//        return 3;
-//    }
-//
-//    /// Number of extra final state partons from real emission
-//    const size_t realEmissions(void) const
-//    {
-//        return 0;
-//    }
-//
-//    /// Generate kinematics according to random variables
-//    void generate(const double* const randoms);
-//
-//    /// @}
-//
-//};
-//
-//template<class xGenerator>
-//inline void DeltaKinematics<xGenerator>::generate(const double* const randoms)
-//{
-//    const Generated<Bjorken> fooX = xGenerator(_smin_S,randoms);
-//    _x = fooX.value;
-//    const Generated<Momenta> fooP = pGenerator(NULL);
-//    _p = fooP.value;
-//    set(_p);
-//    _jacobian = fooX.jacobian * fooP.jacobian;
-//    return;
-//}
 
 #endif

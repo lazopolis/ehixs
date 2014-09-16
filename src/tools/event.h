@@ -12,7 +12,7 @@
 #define EVENT_H
 
 #include <ostream>
-#include "FourVector.h"
+#include "fourvector.h"
 using namespace std;
 
 /**

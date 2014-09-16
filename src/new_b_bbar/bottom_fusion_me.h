@@ -95,7 +95,7 @@ protected:
     /// \name Data members
     /// @{
     
-    KinematicVariables<OneXGenerator,deltaPG> kk_;
+    KinematicVariables<OneXGenerator,DeltaPG> kk_;
     
     /// @}
 

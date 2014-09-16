@@ -68,6 +68,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/decay_wwzz
                     ${EHIXS_SRC_DIR}/decay_bb
                     ${EHIXS_SRC_DIR}/tools
+                    ${EHIXS_SRC_DIR}/kinematics
                     ${EHIXS_SRC_DIR}/models
                     ${EHIXS_SRC_DIR}/core
                     ${EHIXS_SRC_DIR}/pdf
@@ -98,6 +99,7 @@ add_subdirectory(models)
 add_subdirectory(core)
 add_subdirectory(pdf)
 add_subdirectory(avh_olo)
+add_subdirectory(kinematics)
 #
 #   testing with gtests
 #
@@ -143,6 +145,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             decay_z_gamma 
             higgs_zerfal 
             decay_h_to_gamma_gamma
+            kinematics
             models
             tools
             #

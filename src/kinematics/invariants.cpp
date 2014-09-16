@@ -1,45 +1,18 @@
 /**
  *
- * \file   kinematics.h
- * \author Simone Lionetti
- * \date   September 2014
+ * \file    invariants.h
+ * \ingroup kinematics
+ * \author  Simone Lionetti
+ * \date    September 2014
  *
  */
 
-#ifndef KINEMATICS_H
-#define KINEMATICS_H
+#ifndef INVARIANTS_H
+#define INVARIANTS_H
 
 #include "fourvector.h"
 #include <vector>
 using namespace std;
-
-/**
- *
- * \class Momenta
- * \brief Container for the set of momenta in an event
- *
- * With respect to a typedef, this class has the advantage that it overloads
- * vector<FourVector>'s operator[] so that the numbering of momenta is the
- * usual one starting from 1.
- *
- */
-
-class Momenta : public vector<FourVector>
-{
-
-public:
-
-    const FourVector& operator[](const size_t& i) const
-    {
-        return vector<FourVector>::operator[](i-1);
-    }
-
-    FourVector& operator[](const size_t& i)
-    {
-        return vector<FourVector>::operator[](i-1);
-    }
-
-};
 
 /**
  *

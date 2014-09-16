@@ -1,7 +1,7 @@
 /**
  *
  * \file    fourvector.cpp
- * \ingroup tools
+ * \ingroup kinematics
  * \author  Achilleas Lazopoulos
  * \author  Simone Lionetti
  * \author  Romain Mueller
