@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef BJORKEN_H
-#define BJORKEN_H
+#ifndef KINEMATICS_BJORKEN_H
+#define KINEMATICS_BJORKEN_H
 
 #include "fourvector.h"
 #include <vector>

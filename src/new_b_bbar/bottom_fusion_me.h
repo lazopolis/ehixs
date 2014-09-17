@@ -2,7 +2,7 @@
 #define BOTTOM_FUSION_ME_H
 
 #include "xsection.h"
-#include "kinematicvariables.h"
+#include "variables.h"
 
 /**
  *

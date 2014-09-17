@@ -1,13 +1,14 @@
 /**
  *
- * \file   parametrizations.h
- * \author Simone Lionetti
- * \date   September 2014
+ * \file    parametrizations.h
+ * \ingroup kinematics
+ * \author  Simone Lionetti
+ * \date    September 2014
  *
  */
 
-#ifndef PARAMETRIZATIONS_H
-#define PARAMETRIZATIONS_H
+#ifndef KINEMATICS_PARAMETRIZATIONS_H
+#define KINEMATICS_PARAMETRIZATIONS_H
 
 #include "fourvector.h"
 #include <vector>
@@ -61,23 +62,11 @@ public:
     /// @{
 
     /// Sets the parameters needed for generation
-    virtual void setParameters(const double& S, const vector<double>& masses)
-    {
-        _E = sqrt(S)/2.;
-        _m = masses;
-        computeConstants();
-        return;
-    }
+    virtual void setParameters(const double& S, const vector<double>& masses);
 
     /// Generates the first two momenta that are common for all processes,
     /// then passes the job on to generateFSMomenta
-    virtual void operator()(const double* const randoms) const
-    {
-        _p[1] = x1 * _E * LightCone::n;
-        _p[2] = x2 * _E * LightCone::nbar;
-        generateFSMomenta(randoms);
-        return;
-    };
+    virtual void operator()(const double* const randoms) const;
 
     /// @}
 
@@ -201,34 +190,10 @@ public:
     /// @{
     
     /// Sets the intermediate variable _tau for computational speed gain
-    void computeConstants()
-    {
-        // Check number of masses passed to PGenerator::setParameters
-        if (_m.size() != 1)
-        {
-            cerr << "[ZlambdaPG] Error: a wrong number of masses arrived at the momenta generator.\n";
-            exit(1);
-        }
-        _tau = _m[0]*_m[0]/(4.*_E*_E);
-        return;
-    }
+    void computeConstants();
 
     /// Implements the parametrization
-    void generateFSMomenta(const double* const randoms) const
-    {
-        const double phi = 2.*consts::Pi*randoms[0];
-        const double lambda = randoms[1];
-        const double z = _tau / (x1*x2);
-        const double sllbar = sqrt(lambda*(1.-lambda))*x1*x2*_E;
-        _p[4] = (1.-z)*(
-                        (1.-lambda) * _p[1] +
-                        lambda * _p[2] +
-                        sllbar * LightCone::eperp(phi)
-                       );
-        _p[3] = _p[1] + _p[2] - _p[4];
-        // nothing to be done for jacobian = 1
-        return;
-    }
+    void generateFSMomenta(const double* const randoms) const;
 
     /// Returns the number of final-state particles
     size_t Nfs() const {return 2;}

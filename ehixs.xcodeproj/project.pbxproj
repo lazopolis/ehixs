@@ -10,8 +10,6 @@
 		56A6B44719BD9DD700400267 /* bottom_fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */; };
 		56A6B44819BD9DD700400267 /* bottom_fusion_me.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */; };
 		56A6B45219BE0B2C00400267 /* constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B45119BE0B2C00400267 /* constants.cpp */; };
-		56A6B45719C04DEF00400267 /* kinematic_variables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45619C04DEF00400267 /* kinematic_variables.h */; };
-		56A6B45919C04EC500400267 /* kinematicvariables.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A6B45819C04EC500400267 /* kinematicvariables.h */; };
 		56A6B46C19C2E82300400267 /* event_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56A6B46B19C2E5DA00400267 /* event_test.cpp */; };
 		56A6B46D19C2E82300400267 /* event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840F19B5EA720034E0DD /* event.cpp */; settings = {COMPILER_FLAGS = "-c"; }; };
 		56E358F119B74507004E03CA /* xsection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1826519B5EA710034E0DD /* xsection.cpp */; };
@@ -32,7 +30,6 @@
 		56E3591019B745D3004E03CA /* event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1840F19B5EA720034E0DD /* event.cpp */; };
 		56E3591219B745D3004E03CA /* histogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841419B5EA720034E0DD /* histogram.cpp */; };
 		56E3591319B745D3004E03CA /* hub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841719B5EA720034E0DD /* hub.cpp */; };
-		56E3591419B745D3004E03CA /* kinematic_invariants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */; };
 		56E3591519B745D3004E03CA /* user_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1841E19B5EA720034E0DD /* user_interface.cpp */; };
 		56E3591619B745D3004E03CA /* vegas_adaptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56B1842019B5EA720034E0DD /* vegas_adaptor.cpp */; };
 /* End PBXBuildFile section */
@@ -59,10 +56,9 @@
 		5620E3EE19C87F2E0060E9BB /* invariants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = invariants.h; sourceTree = "<group>"; };
 		5620E3EF19C87F2F0060E9BB /* parametrizations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parametrizations.cpp; sourceTree = "<group>"; };
 		5620E3F019C87F2F0060E9BB /* parametrizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parametrizations.h; sourceTree = "<group>"; };
+		5620E3F119C9A8670060E9BB /* variables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = variables.h; sourceTree = "<group>"; };
 		56A6B44E19BD9DD700400267 /* libbottomfusion copy.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libbottomfusion copy.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B45119BE0B2C00400267 /* constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constants.cpp; sourceTree = "<group>"; };
-		56A6B45619C04DEF00400267 /* kinematic_variables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematic_variables.h; sourceTree = "<group>"; };
-		56A6B45819C04EC500400267 /* kinematicvariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematicvariables.h; sourceTree = "<group>"; };
 		56A6B45A19C1BF2800400267 /* fourvector_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fourvector_test.cpp; sourceTree = "<group>"; };
 		56A6B45F19C1BF5400400267 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A6B46A19C2E4C100400267 /* xcodetest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xcodetest.h; sourceTree = "<group>"; };
@@ -640,7 +636,6 @@
 		56B183EB19B5EA720034E0DD /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion.cpp; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 1; };
 		56B183EE19B5EA720034E0DD /* bottom_fusion.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion.h; sourceTree = "<group>"; tabWidth = 4; };
-		56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion_kinematics.h; sourceTree = "<group>"; };
 		56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom_fusion_me.cpp; sourceTree = "<group>"; };
 		56B183F219B5EA720034E0DD /* bottom_fusion_me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom_fusion_me.h; sourceTree = "<group>"; };
 		56B183F319B5EA720034E0DD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -677,8 +672,6 @@
 		56B1841719B5EA720034E0DD /* hub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hub.cpp; sourceTree = "<group>"; };
 		56B1841819B5EA720034E0DD /* hub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = hub.hpp; sourceTree = "<group>"; };
 		56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interface_to_amplitudes.h; sourceTree = "<group>"; };
-		56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kinematic_invariants.cpp; sourceTree = "<group>"; };
-		56B1841B19B5EA720034E0DD /* kinematic_invariants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinematic_invariants.h; sourceTree = "<group>"; };
 		56B1841D19B5EA720034E0DD /* timekeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timekeeper.h; sourceTree = "<group>"; };
 		56B1841E19B5EA720034E0DD /* user_interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = user_interface.cpp; sourceTree = "<group>"; };
 		56B1841F19B5EA720034E0DD /* user_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = user_interface.h; sourceTree = "<group>"; };
@@ -756,6 +749,7 @@
 				5620E3EE19C87F2E0060E9BB /* invariants.h */,
 				5620E3EF19C87F2F0060E9BB /* parametrizations.cpp */,
 				5620E3F019C87F2F0060E9BB /* parametrizations.h */,
+				5620E3F119C9A8670060E9BB /* variables.h */,
 			);
 			path = kinematics;
 			sourceTree = "<group>";
@@ -1715,8 +1709,6 @@
 			children = (
 				56B183ED19B5EA720034E0DD /* bottom_fusion.cpp */,
 				56B183EE19B5EA720034E0DD /* bottom_fusion.h */,
-				56B183F019B5EA720034E0DD /* bottom_fusion_kinematics.h */,
-				56A6B45819C04EC500400267 /* kinematicvariables.h */,
 				56B183F119B5EA720034E0DD /* bottom_fusion_me.cpp */,
 				56B183F219B5EA720034E0DD /* bottom_fusion_me.h */,
 				56B183F319B5EA720034E0DD /* CMakeLists.txt */,
@@ -1768,9 +1760,6 @@
 				56B1841719B5EA720034E0DD /* hub.cpp */,
 				56B1841819B5EA720034E0DD /* hub.hpp */,
 				56B1841919B5EA720034E0DD /* interface_to_amplitudes.h */,
-				56B1841A19B5EA720034E0DD /* kinematic_invariants.cpp */,
-				56B1841B19B5EA720034E0DD /* kinematic_invariants.h */,
-				56A6B45619C04DEF00400267 /* kinematic_variables.h */,
 				56B1841D19B5EA720034E0DD /* timekeeper.h */,
 				56B1841E19B5EA720034E0DD /* user_interface.cpp */,
 				56B1841F19B5EA720034E0DD /* user_interface.h */,
@@ -1873,8 +1862,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56A6B45919C04EC500400267 /* kinematicvariables.h in Headers */,
-				56A6B45719C04DEF00400267 /* kinematic_variables.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2069,7 +2056,6 @@
 				56E3591019B745D3004E03CA /* event.cpp in Sources */,
 				56E3591219B745D3004E03CA /* histogram.cpp in Sources */,
 				56E3591319B745D3004E03CA /* hub.cpp in Sources */,
-				56E3591419B745D3004E03CA /* kinematic_invariants.cpp in Sources */,
 				56E3591519B745D3004E03CA /* user_interface.cpp in Sources */,
 				56E3591619B745D3004E03CA /* vegas_adaptor.cpp in Sources */,
 				56A6B45219BE0B2C00400267 /* constants.cpp in Sources */,

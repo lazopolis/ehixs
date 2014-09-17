@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef FOURVECTOR_H
-#define FOURVECTOR_H
+#ifndef KINEMATICS_FOURVECTOR_H
+#define KINEMATICS_FOURVECTOR_H
 
 #include <array>        // array<double,4>
 #include <cfloat>       // DBL_MIN

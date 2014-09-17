@@ -1,13 +1,14 @@
 /**
  *
  * \file    kinematicvariables.h
+ * \ingroup kinematics
  * \author  Simone Lionetti
  * \date    September 2014
  *
  */
 
-#ifndef KINEMATICVARIABLES_H
-#define KINEMATICVARIABLES_H
+#ifndef KINEMATICS_VARIABLES_H
+#define KINEMATICS_VARIABLES_H
 
 #include <stdlib.h>
 #include "invariants.h"
