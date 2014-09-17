@@ -13,7 +13,7 @@
 
 #include <map>
 #include <string>
-#include "convolutions.h"   // InitialStateFlavors, EventBox, NewLuminosity
+#include "convolutions.h"   // InitialStateFlavors, Event, NewLuminosity
 #include "model.h"          // Model
 #include "variables.h"      // IKinematicVariables
 using namespace std;
@@ -110,13 +110,8 @@ public:
     /// \name Input/output functions
     /// @{
 
-    /// Sets the EventBox to send events to
-    /// \todo Move this to the constructor? Or just change Evaluate?
-    void setEventBox(EventBox& eventBox);
-
     /// Evaluate this cross section from Vegas random numbers
-    /// \todo Return event directly?
-    virtual void evaluate(double*) const;
+    virtual Event evaluate(double*) const;
 
     /// @}
 

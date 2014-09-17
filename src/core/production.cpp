@@ -98,7 +98,7 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
 void Production::evaluate_sector()
 {
     event_box.clear();
-    the_xs_->evaluate(xx_vegas);
+    event_box.push_back(the_xs_->evaluate(xx_vegas));
     return;
 }
 

@@ -41,17 +41,9 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
     return;
 }
 
-/// Sets the EventBox to send events to
-void XSection::setEventBox(EventBox& eventBox)
-{
-    _eventBox = &eventBox;
-    return;
-}
-
 /// Evaluate this cross section from Vegas random numbers
-void XSection::evaluate(double* xx_vegas) const
+Event XSection::evaluate(double* xx_vegas) const
 {
-
     _kin->generate(xx_vegas);
     const double myxlumi = _lumi->give(_kin->x1,_kin->x2);
     if (myxlumi!=0.0)
@@ -61,11 +53,7 @@ void XSection::evaluate(double* xx_vegas) const
         * 1.0/(2.0*_kin->s(1,2)) //flux
         * matrixElement(*_kin)
         ;
-        _eventBox->push_back(Event(sigma, _kin->p));
+        return Event(sigma, _kin->p);
     }
-    else
-    {
-        _eventBox->push_back(Event());
-    }
-
+    else return Event();
 }
