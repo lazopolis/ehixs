@@ -20,12 +20,6 @@ public:
         return;
     }
 
-    //: virtual obligations from production
-    void SetDecayParticleIdInEventBox()
-    {
-        event_box.decayParticleId = 3;
-    }
-
     void ConfigureCuts();
 
 };

@@ -37,9 +37,9 @@ public:
     {}
 
     /// Copy constructor
-    Production(const Production& that) :
-    event_box(that.event_box), xx_vegas(that.xx_vegas), cuts_(that.cuts_), the_xs_(that.the_xs_), sectors(that.sectors)
-    {}
+//    Production(const Production& that) :
+//    event_box(that.event_box), xx_vegas(that.xx_vegas), cuts_(that.cuts_), the_xs_(that.the_xs_), sectors(that.sectors)
+//    {}
 
     /// Destructor
     ~Production()
@@ -58,7 +58,7 @@ public:
     void set_up_the_hatch(TheHatch*);
     bool this_event_passes_cuts(const size_t i)
     {
-        return cuts_.passes_cuts(event_box(i));
+        return cuts_.passes_cuts(&(event_box[i]));
     }
 
     void show_cut_info_and_exit()
@@ -68,7 +68,6 @@ public:
     
     //: pure virtual functions
     
-    virtual void SetDecayParticleIdInEventBox()=0;
     virtual void ConfigureCuts()=0;
     
     void evaluate_sector();

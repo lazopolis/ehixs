@@ -91,7 +91,10 @@ void Process::choose_production(const UserInterface & UI)
         //my_production = new GammaStarGammaStar;
     {cout<<"\nError: GammaStarGammaStar temporarily unavailable"<<endl;exit(0);}
     else if (UI.production=="bbH")
+    {
         my_production = new BottomFusion;
+        decay_particle_id_ = 3;
+    }
     else
     {
         cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
@@ -100,7 +103,6 @@ void Process::choose_production(const UserInterface & UI)
     my_production->Configure(UI);
     my_production->set_up_the_hatch(&the_hatch);
     Vegas.set_number_of_dimensions(the_hatch.GetVEGASDim());
-    decay_particle_id_ = my_production->event_box.decayParticleId;
     production_is_defined=true;
 }
 
@@ -279,7 +281,7 @@ void Process::proceed_to_production_phase()
                 {
                 if (my_production->this_event_passes_cuts(i))
                     {
-                    Event* production_event=my_production->event_box(i);
+                    Event* production_event = &(my_production->event_box[i]);
                 //cout<<"\nIn Process, event weight = "<<production_event->weight();
                     proceed_to_decay_phase(production_event);
                     }
@@ -311,7 +313,7 @@ void Process::proceed_to_decay_phase(Event* production_event)
                 {
                 if (my_decay->this_event_passes_cuts(j))
                     {
-                    CombinedEvent the_event(production_event,my_decay->event_box(j));
+                    CombinedEvent the_event(production_event,&(my_decay->event_box[j]));
                     book_event(the_event);
                     }
                 else book_null_event();
@@ -335,7 +337,7 @@ void Process::perform_decay_alone()//: no production was defined
                     {
                     if (my_decay->this_event_passes_cuts(j))
                          {
-                         Event* decay_event=my_decay->event_box(j);
+                         Event* decay_event = &(my_decay->event_box[j]);
 
                          CombinedEvent the_event( NULL, decay_event);
                          book_event(the_event);

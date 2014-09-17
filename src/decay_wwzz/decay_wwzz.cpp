@@ -84,7 +84,7 @@ void Decay_WWZZ::do_decay(FourVector PH)
     
     decay_weight /= Model.higgs.width();
     
-    event_box.add(decay_weight,p);
+    event_box.push_back(Event(decay_weight,p));
 }
 
 

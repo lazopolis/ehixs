@@ -46,7 +46,7 @@ void Decay_gammagamma::do_decay(FourVector PH)
     
     decay_weight /= Model.higgs.width();
     //decay_weight = 1e-2;
-    event_box.add(decay_weight,p);
+    event_box.push_back(Event(decay_weight,p));
 
 }
 

@@ -10,22 +10,7 @@ double CombinedEvent::weight() const
     double w2=1.0;
     if (production!=NULL) w1 = production->weight;
     if (decay!=NULL) w2 = decay->weight;
-    // Why pass weight 1 when both events have weight 0?
     return w1*w2;
-}
-
-EventBox::EventBox()
-{
-    decayParticleId=0;
-    _current=0;
-    return;
-}
-
-void EventBox::add(const double& inWeight, const vector<FourVector>& inP)
-{
-    if ( _current++ != _events.size() ) _events[_current-1] = Event(inWeight,inP);
-    else _events.push_back(Event(inWeight,inP));
-    return;
 }
 
 ostream& operator<<(ostream& the_stream, const CombinedEvent& E)

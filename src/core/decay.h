@@ -49,7 +49,7 @@ public:
     bool is_sector_defined(){return sector_defined;}
     void set_up_the_hatch(TheHatch*);
     CutBox* cuts_;
-    bool this_event_passes_cuts(int i){return cuts_->passes_cuts(event_box(i));}
+    bool this_event_passes_cuts(int i){return cuts_->passes_cuts(&event_box[i]);}
 protected:
     string decay_mode;
     double* decay_xx_vegas;

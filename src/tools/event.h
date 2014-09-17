@@ -19,6 +19,7 @@ using namespace std;
  *
  * \class Event
  * \brief Container for weight and essential kinematics of a generated event
+ * \todo  Change vector<FourMomenta> to Momenta??
  * \todo  Complete tests
  *
  */
@@ -40,9 +41,9 @@ public:
     _p(momenta), _weight(weight)
     {}
 
-    /// Copy constructor
-    Event(const Event& that) :
-    _p(that._p), _weight(that._weight)
+    /// Move constructor
+    Event(Event&& that) noexcept :
+    _p(std::move(that._p)), _weight(std::move(that._weight))
     {}
 
     /// Destructor
@@ -71,14 +72,6 @@ public:
         return stream << "----\n";
     }
 
-    /// Assignment operator
-    Event& operator=(const Event& that)
-    {
-        _weight = that._weight;
-        _p = that._p;
-        return *this;
-    }
-
     /// @}
 
 private:
@@ -91,45 +84,17 @@ private:
 
     /// @}
 
+    /// \name Forbidden functions
+    /// @{
+
+    Event(const Event& that);
+    Event& operator=(const Event& that);
+
+    /// @}
+
 };
 
-/**
- *
- * \class EventBox
- * \brief Vector of events optimized for minimal reallocation of memory
- * \todo  Assess speed loss with typedef vector<Event> EventBox
- *
- */
-
-class EventBox
-{
-
-public:
-
-    EventBox();
-    size_t decayParticleId;
-    void add(const double& inWeight, const vector<FourVector>& inP);
-    void add()
-    {
-        add(0.,vector<FourVector>());
-        return;
-    }
-    Event* operator()(const size_t i)
-    {
-        return &_events.at(i);
-    }
-    void clear()
-    {
-        _current = 0;
-    }
-    size_t size() const
-    {
-        return _current;
-    }
-private:
-    vector<Event> _events;
-    size_t _current;
-};
+typedef vector<Event> EventBox;
 
 /**
  *
@@ -142,8 +107,8 @@ class CombinedEvent
 {
 public:
 
-    CombinedEvent(Event* prod,Event* dec)
-    :production(prod),decay(dec)
+    CombinedEvent(Event* prod, Event* dec) :
+    production(prod),decay(dec)
     {}
 
     Event* production;

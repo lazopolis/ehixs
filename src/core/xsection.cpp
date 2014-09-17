@@ -61,11 +61,11 @@ void XSection::evaluate(double* xx_vegas) const
         * 1.0/(2.0*_kin->s(1,2)) //flux
         * matrixElement(*_kin)
         ;
-        _eventBox->add(sigma, _kin->p);
+        _eventBox->push_back(Event(sigma, _kin->p));
     }
     else
     {
-        _eventBox->add();
+        _eventBox->push_back(Event());
     }
 
 }
