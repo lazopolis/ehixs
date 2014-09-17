@@ -1,6 +1,6 @@
 /**
  *
- * \file    kinematicvariables.h
+ * \file    variables.h
  * \ingroup kinematics
  * \author  Simone Lionetti
  * \date    September 2014
@@ -46,9 +46,9 @@ public:
     /// @{
 
     /// Default constructor
-    IKinematicVariables() :
+    IKinematicVariables(const double& S, const vector<double>& m) :
     KinematicInvariants(),
-    _S(), _m(), _x(), _p(), _jacobian()
+    _S(S), _m(m), _x(), _p(), _jacobian()
     {}
 
     /// Copy constructor
@@ -76,9 +76,6 @@ public:
 
     /// Global jacobian
     const double& jacobian = _jacobian;
-
-    /// Setting parameters
-    virtual void setParameters(const double& S, const vector<double>& m) = 0;
 
     /// @}
 
@@ -117,17 +114,29 @@ public:
     /// @{
 
     /// Default constructor
-    KinematicVariables() :
-    IKinematicVariables(), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x)
+    KinematicVariables(const double& S, const vector<double>& m, const size_t expectedDOF) :
+    IKinematicVariables(S, m), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x)
     {
         // Check consistency of generators passed by template
         if ( _xGen.Nran() + _pGen.Nran() != Ndof() )
         {
-            cerr << "Generators are not compatible with the kinematic structure." << endl;
+            cerr << "[KinematicVariables] Error: generators are not compatible with the kinematic structure." << endl;
+            exit(1);
+        }
+        // Check if expected number of degrees of freedom matches
+        if ( expectedDOF != Ndof() )
+        {
+            cerr << "[KinematicVariables] Error: declared number of DOF does not match this kinematic." << endl;
             exit(1);
         }
         // Prepare array of four-momenta of the correct length
         _p.resize(Ntot());
+        // Set parameters in generators
+        double sumOfMasses2 = 0.;
+        for (vector<double>::const_iterator it = _m.begin(); it < _m.end(); ++it)
+            sumOfMasses2 += (*it)*(*it);
+        _xGen.setParameters(sumOfMasses2/_S);
+        _pGen.setParameters(_S,_m);
         return;
     }
 
@@ -159,20 +168,6 @@ public:
 
     /// Generate kinematics according to random variables
     virtual void generate(const double* const randoms);
-
-    /// Setting parameters
-    virtual void setParameters(const double& S, const vector<double>& m)
-    {
-        cout << "KinematicVariables configured with S = " << S << endl;
-        _S = S;
-        _m = m;
-        double sumOfMasses = 0.;
-        for (vector<double>::const_iterator it = _m.begin(); it < _m.end(); ++it)
-            sumOfMasses += (*it)*(*it);
-        _xGen.setParameters(sumOfMasses/_S);
-        _pGen.setParameters(_S,_m);
-        return;
-    }
 
     /// @}
 

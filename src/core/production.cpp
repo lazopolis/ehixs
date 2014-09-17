@@ -40,7 +40,7 @@ void Production::Configure(const UserInterface& UI)
             ConfigureCuts();
             cuts_.ParseCuts(UI);
             cout << "[ehixs] CrossSection name : " << the_xs_->info->name << endl;
-            the_xs_->SetEventBox(event_box);
+            the_xs_->setEventBox(event_box);
         }
     }
     return;
@@ -98,7 +98,7 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
 void Production::evaluate_sector()
 {
     event_box.clear();
-    the_xs_->Evaluate(xx_vegas);
+    the_xs_->evaluate(xx_vegas);
     return;
 }
 

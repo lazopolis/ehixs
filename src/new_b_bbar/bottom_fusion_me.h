@@ -1,40 +1,12 @@
 #ifndef BOTTOM_FUSION_ME_H
 #define BOTTOM_FUSION_ME_H
 
+#include <stdlib.h>
 #include "xsection.h"
 #include "variables.h"
 
-/**
- *
- * \class BottomFusionXSection
- * \brief Mother class for any subprocess contributing to Higgs production via bottom fusion
- *
- */
-
-class BottomFusionXSection : public XSection
-{
-
-public:
-
-    BottomFusionXSection(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info)
-    {
-        // Set process-dependent parameters
-        _mH = UI.m_higgs;
-        return;
-    }
-
-protected:
-    
-    /// \name Data members
-    /// @{
-    
-    double _mH;                       /// < Higgs mass
-    const double yukawa_bottom = 1.0; /// < Bottom-Higgs Yukawa coupling
-
-    /// @}
-    
-};
+/// \todo Move this to either Constants, UserInterface, Model or whatever
+constexpr double yukawa_bottom = 1.0;
 
 /**
  *
@@ -43,7 +15,7 @@ protected:
  *
  */
 
-class BottomFusion_bb_Delta : public BottomFusionXSection
+class BottomFusion_bb_Delta : public XSection
 {
 
 public:
@@ -51,7 +23,6 @@ public:
     BottomFusion_bb_Delta(const UserInterface& UI, const SectorInfo& info);
 
 };
-
 
 /**
  *

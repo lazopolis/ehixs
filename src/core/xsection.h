@@ -15,7 +15,7 @@
 #include <string>
 #include "convolutions.h"   // InitialStateFlavors, EventBox, NewLuminosity
 #include "model.h"          // Model
-#include "variables.h"
+#include "variables.h"      // IKinematicVariables
 using namespace std;
 
 /**
@@ -91,38 +91,65 @@ class XSection
 
 public:
 
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
     XSection(const UserInterface& UI, const SectorInfo& info);
 
+    /// Destructor
     virtual ~XSection()
     {
         delete _lumi;
         delete _kin;
+        return;
     }
 
-    virtual void Evaluate(double*) const;
+    /// @}
+
+    /// \name Input/output functions
+    /// @{
+
+    /// Sets the EventBox to send events to
+    /// \todo Move this to the constructor? Or just change Evaluate?
+    void setEventBox(EventBox& eventBox);
+
+    /// Evaluate this cross section from Vegas random numbers
+    /// \todo Return event directly?
+    virtual void evaluate(double*) const;
+
+    /// @}
+
+    /// \name Pure virtual functions
+    /// @{
+
+    /// Compute the matrix element of the instantiated concrete cross section
     virtual double matrixElement(const KinematicInvariants& s) const = 0;
 
-    /// \todo Move this to the constructor
-    void SetEventBox(EventBox& eventBox);
+    /// @}
+    
+    /// \name Data Members
+    /// @{
 
-    const CModel& model = _model;
-    const SectorInfo* info;
+    const CModel& model = _model; /// < Read-only public alias for the model
+    const SectorInfo* info;       /// < Pointer to the information about the specific, concrete cross section
+
+    /// @}
 
 protected:
 
     /// \name Data Members
     /// @{
 
-    CModel _model;
-    EventBox* _eventBox;
-    NewLuminosity* _lumi;    ///< Pointer to the luminosity object
-    IKinematicVariables* _kin;
+    CModel _model;             /// < Model for the running of this cross section
+    EventBox* _eventBox;       /// < Pointer to the box where generated events are stored
+    NewLuminosity* _lumi;      /// < Pointer to the luminosity
+    IKinematicVariables* _kin; /// < Pointer to the interface with kinematis
 
-    double _as_pi;
-    double _smax;
-    double _muR;
-    double _muF;
-    double _prefactor;
+    double _as_pi;             /// < Strong coupling constants over Pi
+    double _muR;               /// < Renormalization scale
+    double _muF;               /// < Factorization scale
+    double _prefactor;         /// < Constant prefactor multiplying matrix element outside of the phase space integral
 
     /// @}
     

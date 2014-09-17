@@ -2,14 +2,11 @@
 
 // BottomFusion_bb_Delta
 
-BottomFusion_bb_Delta::BottomFusion_bb_Delta(const UserInterface& UI, const SectorInfo& info)
-: BottomFusionXSection(UI, info)
+BottomFusion_bb_Delta::BottomFusion_bb_Delta(const UserInterface& UI, const SectorInfo& info) :
+XSection(UI, info)
 {
-    cout << "\n *** mh = " << _mH << endl;
-    _kin = new KinematicVariables<OneXGenerator,DeltaPG>();
-    _kin->setParameters(_smax,vector<double>({_mH}));
-    
-    _prefactor *= consts::Pi * pow(yukawa_bottom,2.0)/2./QCD::Nc/pow(_mH,2.);
+    _prefactor *= consts::Pi * pow(yukawa_bottom,2.) / (2. * QCD::Nc * pow(UI.m_higgs,2.));
+    _kin = new KinematicVariables<OneXGenerator,DeltaPG>(UI.Etot*UI.Etot,{UI.m_higgs},info.dim);
     return;
 }
 

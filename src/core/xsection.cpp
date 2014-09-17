@@ -10,12 +10,17 @@
 
 #include "xsection.h"
 
+/// \class XSection
+
+/// \name Constructors and destructor
+
+/// Default constructor
 XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
-// Initializing empty stuff
-_model(), _eventBox(NULL), _lumi(NULL), _kin(NULL),
-_as_pi(0.), _prefactor(consts::convert_GeV_to_pb),
-// Getting general parameters from the user interface
-info(&myInfo), _smax(UI.Etot*UI.Etot), _muR(UI.mur), _muF(UI.muf)
+    // Initializing empty stuff
+    _model(), _eventBox(NULL), _lumi(NULL), _kin(NULL),
+    _as_pi(0.), _prefactor(consts::convert_GeV_to_pb),
+    // Getting general parameters from the user interface
+    info(&myInfo), _muR(UI.mur), _muF(UI.muf)
 {
     // Configuring the luminosity
     /// \warning Luminosity allocation assumes left-right symmetry right now
@@ -23,6 +28,7 @@ info(&myInfo), _smax(UI.Etot*UI.Etot), _muR(UI.mur), _muF(UI.muf)
     _lumi->add_pair(info->isf.left, info->isf.right);
     _lumi->add_pair(info->isf.right, info->isf.left);
     // Starting to run
+    /// \note Model does not seem to be particularly generic...
     _model.Configure(
                      _lumi->alpha_s_at_mz(),
                      UI.mur_over_mhiggs,
@@ -35,13 +41,15 @@ info(&myInfo), _smax(UI.Etot*UI.Etot), _muR(UI.mur), _muF(UI.muf)
     return;
 }
 
-void XSection::SetEventBox(EventBox& eventBox)
+/// Sets the EventBox to send events to
+void XSection::setEventBox(EventBox& eventBox)
 {
     _eventBox = &eventBox;
     return;
 }
 
-void XSection::Evaluate(double* xx_vegas) const
+/// Evaluate this cross section from Vegas random numbers
+void XSection::evaluate(double* xx_vegas) const
 {
 
     _kin->generate(xx_vegas);
