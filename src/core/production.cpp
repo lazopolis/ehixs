@@ -41,8 +41,6 @@ void Production::Configure(const UserInterface& UI)
             cuts_.ParseCuts(UI);
             cout << "[ehixs] CrossSection name : " << the_xs_->info->name << endl;
             the_xs_->SetEventBox(event_box);
-            the_xs_->initialize(UI);
-            the_xs_->Configure();
         }
     }
     return;
@@ -60,7 +58,7 @@ void Production::find_the_xs(const UserInterface& UI)
     {
         size_t sector_id=atoi(UI.sector_for_production.c_str());
         if (sector_id<sectors.size())
-            the_xs_ = sectors[sector_id]->create();
+            the_xs_ = sectors[sector_id]->create(UI);
         else
         {
             cout<<"\n[find_sector] The sector id number you asked for, "

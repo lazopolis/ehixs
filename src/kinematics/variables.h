@@ -18,16 +18,12 @@ using namespace std;
 
 /**
  *
- * \class KinematicVariables
- * \brief Manages generic collider kinematic variables
- *
- * This class contains four momenta, invariants and Bjorken xs for the current phase space point
- * along with the information needed to generate them from Vegas
+ * \class IKinematicVariables
+ * \brief Interface to collider kinematic variables
  *
  */
 
-template<class xGenerator, class pGenerator>
-class KinematicVariables : public KinematicInvariants
+class IKinematicVariables : public KinematicInvariants
 {
 
 public:
@@ -50,9 +46,79 @@ public:
     /// @{
 
     /// Default constructor
-    KinematicVariables() :
-    KinematicInvariants(), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x),
+    IKinematicVariables() :
+    KinematicInvariants(),
     _S(), _m(), _x(), _p(), _jacobian()
+    {}
+
+    /// Copy constructor
+    IKinematicVariables(const IKinematicVariables& that) :
+    KinematicInvariants(that), _S(that._S), _m(that._m), _x(that._x), _p(that._p), _jacobian(that._jacobian)
+    {}
+
+    /// Destructor
+    virtual ~IKinematicVariables()
+    {}
+
+    /// @}
+
+    /// \name Input/output functions
+    /// @{
+
+    /// Total number of final state particles
+    virtual const size_t Ntot(void) const = 0;
+
+    /// Number of degrees of freedom
+    virtual const size_t Ndof(void) const = 0;
+
+    /// Generate kinematics according to random variables
+    virtual void generate(const double* const randoms) = 0;
+
+    /// Global jacobian
+    const double& jacobian = _jacobian;
+
+    /// Setting parameters
+    virtual void setParameters(const double& S, const vector<double>& m) = 0;
+
+    /// @}
+
+protected:
+
+    /// \name Data members
+    /// @{
+
+    double _S;          /// < Center of mass collider energy squared
+    vector<double> _m;  /// < Minimum value of the ratio smin/S = x1*x2
+    Bjorken _x;         /// < Bjorken x variables
+    Momenta _p;         /// < Momenta of particles
+    double _jacobian;   /// < Jacobian
+
+    /// @}
+
+};
+
+/**
+ *
+ * \class KinematicVariables
+ * \brief Manages generic collider kinematic variables
+ *
+ * This class contains four momenta, invariants and Bjorken xs for the current phase space point
+ * along with the information needed to generate them from Vegas
+ *
+ */
+
+template<class xGenerator, class pGenerator>
+class KinematicVariables : public IKinematicVariables
+{
+
+public:
+
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
+    KinematicVariables() :
+    IKinematicVariables(), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x)
     {
         // Check consistency of generators passed by template
         if ( _xGen.Nran() + _pGen.Nran() != Ndof() )
@@ -67,8 +133,7 @@ public:
 
     /// Copy constructor
     KinematicVariables(const KinematicVariables& that) :
-    KinematicInvariants(that), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x),
-    _S(that._S), _m(that._m), _x(that._x), _p(that._p), _jacobian(that._jacobian)
+    IKinematicVariables(that), _xGen(_x, _jacobian), _pGen(_p, _jacobian, _x)
     {}
 
     /// Destructor
@@ -95,9 +160,6 @@ public:
     /// Generate kinematics according to random variables
     virtual void generate(const double* const randoms);
 
-    /// Global jacobian
-    const double& jacobian = _jacobian;
-
     /// Setting parameters
     virtual void setParameters(const double& S, const vector<double>& m)
     {
@@ -121,12 +183,6 @@ protected:
     
     xGenerator _xGen;   /// < Generator for the Bjorken x variables
     pGenerator _pGen;   /// < Generator for the set of four-momenta
-
-    double _S;          /// < Center of mass collider energy squared
-    vector<double> _m;  /// < Minimum value of the ratio smin/S = x1*x2
-    Bjorken _x;         /// < Bjorken x variables
-    Momenta _p;         /// < Momenta of particles
-    double _jacobian;   /// < Jacobian
 
     /// @}
 

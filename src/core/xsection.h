@@ -15,6 +15,7 @@
 #include <string>
 #include "convolutions.h"   // InitialStateFlavors, EventBox, NewLuminosity
 #include "model.h"          // Model
+#include "variables.h"
 using namespace std;
 
 /**
@@ -87,19 +88,22 @@ struct SectorInfo
 
 class XSection
 {
+
 public:
+
+    XSection(const UserInterface& UI, const SectorInfo& info);
 
     virtual ~XSection()
     {
         delete _lumi;
+        delete _kin;
     }
 
-    virtual void Evaluate(double*)=0;
-    virtual void Configure()=0;
-    virtual NewLuminosity* AllocateLuminosity(const UserInterface&)=0;
-    void initialize(const UserInterface&);
+    virtual void Evaluate(double*) const;
+    virtual double matrixElement(const KinematicInvariants& s) const = 0;
 
-    void SetEventBox(EventBox& event_box);
+    /// \todo Move this to the constructor
+    void SetEventBox(EventBox& eventBox);
 
     const CModel& model = _model;
     const SectorInfo* info;
@@ -110,13 +114,15 @@ protected:
     /// @{
 
     CModel _model;
-    EventBox* event_box_;
+    EventBox* _eventBox;
     NewLuminosity* _lumi;    ///< Pointer to the luminosity object
+    IKinematicVariables* _kin;
 
-    double _smax;
     double _as_pi;
+    double _smax;
     double _muR;
     double _muF;
+    double _prefactor;
 
     /// @}
     
@@ -153,7 +159,7 @@ struct BaseXSectionMaker
     /// @{
 
     /// Calls the constructor for a specific type of cross section
-    virtual XSection* create() = 0;
+    virtual XSection* create(const UserInterface& UI) = 0;
 
     /// Returns information about the cross section
     virtual const SectorInfo& info() const = 0;
@@ -198,9 +204,9 @@ public:
     /// @{
 
     /// Calls the constructor for a specific type of cross section
-    virtual XSection* create()
+    virtual XSection* create(const UserInterface& UI)
     {
-        XSectionType* foo = new XSectionType;
+        XSectionType* foo = new XSectionType(UI);
         foo->info = &_info;
         return dynamic_cast<XSection*>(foo);
     };

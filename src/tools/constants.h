@@ -57,7 +57,7 @@ namespace QCD
         c = 4,
         b = 5,
         t = 6,
-        g = 0,
+        g = 21,
         dbar = -1,
         ubar = -2,
         sbar = -3,
