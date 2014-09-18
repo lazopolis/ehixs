@@ -1,9 +1,8 @@
-/** \file splitting_kernels.h
-  *
-  * Defines all splitting kernels
-  *
-  * \author, Stefu Bulli
-  */
+/**
+ * \file   splitting_kernels.h
+ * \author Stefu Bulli
+ * \brief  Defines all splitting kernels
+ */
 
 #ifndef SPLITTING_H
 #define SPLITTING_H
@@ -63,17 +62,17 @@ double null_kernel(const double&);
 
 class Kernel{
 public:
-     Kernel(int iparton,int from_parton,int a_power,int e_power);
-     double delta();
-     double reg(const double& x);
-     double DDB();
-     double DD(const double& x);
-     
+    Kernel(int iparton,int from_parton,int a_power,int e_power);
+    double delta();
+    double reg(const double& x);
+    double DDB();
+    double DD(const double& x);
+
 private:
-     double (*delta_ptr)(const double&);
-     double (*plus_ptr)(const double&);
-     double (*bound_ptr)(const double&);
-     double (*reg_ptr)(const double&);
+    double (*delta_ptr)(const double&);
+    double (*plus_ptr)(const double&);
+    double (*bound_ptr)(const double&);
+    double (*reg_ptr)(const double&);
 
 };
 

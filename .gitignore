@@ -12,3 +12,6 @@ src/decay_wwzz/higgs_zerfall_old.f
 src/gluon_fusion/electroweak_h_plus_jet
 run/*.png
 run/*.pyc
+doxygen/*
+
+ehixs.xcodeproj/xcuserdata/lionetti.xcuserdatad/xcschemes/bottomfusion.xcscheme

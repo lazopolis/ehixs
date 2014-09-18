@@ -3,10 +3,12 @@
 
 #include "decay.h"
 
+/// \todo Review how parameters are passed around
+
 class Decay_WWZZ: public Decay
 {
 public:
-    void do_decay(double* PH);
+    void do_decay(FourVector PH);
     void do_decay();
     Decay_WWZZ(const UserInterface&);
     int NumberOfParticles(){return 4;}

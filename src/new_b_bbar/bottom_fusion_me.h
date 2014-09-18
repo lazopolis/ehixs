@@ -1,69 +1,48 @@
 #ifndef BOTTOM_FUSION_ME_H
 #define BOTTOM_FUSION_ME_H
 
-#include "cross_section.h"
-#include "bottom_fusion_kinematics.h"
+#include <stdlib.h>
+#include "xsection.h"
+#include "variables.h"
 
+/// \todo Move this to either Constants, UserInterface, Model or whatever
+constexpr double yukawa_bottom = 1.0;
 
-class BottomFusionCrossSection : public CrossSection
+/**
+ *
+ * \class BottomFusion_bb_Delta
+ * Mother class for subprocesses with bbar initial state and delta-like kinematics
+ *
+ */
+
+class BottomFusion_bb_Delta : public XSection
 {
-public:
-    double alpha_s_at_mz_from_lhapdfs(){return lumi->alpha_s_at_mz();}
-    void SetHiggsMass(const double& mh){mh_ = mh;}
-protected:
 
-    void JF(const double&,const BottomFusionKinematics& kv);
-    void JF();
-protected:
-    NewLuminosity* lumi;
-    double mh_;
+public:
+
+    BottomFusion_bb_Delta(const UserInterface& UI, const SectorInfo& info);
+
 };
 
-
-
-class BottomFusion_bb: public BottomFusionCrossSection
-{
-public:
-    BottomFusion_bb();
-    void AllocateLuminosity(const UserInterface&);
-    
-
-protected:
-    double LL(const double& x1,const double& x2);
-    
-    
-protected:
-    int number_of_particles_;
-    double smin;
-    double prefactor_;
-    
-};
-
-class BottomFusion_bb_Delta: public BottomFusion_bb
-{
-public:
-    void Configure();
-    void Evaluate(double* xx_vegas);
-    virtual double eval_me(const KinematicInvariants&)=0;
-    void SetDimension(){dimension_ = 1;}
-protected:
-    BottomFusionKinematicsLO kk_;
-};
-
+/**
+ *
+ * \class BottomFusion_bb_LO
+ * LO matrix element for bbar->H
+ *
+ */
 
 class BottomFusion_bb_LO : public BottomFusion_bb_Delta
 {
-public:
-    BottomFusion_bb_LO();
-    double eval_me(const KinematicInvariants&);
-};
 
-class BottomFusion_bb_NLO_SOFT : public BottomFusion_bb_Delta
-{
 public:
-    BottomFusion_bb_NLO_SOFT();
-    double eval_me(const KinematicInvariants&);
-};
 
+
+    BottomFusion_bb_LO(const UserInterface& UI) :
+    BottomFusion_bb_Delta(UI, XSectionMaker<BottomFusion_bb_LO>::_info)
+    {}
+
+    double matrixElement(const KinematicInvariants& invariants) const;
+
+};
 
 #endif

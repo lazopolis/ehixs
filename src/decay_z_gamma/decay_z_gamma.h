@@ -3,10 +3,12 @@
 
 #include "decay.h"
 
+/// \todo Review const-correctness of decay!!!
+
 class Decay_H_to_Z_Gamma: public Decay
 {
 public:
-    void do_decay(double* PH);
+    void do_decay(FourVector PH);
     void do_decay();
     Decay_H_to_Z_Gamma(const UserInterface&);
     int NumberOfParticles(){return 4;}

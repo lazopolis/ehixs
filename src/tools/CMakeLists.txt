@@ -6,9 +6,7 @@ add_library(tools
                     event.cpp
                     bin.cpp
                     convolutions.cpp
-                    kinematic_invariants.cpp
                     user_interface.cpp
                     epsilon_series.cpp
-                    fmomentum.cpp
-                    bjorken_xs.cpp
+                    constants.cpp
                     )

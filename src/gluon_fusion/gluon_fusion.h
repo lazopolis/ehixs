@@ -37,8 +37,8 @@ public://methods
 
     void evaluate_sector();
     
-    void SetNumberOfParticles() {event_box.SetNumberOfParticles(5);}
-    void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(5);}
+    //void SetNumberOfParticles() {event_box.SetNumberOfParticles(5);}
+    void SetDecayParticleIdInEventBox(){event_box.decayParticleId = 5;}
     
     
     //: public to integrate with fortran Fjet
@@ -64,7 +64,7 @@ private://data
     GluonFusionEWCoefficients* electroweak_coefficients;
     int number_of_necessary_sectors_;
     //int vegas_point_counter;
-    vector<FourMomentum*> momenta_pointers_;
+    vector<FourVector*> momenta_pointers_;
     
     EventReconstructor event_reconstructor;
     

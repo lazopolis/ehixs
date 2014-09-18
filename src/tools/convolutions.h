@@ -1,42 +1,67 @@
 
 #ifndef CONVOLUTIONS_H
 #define CONVOLUTIONS_H
-#include<string>
-#include<vector>
-#include<list>
-#include<complex>
-//#include "splitting_kernels.h"
-using namespace std;
+
+#include <string>
+#include <vector>
+#include <list>
+#include <complex>
 #include "event.h"
 #include "luminosity.h"
+#include "constants.h"
+using namespace std;
 
+/**
+ *
+ * \struct InitialStateFlavors
+ * \brief  Container for information about initial state flavors
+ *
+ */
 
-//typedef  pair<string,string> stringpair;
-
-//class FxFxA;
-
-class InitialStateFlavors
+struct InitialStateFlavors
 {
-public:
-    InitialStateFlavors(){};
-    InitialStateFlavors(const string& lef,const string& rig)
-    {left = lef;right=rig;}
-    string left;
-    string right;
+
+    /// \name Data members
+    /// @{
+
+    QCD::Flavor left;   ///< Left parton flavor
+    QCD::Flavor right;  ///< Right parton flavor
+
+    /// @}
+
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
+    InitialStateFlavors() :
+    left(), right()
+    {}
+
+    /// Copy constructor
+    InitialStateFlavors(const InitialStateFlavors& that) :
+    left(that.left), right(that.right)
+    {}
+
+    /// Constructor with data
+    InitialStateFlavors(const QCD::Flavor lef, const QCD::Flavor rig) :
+    left(lef), right(rig)
+    {}
+
+    /// Destructor
+    ~InitialStateFlavors()
+    {}
+
+    /// Prints initial state flavors
+    friend ostream& operator<<(ostream& stream, const InitialStateFlavors& isf)
+    {
+        return stream << "(" << isf.left << "," << isf.right << ")";
+    }
+
+    /// @}
+
 };
 
-class NewMeExternalInfo
-{
-public:
-    NewMeExternalInfo(){};
-public:
-    string name;
-    InitialStateFlavors ISF;
-    int alpha_power;
-    //int epsilon_power_min;
-    //int epsilon_power_max;
-};
-
+/// \note !!??
 class pdf_desc_pair
 {
 public:
@@ -90,6 +115,7 @@ struct WilsonCoefficients{
     bool ew_soft;
 };
 
+/// \note Beta constants already defined in constants?!?
 struct BetaConstants{
     double zero,one,two,three;
 };

@@ -12,10 +12,7 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-
-    double* ph = ce.production->ParticleMomentum(3);
-    double ptH = sqrt(ph[1]*ph[1]+ph[2]*ph[2]);
-    return ptH;
+        return ce.production->p[3].T();
     }
 
 };
@@ -29,14 +26,7 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-    
-    double* h = ce.production->ParticleMomentum(3);
-    const double E=h[0];
-    const double pz=h[3];
-    //cout<<"\t  "<<pz;
-    double y = 0.5*log((E+pz)/(E-pz));
-    return y;
-    
+        return ce.production->p[3].Y();
     }
     
 };
@@ -51,15 +41,10 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-    
-    double* gamma1 = ce.decay->ParticleMomentum(1);
-    double* gamma2 = ce.decay->ParticleMomentum(2);
-    //cout<<"\n gamma1 = "<<gamma1[0]<<" "<<gamma1[1]<<" "<<gamma1[2]<<" "<<gamma1[3];
-    double pt1 = sqrt(gamma1[1]*gamma1[1]+gamma1[2]*gamma1[2]);
-    double pt2 = sqrt(gamma2[1]*gamma2[1]+gamma2[2]*gamma2[2]);
-    if (pt1>pt2) return pt1;
-    else return pt2;
-    
+        const double pt1 = ce.decay->p[1].T();
+        const double pt2 = ce.decay->p[2].T();
+        if (pt1>pt2) return pt1;
+        else return pt2;
     }
     
 };
@@ -75,15 +60,10 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-        
-        double* gamma1 = ce.production->ParticleMomentum(3);
-        double* gamma2 = ce.production->ParticleMomentum(4);
-        //cout<<"\n gamma1 = "<<gamma1[0]<<" "<<gamma1[1]<<" "<<gamma1[2]<<" "<<gamma1[3];
-        double pt1 = sqrt(gamma1[1]*gamma1[1]+gamma1[2]*gamma1[2]);
-        double pt2 = sqrt(gamma2[1]*gamma2[1]+gamma2[2]*gamma2[2]);
+        const double pt1 = ce.production->p[1].T();
+        const double pt2 = ce.production->p[2].T();
         if (pt1>pt2) return pt1;
         else return pt2;
-        
     }
     
 };
@@ -99,11 +79,7 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-        
-        double* gamma1 = ce.production->ParticleMomentum(3);
-        double pt1 = sqrt(gamma1[1]*gamma1[1]+gamma1[2]*gamma1[2]);
-        return pt1;
-        
+        return ce.production->p[3].T();
     }
     
 };
@@ -117,14 +93,7 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-        
-        double* gamma1 = ce.production->ParticleMomentum(3);
-        const double E=gamma1[0];
-        const double pz=gamma1[3];
-        //cout<<"\t  "<<pz;
-        double y = 0.5*log((E+pz)/(E-pz));
-        return y;
-        
+        return ce.production->p[3].Y();
     }
     
 };
@@ -139,7 +108,7 @@ public:
     double determine_xval(const CombinedEvent& ce)
     {
         
-        return ce.production->ParticleMomentum(1)[0]/13000*2.0;
+        return ce.production->p[1][0]/13000*2.0;
         
     }
     
@@ -154,9 +123,7 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-        
-        return ce.production->ParticleMomentum(2)[0]/13000*2.0;
-        
+        return ce.production->p[2][0]/13000*2.0;
     }
     
 };
@@ -170,11 +137,7 @@ public:
     
     double determine_xval(const CombinedEvent& ce)
     {
-        
-        double* gamma1 = ce.production->ParticleMomentum(5);
-        double pt1 = sqrt(gamma1[1]*gamma1[1]+gamma1[2]*gamma1[2]);
-        return pt1;
-        
+        return ce.production->p[5].T();
     }
     
 };

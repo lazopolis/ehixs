@@ -12,9 +12,7 @@ set (ehixstests_VERSION_MINOR 9)
 #   please edit below to set the absolute path for lhapdf 
 #   (don't forget to remove the '#' before 'SET(..)'
 #
-#SET(LHAPDF_DIR my_lhapdf_directory)
-SET(LHAPDF_DIR /Users/lazopolis/other_codes/lhapdf6)
-#
+#   SET(LHAPDF_DIR my_lhapdf_directory)
 #
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
@@ -51,7 +49,7 @@ else (Fortran_COMPILER_NAME STREQUAL "gfortran")
   set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g")
 endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
-set (CMAKE_CXX_FLAGS "  -DGTEST_HAS_PTHREAD=0 -pthread")
+set (CMAKE_CXX_FLAGS " -std=c++11 -DGTEST_HAS_PTHREAD=0 -pthread")
 
 SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
@@ -70,6 +68,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/decay_wwzz
                     ${EHIXS_SRC_DIR}/decay_bb
                     ${EHIXS_SRC_DIR}/tools
+                    ${EHIXS_SRC_DIR}/kinematics
                     ${EHIXS_SRC_DIR}/models
                     ${EHIXS_SRC_DIR}/core
                     ${EHIXS_SRC_DIR}/pdf
@@ -82,6 +81,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/../user_src/decay_gamma_gamma
                     ${EHIXS_SRC_DIR}/../user_src/
                     ${EHIXS_SRC_DIR}/mincuba
+                    ${EHIXS_SRC_DIR}/gtest-1.7.0/include
                     )
 
 link_directories(
@@ -100,10 +100,12 @@ add_subdirectory(models)
 add_subdirectory(core)
 add_subdirectory(pdf)
 add_subdirectory(avh_olo)
+add_subdirectory(kinematics)
 #
 #   testing with gtests
 #
-#add_subdirectory(gtests)
+add_subdirectory(gtest-1.7.0)
+add_subdirectory(gtests)
 #
 #   production modes
 #
@@ -121,6 +123,8 @@ add_subdirectory(decay_z_gamma)
 add_subdirectory(decay_h_to_gamma_gamma)
 add_subdirectory(decay_wwzz)
 #-------------------------------------------------------------------------------
+
+#find_library(gtest ssl{GTEST_PATH})
 
 #find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
 #This will check the environment for a variable named LHAPDF_PATH. 
@@ -145,6 +149,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             decay_z_gamma 
             higgs_zerfal 
             decay_h_to_gamma_gamma
+            kinematics
             models
             tools
             #
@@ -158,7 +163,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             pdf
             avh_olo
             mincuba
-            #gtest 
+            ${GTEST_PATH}
             LHAPDF
             ${LHAPDF})
 
@@ -168,9 +173,3 @@ target_link_libraries(ehixs
             ${LIBRARIES_FOR_GLOBAL_TESTS})
 
 set(CMAKE_BUILD_TYPE Release)
-
-
-
-
-
-

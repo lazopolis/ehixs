@@ -63,7 +63,7 @@ void CutBox::show_cut_info_and_exit()
 
 bool CutBox::passes_cuts(Event* the_event)
 {
-    if (the_event->weight()!=0.0)
+    if (the_event->weight!=0.0)
         {
         bool event_passes=true;
         for (int i=0;i<cuts_.size();i++)

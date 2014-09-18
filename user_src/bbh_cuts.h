@@ -1,7 +1,7 @@
 #ifndef BBH_CUT_H
 #define BBH_CUT_H
 
-#include "momenta.h"
+//#include "momenta.h"
 #include "cut.h"
 //class CCut
 //{
@@ -23,14 +23,7 @@ public:
     : CCut("CutBBhHiggsPT",cutvalue){};
     bool operator()(Event* the_event)
     {
-        double* pH = the_event->ParticleMomentum(3);
-        const double pth = sqrt(pH[1] * pH[1] + pH[2]*pH[2]);
-        if (pth>min)
-        {
-            //cout<<"\n event accepted with ptH = "<<pth;
-            return true;
-        }
-        
+        if (the_event->p[3].T()>min) return true;
         return false;
     }
 };

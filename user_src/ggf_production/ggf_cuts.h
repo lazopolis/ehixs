@@ -1,7 +1,7 @@
 #ifndef GLUON_FUSION_CUT_H
 #define GLUON_FUSION_CUT_H
 
-#include "momenta.h"
+//#include "momenta.h"
 #include "cut.h"
 //class CCut
 //{

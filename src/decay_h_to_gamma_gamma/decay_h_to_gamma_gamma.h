@@ -1,14 +1,15 @@
 #ifndef DECAY_HIGGS_TO_GAMMA_GAMMA
 #define DECAY_HIGGS_TO_GAMMA_GAMMA
 
-
+/// \todo Factor out the common structure of all do_decay functions!!!
+///       (It is repeated at least 3 times!)
 
 #include "decay.h"
 
 class Decay_gammagamma: public Decay
 {
 public:
-    void do_decay(double* PH);
+    void do_decay(FourVector PH);
     void do_decay();
     Decay_gammagamma(const UserInterface&);
     int NumberOfParticles(){return 2;}

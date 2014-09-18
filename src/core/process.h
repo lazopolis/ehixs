@@ -23,7 +23,7 @@ using namespace std;
 //#include "CMonteCarlo.h"
 #include "model.h"
 #include "chaplin.h"
-#include "fvector.h"
+//#include "fvector.h"
 //#include "CConstants.h"
 #include "cut.h"
 
@@ -43,7 +43,7 @@ class CHistogram;
 class CHistogram2d;
 class AverageObservable;
 
-#include "momenta.h"
+//#include "momenta.h"
 #include "histogram.h"
 
 

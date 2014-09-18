@@ -1,6 +1,6 @@
 add_library(core
+                decay.cpp
                 production.cpp
                 process.cpp
-                decay.cpp
-                cross_section.cpp
+                xsection.cpp
                 )

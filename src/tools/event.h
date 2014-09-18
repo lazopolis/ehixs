@@ -1,58 +1,157 @@
+/**
+ *
+ * \file    event.h
+ * \ingroup tools
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    September 2014
+ *
+ */
+
 #ifndef EVENT_H
 #define EVENT_H
 
-#include <vector>
-#include <math.h> // for fabs
 #include <ostream>
+#include "fourvector.h"
 using namespace std;
 
-#define MAX_NUMBER_OF_PARTICLES 10
+/**
+ *
+ * \class Event
+ * \brief Container for weight and essential kinematics of a generated event
+ * \todo  Complete tests
+ *
+ */
 
 class Event
 {
 public:
-    Event(const double& weight){weight_ = weight;}
-    virtual ~Event(){}
-    double weight(){return weight_;}
-    void SetWeight(const double& w){weight_ = w;}
-    void SetP(int i,const double& E,const double& px, const double& py, const double& pz);
-    double* ParticleMomentum(int i){return p_[i-1];}
-private:
-    double weight_;
-    double p_[MAX_NUMBER_OF_PARTICLES][4];
-    };
 
+    /// \name Constructors
+    /// @{
+
+    /// Default constructor
+    Event() :
+    _p(), _weight(0.)
+    {}
+
+    /// Constructor with data
+    Event(const double& weight, const Momenta& momenta) :
+    _p(momenta), _weight(weight)
+    {}
+
+    /// Move constructor from data
+    Event(const double& weight, Momenta&& momenta) :
+    _p(momenta), _weight(weight)
+    {}
+
+    /// Move constructor
+    Event(Event&& that) noexcept :
+    _p(std::move(that._p)), _weight(std::move(that._weight))
+    {}
+
+    /// Destructor
+    ~Event()
+    {}
+
+    /// @}
+
+    /// \name Read-only data
+    /// @{
+
+    const double& weight = _weight; ///< Weight of the event
+    const Momenta& p = _p;          ///< Set of four-momenta
+
+    /// @}
+
+    /// \name Input/output functions
+    /// @{
+
+    /// Print event information
+    friend ostream& operator<<(ostream& stream, const Event& event)
+    {
+        stream << "----\nEvent with weight " << event.weight << "\nFourMomenta:\n";
+        for (size_t i = 0; i<event.p.size(); ++i)
+            stream << "\tp" << i+1 << " = " << event.p[i] << endl;
+        return stream << "----\n";
+    }
+
+    /// @}
+
+private:
+
+    /// \name Data members
+    /// @{
+
+    double _weight; ///< Weight of the event
+    Momenta _p;     ///< Set of four-momenta
+
+    /// @}
+
+    /// \name Forbidden functions
+    /// @{
+
+    /// Copy constructor
+    Event(const Event& that);
+
+    /// Assignment operator
+    Event& operator=(const Event& that);
+
+    /// @}
+
+};
+
+/**
+ *
+ * \typedef EventBox
+ * \brief   A vector of events is named EventBox for simpler semantics
+ *
+ */
+
+typedef vector<Event> EventBox;
+
+/**
+ *
+ * \class CombinedEvent
+ * \brief Container for combined production+decay event
+ * \note  Switch to references instead of pointers?
+ * \todo  Extend decay to be a vector of decays, so that more than one particle can decay
+ *
+ */
 
 class CombinedEvent
 {
 public:
-    CombinedEvent(Event* prod,Event* dec)
-    :production(prod),decay(dec){};
-    Event* production;
-    Event* decay;
-    double weight() const ;
-    friend ostream& operator<<(ostream&, const CombinedEvent&);
-};
 
-class EventBox{
-public:
-    EventBox();
-    void SetDecayParticleId(int k){decay_particle_id_=k;}
-    int DecayParticleId(){return decay_particle_id_;}
-    void SetNumberOfParticles(int n);
-    int size(){return effective_size_;}
-    void SetP(int i,const double& E,const double& px, const double& py, const double& pz);
-    void SetWeight(const double& w){events_[current_event_pointer_].SetWeight(w);}
-    //void AddNewEvent();
-    void AddNewEvent(const double& weight);
-    Event* ptr_to_event(int i);
-    void CleanUp(){effective_size_=0;current_event_pointer_=0;}
-private:
-    vector<Event> events_;
-    int number_of_particles_;
-    int decay_particle_id_;
-    int effective_size_;
-    int current_event_pointer_;
+    /// \name Constructors and Destructor
+    /// @{
+
+    /// Constructor with data
+    CombinedEvent(Event* prod, Event* dec) :
+    production(prod),decay(dec)
+    {}
+
+    /// @}
+
+    /// \name Data members
+    /// @{
+
+    Event* production; ///< Pointer to the production event
+    Event* decay;      ///< Pointer to the decay event
+
+    /// @}
+
+    /// \name Input/output functions
+    /// @{
+
+    /// Returns the weight of the combined event
+    double weight() const;
+
+    /// Prints information about the event
+    friend ostream& operator<<(ostream&, const CombinedEvent&);
+
+    /// @}
+
 };
 
 #endif
