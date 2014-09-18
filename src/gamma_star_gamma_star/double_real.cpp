@@ -1,4 +1,10 @@
-double GstarGstarMe::RR (const KinematicInvariants & kk
+
+namespace GstarGstar{
+
+#include "kinematic_invariants.h"
+
+    
+double RR (const KinematicInvariants & kk
   )
 {
   const   double t12 = kk.s(1,2);
@@ -975,3 +981,6 @@ double RRi (
   t1290 = 0.8e1 * t100 * t2 * t838 + 0.8e1 * t117 * t2 * t964 + 0.8e1 * t197 * t29 * t964 + 0.8e1 * t212 * t29 * t838 - 0.16e2 * t1 * t37 + 0.16e2 * t104 * t188 + 0.8e1 * t1192 * t294 + 0.8e1 * t1192 * t303 + 0.16e2 * t65 * t707 - 0.16e2 * t188 - 0.16e2 * t285 - 0.16e2 * t707 - 0.16e2 * t714 - 0.16e2 * t724;
   return(V * (t901 + t936 + t978 + t609 + t652 + t690 + t717 + t756 + t787 + t819 + t864 + t370 + 0.32e2 * t395 + t439 + t483 + t526 + t568 + t202 + t236 + t279 + t322 + t1203 + t1232 + t1290 + t1262 + t147 + t1023 + t1070 + t1169 + t1106 + t1140 + t89));
 }
+    
+};
+

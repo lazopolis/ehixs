@@ -17,7 +17,7 @@ ostream& operator<<(ostream& stream, const CrossSection& XS)
 void CrossSection::SetAlphaStrong(const double& a_s_over_pi)
 {
     a_s_over_pi_=a_s_over_pi;
-    cout<<"\n[CrossSection]: a_s = "<<a_s_over_pi_* consts::Pi;
+    cout<<"\n[CrossSection]: a_s = "<<a_s_over_pi_* consts::Pi<<endl;
 }
 
 void CrossSection::SetScales(const double& mur,const double& muf)

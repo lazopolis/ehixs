@@ -2,17 +2,19 @@
 using namespace std;
 #include "bottom_fusion.h"
 
-
-
-
-//------------------------------------------------------------------------------
-
-
 #include "bbh_cuts.h"
 
 
 
+void BottomFusion::SetNumberOfParticles()
+{
+    event_box.SetNumberOfParticles(5);
+}
 
+void BottomFusion::SetDecayParticleIdInEventBox()
+{
+    event_box.SetDecayParticleId(3);
+}
 
 // defining all the cross secion objects that are available to the user
 // all of them should inherit from CrossSection
@@ -25,7 +27,7 @@ void BottomFusion::create_matrix_elements()
 }
 
 
-void BottomFusion::SetProcessSpecificParameters()
+void BottomFusion::SetProcessSpecificParameters(const UserInterface& UI)
 {
     // here we need to use setter functions of the derived class
     // (BottomFusionCrossSection) and I found no better way to do this than

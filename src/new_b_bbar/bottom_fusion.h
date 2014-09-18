@@ -16,25 +16,11 @@ class BottomFusion : public Production
 {
 public:
     //: virtual obligations from production
-    void SetNumberOfParticles() {event_box.SetNumberOfParticles(5);}
-    void SetDecayParticleIdInEventBox(){event_box.SetDecayParticleId(3);}
+    void SetNumberOfParticles();
+    void SetDecayParticleIdInEventBox();
     void create_matrix_elements();
     void ConfigureCuts();
-    void SetProcessSpecificParameters();
-    
-//private://data
-//    vector<BottomFusionCrossSection*> available_xs_;
-//    BottomFusionCrossSection* the_xs_;
-private://methods
-    //void find_the_xs(const UserInterface & UI);
-    //void allocate_luminosity();
-    
-    //int number_of_necessary_sectors_;
-private:
-    // these should be in process
-    
-    //void initialize_sector(const UserInterface& UI);
-    
+    void SetProcessSpecificParameters(const UserInterface& UI);
 };
 
 

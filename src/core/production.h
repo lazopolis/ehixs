@@ -44,7 +44,7 @@ public://methods
     
     virtual void create_matrix_elements()=0;
     virtual void ConfigureCuts()=0;
-    virtual void SetProcessSpecificParameters()=0;
+    virtual void SetProcessSpecificParameters(const UserInterface&)=0;
     
     /*
     virtual void book_production_event(const double &,const double &,

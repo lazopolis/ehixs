@@ -10,4 +10,5 @@ add_library(tools
                     user_interface.cpp
                     epsilon_series.cpp
                     fmomentum.cpp
+                    bjorken_xs.cpp
                     )

@@ -1,6 +1,6 @@
 #include "process.h"
 //#include "gluon_fusion.h"
-//#include "gamma_star_gamma_star.h"
+#include "gamma_star_gamma_star.h"
 #include "bottom_fusion.h"
 
 //#include "histograms.hpp" //: particular available histograms are defined here. The base class for histograms is at CHistogram.h
@@ -88,8 +88,8 @@ void Process::choose_production(const UserInterface & UI)
     {cout<<"\nError: ggF temporarily unavailable"<<endl;exit(0);}
         //my_production = new GluonFusion;
     else if (UI.production=="GammaStarGammaStar")
-        //my_production = new GammaStarGammaStar;
-    {cout<<"\nError: GammaStarGammaStar temporarily unavailable"<<endl;exit(0);}
+        my_production = new GammaStarGammaStar;
+    //{cout<<"\nError: GammaStarGammaStar temporarily unavailable"<<endl;exit(0);}
     else if (UI.production=="bbH")
         my_production = new BottomFusion;
     else

@@ -36,7 +36,8 @@ double NewLuminosity::give(const double& x1,const double& x2)
     for (int i=0;i<pairs.size();i++)
     {
         res +=    pdf_->xfxQ(pairs[i].first,x1,muf_)
-                * pdf_->xfxQ(pairs[i].second,x2,muf_);
+                * pdf_->xfxQ(pairs[i].second,x2,muf_)
+                * coeff_[i];
     }
     return res;
 }

@@ -58,5 +58,12 @@ public:
     double eval_me(const KinematicInvariants&);
 };
 
+class BottomFusion_bb_NLO_SOFT : public BottomFusion_bb_Delta
+{
+public:
+    BottomFusion_bb_NLO_SOFT();
+    double eval_me(const KinematicInvariants&);
+};
+
 
 #endif

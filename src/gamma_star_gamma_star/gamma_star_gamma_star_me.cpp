@@ -1,80 +1,259 @@
 #include "gamma_star_gamma_star_me.h"
 #include "chaplin.h"
 
-
 #include <iomanip>
 #include <sstream>
 
 
-
-double GstarGstarBorn::operator()(const KinematicInvariants& kk)
+void Gstar2CrossSection::SetPhotonMasses(const double& m3_in, const double& m4_in)
 {
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double q13 = kk.q(1,3);
-    const double q23 = kk.q(2,3);
-    
-    
-    return 8.0*3.0*(
-                    q23/q13 - 2.0 * (q3+q4)/q13
-                    - q3*q4/q13/q13
-                    +q13/q23 - 2.0 * (q3+q4)/q23
-                    - q3*q4/q23/q23
-                    +2.0*pow(q3+q4,2.0)/ (q13*q23)
-                    );
+    m3 = m3_in;
+    m4 = m4_in;
 }
 
-double GstarGstarBorn::e(const KinematicInvariants& kk)
+void Gstar2CrossSection::JF(const double& w,const GStar2Kinematics& kv)
 {
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double t = kk.q(1,3);
-    const double u = kk.q(2,3);
-    
-    
-    return 48.0*(-q3*q3/(t*u)-q4*q4/(t*u)
-                 +q3*q4/pow(u,2.0)-q3*q4/(t*u)+q3*q4/pow(t,2.0)
-                 +q3/u+q3/t+q4/u+q4/t
-                 -t/u-1.0-u/t );
-}
-
-
-double GstarGstarBorn::e2(const KinematicInvariants& kk)
-{
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double t = kk.q(1,3);
-    const double u = kk.q(2,3);
-    
-    return 24.0*(-q3*q4/pow(u,2.0)
-                 -2.0*q3*q4/(t*u)-q3*q4/pow(t,2.0)+t/u+2.0+u/t);
-}
-
-double GstarGstarBorn::e3(const KinematicInvariants& kk)
-{
-    return 0.0;
-}
-
-void GstarGstarBorn::configure(const double& charge, const double& alpha_em)
-{
-    const double averaging_factor = 1.0/6.0 * 1.0/6.0 ;    
-    prefactor_ = averaging_factor*pow(charge,4.0)
-                * pow(alpha_em,2.0)* 0.389379*1.e9;
-}
-
-
-
-double Power(const double x,int i)
-{
-    double res=1.0;
-    for (int j=0;j<i;j++)
+    if (w!=w)
     {
-        res=res*x;
+        cout<<"\nerror: nan as event weight. w="<<w;
+        cout<<kv;
+        cout<<endl;
+        exit(1);
+    }
+    event_box_->AddNewEvent(w);
+    for (int i=1;i<kv.NumberOfParticles()+1;i++)
+    {
+        event_box_->SetP(i,kv.P(i)[0],kv.P(i)[1],kv.P(i)[2],kv.P(i)[3]);
+    }
+}
+
+void Gstar2CrossSection::JF()
+{
+    event_box_->AddNewEvent(0.0);
+    
+}
+
+
+
+Gstar2CrossSection_qqbar::Gstar2CrossSection_qqbar()
+{
+    //refacator: move this to the LO daughter class
+    number_of_particles_ = 6;
+    info_.ISF = InitialStateFlavors("q","qbar");
+}
+
+
+
+void Gstar2CrossSection_qqbar::AllocateLuminosity(const UserInterface& UI)
+{
+    lumi = new NewLuminosity(UI);
+    // in Gstar2 we have to multiply the luminosity of each quark flavor with
+    // its charge to the fourth. The overloaded add_pair function does this.
+    lumi->add_pair(-5,5,pow(-1./3.,4));
+    lumi->add_pair(-4,4,pow(2./3.,4));
+    lumi->add_pair(-3,3,pow(-1./3.,4));
+    lumi->add_pair(-2,2,pow(2./3.,4));
+    lumi->add_pair(-1,1,pow(-1./3.,4));
+    lumi->add_pair(1,-1,pow(-1./3.,4));
+    lumi->add_pair(2,-2,pow(2./3.,4));
+    lumi->add_pair(3,-3,pow(-1./3.,4));
+    lumi->add_pair(4,-4,pow(2./3.,4));
+    lumi->add_pair(5,-5,pow(-1./3.,4));
+}
+
+double Gstar2CrossSection_qqbar::LL(const double& x1,const double& x2)
+{
+    return lumi->give(x1,x2);
+}
+
+
+
+
+
+void Gstar2_qqbar_Delta::Configure()
+{
+    kk_.SetNumberOfParticles(4);
+    //refactor: make a ConfigureBase function and move smin setting there
+    const double smin = pow(m3+m4,2.0);
+    cout<<"\nsetting boundaries "<<smin<<" "<<smax<<endl;
+    kk_.SetBoundaries(smin,smax);
+    kk_.SetMassesSquared(m3*m3,m4*m4);
+    const double averaging_factor = 1.0/6.0 * 1.0/6.0 ;
+    prefactor_ = averaging_factor
+    * pow(consts::alpha_em_at_mz,2.0)* consts::convert_GeV_to_pb;
+}
+
+
+void Gstar2_qqbar_Delta::Evaluate(double* xx_vegas)
+{
+    
+    kk_.GenerateKinematics(xx_vegas);
+    const double myxlumi = LL(kk_.x1(),kk_.x2());
+    if (myxlumi!=0.0)
+    {
+        const double me_sq = eval_me(kk_.Invariants());
+        const double sigma = prefactor_ * kk_.Jacobian()
+        * myxlumi
+        * 1.0/2.0/kk_.s(1,2)
+        * me_sq
+        ;
+        JF(sigma,kk_);
+        //cout<<kk_<<endl<<me_sq<<endl;
+    }
+    else
+    {
+        JF();
+    }
+}
+
+
+double Gstar2_qqbar_LO::eval_me(const KinematicInvariants& kinvar)
+{
+    return amplitude_.born(kinvar);
+}
+
+
+
+double Gstar2_qqbar_NLO_soft::eval_me(const KinematicInvariants& kv)
+{
+    //There is a factor of 2  from 2*Re(V*conjg(B))
+    //and a compensating factor of 1/2 from the virtual being defined in a
+    //a_s/2/pi expansion (we always use a_s/pi here)
+    
+    return  a_s_over_pi_ * (V_.Epsilon0(kv)
+                               + 4.0/3.0 * amplitude_.born_e2(kv)
+                               + 4.0/3.0 * 3.0/2.0 * amplitude_.born_e(kv)
+                               );
+}
+
+double Gstar2_qqbar_NLO_soft::Catani(const KinematicInvariants& kv,int eps)
+{
+    double res=10.0;
+    if (eps==-2)
+    {
+        const double C2 =  4.0/3.0*(-1.0)*amplitude_.born(kv);
+        res =  V_.EpsilonM2(kv) -C2;
+    }
+    else if (eps==-1)
+    {
+        const double C1 =  4.0/3.0*(-3.0/2.0*amplitude_.born(kv) - 1.0*amplitude_.born_e(kv));
+        res =  V_.EpsilonM1(kv) -C1;
+    }
+    else
+    {
+        cout<<"\nError in Catani: you asked for e^"<<eps<<" that is not predicted by Catani";
     }
     return res;
 }
 
 
+double Gstar2_qqbar_NNLO_soft::eval_me(const KinematicInvariants& kv)
+{
+    //There is a factor of 2  from 2*Re(V*conjg(B))
+    //and a compensating factor of 1/4 from the virtual being defined in a
+    //a_s/2/pi expansion (we always use a_s/pi here)
+    // hence an overall 1/2
+    
+    
+    const double mu=muf_;
+    
+    const double L=log(kv.s(1,2)/mu/mu);
+    const double B0=amplitude_.born(kv);
+    const double B1=amplitude_.born_e(kv);
+    const double B2=amplitude_.born_e2(kv);
+    const double NF=consts::nf;
+    const double VV0 = VV_.Epsilon0(kv);
+    const double V0 = V_.Epsilon0(kv);
+    const double V1 = V_.EpsilonP1(kv);
+    
+    
+    const double res= pow(a_s_over_pi_,2.)*1./2.*(
+                             -(2./27.)*NF*B0  *L*L*L
+                             +(19./27.)*NF*B0*L*L
+                             +(-(65./81.)*NF*B0+(8./27.)*NF*B1+(2./3.)*NF*B2+(1./3.)*NF*V0)*L
+                             +(1./54.)*NF*(-5.*consts::pi_square+28.*consts::z3)*B0
+                             +(1./18.)*B1*NF*consts::pi_square
+                             +(1./6.)*NF*(2.*V1+3.*VV0)
+                             );
+    if (res!=res)
+    {
+        cout<<"\nError: VVrenormalized is a nan: "<<res<<endl;
+        return 0.0;
+    }
+    
+    return res;
+}
+
+double Gstar2_qqbar_NNLO_soft::Catani(const KinematicInvariants& kv,int eps)
+{
+    
+    double res=10.0;
+    if (eps==-3)
+    {
+        const double C3 =  1.0/9.0*amplitude_.born(kv) * consts::nf;
+        const double pole3 =  VV_.EpsilonM3(kv) * consts::nf /2.0;
+        //            + consts::nf/3.0 * V_.EpsilonM2(kv)  ;
+        //cout<<"\nCatani 1/e^3 : "<< pole3 <<" vs "<<C3<<endl;
+        res = pole3 - C3;
+    }
+    else if (eps==-2)
+    {
+        //    const double C2 = ( -4.0/27.0*born_(kv)
+        //                    -1.0/3.0*born_.e(kv)) * consts::nf;
+        const double C2 = consts::nf*((1./9.)*amplitude_.born_e(kv)
+                                      +(14./27.)*amplitude_.born(kv));
+        res =  VV_.EpsilonM2(kv) * consts::nf /2.0
+        //      + consts::nf/3.0 * V_.EpsilonM1(kv)
+        -C2;
+    }
+    else if (eps==-1)
+    {
+        const double C1 =  consts::nf*(
+                                       -(1./3.)*amplitude_.born_e2(kv)
+                                       -(4./27.)*amplitude_.born_e(kv)
+                                       +(65./162.)*amplitude_.born(kv)
+                                       -(1./3.)*V_.Epsilon0(kv)
+                                       );
+        
+        const double pole1 =  VV_.EpsilonM1(kv) * consts::nf /2.0;
+        cout<<"\nCatani 1/e^1 : "<< pole1 <<" vs "<<C1<<endl;
+        res = pole1-C1;
+    }
+    else
+    {
+        cout<<"\nError in Catani: you asked for e^"<<eps<<" that is not predicted by Catani";
+    }
+    return res;
+}
+
+double Gstar2_qqbar_NNLO_soft::VVRenormalized(const KinematicInvariants& kbr)
+{
+    //vv[-3]=1/9*B[0],vv[-2]=1/9*B[1]+14/27*B[0]
+    const double Ce2X_ci_mi = consts::nf/2.*(VV_.Epsilon0(kbr)
+                                             - 1./2.*consts::pi_square
+                                             //                     *VV_.EpsilonM2(kbr)
+                                             *2.*(1./9.*amplitude_.born_e(kbr)
+                                                  + 14./27.*amplitude_.born(kbr))
+                                             -14./3.*consts::z3
+                                             //*VV_.EpsilonM3(kbr))
+                                             *2.*1./9.*amplitude_.born(kbr)
+                                             );
+    
+    const double CeX_ci_mi_V = V_.EpsilonP1(kbr)
+    -(1./4.)*consts::pi_square
+    //*V_.EpsilonM1(kbr)
+    *(-4./3.*amplitude_.born_e(kbr)-2.0*amplitude_.born(kbr))
+    -(7./3.)*consts::z3
+    //*V_.EpsilonM2(kbr)
+    *(-4.0/3.0)*amplitude_.born(kbr);
+    return Ce2X_ci_mi + consts::nf/3.*CeX_ci_mi_V;
+    
+    
+}
+
+//------
+
+/*
 
 
 void Gstar2CrossSection::AllocateLuminosity(Luminosity* lumi)
@@ -89,6 +268,13 @@ double Gstar2CrossSection::LL(const double& x1,const double& x2)
     return lumi_box_.give(x1,x2)
     *pow(a_s_over_pi_,info_.alpha_power);
 }
+
+
+
+
+
+
+
 
 
 
@@ -184,30 +370,7 @@ void GstarGstarMeNNLOMueller::Configure()
     compute_averaging_charge_and_a_em_prefactor();
 }
 
-void GstarGstarMe::JF(const double& w,const KinematicVariables& kv)
-{
-    if (w!=w)
-        {
-            cout<<"\nerror: nan as event weight. w="<<w;
-            cout<<kv;
-            cout<<endl;
-            exit(1);
-        }
-    event_box_->AddNewEvent(w);
-    event_box_->SetP(1,kv.p1.p[0],kv.p1.p[1],kv.p1.p[2],kv.p1.p[3]);
-    event_box_->SetP(2,kv.p2.p[0],kv.p2.p[1],kv.p2.p[2],kv.p2.p[3]);
-    event_box_->SetP(3,kv.p3.p[0],kv.p3.p[1],kv.p3.p[2],kv.p3.p[3]);
-    event_box_->SetP(4,kv.p4.p[0],kv.p4.p[1],kv.p4.p[2],kv.p4.p[3]);
-    event_box_->SetP(5,kv.p5.p[0],kv.p5.p[1],kv.p5.p[2],kv.p5.p[3]);
-    event_box_->SetP(6,kv.p6.p[0],kv.p6.p[1],kv.p6.p[2],kv.p6.p[3]);
 
-}
-
-void GstarGstarMe::JF()
-{
-    event_box_->AddNewEvent(0.0);
-
-}
 
 double GstarGstarMe::PP(const double& x)
 {
@@ -226,464 +389,6 @@ double GstarGstarMe::PPt2(const double& z,const double & rho)
     return 4.0/3.0 * (zb*zb*(1.0-z*rb/(1.0-zb*rb))+2.0*z)/zb; 
 }
 
-/*
-double GstarGstarMe::Born(const KinematicInvariants& kk)
-{
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double q13 = kk.q(1,3);
-    const double q23 = kk.q(2,3);
-
-
-    return 8.0*3.0*(
-                q23/q13 - 2.0 * (q3+q4)/q13
-                - q3*q4/q13/q13
-                +q13/q23 - 2.0 * (q3+q4)/q23
-                - q3*q4/q23/q23
-                +2.0*pow(q3+q4,2.0)/ (q13*q23)
-                );
-}
-
-double GstarGstarMe::Born_e(const KinematicInvariants& kk)
-{
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double t = kk.q(1,3);
-    const double u = kk.q(2,3);
-    
-
-    return 48.0*(-q3*q3/(t*u)-q4*q4/(t*u)
-            +q3*q4/pow(u,2.0)-q3*q4/(t*u)+q3*q4/pow(t,2.0)
-            +q3/u+q3/t+q4/u+q4/t
-            -t/u-1.0-u/t );
-}
-
-
-double GstarGstarMe::Born_e2(const KinematicInvariants& kk)
-{
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double t = kk.q(1,3);
-    const double u = kk.q(2,3);
-    
-    return 24.0*(-q3*q4/pow(u,2.0)
-                 -2.0*q3*q4/(t*u)-q3*q4/pow(t,2.0)+t/u+2.0+u/t);
-}
-
-double GstarGstarMe::Born_e3(const KinematicInvariants& kk)
-{
-    const double q3 = kk.q(3);
-    const double q4 = kk.q(4);
-    const double t = kk.q(1,3);
-    const double u = kk.q(2,3);
-    
-    return 0.0;
-}
-*/
-
-//: reminder R= |Mnlo|^2 / (4*gs^2)
-double GstarGstarMe::R(const KinematicInvariants& kk)
-{
-    const double s3 = kk.s(3);
-    const double s4 = kk.s(4);
-    const double s12 = kk.s(1,2);
-    const double s31 = kk.s(1,3);
-    const double s41 = kk.s(1,4);
-    const double s51 = kk.s(1,5);
-    const double s23 = kk.s(2,3);
-    const double s24 = kk.s(2,4);
-    const double s25 = kk.s(2,5);
-    const double s34 = kk.s(3,4);
-    const double s35 = kk.s(3,5);
-    const double s45 = kk.s(4,5);
-
-    
-    const double Vgs2 = 2.0 ;
-    return Vgs2*((-2*(-4*Power(s12,3)*Power(s23,2)*s24*s3*Power(s31,2)*s4*s41 + 8*Power(s12,2)*Power(s23,3)*s24*s3*Power(s31,2)*s4*s41 -
-                      4*Power(s12,2)*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s4*s41 + 4*s12*Power(s23,3)*Power(s24,2)*s3*Power(s31,2)*s4*s41 +
-                      4*s12*Power(s23,2)*Power(s24,3)*s3*Power(s31,2)*s4*s41 - 4*Power(s12,2)*Power(s23,2)*s24*s25*s3*Power(s31,2)*s4*s41 +
-                      4*s12*Power(s23,3)*s24*s25*s3*Power(s31,2)*s4*s41 - 12*s12*Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*s4*s41 +
-                      4*s12*Power(s23,2)*s24*Power(s25,2)*s3*Power(s31,2)*s4*s41 - 16*Power(s12,2)*Power(s23,2)*s24*Power(s3,2)*Power(s31,2)*s4*s41 -
-                      8*s12*s23*Power(s24,3)*Power(s3,2)*Power(s31,2)*s4*s41 + 16*s12*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*s41 -
-                      8*s12*s23*s24*Power(s25,2)*Power(s3,2)*Power(s31,2)*s4*s41 - 4*Power(s12,2)*Power(s23,3)*s24*Power(s31,3)*s4*s41 -
-                      2*s12*Power(s23,3)*Power(s24,2)*Power(s31,3)*s4*s41 - 2*s12*Power(s23,2)*Power(s24,3)*Power(s31,3)*s4*s41 -
-                      2*s12*Power(s23,3)*s24*s25*Power(s31,3)*s4*s41 + 4*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,3)*s4*s41 -
-                      2*s12*Power(s23,2)*s24*Power(s25,2)*Power(s31,3)*s4*s41 + 8*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,3)*s4*s41 -
-                      4*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,3)*s4*s41 + 4*s12*s23*Power(s24,3)*s3*Power(s31,3)*s4*s41 -
-                      4*s12*Power(s23,2)*s24*s25*s3*Power(s31,3)*s4*s41 - 8*s12*s23*Power(s24,2)*s25*s3*Power(s31,3)*s4*s41 +
-                      4*s12*s23*s24*Power(s25,2)*s3*Power(s31,3)*s4*s41 + 2*s12*Power(s23,2)*Power(s24,2)*Power(s31,4)*s4*s41 +
-                      2*s12*Power(s23,2)*s24*s25*Power(s31,4)*s4*s41 - 2*Power(s12,2)*Power(s23,3)*s24*Power(s31,2)*s34*s4*s41 +
-                      2*Power(s12,2)*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*s4*s41 - 2*Power(s12,2)*Power(s23,2)*s24*s25*Power(s31,2)*s34*s4*s41 -
-                      2*s12*Power(s23,3)*s24*s25*Power(s31,2)*s34*s4*s41 + 2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s34*s4*s41 -
-                      2*s12*Power(s23,2)*s24*Power(s25,2)*Power(s31,2)*s34*s4*s41 + 8*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,2)*s34*s4*s41 -
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*Power(s31,2)*s34*s4*s41 + 4*Power(s12,2)*s23*s24*s25*s3*Power(s31,2)*s34*s4*s41 -
-                      4*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*s4*s41 + 4*s12*s23*s24*Power(s25,2)*s3*Power(s31,2)*s34*s4*s41 -
-                      2*Power(s12,2)*Power(s23,2)*s24*Power(s31,3)*s34*s4*s41 + 2*s12*Power(s23,2)*s24*s25*Power(s31,3)*s34*s4*s41 -
-                      2*Power(s12,2)*Power(s23,3)*s24*Power(s31,2)*s35*s4*s41 - 2*Power(s12,2)*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*s4*s41 -
-                      2*s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*s35*s4*s41 - 2*s12*Power(s23,2)*Power(s24,3)*Power(s31,2)*s35*s4*s41 +
-                      2*Power(s12,2)*Power(s23,2)*s24*s25*Power(s31,2)*s35*s4*s41 + 2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s35*s4*s41 +
-                      8*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,2)*s35*s4*s41 + 4*Power(s12,2)*s23*Power(s24,2)*s3*Power(s31,2)*s35*s4*s41 +
-                      4*s12*s23*Power(s24,3)*s3*Power(s31,2)*s35*s4*s41 - 4*Power(s12,2)*s23*s24*s25*s3*Power(s31,2)*s35*s4*s41 -
-                      4*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*s35*s4*s41 - 2*Power(s12,2)*Power(s23,2)*s24*Power(s31,3)*s35*s4*s41 +
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*s35*s4*s41 - 4*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*s34*s35*s4*s41 +
-                      2*Power(s12,2)*Power(s23,3)*s24*Power(s31,2)*Power(s4,2)*s41 - 4*s12*Power(s23,4)*s24*Power(s31,2)*Power(s4,2)*s41 -
-                      2*Power(s12,2)*Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s4,2)*s41 - 4*s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s4,2)*s41 +
-                      2*Power(s12,2)*Power(s23,2)*s24*s25*Power(s31,2)*Power(s4,2)*s41 - 2*s12*Power(s23,3)*s24*s25*Power(s31,2)*Power(s4,2)*s41 -
-                      10*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s4,2)*s41 + 2*s12*Power(s23,2)*s24*Power(s25,2)*Power(s31,2)*Power(s4,2)*s41 -
-                      16*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,2)*Power(s4,2)*s41 - 4*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s4,2)*s41 -
-                      16*Power(s12,2)*s23*s24*s25*s3*Power(s31,2)*Power(s4,2)*s41 + 4*s12*Power(s23,2)*s24*s25*s3*Power(s31,2)*Power(s4,2)*s41 +
-                      8*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,2)*s41 - 4*Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,2)*s41 -
-                      8*s12*s23*s24*Power(s25,2)*s3*Power(s31,2)*Power(s4,2)*s41 + 4*Power(s23,2)*s24*Power(s25,2)*s3*Power(s31,2)*Power(s4,2)*s41 +
-                      16*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s4,2)*s41 + 16*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*s41 +
-                      16*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*s41 - 16*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*Power(s4,2)*s41 +
-                      2*Power(s12,2)*Power(s23,2)*s24*Power(s31,3)*Power(s4,2)*s41 + 8*s12*Power(s23,3)*s24*Power(s31,3)*Power(s4,2)*s41 +
-                      4*s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*Power(s4,2)*s41 + 2*s12*Power(s23,2)*s24*s25*Power(s31,3)*Power(s4,2)*s41 -
-                      8*s12*s23*Power(s24,2)*s3*Power(s31,3)*Power(s4,2)*s41 - 8*s12*s23*s24*s25*s3*Power(s31,3)*Power(s4,2)*s41 -
-                      12*s23*Power(s24,2)*s25*s3*Power(s31,3)*Power(s4,2)*s41 - 4*s23*s24*Power(s25,2)*s3*Power(s31,3)*Power(s4,2)*s41 +
-                      16*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*Power(s4,2)*s41 - 4*s12*Power(s23,2)*s24*Power(s31,4)*Power(s4,2)*s41 +
-                      4*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*s35*Power(s4,2)*s41 - 4*s12*s23*Power(s24,2)*s3*Power(s31,2)*s35*Power(s4,2)*s41 +
-                      4*s12*s23*s24*s25*s3*Power(s31,2)*s35*Power(s4,2)*s41 - 2*Power(s12,2)*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*Power(s41,2) +
-                      2*Power(s12,2)*s23*Power(s24,3)*Power(s3,2)*s31*Power(s41,2) - 4*s12*Power(s23,2)*Power(s24,3)*Power(s3,2)*s31*Power(s41,2) -
-                      4*s12*s23*Power(s24,4)*Power(s3,2)*s31*Power(s41,2) + 2*Power(s12,2)*s23*Power(s24,2)*s25*Power(s3,2)*s31*Power(s41,2) -
-                      10*s12*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*s31*Power(s41,2) - 2*s12*s23*Power(s24,3)*s25*Power(s3,2)*s31*Power(s41,2) +
-                      2*s12*s23*Power(s24,2)*Power(s25,2)*Power(s3,2)*s31*Power(s41,2) + 4*Power(s12,2)*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2) -
-                      3*s12*Power(s23,3)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2) - s12*Power(s23,2)*Power(s24,3)*s3*Power(s31,2)*Power(s41,2) +
-                      2*s12*s23*Power(s24,4)*s3*Power(s31,2)*Power(s41,2) + 10*s12*Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*Power(s41,2) +
-                      2*s12*s23*Power(s24,3)*s25*s3*Power(s31,2)*Power(s41,2) - 4*Power(s23,2)*Power(s24,2)*Power(s25,2)*s3*Power(s31,2)*Power(s41,2) -
-                      2*Power(s12,2)*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s41,2) + 4*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s41,2) +
-                      4*s12*s23*Power(s24,3)*Power(s3,2)*Power(s31,2)*Power(s41,2) - 4*s12*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2) -
-                      Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2) - 2*s23*Power(s24,3)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2) +
-                      4*s23*Power(s24,2)*Power(s25,2)*Power(s3,2)*Power(s31,2)*Power(s41,2) + 2*s12*Power(s23,3)*Power(s24,2)*Power(s31,3)*Power(s41,2) +
-                      2*s12*Power(s23,2)*Power(s24,3)*Power(s31,3)*Power(s41,2) + Power(s23,3)*Power(s24,2)*s25*Power(s31,3)*Power(s41,2) +
-                      Power(s23,2)*Power(s24,3)*s25*Power(s31,3)*Power(s41,2) + 2*Power(s23,2)*Power(s24,2)*Power(s25,2)*Power(s31,3)*Power(s41,2) -
-                      3*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,3)*Power(s41,2) - 2*s12*s23*Power(s24,3)*s3*Power(s31,3)*Power(s41,2) +
-                      Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,3)*Power(s41,2) - 2*s23*Power(s24,2)*Power(s25,2)*s3*Power(s31,3)*Power(s41,2) -
-                      Power(s23,2)*Power(s24,2)*s25*Power(s31,4)*Power(s41,2) + 2*Power(s12,2)*Power(s23,2)*Power(s24,2)*s3*s31*s34*Power(s41,2) -
-                      2*Power(s12,2)*s23*Power(s24,3)*s3*s31*s34*Power(s41,2) - 2*Power(s12,2)*s23*Power(s24,2)*s25*s3*s31*s34*Power(s41,2) +
-                      2*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*s34*Power(s41,2) - 2*s12*s23*Power(s24,3)*s25*s3*s31*s34*Power(s41,2) -
-                      2*s12*s23*Power(s24,2)*Power(s25,2)*s3*s31*s34*Power(s41,2) - 2*Power(s12,2)*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*Power(s41,2) -
-                      2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s34*Power(s41,2) + Power(s23,2)*Power(s24,2)*Power(s25,2)*Power(s31,2)*s34*Power(s41,2) +
-                      2*Power(s12,2)*s23*Power(s24,2)*s3*Power(s31,2)*s34*Power(s41,2) + 2*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*Power(s41,2) -
-                      2*s23*Power(s24,2)*Power(s25,2)*s3*Power(s31,2)*s34*Power(s41,2) + 2*s12*Power(s23,2)*Power(s24,3)*s3*s31*s35*Power(s41,2) +
-                      2*s12*s23*Power(s24,4)*s3*s31*s35*Power(s41,2) + 4*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*s35*Power(s41,2) +
-                      2*s12*s23*Power(s24,3)*s25*s3*s31*s35*Power(s41,2) + s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*s35*Power(s41,2) +
-                      s12*Power(s23,2)*Power(s24,3)*Power(s31,2)*s35*Power(s41,2) - 2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s35*Power(s41,2) -
-                      Power(s23,3)*Power(s24,2)*s25*Power(s31,2)*s35*Power(s41,2) - Power(s23,2)*Power(s24,3)*s25*Power(s31,2)*s35*Power(s41,2) -
-                      2*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s35*Power(s41,2) - 2*s12*s23*Power(s24,3)*s3*Power(s31,2)*s35*Power(s41,2) +
-                      2*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*s35*Power(s41,2) + Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*s35*Power(s41,2) +
-                      2*s23*Power(s24,3)*s25*s3*Power(s31,2)*s35*Power(s41,2) + s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*s35*Power(s41,2) -
-                      4*Power(s12,3)*s23*Power(s24,2)*s3*s31*s4*Power(s41,2) - 4*Power(s12,2)*Power(s23,2)*Power(s24,2)*s3*s31*s4*Power(s41,2) +
-                      4*s12*Power(s23,3)*Power(s24,2)*s3*s31*s4*Power(s41,2) + 8*Power(s12,2)*s23*Power(s24,3)*s3*s31*s4*Power(s41,2) +
-                      4*s12*Power(s23,2)*Power(s24,3)*s3*s31*s4*Power(s41,2) - 4*Power(s12,2)*s23*Power(s24,2)*s25*s3*s31*s4*Power(s41,2) -
-                      12*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*s4*Power(s41,2) + 4*s12*s23*Power(s24,3)*s25*s3*s31*s4*Power(s41,2) +
-                      4*s12*s23*Power(s24,2)*Power(s25,2)*s3*s31*s4*Power(s41,2) - 16*Power(s12,2)*s23*Power(s24,2)*Power(s3,2)*s31*s4*Power(s41,2) -
-                      4*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*s4*Power(s41,2) - 16*Power(s12,2)*s23*s24*s25*Power(s3,2)*s31*s4*Power(s41,2) +
-                      8*s12*Power(s23,2)*s24*s25*Power(s3,2)*s31*s4*Power(s41,2) + 4*s12*s23*Power(s24,2)*s25*Power(s3,2)*s31*s4*Power(s41,2) -
-                      4*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*s31*s4*Power(s41,2) - 8*s12*s23*s24*Power(s25,2)*Power(s3,2)*s31*s4*Power(s41,2) +
-                      4*s23*Power(s24,2)*Power(s25,2)*Power(s3,2)*s31*s4*Power(s41,2) + 2*s12*Power(s23,4)*s24*Power(s31,2)*s4*Power(s41,2) +
-                      4*Power(s12,2)*Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2) - s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2) -
-                      3*s12*Power(s23,2)*Power(s24,3)*Power(s31,2)*s4*Power(s41,2) + 2*s12*Power(s23,3)*s24*s25*Power(s31,2)*s4*Power(s41,2) +
-                      10*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s4*Power(s41,2) - 4*Power(s23,2)*Power(s24,2)*Power(s25,2)*Power(s31,2)*s4*Power(s41,2) -
-                      4*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,2)*s4*Power(s41,2) - 4*s12*Power(s23,3)*s24*s3*Power(s31,2)*s4*Power(s41,2) -
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*Power(s31,2)*s4*Power(s41,2) - 4*s12*s23*Power(s24,3)*s3*Power(s31,2)*s4*Power(s41,2) -
-                      24*s12*Power(s23,2)*s24*s25*s3*Power(s31,2)*s4*Power(s41,2) - 24*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*s4*Power(s41,2) +
-                      10*Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*s4*Power(s41,2) - 8*s12*s23*s24*Power(s25,2)*s3*Power(s31,2)*s4*Power(s41,2) +
-                      6*Power(s23,2)*s24*Power(s25,2)*s3*Power(s31,2)*s4*Power(s41,2) + 6*s23*Power(s24,2)*Power(s25,2)*s3*Power(s31,2)*s4*Power(s41,2) -
-                      4*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) + 8*s12*s23*s24*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) -
-                      2*Power(s23,2)*s24*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) - 10*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) -
-                      8*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) - 2*Power(s24,3)*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) -
-                      12*s23*s24*Power(s25,2)*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) + 4*Power(s24,2)*Power(s25,2)*Power(s3,2)*Power(s31,2)*s4*Power(s41,2) +
-                      8*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*s4*Power(s41,2) - 2*s12*Power(s23,3)*s24*Power(s31,3)*s4*Power(s41,2) -
-                      s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*s4*Power(s41,2) + 2*s12*Power(s23,2)*s24*s25*Power(s31,3)*s4*Power(s41,2) +
-                      Power(s23,2)*Power(s24,2)*s25*Power(s31,3)*s4*Power(s41,2) + 4*s12*Power(s23,2)*s24*s3*Power(s31,3)*s4*Power(s41,2) +
-                      4*s12*s23*Power(s24,2)*s3*Power(s31,3)*s4*Power(s41,2) + 6*s23*Power(s24,2)*s25*s3*Power(s31,3)*s4*Power(s41,2) -
-                      10*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*s4*Power(s41,2) - 4*Power(s12,2)*Power(s23,2)*s24*s3*s31*s34*s4*Power(s41,2) +
-                      8*Power(s12,2)*s23*Power(s24,2)*s3*s31*s34*s4*Power(s41,2) + 4*Power(s12,2)*s23*s24*s25*s3*s31*s34*s4*Power(s41,2) -
-                      4*s12*Power(s23,2)*s24*s25*s3*s31*s34*s4*Power(s41,2) + 4*s12*s23*s24*Power(s25,2)*s3*s31*s34*s4*Power(s41,2) +
-                      2*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*s34*s4*Power(s41,2) + 2*s12*Power(s23,2)*s24*s25*Power(s31,2)*s34*s4*Power(s41,2) -
-                      2*Power(s23,2)*s24*Power(s25,2)*Power(s31,2)*s34*s4*Power(s41,2) + 2*Power(s23,2)*s24*s25*s3*Power(s31,2)*s34*s4*Power(s41,2) +
-                      2*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*s4*Power(s41,2) + 8*s23*s24*Power(s25,2)*s3*Power(s31,2)*s34*s4*Power(s41,2) -
-                      2*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s34*s4*Power(s41,2) + 4*Power(s12,2)*Power(s23,2)*s24*s3*s31*s35*s4*Power(s41,2) +
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*s31*s35*s4*Power(s41,2) + 4*Power(s12,2)*s23*s24*s25*s3*s31*s35*s4*Power(s41,2) -
-                      2*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*s35*s4*Power(s41,2) + 2*s12*Power(s23,3)*s24*Power(s31,2)*s35*s4*Power(s41,2) +
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*s4*Power(s41,2) + 2*s12*Power(s23,2)*s24*s25*Power(s31,2)*s35*s4*Power(s41,2) -
-                      Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s35*s4*Power(s41,2) - 4*s12*s23*s24*s25*s3*Power(s31,2)*s35*s4*Power(s41,2) +
-                      2*Power(s23,2)*s24*s25*s3*Power(s31,2)*s35*s4*Power(s41,2) - 6*s23*Power(s24,2)*s25*s3*Power(s31,2)*s35*s4*Power(s41,2) +
-                      4*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s35*s4*Power(s41,2) - 2*s12*Power(s23,2)*s24*Power(s31,3)*s35*s4*Power(s41,2) -
-                      2*Power(s23,2)*s24*s25*Power(s31,2)*s34*s35*s4*Power(s41,2) - 8*s12*Power(s23,3)*s24*s3*s31*Power(s4,2)*Power(s41,2) -
-                      16*Power(s12,2)*s23*Power(s24,2)*s3*s31*Power(s4,2)*Power(s41,2) + 16*s12*Power(s23,2)*s24*s25*s3*s31*Power(s4,2)*Power(s41,2) -
-                      8*s12*s23*s24*Power(s25,2)*s3*s31*Power(s4,2)*Power(s41,2) + 16*s12*Power(s23,2)*s24*Power(s3,2)*s31*Power(s4,2)*Power(s41,2) +
-                      16*s12*Power(s23,2)*s25*Power(s3,2)*s31*Power(s4,2)*Power(s41,2) + 16*Power(s23,2)*s24*s25*Power(s3,2)*s31*Power(s4,2)*Power(s41,2) -
-                      2*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*Power(s4,2)*Power(s41,2) + 4*s12*Power(s23,3)*s24*Power(s31,2)*Power(s4,2)*Power(s41,2) +
-                      4*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s4,2)*Power(s41,2) - 4*s12*Power(s23,2)*s24*s25*Power(s31,2)*Power(s4,2)*Power(s41,2) -
-                      2*Power(s23,3)*s24*s25*Power(s31,2)*Power(s4,2)*Power(s41,2) - Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s4,2)*Power(s41,2) +
-                      4*Power(s23,2)*s24*Power(s25,2)*Power(s31,2)*Power(s4,2)*Power(s41,2) - 4*s12*Power(s23,2)*s24*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) -
-                      10*s12*Power(s23,2)*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) - 2*Power(s23,3)*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) +
-                      8*s12*s23*s24*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) - 8*Power(s23,2)*s24*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) -
-                      2*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) + 4*Power(s23,2)*Power(s25,2)*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) -
-                      12*s23*s24*Power(s25,2)*s3*Power(s31,2)*Power(s4,2)*Power(s41,2) + 4*Power(s23,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*Power(s41,2) +
-                      4*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*Power(s41,2) - 4*s12*Power(s23,2)*s24*Power(s31,3)*Power(s4,2)*Power(s41,2) -
-                      2*Power(s23,2)*s24*s25*Power(s31,3)*Power(s4,2)*Power(s41,2) - 2*Power(s23,2)*Power(s25,2)*Power(s31,3)*Power(s4,2)*Power(s41,2) -
-                      2*Power(s23,2)*s25*s3*Power(s31,2)*s34*Power(s4,2)*Power(s41,2) - 4*s12*Power(s23,2)*s24*s3*s31*s35*Power(s4,2)*Power(s41,2) -
-                      8*s12*Power(s23,2)*s25*s3*s31*s35*Power(s4,2)*Power(s41,2) - 4*s12*s23*s24*s25*s3*s31*s35*Power(s4,2)*Power(s41,2) -
-                      8*Power(s23,2)*s24*s25*s3*s31*s35*Power(s4,2)*Power(s41,2) + 2*s12*Power(s23,2)*s25*Power(s31,2)*s35*Power(s4,2)*Power(s41,2) +
-                      2*Power(s23,3)*s25*Power(s31,2)*s35*Power(s4,2)*Power(s41,2) + 6*Power(s23,2)*s24*s25*Power(s31,2)*s35*Power(s4,2)*Power(s41,2) -
-                      4*Power(s23,2)*s25*s3*Power(s31,2)*s35*Power(s4,2)*Power(s41,2) + 2*Power(s23,2)*s25*Power(s31,2)*s34*s35*Power(s4,2)*Power(s41,2) -
-                      16*Power(s23,2)*s25*Power(s3,2)*s31*Power(s4,3)*Power(s41,2) + 8*Power(s23,2)*s25*s3*Power(s31,2)*Power(s4,3)*Power(s41,2) +
-                      2*Power(s23,2)*s25*Power(s31,3)*Power(s4,3)*Power(s41,2) + 8*Power(s23,2)*s25*s3*s31*s35*Power(s4,3)*Power(s41,2) -
-                      4*Power(s23,2)*s25*Power(s31,2)*s35*Power(s4,3)*Power(s41,2) - 2*s12*Power(s23,3)*Power(s24,2)*s3*s31*Power(s41,3) -
-                      4*Power(s12,2)*s23*Power(s24,3)*s3*s31*Power(s41,3) - 2*s12*Power(s23,2)*Power(s24,3)*s3*s31*Power(s41,3) +
-                      4*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*Power(s41,3) - 2*s12*s23*Power(s24,3)*s25*s3*s31*Power(s41,3) -
-                      2*s12*s23*Power(s24,2)*Power(s25,2)*s3*s31*Power(s41,3) + 2*Power(s12,2)*s23*Power(s24,2)*Power(s3,2)*s31*Power(s41,3) +
-                      4*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*Power(s41,3) + 8*s12*s23*Power(s24,3)*Power(s3,2)*s31*Power(s41,3) +
-                      2*s12*s23*Power(s24,2)*s25*Power(s3,2)*s31*Power(s41,3) + 2*s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s41,3) +
-                      2*s12*Power(s23,2)*Power(s24,3)*Power(s31,2)*Power(s41,3) + Power(s23,3)*Power(s24,2)*s25*Power(s31,2)*Power(s41,3) +
-                      Power(s23,2)*Power(s24,3)*s25*Power(s31,2)*Power(s41,3) + 2*Power(s23,2)*Power(s24,2)*Power(s25,2)*Power(s31,2)*Power(s41,3) -
-                      s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s41,3) - 2*s12*s23*Power(s24,3)*s3*Power(s31,2)*Power(s41,3) +
-                      2*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s41,3) + Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*Power(s41,3) -
-                      4*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s41,3) - 2*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,3) -
-                      2*Power(s24,2)*Power(s25,2)*Power(s3,2)*Power(s31,2)*Power(s41,3) + 2*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*Power(s41,3) -
-                      2*Power(s23,2)*Power(s24,2)*s25*Power(s31,3)*Power(s41,3) - 2*Power(s12,2)*s23*Power(s24,2)*s3*s31*s34*Power(s41,3) +
-                      2*s12*s23*Power(s24,2)*s25*s3*s31*s34*Power(s41,3) - 2*s12*Power(s23,2)*Power(s24,2)*s3*s31*s35*Power(s41,3) -
-                      4*s12*s23*Power(s24,3)*s3*s31*s35*Power(s41,3) - 2*s12*s23*Power(s24,2)*s25*s3*s31*s35*Power(s41,3) +
-                      s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*Power(s41,3) + 2*s12*s23*Power(s24,2)*s3*Power(s31,2)*s35*Power(s41,3) +
-                      2*s23*Power(s24,2)*s25*s3*Power(s31,2)*s35*Power(s41,3) - 2*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s35*Power(s41,3) +
-                      4*s12*Power(s23,3)*s24*s3*s31*s4*Power(s41,3) + 8*Power(s12,2)*s23*Power(s24,2)*s3*s31*s4*Power(s41,3) -
-                      4*s12*Power(s23,2)*Power(s24,2)*s3*s31*s4*Power(s41,3) - 8*s12*Power(s23,2)*s24*s25*s3*s31*s4*Power(s41,3) -
-                      4*s12*s23*Power(s24,2)*s25*s3*s31*s4*Power(s41,3) + 4*s12*s23*s24*Power(s25,2)*s3*s31*s4*Power(s41,3) -
-                      8*s12*Power(s23,2)*s24*Power(s3,2)*s31*s4*Power(s41,3) - 8*s12*s23*s24*s25*Power(s3,2)*s31*s4*Power(s41,3) -
-                      12*Power(s23,2)*s24*s25*Power(s3,2)*s31*s4*Power(s41,3) - 4*s23*s24*Power(s25,2)*Power(s3,2)*s31*s4*Power(s41,3) -
-                      2*s12*Power(s23,3)*s24*Power(s31,2)*s4*Power(s41,3) - 3*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*Power(s41,3) +
-                      Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s4*Power(s41,3) - 2*Power(s23,2)*s24*Power(s25,2)*Power(s31,2)*s4*Power(s41,3) +
-                      4*s12*Power(s23,2)*s24*s3*Power(s31,2)*s4*Power(s41,3) + 4*s12*s23*Power(s24,2)*s3*Power(s31,2)*s4*Power(s41,3) +
-                      6*Power(s23,2)*s24*s25*s3*Power(s31,2)*s4*Power(s41,3) + 4*s12*Power(s23,2)*s24*s3*s31*s35*s4*Power(s41,3) +
-                      4*s12*s23*s24*s25*s3*s31*s35*s4*Power(s41,3) + 8*Power(s23,2)*s24*s25*s3*s31*s35*s4*Power(s41,3) -
-                      2*s12*Power(s23,2)*s24*Power(s31,2)*s35*s4*Power(s41,3) - 2*Power(s23,2)*s24*s25*Power(s31,2)*s35*s4*Power(s41,3) +
-                      16*Power(s23,2)*s25*Power(s3,2)*s31*Power(s4,2)*Power(s41,3) - 10*Power(s23,2)*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,3) -
-                      8*Power(s23,2)*s25*s3*s31*s35*Power(s4,2)*Power(s41,3) + 2*Power(s23,2)*s25*Power(s31,2)*s35*Power(s4,2)*Power(s41,3) +
-                      2*s12*Power(s23,2)*Power(s24,2)*s3*s31*Power(s41,4) + 2*s12*s23*Power(s24,2)*s25*s3*s31*Power(s41,4) -
-                      4*s12*s23*Power(s24,2)*Power(s3,2)*s31*Power(s41,4) - Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s41,4) +
-                      2*s12*s23*Power(s24,2)*s3*s31*s35*Power(s41,4) + 2*s12*Power(s23,4)*s24*Power(s31,2)*s4*s41*s45 +
-                      2*s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*s4*s41*s45 + 2*s12*Power(s23,3)*s24*s25*Power(s31,2)*s4*s41*s45 +
-                      4*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s4*s41*s45 + 4*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,2)*s4*s41*s45 +
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*Power(s31,2)*s4*s41*s45 + 4*Power(s12,2)*s23*s24*s25*s3*Power(s31,2)*s4*s41*s45 -
-                      4*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*s4*s41*s45 - 4*s12*s23*s24*s25*Power(s3,2)*Power(s31,2)*s4*s41*s45 -
-                      8*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*s41*s45 - 8*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*s41*s45 +
-                      8*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*s4*s41*s45 - 4*s12*Power(s23,3)*s24*Power(s31,3)*s4*s41*s45 -
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*s4*s41*s45 - 2*s12*Power(s23,2)*s24*s25*Power(s31,3)*s4*s41*s45 +
-                      4*s12*s23*Power(s24,2)*s3*Power(s31,3)*s4*s41*s45 + 4*s12*s23*s24*s25*s3*Power(s31,3)*s4*s41*s45 + 8*s23*Power(s24,2)*s25*s3*Power(s31,3)*s4*s41*s45 -
-                      8*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*s4*s41*s45 + 2*s12*Power(s23,2)*s24*Power(s31,4)*s4*s41*s45 -
-                      2*Power(s12,2)*Power(s23,2)*Power(s24,2)*s3*s31*Power(s41,2)*s45 - 2*s12*Power(s23,3)*Power(s24,2)*s3*s31*Power(s41,2)*s45 -
-                      2*Power(s12,2)*s23*Power(s24,3)*s3*s31*Power(s41,2)*s45 - 2*s12*Power(s23,2)*Power(s24,3)*s3*s31*Power(s41,2)*s45 +
-                      2*Power(s12,2)*s23*Power(s24,2)*s25*s3*s31*Power(s41,2)*s45 + 2*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*Power(s41,2)*s45 +
-                      4*Power(s12,2)*s23*Power(s24,2)*Power(s3,2)*s31*Power(s41,2)*s45 + s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s41,2)*s45 +
-                      s12*Power(s23,2)*Power(s24,3)*Power(s31,2)*Power(s41,2)*s45 - 2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s41,2)*s45 -
-                      Power(s23,3)*Power(s24,2)*s25*Power(s31,2)*Power(s41,2)*s45 - Power(s23,2)*Power(s24,3)*s25*Power(s31,2)*Power(s41,2)*s45 -
-                      2*Power(s12,2)*s23*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*s45 + 2*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*s45 +
-                      2*s12*s23*Power(s24,3)*s3*Power(s31,2)*Power(s41,2)*s45 + 2*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s41,2)*s45 -
-                      Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*Power(s41,2)*s45 + 2*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2)*s45 +
-                      6*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2)*s45 + 2*Power(s24,3)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2)*s45 -
-                      4*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*Power(s41,2)*s45 + s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*Power(s41,2)*s45 -
-                      2*s12*s23*Power(s24,2)*s3*Power(s31,3)*Power(s41,2)*s45 - 2*s23*Power(s24,2)*s25*s3*Power(s31,3)*Power(s41,2)*s45 +
-                      2*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*Power(s41,2)*s45 - 4*Power(s12,2)*s23*Power(s24,2)*s3*s31*s34*Power(s41,2)*s45 -
-                      2*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*Power(s41,2)*s45 + 2*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s34*Power(s41,2)*s45 +
-                      4*Power(s12,2)*Power(s23,2)*s24*s3*s31*s4*Power(s41,2)*s45 + 4*s12*Power(s23,3)*s24*s3*s31*s4*Power(s41,2)*s45 +
-                      8*Power(s12,2)*s23*Power(s24,2)*s3*s31*s4*Power(s41,2)*s45 - 4*Power(s12,2)*s23*s24*s25*s3*s31*s4*Power(s41,2)*s45 -
-                      4*s12*Power(s23,2)*s24*s25*s3*s31*s4*Power(s41,2)*s45 - 4*s12*Power(s23,2)*s24*Power(s3,2)*s31*s4*Power(s41,2)*s45 +
-                      4*s12*s23*s24*s25*Power(s3,2)*s31*s4*Power(s41,2)*s45 - 2*s12*Power(s23,3)*s24*Power(s31,2)*s4*Power(s41,2)*s45 -
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2)*s45 + 2*s12*Power(s23,2)*s24*s25*Power(s31,2)*s4*Power(s41,2)*s45 +
-                      2*Power(s23,3)*s24*s25*Power(s31,2)*s4*Power(s41,2)*s45 + Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s4*Power(s41,2)*s45 -
-                      4*s12*s23*s24*s25*s3*Power(s31,2)*s4*Power(s41,2)*s45 - 6*Power(s23,2)*s24*s25*s3*Power(s31,2)*s4*Power(s41,2)*s45 +
-                      2*s23*Power(s24,2)*s25*s3*Power(s31,2)*s4*Power(s41,2)*s45 - 4*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2)*s45 +
-                      2*s12*Power(s23,2)*s24*Power(s31,3)*s4*Power(s41,2)*s45 + 2*Power(s23,2)*s24*s25*Power(s31,3)*s4*Power(s41,2)*s45 +
-                      4*Power(s23,2)*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2)*s45 - 2*Power(s23,2)*s25*Power(s31,3)*Power(s4,2)*Power(s41,2)*s45 -
-                      2*Power(s12,2)*s23*Power(s24,2)*s3*s31*Power(s41,3)*s45 + 2*s12*Power(s23,2)*Power(s24,2)*s3*s31*Power(s41,3)*s45 +
-                      s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s41,3)*s45 - 2*s12*s23*Power(s24,2)*s3*Power(s31,2)*Power(s41,3)*s45 +
-                      2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s4,2)*s51 + 2*Power(s23,2)*Power(s24,3)*s25*Power(s31,2)*Power(s4,2)*s51 -
-                      10*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s4,2)*s51 - 10*Power(s23,2)*Power(s24,3)*s3*Power(s31,2)*Power(s4,2)*s51 -
-                      8*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,2)*s51 - 4*Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,2)*s51 -
-                      8*s23*Power(s24,3)*s25*s3*Power(s31,2)*Power(s4,2)*s51 + 16*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s4,2)*s51 +
-                      4*Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s4,2)*s51 + 16*s23*Power(s24,3)*Power(s3,2)*Power(s31,2)*Power(s4,2)*s51 -
-                      4*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*s51 - 8*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*s51 -
-                      4*Power(s24,3)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*s51 + 8*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*Power(s4,2)*s51 +
-                      2*Power(s23,2)*Power(s24,2)*s25*Power(s31,3)*Power(s4,2)*s51 - 2*Power(s23,2)*Power(s24,2)*s3*Power(s31,3)*Power(s4,2)*s51 +
-                      4*s23*Power(s24,2)*s25*s3*Power(s31,3)*Power(s4,2)*s51 - 4*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*Power(s4,2)*s51 +
-                      2*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s34*Power(s4,2)*s51 - 2*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s34*Power(s4,2)*s51 +
-                      4*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*Power(s4,2)*s51 - 4*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s34*Power(s4,2)*s51 +
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*Power(s4,2)*s51 + 2*Power(s23,2)*Power(s24,3)*Power(s31,2)*s35*Power(s4,2)*s51 -
-                      8*s12*s23*Power(s24,2)*s3*Power(s31,2)*s35*Power(s4,2)*s51 - 4*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s35*Power(s4,2)*s51 -
-                      8*s23*Power(s24,3)*s3*Power(s31,2)*s35*Power(s4,2)*s51 + 2*Power(s23,2)*Power(s24,2)*Power(s31,3)*s35*Power(s4,2)*s51 +
-                      2*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*s35*Power(s4,2)*s51 + 2*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s4,3)*s51 -
-                      4*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s4,3)*s51 + 8*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s4,3)*s51 +
-                      4*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,3)*s51 - 16*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s4,3)*s51 +
-                      8*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,3)*s51 - 4*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*Power(s4,3)*s51 +
-                      8*s23*Power(s24,2)*s3*Power(s31,2)*s35*Power(s4,3)*s51 - 8*Power(s12,3)*s23*s24*s25*s3*s31*s4*s41*s51 -
-                      8*Power(s12,2)*Power(s23,2)*s24*s25*s3*s31*s4*s41*s51 - 8*Power(s12,2)*s23*Power(s24,2)*s25*s3*s31*s4*s41*s51 -
-                      8*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*s4*s41*s51 - 16*Power(s12,2)*s23*Power(s24,2)*Power(s3,2)*s31*s4*s41*s51 +
-                      8*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*s4*s41*s51 - 8*s12*s23*Power(s24,3)*Power(s3,2)*s31*s4*s41*s51 -
-                      4*s12*Power(s23,2)*s24*s25*Power(s3,2)*s31*s4*s41*s51 + 4*s12*s23*Power(s24,2)*s25*Power(s3,2)*s31*s4*s41*s51 -
-                      4*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*s31*s4*s41*s51 + 4*s23*Power(s24,3)*s25*Power(s3,2)*s31*s4*s41*s51 +
-                      2*s12*Power(s23,4)*s24*Power(s31,2)*s4*s41*s51 + 2*s12*Power(s23,3)*Power(s24,2)*Power(s31,2)*s4*s41*s51 +
-                      4*Power(s12,2)*Power(s23,2)*s24*s25*Power(s31,2)*s4*s41*s51 + 2*s12*Power(s23,3)*s24*s25*Power(s31,2)*s4*s41*s51 +
-                      8*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s4*s41*s51 - 2*Power(s23,2)*Power(s24,3)*s25*Power(s31,2)*s4*s41*s51 -
-                      4*Power(s12,2)*Power(s23,2)*s24*s3*Power(s31,2)*s4*s41*s51 - 4*s12*Power(s23,3)*s24*s3*Power(s31,2)*s4*s41*s51 -
-                      24*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s4*s41*s51 - 8*s12*s23*Power(s24,3)*s3*Power(s31,2)*s4*s41*s51 +
-                      6*Power(s23,2)*Power(s24,3)*s3*Power(s31,2)*s4*s41*s51 - 8*Power(s12,2)*s23*s24*s25*s3*Power(s31,2)*s4*s41*s51 -
-                      16*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*s4*s41*s51 + 10*Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*s4*s41*s51 +
-                      4*s23*Power(s24,3)*s25*s3*Power(s31,2)*s4*s41*s51 + 8*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*s4*s41*s51 -
-                      2*Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s31,2)*s4*s41*s51 - 12*s23*Power(s24,3)*Power(s3,2)*Power(s31,2)*s4*s41*s51 -
-                      4*s12*s23*s24*s25*Power(s3,2)*Power(s31,2)*s4*s41*s51 - 8*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*s41*s51 -
-                      4*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*s41*s51 + 4*Power(s24,3)*s25*Power(s3,2)*Power(s31,2)*s4*s41*s51 +
-                      4*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*s4*s41*s51 - 2*s12*Power(s23,3)*s24*Power(s31,3)*s4*s41*s51 +
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,3)*s4*s41*s51 + 2*s12*Power(s23,2)*s24*s25*Power(s31,3)*s4*s41*s51 +
-                      4*s12*Power(s23,2)*s24*s3*Power(s31,3)*s4*s41*s51 + 4*s23*Power(s24,2)*s25*s3*Power(s31,3)*s4*s41*s51 -
-                      8*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*s4*s41*s51 + 4*Power(s12,2)*Power(s23,2)*s24*s3*s31*s34*s4*s41*s51 +
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*s31*s34*s4*s41*s51 - 2*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*s34*s4*s41*s51 +
-                      2*s12*Power(s23,3)*s24*Power(s31,2)*s34*s4*s41*s51 + 2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*s4*s41*s51 +
-                      4*s12*Power(s23,2)*s24*s25*Power(s31,2)*s34*s4*s41*s51 - 2*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*s34*s4*s41*s51 -
-                      4*s12*s23*Power(s24,2)*s3*Power(s31,2)*s34*s4*s41*s51 + 2*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s34*s4*s41*s51 -
-                      4*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*s4*s41*s51 + 4*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s34*s4*s41*s51 -
-                      2*s12*Power(s23,2)*s24*Power(s31,3)*s34*s4*s41*s51 - 4*Power(s12,2)*Power(s23,2)*s24*s3*s31*s35*s4*s41*s51 +
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*s31*s35*s4*s41*s51 - 4*s12*Power(s23,2)*Power(s24,2)*s3*s31*s35*s4*s41*s51 +
-                      4*s12*s23*Power(s24,3)*s3*s31*s35*s4*s41*s51 + 2*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*s35*s4*s41*s51 +
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*s4*s41*s51 - 2*Power(s23,2)*Power(s24,3)*Power(s31,2)*s35*s4*s41*s51 +
-                      2*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s35*s4*s41*s51 + 8*s23*Power(s24,3)*s3*Power(s31,2)*s35*s4*s41*s51 -
-                      2*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*s35*s4*s41*s51 - 16*Power(s12,2)*Power(s23,2)*s24*s3*s31*Power(s4,2)*s41*s51 -
-                      8*s12*Power(s23,3)*s24*s3*s31*Power(s4,2)*s41*s51 + 8*s12*Power(s23,2)*Power(s24,2)*s3*s31*Power(s4,2)*s41*s51 +
-                      4*s12*Power(s23,2)*s24*s25*s3*s31*Power(s4,2)*s41*s51 + 4*Power(s23,3)*s24*s25*s3*s31*Power(s4,2)*s41*s51 -
-                      4*s12*s23*Power(s24,2)*s25*s3*s31*Power(s4,2)*s41*s51 - 4*Power(s23,2)*Power(s24,2)*s25*s3*s31*Power(s4,2)*s41*s51 +
-                      2*Power(s12,2)*Power(s23,2)*s24*Power(s31,2)*Power(s4,2)*s41*s51 + 2*s12*Power(s23,3)*s24*Power(s31,2)*Power(s4,2)*s41*s51 -
-                      4*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s4,2)*s41*s51 - 2*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s4,2)*s41*s51 -
-                      4*s12*Power(s23,2)*s24*s25*Power(s31,2)*Power(s4,2)*s41*s51 + 6*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s4,2)*s41*s51 +
-                      4*s12*Power(s23,2)*s24*s3*Power(s31,2)*Power(s4,2)*s41*s51 + 16*s12*s23*Power(s24,2)*s3*Power(s31,2)*Power(s4,2)*s41*s51 -
-                      8*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s4,2)*s41*s51 + 4*s12*s23*s24*s25*s3*Power(s31,2)*Power(s4,2)*s41*s51 -
-                      8*Power(s23,2)*s24*s25*s3*Power(s31,2)*Power(s4,2)*s41*s51 - 4*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s4,2)*s41*s51 +
-                      16*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s4,2)*s41*s51 - 8*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s4,2)*s41*s51 -
-                      2*s12*Power(s23,2)*s24*Power(s31,3)*Power(s4,2)*s41*s51 - 2*Power(s23,2)*Power(s24,2)*Power(s31,3)*Power(s4,2)*s41*s51 +
-                      4*s23*s24*s25*s3*Power(s31,3)*Power(s4,2)*s41*s51 + 4*s12*Power(s23,2)*s24*s3*s31*s35*Power(s4,2)*s41*s51 -
-                      4*s12*s23*Power(s24,2)*s3*s31*s35*Power(s4,2)*s41*s51 + 6*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*Power(s4,2)*s41*s51 -
-                      8*s23*Power(s24,2)*s3*Power(s31,2)*s35*Power(s4,2)*s41*s51 + 2*s12*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*Power(s41,2)*s51 +
-                      2*Power(s23,3)*Power(s24,2)*s25*Power(s3,2)*Power(s41,2)*s51 + 2*Power(s23,2)*Power(s24,3)*Power(s3,3)*Power(s41,2)*s51 -
-                      4*Power(s23,2)*Power(s24,2)*s25*Power(s3,3)*Power(s41,2)*s51 + 2*s12*Power(s23,2)*Power(s24,3)*s3*s31*Power(s41,2)*s51 +
-                      2*s12*s23*Power(s24,4)*s3*s31*Power(s41,2)*s51 + 4*Power(s12,2)*s23*Power(s24,2)*s25*s3*s31*Power(s41,2)*s51 +
-                      8*s12*Power(s23,2)*Power(s24,2)*s25*s3*s31*Power(s41,2)*s51 - 2*Power(s23,3)*Power(s24,2)*s25*s3*s31*Power(s41,2)*s51 +
-                      2*s12*s23*Power(s24,3)*s25*s3*s31*Power(s41,2)*s51 + 2*Power(s12,2)*s23*Power(s24,2)*Power(s3,2)*s31*Power(s41,2)*s51 -
-                      4*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*Power(s41,2)*s51 + 2*s12*s23*Power(s24,3)*Power(s3,2)*s31*Power(s41,2)*s51 -
-                      2*Power(s23,2)*Power(s24,3)*Power(s3,2)*s31*Power(s41,2)*s51 - 4*s12*s23*Power(s24,2)*s25*Power(s3,2)*s31*Power(s41,2)*s51 +
-                      6*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*s31*Power(s41,2)*s51 - Power(s23,4)*Power(s24,2)*Power(s31,2)*Power(s41,2)*s51 -
-                      2*Power(s23,3)*Power(s24,3)*Power(s31,2)*Power(s41,2)*s51 - Power(s23,2)*Power(s24,4)*Power(s31,2)*Power(s41,2)*s51 -
-                      4*s12*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s41,2)*s51 - 2*Power(s23,3)*Power(s24,2)*s25*Power(s31,2)*Power(s41,2)*s51 -
-                      2*Power(s23,2)*Power(s24,3)*s25*Power(s31,2)*Power(s41,2)*s51 + 10*s12*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*s51 +
-                      Power(s23,3)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*s51 + 4*s12*s23*Power(s24,3)*s3*Power(s31,2)*Power(s41,2)*s51 +
-                      Power(s23,2)*Power(s24,3)*s3*Power(s31,2)*Power(s41,2)*s51 + 8*s12*s23*Power(s24,2)*s25*s3*Power(s31,2)*Power(s41,2)*s51 -
-                      10*s12*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s41,2)*s51 - Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s31,2)*Power(s41,2)*s51 +
-                      2*s12*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2)*s51 + 6*s23*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2)*s51 +
-                      2*Power(s24,3)*s25*Power(s3,2)*Power(s31,2)*Power(s41,2)*s51 - 4*Power(s24,2)*s25*Power(s3,3)*Power(s31,2)*Power(s41,2)*s51 +
-                      Power(s23,3)*Power(s24,2)*Power(s31,3)*Power(s41,2)*s51 + Power(s23,2)*Power(s24,3)*Power(s31,3)*Power(s41,2)*s51 -
-                      2*Power(s23,2)*Power(s24,2)*s25*Power(s31,3)*Power(s41,2)*s51 - 2*s23*Power(s24,2)*s25*s3*Power(s31,3)*Power(s41,2)*s51 +
-                      2*Power(s24,2)*s25*Power(s3,2)*Power(s31,3)*Power(s41,2)*s51 + 2*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*s34*Power(s41,2)*s51 -
-                      2*Power(s12,2)*s23*Power(s24,2)*s3*s31*s34*Power(s41,2)*s51 + 2*s12*Power(s23,2)*Power(s24,2)*s3*s31*s34*Power(s41,2)*s51 +
-                      2*s12*s23*Power(s24,3)*s3*s31*s34*Power(s41,2)*s51 + 4*s12*s23*Power(s24,2)*s25*s3*s31*s34*Power(s41,2)*s51 -
-                      2*Power(s23,2)*Power(s24,2)*s25*s3*s31*s34*Power(s41,2)*s51 - 2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*Power(s41,2)*s51 +
-                      2*s12*s23*Power(s24,2)*s3*Power(s31,2)*s34*Power(s41,2)*s51 - 2*s23*Power(s24,2)*s25*s3*Power(s31,2)*s34*Power(s41,2)*s51 +
-                      2*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s34*Power(s41,2)*s51 - 2*Power(s23,2)*Power(s24,3)*Power(s3,2)*s35*Power(s41,2)*s51 +
-                      2*s12*Power(s23,2)*Power(s24,2)*s3*s31*s35*Power(s41,2)*s51 - 2*s12*s23*Power(s24,3)*s3*s31*s35*Power(s41,2)*s51 +
-                      2*Power(s23,2)*Power(s24,3)*s3*s31*s35*Power(s41,2)*s51 - 2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*Power(s41,2)*s51 +
-                      4*s12*s23*Power(s24,2)*s3*Power(s31,2)*s35*Power(s41,2)*s51 + Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s35*Power(s41,2)*s51 -
-                      Power(s23,2)*Power(s24,2)*Power(s31,3)*s35*Power(s41,2)*s51 - 10*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*s4*Power(s41,2)*s51 -
-                      10*Power(s23,3)*Power(s24,2)*Power(s3,2)*s4*Power(s41,2)*s51 - 8*s12*Power(s23,2)*s24*s25*Power(s3,2)*s4*Power(s41,2)*s51 -
-                      8*Power(s23,3)*s24*s25*Power(s3,2)*s4*Power(s41,2)*s51 - 4*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*s4*Power(s41,2)*s51 +
-                      8*Power(s23,2)*Power(s24,2)*Power(s3,3)*s4*Power(s41,2)*s51 + 4*Power(s23,2)*s24*s25*Power(s3,3)*s4*Power(s41,2)*s51 -
-                      8*s12*Power(s23,3)*s24*s3*s31*s4*Power(s41,2)*s51 - 4*Power(s12,2)*s23*Power(s24,2)*s3*s31*s4*Power(s41,2)*s51 -
-                      24*s12*Power(s23,2)*Power(s24,2)*s3*s31*s4*Power(s41,2)*s51 + 6*Power(s23,3)*Power(s24,2)*s3*s31*s4*Power(s41,2)*s51 -
-                      4*s12*s23*Power(s24,3)*s3*s31*s4*Power(s41,2)*s51 - 8*Power(s12,2)*s23*s24*s25*s3*s31*s4*Power(s41,2)*s51 -
-                      16*s12*Power(s23,2)*s24*s25*s3*s31*s4*Power(s41,2)*s51 + 4*Power(s23,3)*s24*s25*s3*s31*s4*Power(s41,2)*s51 +
-                      10*Power(s23,2)*Power(s24,2)*s25*s3*s31*s4*Power(s41,2)*s51 + 16*s12*Power(s23,2)*s24*Power(s3,2)*s31*s4*Power(s41,2)*s51 +
-                      4*s12*s23*Power(s24,2)*Power(s3,2)*s31*s4*Power(s41,2)*s51 - 8*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*s4*Power(s41,2)*s51 +
-                      4*s12*s23*s24*s25*Power(s3,2)*s31*s4*Power(s41,2)*s51 - 4*Power(s23,2)*s24*s25*Power(s3,2)*s31*s4*Power(s41,2)*s51 -
-                      8*s23*Power(s24,2)*s25*Power(s3,2)*s31*s4*Power(s41,2)*s51 + 4*s12*Power(s23,3)*s24*Power(s31,2)*s4*Power(s41,2)*s51 +
-                      10*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2)*s51 + Power(s23,3)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2)*s51 +
-                      Power(s23,2)*Power(s24,3)*Power(s31,2)*s4*Power(s41,2)*s51 + 8*s12*Power(s23,2)*s24*s25*Power(s31,2)*s4*Power(s41,2)*s51 -
-                      12*s12*Power(s23,2)*s24*s3*Power(s31,2)*s4*Power(s41,2)*s51 - 12*s12*s23*Power(s24,2)*s3*Power(s31,2)*s4*Power(s41,2)*s51 +
-                      10*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s4*Power(s41,2)*s51 - 8*s12*s23*s24*s25*s3*Power(s31,2)*s4*Power(s41,2)*s51 +
-                      10*Power(s23,2)*s24*s25*s3*Power(s31,2)*s4*Power(s41,2)*s51 + 10*s23*Power(s24,2)*s25*s3*Power(s31,2)*s4*Power(s41,2)*s51 -
-                      4*s23*Power(s24,2)*Power(s3,2)*Power(s31,2)*s4*Power(s41,2)*s51 - 4*s23*s24*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2)*s51 -
-                      4*Power(s24,2)*s25*Power(s3,2)*Power(s31,2)*s4*Power(s41,2)*s51 - 2*Power(s23,2)*Power(s24,2)*Power(s3,2)*s34*s4*Power(s41,2)*s51 +
-                      4*Power(s23,2)*s24*s25*Power(s3,2)*s34*s4*Power(s41,2)*s51 - 4*s12*Power(s23,2)*s24*s3*s31*s34*s4*Power(s41,2)*s51 +
-                      2*Power(s23,2)*Power(s24,2)*s3*s31*s34*s4*Power(s41,2)*s51 - 4*Power(s23,2)*s24*s25*s3*s31*s34*s4*Power(s41,2)*s51 +
-                      2*s12*Power(s23,2)*s24*Power(s31,2)*s34*s4*Power(s41,2)*s51 - 2*Power(s23,2)*s24*s25*Power(s31,2)*s34*s4*Power(s41,2)*s51 +
-                      4*Power(s23,2)*Power(s24,2)*Power(s3,2)*s35*s4*Power(s41,2)*s51 - 4*s12*Power(s23,2)*s24*s3*s31*s35*s4*Power(s41,2)*s51 -
-                      6*Power(s23,2)*Power(s24,2)*s3*s31*s35*s4*Power(s41,2)*s51 + 2*s12*Power(s23,2)*s24*Power(s31,2)*s35*s4*Power(s41,2)*s51 -
-                      Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*s4*Power(s41,2)*s51 + 16*s12*Power(s23,2)*s24*Power(s3,2)*Power(s4,2)*Power(s41,2)*s51 +
-                      16*Power(s23,3)*s24*Power(s3,2)*Power(s4,2)*Power(s41,2)*s51 + 4*Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s4,2)*Power(s41,2)*s51 -
-                      4*s12*Power(s23,2)*s25*Power(s3,2)*Power(s4,2)*Power(s41,2)*s51 - 4*Power(s23,3)*s25*Power(s3,2)*Power(s4,2)*Power(s41,2)*s51 -
-                      8*Power(s23,2)*s24*s25*Power(s3,2)*Power(s4,2)*Power(s41,2)*s51 - 16*Power(s23,2)*s24*Power(s3,3)*Power(s4,2)*Power(s41,2)*s51 +
-                      8*Power(s23,2)*s25*Power(s3,3)*Power(s4,2)*Power(s41,2)*s51 + 8*s12*Power(s23,2)*s24*s3*s31*Power(s4,2)*Power(s41,2)*s51 -
-                      12*Power(s23,3)*s24*s3*s31*Power(s4,2)*Power(s41,2)*s51 - 2*Power(s23,2)*Power(s24,2)*s3*s31*Power(s4,2)*Power(s41,2)*s51 -
-                      8*s12*Power(s23,2)*s25*s3*s31*Power(s4,2)*Power(s41,2)*s51 + 4*Power(s23,3)*s25*s3*s31*Power(s4,2)*Power(s41,2)*s51 -
-                      4*s12*s23*s24*s25*s3*s31*Power(s4,2)*Power(s41,2)*s51 - 4*Power(s23,2)*s24*s25*s3*s31*Power(s4,2)*Power(s41,2)*s51 +
-                      16*Power(s23,2)*s24*Power(s3,2)*s31*Power(s4,2)*Power(s41,2)*s51 - 8*Power(s23,2)*s25*Power(s3,2)*s31*Power(s4,2)*Power(s41,2)*s51 -
-                      10*s12*Power(s23,2)*s24*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 - Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 +
-                      2*s12*Power(s23,2)*s25*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 + 2*Power(s23,3)*s25*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 +
-                      6*Power(s23,2)*s24*s25*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 - 4*Power(s23,2)*s24*s3*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 -
-                      4*Power(s23,2)*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 - 4*s23*s24*s25*s3*Power(s31,2)*Power(s4,2)*Power(s41,2)*s51 -
-                      4*Power(s23,2)*s25*Power(s3,2)*s34*Power(s4,2)*Power(s41,2)*s51 + 4*Power(s23,2)*s25*s3*s31*s34*Power(s4,2)*Power(s41,2)*s51 +
-                      2*Power(s23,2)*s25*Power(s31,2)*s34*Power(s4,2)*Power(s41,2)*s51 + 8*Power(s23,2)*s25*Power(s3,2)*Power(s4,3)*Power(s41,2)*s51 +
-                      4*Power(s23,2)*s25*s3*s31*Power(s4,3)*Power(s41,2)*s51 - 4*Power(s23,2)*s25*Power(s31,2)*Power(s4,3)*Power(s41,2)*s51 +
-                      2*Power(s23,2)*Power(s24,2)*s25*Power(s3,2)*Power(s41,3)*s51 + 2*s12*Power(s23,2)*Power(s24,2)*s3*s31*Power(s41,3)*s51 -
-                      2*s12*s23*Power(s24,3)*s3*s31*Power(s41,3)*s51 + 2*s12*s23*Power(s24,2)*s25*s3*s31*Power(s41,3)*s51 -
-                      2*s12*s23*Power(s24,2)*Power(s3,2)*s31*Power(s41,3)*s51 - 2*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*Power(s41,3)*s51 +
-                      Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s41,3)*s51 + Power(s23,2)*Power(s24,3)*Power(s31,2)*Power(s41,3)*s51 -
-                      2*Power(s23,2)*Power(s24,2)*s25*Power(s31,2)*Power(s41,3)*s51 - 2*s12*s23*Power(s24,2)*s3*s31*s34*Power(s41,3)*s51 +
-                      2*s12*s23*Power(s24,2)*s3*s31*s35*Power(s41,3)*s51 + 2*Power(s23,2)*Power(s24,2)*s3*s31*s35*Power(s41,3)*s51 -
-                      Power(s23,2)*Power(s24,2)*Power(s31,2)*s35*Power(s41,3)*s51 - 2*Power(s23,2)*Power(s24,2)*Power(s3,2)*s4*Power(s41,3)*s51 +
-                      4*Power(s23,2)*s24*s25*Power(s3,2)*s4*Power(s41,3)*s51 + 4*s12*s23*Power(s24,2)*s3*s31*s4*Power(s41,3)*s51 +
-                      4*Power(s23,2)*s24*s25*s3*s31*s4*Power(s41,3)*s51 + 4*s23*s24*s25*Power(s3,2)*s31*s4*Power(s41,3)*s51 -
-                      2*Power(s23,2)*s24*s25*Power(s31,2)*s4*Power(s41,3)*s51 - 4*Power(s23,2)*s25*Power(s3,2)*Power(s4,2)*Power(s41,3)*s51 -
-                      8*Power(s23,2)*s25*s3*s31*Power(s4,2)*Power(s41,3)*s51 + 2*Power(s23,2)*s25*Power(s31,2)*Power(s4,2)*Power(s41,3)*s51 -
-                      2*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s4,2)*s45*s51 + 4*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s4,2)*s45*s51 +
-                      4*Power(s12,2)*Power(s23,2)*s24*s3*s31*s4*s41*s45*s51 + 4*s12*Power(s23,3)*s24*s3*s31*s4*s41*s45*s51 -
-                      4*Power(s12,2)*s23*Power(s24,2)*s3*s31*s4*s41*s45*s51 - 4*s12*Power(s23,2)*Power(s24,2)*s3*s31*s4*s41*s45*s51 -
-                      4*s12*Power(s23,2)*s24*Power(s3,2)*s31*s4*s41*s45*s51 + 4*s12*s23*Power(s24,2)*Power(s3,2)*s31*s4*s41*s45*s51 -
-                      2*s12*Power(s23,3)*s24*Power(s31,2)*s4*s41*s45*s51 + 2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*s41*s45*s51 +
-                      2*Power(s23,3)*Power(s24,2)*Power(s31,2)*s4*s41*s45*s51 - 4*s12*s23*Power(s24,2)*s3*Power(s31,2)*s4*s41*s45*s51 -
-                      6*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s4*s41*s45*s51 + 2*s12*Power(s23,2)*s24*Power(s31,3)*s4*s41*s45*s51 +
-                      2*Power(s23,2)*Power(s24,2)*Power(s31,3)*s4*s41*s45*s51 + 2*s12*Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s41,2)*s45*s51 +
-                      2*Power(s23,3)*Power(s24,2)*Power(s3,2)*Power(s41,2)*s45*s51 - 4*Power(s23,2)*Power(s24,2)*Power(s3,3)*Power(s41,2)*s45*s51 +
-                      2*Power(s12,2)*s23*Power(s24,2)*s3*s31*Power(s41,2)*s45*s51 + 2*s12*Power(s23,2)*Power(s24,2)*s3*s31*Power(s41,2)*s45*s51 -
-                      2*Power(s23,3)*Power(s24,2)*s3*s31*Power(s41,2)*s45*s51 + 6*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*Power(s41,2)*s45*s51 -
-                      2*s12*Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s41,2)*s45*s51 + 2*s12*s23*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*s45*s51 -
-                      Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*s45*s51 - Power(s23,2)*Power(s24,2)*Power(s31,3)*Power(s41,2)*s45*s51 +
-                      2*Power(s23,2)*Power(s24,2)*Power(s3,2)*s34*Power(s41,2)*s45*s51 - 2*Power(s23,2)*Power(s24,2)*s3*s31*s34*Power(s41,2)*s45*s51 -
-                      8*s12*Power(s23,2)*s24*Power(s3,2)*s4*Power(s41,2)*s45*s51 - 8*Power(s23,3)*s24*Power(s3,2)*s4*Power(s41,2)*s45*s51 -
-                      4*Power(s23,2)*Power(s24,2)*Power(s3,2)*s4*Power(s41,2)*s45*s51 + 8*Power(s23,2)*s24*Power(s3,3)*s4*Power(s41,2)*s45*s51 +
-                      8*Power(s23,3)*s24*s3*s31*s4*Power(s41,2)*s45*s51 + 2*Power(s23,2)*Power(s24,2)*s3*s31*s4*Power(s41,2)*s45*s51 -
-                      8*Power(s23,2)*s24*Power(s3,2)*s31*s4*Power(s41,2)*s45*s51 + 4*s12*Power(s23,2)*s24*Power(s31,2)*s4*Power(s41,2)*s45*s51 +
-                      Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2)*s45*s51 + 2*Power(s23,2)*Power(s24,2)*Power(s3,2)*Power(s41,3)*s45*s51 -
-                      Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s41,3)*s45*s51 - 2*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s4,2)*Power(s51,2) +
-                      4*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s4,2)*Power(s51,2) + 4*s12*Power(s23,3)*s24*s3*s31*s4*s41*Power(s51,2) -
-                      8*s12*Power(s23,2)*Power(s24,2)*s3*s31*s4*s41*Power(s51,2) + 4*s12*s23*Power(s24,3)*s3*s31*s4*s41*Power(s51,2) -
-                      8*s12*Power(s23,2)*s24*Power(s3,2)*s31*s4*s41*Power(s51,2) - 8*s12*s23*Power(s24,2)*Power(s3,2)*s31*s4*s41*Power(s51,2) -
-                      12*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*s4*s41*Power(s51,2) - 4*s23*Power(s24,3)*Power(s3,2)*s31*s4*s41*Power(s51,2) -
-                      2*s12*Power(s23,3)*s24*Power(s31,2)*s4*s41*Power(s51,2) - 2*Power(s23,2)*Power(s24,3)*Power(s31,2)*s4*s41*Power(s51,2) +
-                      4*s12*Power(s23,2)*s24*s3*Power(s31,2)*s4*s41*Power(s51,2) + 6*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*s4*s41*Power(s51,2) +
-                      4*s12*Power(s23,2)*s24*s3*s31*s34*s4*s41*Power(s51,2) + 4*s12*s23*Power(s24,2)*s3*s31*s34*s4*s41*Power(s51,2) +
-                      8*Power(s23,2)*Power(s24,2)*s3*s31*s34*s4*s41*Power(s51,2) - 2*s12*Power(s23,2)*s24*Power(s31,2)*s34*s4*s41*Power(s51,2) -
-                      2*Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*s4*s41*Power(s51,2) - 8*s12*Power(s23,2)*s24*s3*s31*Power(s4,2)*s41*Power(s51,2) -
-                      4*Power(s23,3)*s24*s3*s31*Power(s4,2)*s41*Power(s51,2) - 8*s12*s23*Power(s24,2)*s3*s31*Power(s4,2)*s41*Power(s51,2) -
-                      12*Power(s23,2)*Power(s24,2)*s3*s31*Power(s4,2)*s41*Power(s51,2) + 2*s12*Power(s23,2)*s24*Power(s31,2)*Power(s4,2)*s41*Power(s51,2) +
-                      4*Power(s23,2)*Power(s24,2)*Power(s31,2)*Power(s4,2)*s41*Power(s51,2) + 4*Power(s23,2)*s24*s3*Power(s31,2)*Power(s4,2)*s41*Power(s51,2) -
-                      2*Power(s23,2)*Power(s24,3)*Power(s3,2)*Power(s41,2)*Power(s51,2) - 2*Power(s23,3)*Power(s24,2)*s3*s31*Power(s41,2)*Power(s51,2) -
-                      2*s12*s23*Power(s24,3)*s3*s31*Power(s41,2)*Power(s51,2) + 2*s12*s23*Power(s24,2)*Power(s3,2)*s31*Power(s41,2)*Power(s51,2) +
-                      4*Power(s23,2)*Power(s24,2)*Power(s3,2)*s31*Power(s41,2)*Power(s51,2) + 2*Power(s23,3)*Power(s24,2)*Power(s31,2)*Power(s41,2)*Power(s51,2) +
-                      2*Power(s23,2)*Power(s24,3)*Power(s31,2)*Power(s41,2)*Power(s51,2) - 4*Power(s23,2)*Power(s24,2)*s3*Power(s31,2)*Power(s41,2)*Power(s51,2) -
-                      2*s12*s23*Power(s24,2)*s3*s31*s34*Power(s41,2)*Power(s51,2) - 2*Power(s23,2)*Power(s24,2)*s3*s31*s34*Power(s41,2)*Power(s51,2) + 
-                      Power(s23,2)*Power(s24,2)*Power(s31,2)*s34*Power(s41,2)*Power(s51,2) + 4*Power(s23,2)*Power(s24,2)*Power(s3,2)*s4*Power(s41,2)*Power(s51,2) + 
-                      4*s12*s23*Power(s24,2)*s3*s31*s4*Power(s41,2)*Power(s51,2) + 6*Power(s23,2)*Power(s24,2)*s3*s31*s4*Power(s41,2)*Power(s51,2) + 
-                      4*s23*Power(s24,2)*Power(s3,2)*s31*s4*Power(s41,2)*Power(s51,2) - 4*Power(s23,2)*Power(s24,2)*Power(s31,2)*s4*Power(s41,2)*Power(s51,2)))/
-                 (Power(s23,2)*Power(s24,2)*s25*s3*Power(s31,2)*s4*Power(s41,2)*s51));
-    
-}
 
 #include "RR_from_maple.cpp"
 
@@ -1623,6 +1328,6 @@ double GstarGstarMeNNLOConvRight::asymmetric_reg_piece()
     const double CF = 4.0/3.0;
     return - CF/12. * (logz-zsqp1*Li2zbar/zbar+zbar) * reg;
 }
-
+*/
 
 

@@ -31,6 +31,8 @@ namespace consts
                             +(-1078361.0/162.0-6508.0/27.0*consts::z3)*consts::nf
                             +(50065.0/162.0+6472.0/81.0*consts::z3)*pow(consts::nf,2.0)
                             +(1093.0/729.0)*pow(consts::nf,3.0));
+    const double alpha_em_at_mz = 1./132.3384323;
+    // a_em(m_z) from MCFM with mz = 91.1876
     
 }
 

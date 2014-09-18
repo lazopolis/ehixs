@@ -1,8 +1,9 @@
 #ifndef KINEMATIC_INVARIANTS_H
 #define KINEMATIC_INVARIANTS_H
+//#include <iostream>
+#include <sstream>
 
-#include <iostream>
-using namespace std;
+//using namespace std;
 
 class KinematicInvariants{
 public:
@@ -21,7 +22,7 @@ public:
     double q(int i)const {return q_i_[index(i)];}
     void compute_dimensionless_invariants();
     
-    friend ostream& operator<<(ostream& stream, const KinematicInvariants& kk);
+    friend std::ostream& operator<<(std::ostream& stream, const KinematicInvariants& kk);
     
     
 private:
@@ -35,18 +36,6 @@ private:
     int max(int i,int j) const ;
     int min(int i,int j) const;
     int index(int) const;
-};
-
-class BjorkenXs{
-public:
-    void generate(const double& tau,const double& v0, const double& v1);
-    double jacobian(){return jacobian_;}
-    double x1() const {return x1_;}
-    double x2() const {return x2_;}
-    double com_rapidity_ratio(){return (x2_-x1_)/(x2_+x1_);}
-private:
-    double x1_,x2_;
-    double jacobian_;
 };
 
 

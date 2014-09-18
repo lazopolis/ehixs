@@ -90,7 +90,7 @@ void Production::Configure(const UserInterface & UI)
                             UI.perturbative_order,
                             UI.m_higgs);
             the_xs_->SetAlphaStrong(Model.alpha_strong()/consts::Pi);
-            SetProcessSpecificParameters();
+            SetProcessSpecificParameters(UI);
             the_xs_->Configure();
             
         }

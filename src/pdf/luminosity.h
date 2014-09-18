@@ -20,6 +20,12 @@ public:
     void add_pair(int left,int right)
     {
         pairs.push_back(pair<int,int>(left,right));
+        coeff_.push_back(1.);
+    }
+    void add_pair(int left,int right,const double& c)
+    {
+        pairs.push_back(pair<int,int>(left,right));
+        coeff_.push_back(c);
     }
     
     double give(const double& x1,const double& x2);
@@ -29,6 +35,7 @@ private:
     LHAPDF::PDF* pdf_;
     double muf_;
     vector<pair<int,int> > pairs;
+    vector<double> coeff_;
 private:
     string determine_gridname(const string& provider, int order);
 };

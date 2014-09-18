@@ -4,33 +4,96 @@
 #include "convolutions.h" // for FF
 #include "kinematic_variables.h"
 #include "cross_section.h"
-
-class GstarGstarBorn
-{
-public:
-    void configure(const double& charge, const double& alpha_em);
-    double operator()(const KinematicInvariants& kk);
-    double e(const KinematicInvariants& kk);
-    double e2(const KinematicInvariants& kk);
-    double e3(const KinematicInvariants& kk);
-private:
-    double prefactor_;
-};
-
-
+#include "gstar2_amplitude.h"
 
 
 class Gstar2CrossSection : public CrossSection
 {
 public:
-    void AllocateLuminosity(Luminosity* lumi);
-    
+    double alpha_s_at_mz_from_lhapdfs(){return lumi->alpha_s_at_mz();}
+    void SetPhotonMasses(const double& m3, const double& m4);
 protected:
-    LuminosityBox lumi_box_;
+    void JF(const double&,const GStar2Kinematics& kv);
+    void JF();
+protected:
+    NewLuminosity* lumi;
+    double m3,m4;
+    Gstar2Amplitude amplitude_;
+};
+
+
+
+class Gstar2CrossSection_qqbar: public Gstar2CrossSection
+{
+public:
+    Gstar2CrossSection_qqbar();
+    void AllocateLuminosity(const UserInterface&);
+    
+    
 protected:
     double LL(const double& x1,const double& x2);
     
+    
+protected:
+    int number_of_particles_;
+    double smin;
+    double prefactor_;
+    
 };
+
+
+
+class Gstar2_qqbar_Delta: public Gstar2CrossSection_qqbar
+{
+public:
+    void Configure();
+    void Evaluate(double* xx_vegas);
+    virtual double eval_me(const KinematicInvariants&)=0;
+    void SetDimension(){dimension_ = 4;}
+protected:
+    GStar2KinematicsLO kk_;
+};
+
+/* LO */
+class Gstar2_qqbar_LO : public Gstar2_qqbar_Delta
+{
+public:
+    Gstar2_qqbar_LO(){info_.name="LO";info_.alpha_power = 0;}
+    double eval_me(const KinematicInvariants&);
+};
+
+/* NLO SOFT */
+#include "virtual_amplitude.h"
+
+class Gstar2_qqbar_NLO_soft: public Gstar2_qqbar_Delta
+{
+public:
+    Gstar2_qqbar_NLO_soft(){info_.name = "NLO SOFT";info_.alpha_power = 1;}
+    double eval_me(const KinematicInvariants&);
+    double Catani(const KinematicInvariants& kv,int eps);
+private:
+    GstarVirtual V_;
+};
+
+/* NNLO SOFT */
+class Gstar2_qqbar_NNLO_soft: public Gstar2_qqbar_Delta
+{
+public:
+    Gstar2_qqbar_NNLO_soft(){info_.name = "NNLO SOFT";info_.alpha_power = 2;}
+    double eval_me(const KinematicInvariants&);
+    double Catani(const KinematicInvariants& kv,int eps);
+    double VVRenormalized(const KinematicInvariants& kv);
+private:
+    GstarVirtual V_;
+    GstarVirtualVirtual VV_;
+    
+};
+
+
+
+/*
+
+
 
 
 
@@ -60,7 +123,7 @@ protected:
 protected:
     int number_of_particles_;
     double smin;
-    double m3,m4;
+    
     double alpha_em;
     double prefactor_;
     
@@ -396,7 +459,7 @@ public:
 };
 
 
-
+*/
 
 
 #endif

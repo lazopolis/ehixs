@@ -7,56 +7,8 @@
 #include <iomanip>
 using namespace std;
 
-
-
-ostream& operator<<(ostream& stream, const KinematicVariables& kk)
-{
-    
-    return stream << setprecision(16)
-    <<"\n-------"
-    <<kk.kin_inv_
-    <<"\n tau = "<<kk.tau_<<","
-    <<"\n smax = "<<kk.smax_<<","
-    <<"\n smin = "<<kk.smin_<<","
-    <<"\n x1 = "<<kk.x1()<<","
-    <<"\n x2 = "<<kk.x2()<<","
-    <<"\n p1 = "<<kk.p1<<","
-    <<"\n p2 = "<<kk.p2<<","
-    <<"\n p3 = "<<kk.p3<<","
-    <<"\n p4 = "<<kk.p4<<","
-    <<"\n p5 = "<<kk.p5
-    ;
-}
-
-
-
-
-void BjorkenXs::generate(const double& tau,const double& v0, const double& v1)
-{
-    const double y= log(tau) *(1.0-v0);
-    const double u = exp(y);
-    const double rho = 1.0/2.0*log(u) -  log(u) * v1;
-    x1_ = sqrt(u)*exp(rho);
-    x2_ = sqrt(u)*exp(-rho);
-    jacobian_ = -log(u)*u*(1.0-tau)*(-log(tau));
-}
-
-void KinematicVariables::generate_bjorken_xs(double* xx_vegas)
-{
-    bjorken_.generate(tau_,xx_vegas[0],xx_vegas[1]);
-    jacobian = bjorken_.jacobian();
-    set_p1_p2_at_lab();
-    kin_inv_.Set(1,2,bjorken_.x1()*bjorken_.x2()*smax_);
-}
-
-void KinematicVariables::set_p1_p2_at_lab()
-{
-    p1.Set(bjorken_.x1()*sqrt(smax_)/2.0,0.0,0.0,bjorken_.x1()*sqrt(smax_)/2.0);
-    p2.Set(bjorken_.x2()*sqrt(smax_)/2.0,0.0,0.0,-bjorken_.x2()*sqrt(smax_)/2.0);
-}
-
 void Massive2ParticlePhaseSpace::generate(const double& Qsq,const double& s3, const double& s4,const double& v2,const double& v3)
-{    
+{
     const double costheta = -1.0 + 2.0 *  v2;
     const double phi = 2.0 * consts::Pi * v3;
     jacobian_ =  4.0*consts::Pi;
@@ -65,18 +17,18 @@ void Massive2ParticlePhaseSpace::generate(const double& Qsq,const double& s3, co
     const double pp3 = sqrt(Kaellen(Qsq,s3,s4))/2.0/sqrt(Qsq);
     jacobian_ = jacobian_ * pp3/sqrt(Qsq);
     p3com_.Set((Qsq+s3-s4)/2.0/sqrt(Qsq),
-              pp3 * sintheta * sin(phi),
-              pp3 * sintheta * cos(phi),
-              pp3 * costheta);
+               pp3 * sintheta * sin(phi),
+               pp3 * sintheta * cos(phi),
+               pp3 * costheta);
     p4com_.Set((Qsq+s4-s3)/2.0/sqrt(Qsq),
-              -pp3 * sintheta * sin(phi),
-              -pp3 * sintheta * cos(phi),
-              -pp3 * costheta);
+               -pp3 * sintheta * sin(phi),
+               -pp3 * sintheta * cos(phi),
+               -pp3 * costheta);
     if (p3com_[1] != p3com_[1])
-        {
+    {
         cout<<"\n[Massive2ParticlePhaseSpace]: Q^2="<<Qsq
-            <<" pp3 = "<<pp3;
-        }
+        <<" pp3 = "<<pp3;
+    }
 }
 
 double Massive2ParticlePhaseSpace::Kaellen(const double& a, const double& b,const double& c)
@@ -88,66 +40,152 @@ double Massive2ParticlePhaseSpace::Kaellen(const double& a, const double& b,cons
     return res;
 }
 
-void LOKinematics::generate_kinematics(double* xx_vegas)
+ostream& operator<<(ostream& stream, const GStar2Kinematics& kk)
 {
-    generate_bjorken_xs(xx_vegas);
+    
+    return stream << setprecision(16)
+    <<"\n-------"
+    <<kk.kin_inv_
+    <<"\n tau = "<<kk.tau_<<","
+    <<"\n smax = "<<kk.smax_<<","
+    <<"\n smin = "<<kk.smin_<<","
+    <<"\n x1 = "<<kk.x1()<<","
+    <<"\n x2 = "<<kk.x2()<<",";
+    for (int i=1;i<kk.NumberOfParticles()+1;i++)
+        cout<<"\np"<<i<<" = "<<kk.P(i);
+}
+
+
+void GStar2Kinematics::SetNumberOfParticles(int num_of_particles)
+{
+    kin_inv_.SetMaxMomentumID(num_of_particles);
+    num_of_particles_ = num_of_particles;
+    // we initialize p_ with N+1, so that we can call p_[1]..p_[N]
+    // i.e. p_[0] is a dummy FMomentum to off-set the p_ vector
+    p_ = vector<FMomentum>(num_of_particles+1,FMomentum());
+}
+
+void GStar2Kinematics::SetBoundaries(const double& smin,const double& smax)
+{
+    smax_=smax;
+    smin_=smin;
+    tau_=smin/smax;
+}
+
+void GStar2Kinematics::SetMassesSquared(const double& s3, const double& s4)
+{
+    kin_inv_.Set(3,s3);kin_inv_.Set(4,s4);
+}
+
+void GStar2Kinematics::generate_bjorken_xs(double* xx_vegas)
+{
+    bjorken_.generate(tau_,xx_vegas[0],xx_vegas[1]);
+    jacobian_ = bjorken_.jacobian();
+    set_p1_p2_at_lab();
+    kin_inv_.Set(1,2,bjorken_.x1()*bjorken_.x2()*smax_);
+}
+
+void GStar2Kinematics::set_p1_p2_at_lab()
+{
+    p_[1].Set(bjorken_.x1()*sqrt(smax_)/2.0,0.0,0.0,bjorken_.x1()*sqrt(smax_)/2.0);
+    p_[2].Set(bjorken_.x2()*sqrt(smax_)/2.0,0.0,0.0,-bjorken_.x2()*sqrt(smax_)/2.0);
+}
+
+void GStar2Kinematics::boost_along_z_axis(const double& bb)
+{
+    // boosting to LAB frame (the transverse pieces are invariant)
+    p_[3].equal(born_kins_.p3com());p_[3].zboost(bb);
+    p_[4].equal(born_kins_.p4com());p_[4].zboost(bb);
+    
+}
+
+void GStar2Kinematics::boost_to_lab()
+{
+    //Q=p1+p2-p5
+    FMomentum Q;
+    Q.Set(p_[1][0]+p_[2][0]-p_[5][0],
+          p_[1][1]+p_[2][1]-p_[5][1],
+          p_[1][2]+p_[2][2]-p_[5][2],
+          p_[1][3]+p_[2][3]-p_[5][3]);
+    const double bx = -Q[1]/Q[0];
+    const double by = -Q[2]/Q[0];
+    const double bz = -Q[3]/Q[0];
+    
+    p_[3].equal(born_kins_.p3com());
+    //cout<<"\n p3com = "<<p3;
+    p_[3].boost(bx,by,bz);
+    //cout<<" -> boost -> "<<p3;
+    p_[4].equal(born_kins_.p4com());
+    p_[4].boost(bx,by,bz);
+    
+    
+}
+
+void GStar2Kinematics::compute_born_invariants()
+{
+    //kin_inv_.Set(1,2, 2.0 * (p1*p2));
+    kin_inv_.Set(1,3, s(3) - 2.0 * (p_[1]*p_[3]));
+    kin_inv_.Set(1,4, s(4) - 2.0 * (p_[1]*p_[4]));
+    kin_inv_.Set(2,3, s(3) - 2.0 * (p_[2]*p_[3]));
+    kin_inv_.Set(2,4, s(4) - 2.0 * (p_[2]*p_[4]));
+    kin_inv_.Set(3,4, s(3) + s(4) + 2.0*(p_[3]*p_[4]));
+    
+}
+
+//void GStar2Kinematics::compute_nlo_invariants()
+//{
+//    kin_inv_.Set(1,5, - 2.0* (p5*p1));
+//    kin_inv_.Set(2,5,  - 2.0* (p5*p2));
+//    kin_inv_.Set(3,5, s(3) + 2.0 * (p5*p3));
+//    kin_inv_.Set(4,5, s(4) + 2.0 * (p5*p4));
+//}
+
+
+
+void GStar2KinematicsLO::GenerateKinematics(double* xx_vegas)
+{
+    generate_bjorken_xs(xx_vegas); // also the jacobian_ is initialized there
     const double Qsq = 1. * s(1,2); // z!=1 is a N*LO configuration
     
     born_kins_.generate(Qsq,s(3),s(4),xx_vegas[2],xx_vegas[3]);
-    jacobian = jacobian * born_kins_.jacobian();
+    jacobian_ = jacobian_ * born_kins_.jacobian();
     
     const double bb = bjorken_.com_rapidity_ratio();
     boost_along_z_axis(bb);
     compute_born_invariants();
     kin_inv_.compute_dimensionless_invariants();
+    //check_momentum_conservation();
 }
 
-void KinematicVariables::boost_along_z_axis(const double& bb)
+void GStar2Kinematics::check_momentum_conservation() const
 {
-    // boosting to LAB frame (the transverse pieces are invariant)
-    p3.equal(born_kins_.p3com());p3.zboost(bb);
-    p4.equal(born_kins_.p4com());p4.zboost(bb);
-    
+    for (int i=0;i<4;i++)
+    {
+        double zero = 0.0;
+        for(int n=1;n<num_of_particles_+1;n++)
+        {
+            double sign = 1.0;
+            if (n>2) sign = -1.0;
+            zero += sign * p_[n][i];
+        }
+        if (fabs(zero)>1e-3)
+        {
+            cout<<"\n\nmomentum not conserved at component "<<i
+            <<":\tsum="<<zero;
+            for (int n=1;n<num_of_particles_+1;n++)
+            {
+                double sign = 1.0;
+                if (n>2) sign = -1.0;
+                cout<<" "<<sign * p_[n][i];
+            }
+        }
+    }
 }
 
-void KinematicVariables::boost_to_lab()
-{
-    //Q=p1+p2-p5
-    FMomentum Q;
-    Q.Set(p1[0]+p2[0]-p5[0],p1[1]+p2[1]-p5[1],p1[2]+p2[2]-p5[2],p1[3]+p2[3]-p5[3]);
-    const double bx = -Q[1]/Q[0];
-    const double by = -Q[2]/Q[0];
-    const double bz = -Q[3]/Q[0];
-    
-    p3.equal(born_kins_.p3com());
-    //cout<<"\n p3com = "<<p3;
-    p3.boost(bx,by,bz);
-    //cout<<" -> boost -> "<<p3;
-    p4.equal(born_kins_.p4com());
-    p4.boost(bx,by,bz);
-    
-    
-}
 
-void KinematicVariables::compute_born_invariants()
-{
-    //kin_inv_.Set(1,2, 2.0 * (p1*p2));
-    kin_inv_.Set(1,3, s(3) - 2.0 * (p1*p3));
-    kin_inv_.Set(1,4, s(4) - 2.0 * (p1*p4));
-    kin_inv_.Set(2,3, s(3) - 2.0 * (p2*p3));
-    kin_inv_.Set(2,4, s(4) - 2.0 * (p2*p4));
-    kin_inv_.Set(3,4, s(3) + s(4) + 2.0*(p3*p4));
-    
-}
 
-void KinematicVariables::compute_nlo_invariants()
-{
-    kin_inv_.Set(1,5, - 2.0* (p5*p1));
-    kin_inv_.Set(2,5,  - 2.0* (p5*p2));
-    kin_inv_.Set(3,5, s(3) + 2.0 * (p5*p3));
-    kin_inv_.Set(4,5, s(4) + 2.0 * (p5*p4));
-}
 
+/*
 void NLOKinematics::generate_kinematics(double* xx_vegas)
 {
     generate_bjorken_xs(xx_vegas);
@@ -464,21 +502,5 @@ double NNLOKinematicsMueller::SplittingKernel()
     /(1.-z)/(1.-u*(1.-z));
 }
 
-void KinematicVariables::check_momentum_conservation() const
-{
-    for (int i=0;i<4;i++)
-    {
-        const double zero = p1[i]+p2[i]-p3[i]-p4[i]-p5[i]-p6[i];
-        if (fabs(zero)>1e-3)
-            {
-            cout<<"\n\nmomentum not conserved at component "<<i
-                <<":\tsum="<<zero
-                <<" "<<p1[i]<<" "<<p2[i]
-                <<" "<<-p3[i]<<" "<<-p4[i]
-                <<" "<<-p5[i]<<" "<<-p6[i]
-                ;
-            }
-    }
-}
-
+*/
 

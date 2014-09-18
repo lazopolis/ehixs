@@ -1,7 +1,8 @@
 #include "kinematic_invariants.h"
 
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
-
+#include<iostream>
+using namespace std;
 
 void KinematicInvariants::compute_dimensionless_invariants()
 {
