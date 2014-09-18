@@ -59,8 +59,8 @@ public:
     /// \name Read-only data
     /// @{
 
-    const double& weight = _weight; /// < Weight of the event
-    const Momenta& p = _p;          /// < Set of four-momenta
+    const double& weight = _weight; ///< Weight of the event
+    const Momenta& p = _p;          ///< Set of four-momenta
 
     /// @}
 
@@ -83,8 +83,8 @@ private:
     /// \name Data members
     /// @{
 
-    double _weight; /// < Weight of the event
-    Momenta _p;     /// < Set of four-momenta
+    double _weight; ///< Weight of the event
+    Momenta _p;     ///< Set of four-momenta
 
     /// @}
 
@@ -136,8 +136,8 @@ public:
     /// \name Data members
     /// @{
 
-    Event* production; /// < Pointer to the production event
-    Event* decay;      /// < Pointer to the decay event
+    Event* production; ///< Pointer to the production event
+    Event* decay;      ///< Pointer to the decay event
 
     /// @}
 

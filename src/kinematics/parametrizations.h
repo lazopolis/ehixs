@@ -92,15 +92,15 @@ protected:
     /// \name Data members
     /// @{
     
-    Momenta& _p;               /// < Reference to target momenta to be generated
-    double& _jacobian;         /// < Reference to target jacobian
+    Momenta& _p;               ///< Reference to target momenta to be generated
+    double& _jacobian;         ///< Reference to target jacobian
 
-    double _E;                 /// < COM energy of the incoming hadrons
-    const Bjorken& _xs;        /// < Where to read Bjorken xs
-    vector<double> _m;         /// < Masses (beware: counting from 0)
+    double _E;                 ///< COM energy of the incoming hadrons
+    const Bjorken& _xs;        ///< Where to read Bjorken xs
+    vector<double> _m;         ///< Masses (beware: counting from 0)
 
-    const double& x1 = _xs.x1; /// < Alias for the 1st Bjorken x
-    const double& x2 = _xs.x2; /// < Alias for the 2nd Bjorken x
+    const double& x1 = _xs.x1; ///< Alias for the 1st Bjorken x
+    const double& x2 = _xs.x2; ///< Alias for the 2nd Bjorken x
 
     /// @}
 
@@ -208,7 +208,7 @@ private:
     /// \name Data members
     /// @{
 
-    double _tau; /// < Alias for M^2/S
+    double _tau; ///< Alias for M^2/S
 
     /// @}
 

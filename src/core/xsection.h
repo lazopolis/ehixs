@@ -31,10 +31,10 @@ struct SectorInfo
     /// \name Data Members
     /// @{
 
-    string name;                /// < The name of the sector
-    InitialStateFlavors isf;    /// < Initial state flavors for this sector
-    int alpha_power;            /// < Power of the strong coupling
-    size_t dim;                 /// < Dimension of integration for this sector
+    string name;                ///< The name of the sector
+    InitialStateFlavors isf;    ///< Initial state flavors for this sector
+    int alpha_power;            ///< Power of the strong coupling
+    size_t dim;                 ///< Dimension of integration for this sector
 
     /// @}
 
@@ -126,8 +126,8 @@ public:
     /// \name Data Members
     /// @{
 
-    const CModel& model = _model; /// < Read-only public alias for the model
-    const SectorInfo* info;       /// < Pointer to the information about the specific, concrete cross section
+    const CModel& model = _model; ///< Read-only public alias for the model
+    const SectorInfo* info;       ///< Pointer to the information about the specific, concrete cross section
 
     /// @}
 
@@ -136,15 +136,15 @@ protected:
     /// \name Data Members
     /// @{
 
-    CModel _model;             /// < Model for the running of this cross section
-    EventBox* _eventBox;       /// < Pointer to the box where generated events are stored
-    NewLuminosity* _lumi;      /// < Pointer to the luminosity
-    IKinematicVariables* _kin; /// < Pointer to the interface with kinematis
+    CModel _model;             ///< Model for the running of this cross section
+    EventBox* _eventBox;       ///< Pointer to the box where generated events are stored
+    NewLuminosity* _lumi;      ///< Pointer to the luminosity
+    IKinematicVariables* _kin; ///< Pointer to the interface with kinematis
 
-    double _as_pi;             /// < Strong coupling constants over Pi
-    double _muR;               /// < Renormalization scale
-    double _muF;               /// < Factorization scale
-    double _prefactor;         /// < Constant prefactor multiplying matrix element outside of the phase space integral
+    double _as_pi;             ///< Strong coupling constants over Pi
+    double _muR;               ///< Renormalization scale
+    double _muF;               ///< Factorization scale
+    double _prefactor;         ///< Constant prefactor multiplying matrix element outside of the phase space integral
 
     /// @}
     
@@ -244,7 +244,7 @@ public:
     /// \name Data members
     /// @{
 
-    static const SectorInfo _info;  /// < Information about this specific type of cross section
+    static const SectorInfo _info;  ///< Information about this specific type of cross section
 
     /// @}
 

@@ -24,8 +24,8 @@ struct InitialStateFlavors
     /// \name Data members
     /// @{
 
-    QCD::Flavor left;   /// < Left parton flavor
-    QCD::Flavor right;  /// < Right parton flavor
+    QCD::Flavor left;   ///< Left parton flavor
+    QCD::Flavor right;  ///< Right parton flavor
 
     /// @}
 

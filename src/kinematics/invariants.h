@@ -73,9 +73,9 @@ private:
     /// \name Data members
     /// @{
     
-    size_t _n;                      /// < Number of particles
-    vector< vector<double> > _s;    /// < Dimensionful kinematic invariants matrix
-    vector< vector<double> > _q;    /// < Dimensionless kinematic invariants matrix
+    size_t _n;                      ///< Number of particles
+    vector< vector<double> > _s;    ///< Dimensionful kinematic invariants matrix
+    vector< vector<double> > _q;    ///< Dimensionless kinematic invariants matrix
     
     /// @}
     

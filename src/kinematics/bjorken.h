@@ -28,8 +28,8 @@ struct Bjorken
     /// \name Data members
     /// @{
 
-    double x1; /// < Bjorken x of the 1st (left) parton
-    double x2; /// < Bjorken x of the 2nd (right) parton
+    double x1; ///< Bjorken x of the 1st (left) parton
+    double x2; ///< Bjorken x of the 2nd (right) parton
 
     /// @}
 
@@ -111,10 +111,10 @@ protected:
     /// \name Data members
     /// @{
 
-    Bjorken& _x;       /// < Reference to target Bjorken variables to be generated
-    double& _jacobian; /// < Reference to target jacobian
+    Bjorken& _x;       ///< Reference to target Bjorken variables to be generated
+    double& _jacobian; ///< Reference to target jacobian
 
-    double _x1x2min;   /// < Auxiliary variable that specifies the minimum value of the product x1*x2
+    double _x1x2min;   ///< Auxiliary variable that specifies the minimum value of the product x1*x2
 
     /// @}
 

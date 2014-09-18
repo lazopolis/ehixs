@@ -28,17 +28,20 @@ class IKinematicVariables : public KinematicInvariants
 
 public:
 
-    /// \name Data members
+    /// \name Read-only data
     /// @{
 
-    const double& x1 = _x.x1;   /// < Alias for the 1st Bjorken x
-    const double& x2 = _x.x2;   /// < Alias for the 2nd Bjorken x
+    const double& x1 = _x.x1;   ///< Alias for the 1st Bjorken x
+    const double& x2 = _x.x2;   ///< Alias for the 2nd Bjorken x
 
     /// Four-momenta, conventions are:
     /// - p[1] = parton from hadron 1
     /// - p[2] = parton from hadron 2
     /// - p[i>2] = particles in the final state
     const Momenta& p = _p;
+
+    /// Global jacobian
+    const double& jacobian = _jacobian;
 
     /// @}
 
@@ -74,9 +77,6 @@ public:
     /// Generate kinematics according to random variables
     virtual void generate(const double* const randoms) = 0;
 
-    /// Global jacobian
-    const double& jacobian = _jacobian;
-
     /// @}
 
 protected:
@@ -84,11 +84,11 @@ protected:
     /// \name Data members
     /// @{
 
-    double _S;          /// < Center of mass collider energy squared
-    vector<double> _m;  /// < Minimum value of the ratio smin/S = x1*x2
-    Bjorken _x;         /// < Bjorken x variables
-    Momenta _p;         /// < Momenta of particles
-    double _jacobian;   /// < Jacobian
+    double _S;          ///< Center of mass collider energy squared
+    vector<double> _m;  ///< Minimum value of the ratio smin/S = x1*x2
+    Bjorken _x;         ///< Bjorken x variables
+    Momenta _p;         ///< Momenta of particles
+    double _jacobian;   ///< Jacobian
 
     /// @}
 
@@ -176,8 +176,8 @@ protected:
     /// \name Data members
     /// @{
     
-    xGenerator _xGen;   /// < Generator for the Bjorken x variables
-    pGenerator _pGen;   /// < Generator for the set of four-momenta
+    xGenerator _xGen;   ///< Generator for the Bjorken x variables
+    pGenerator _pGen;   ///< Generator for the set of four-momenta
 
     /// @}
 
