@@ -23,6 +23,20 @@ Axis operator+(const Axis& a, const Axis& b)
 
 /// \name Input/output functions
 
+/// Expicitly set the momentum by component
+FourVector& FourVector::operator=(const initializer_list<double>& that)
+{
+    if (that.size()!=size())
+    {
+        cerr << "Tried to assign more than 4 components to a FourVector object." << endl;
+        throw;
+    }
+    size_t i = 0;
+    for (initializer_list<double>::iterator it = that.begin(); it<that.end(); ++it)
+        (*this)[i++] = *it;
+    return *this;
+}
+
 /// Return the length of the three-vector
 double FourVector::abs(void) const
 {
@@ -95,20 +109,6 @@ ostream& operator<<(ostream& stream, const FourVector& x)
 }
 
 /// \name Operations
-
-/// Expicitly set the momentum by component
-FourVector& FourVector::operator=(const initializer_list<double>& that)
-{
-   if (that.size()!=size())
-   {
-      cerr << "Tried to assign more than 4 components to a FourVector object." << endl;
-      throw;
-   }
-   size_t i = 0;
-   for (initializer_list<double>::iterator it = that.begin(); it<that.end(); ++it)
-      (*this)[i++] = *it;
-   return *this;
-}
 
 /// Divide this momentum by a number
 FourVector FourVector::operator/(const double& that) const

@@ -37,7 +37,7 @@ inline void higgszerfall(
                          const int& decaymode,     // decay mode 0:
                          double* decay_xx_vegas,// passing vegas variables
                          double& decay_weight,  // the weight of the decay will be set here
-                         vector<FourVector> p
+                         Momenta p
                          )
 {
     double _pH[4] = {pH[0],pH[1],pH[2],pH[3]};
@@ -59,6 +59,5 @@ inline void higgszerfall(
     p.push_back(FourVector(_p3));
     p.push_back(FourVector(_p4));
 }
-
 
 #endif

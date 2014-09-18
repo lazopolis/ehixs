@@ -79,6 +79,11 @@ public:
     array<double, 4>(that)
     {}
 
+    /// Move constructor
+    FourVector(FourVector&& that) :
+    array<double, 4>(that)
+    {}
+
     /// Destructor
     ~FourVector()
     {}
@@ -87,6 +92,23 @@ public:
     
     /// \name Input/output functions
     /// @{
+
+    /// Assignment operator
+    FourVector& operator=(const FourVector& that)
+    {
+        array<double,4>::operator=(that);
+        return (*this);
+    }
+
+    /// Move assignment operator
+    FourVector& operator=(FourVector&& that)
+    {
+        array<double,4>::operator=(that);
+        return (*this);
+    }
+    
+    /// Expicitly set the momentum by component
+    FourVector& operator=(const initializer_list<double>& that);
 
     /// Return the length of the three-vector
     double abs(void) const;
@@ -127,9 +149,6 @@ public:
     /// \name Operations
     /// @{
     
-    /// Expicitly set the momentum by component
-    FourVector& operator=(const initializer_list<double>& that);
-
     /// Multiply this momentum for a number
     FourVector operator*(const double& that) const
     {

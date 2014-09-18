@@ -25,7 +25,7 @@ void Decay_gammagamma::do_decay(FourVector PH)
     // decay mode 1:HZZeemm | 2: HZZllll | 3: HWWlnln | 4: HWWZZlnln
     //double pH[4]={PH->E(),PH->px(),PH->py(),PH->pz()};
         
-    vector<FourVector> p;
+    Momenta p;
     double decay_weight = 0.0;
     
     double alpha_QED = 1.0/129.0;

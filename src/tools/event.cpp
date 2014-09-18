@@ -17,7 +17,7 @@ ostream& operator<<(ostream& the_stream, const CombinedEvent& E)
 {
     the_stream<<'\n'<<E.weight();
     if (E.production!=NULL)
-        for (vector<FourVector>::const_iterator it = E.production->p.begin(); it < E.production->p.end(); ++it)
+        for (Momenta::const_iterator it = E.production->p.begin(); it < E.production->p.end(); ++it)
             the_stream << "\t" << *it;
     return the_stream;
 }

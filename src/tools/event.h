@@ -37,7 +37,12 @@ public:
     {}
 
     /// Constructor with data
-    Event(const double& weight, const vector<FourVector>& momenta) :
+    Event(const double& weight, const Momenta& momenta) :
+    _p(momenta), _weight(weight)
+    {}
+
+    /// Move constructor from data
+    Event(const double& weight, Momenta&& momenta) :
     _p(momenta), _weight(weight)
     {}
 
@@ -55,8 +60,8 @@ public:
     /// \name Read-only data
     /// @{
 
-    const double& weight = _weight;     /// < Weight of the event
-    const vector<FourVector>& p = _p;   /// < Set of four-momenta
+    const double& weight = _weight; /// < Weight of the event
+    const Momenta& p = _p;          /// < Set of four-momenta
 
     /// @}
 
@@ -79,8 +84,8 @@ private:
     /// \name Data members
     /// @{
 
-    double _weight;         /// < Weight of the event
-    vector<FourVector> _p;  /// < Set of four-momenta
+    double _weight; /// < Weight of the event
+    Momenta _p;     /// < Set of four-momenta
 
     /// @}
 

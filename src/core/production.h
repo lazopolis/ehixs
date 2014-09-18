@@ -36,11 +36,6 @@ public:
     event_box(), xx_vegas(NULL), cuts_(), the_xs_(NULL), sectors()
     {}
 
-    /// Copy constructor
-//    Production(const Production& that) :
-//    event_box(that.event_box), xx_vegas(that.xx_vegas), cuts_(that.cuts_), the_xs_(that.the_xs_), sectors(that.sectors)
-//    {}
-
     /// Destructor
     ~Production()
     {

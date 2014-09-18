@@ -40,7 +40,6 @@ void Production::Configure(const UserInterface& UI)
             ConfigureCuts();
             cuts_.ParseCuts(UI);
             cout << "[ehixs] CrossSection name : " << the_xs_->info->name << endl;
-            the_xs_->setEventBox(event_box);
         }
     }
     return;

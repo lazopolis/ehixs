@@ -63,7 +63,7 @@ void Decay_WWZZ::do_decay(FourVector PH)
     // decay mode 1:HZZeemm | 2: HZZllll | 3: HWWlnln | 4: HWWZZlnln
     //double pH[4]={PH->E(),PH->px(),PH->py(),PH->pz()};
     
-    vector<FourVector> p;
+    Momenta p;
     double decay_weight = 0.;
     //cout<<"\n[decay]: hello before"<<endl;
     double alpha_QED = 1.0/127.0;
