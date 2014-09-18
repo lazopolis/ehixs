@@ -1,10 +1,10 @@
 /**
  *
- * \file   event.h
- * \author Achilleas, Simone
- * \date   September 2014
- * Created by Achilleas
- * Revised by Simone in Sep 2014
+ * \file    event.h
+ * \ingroup tools
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    September 2014
  *
  */
 
@@ -19,7 +19,6 @@ using namespace std;
  *
  * \class Event
  * \brief Container for weight and essential kinematics of a generated event
- * \todo  Change vector<FourMomenta> to Momenta??
  * \todo  Complete tests
  *
  */
@@ -92,12 +91,22 @@ private:
     /// \name Forbidden functions
     /// @{
 
+    /// Copy constructor
     Event(const Event& that);
+
+    /// Assignment operator
     Event& operator=(const Event& that);
 
     /// @}
 
 };
+
+/**
+ *
+ * \typedef EventBox
+ * \brief   A vector of events is named EventBox for simpler semantics
+ *
+ */
 
 typedef vector<Event> EventBox;
 
@@ -105,6 +114,8 @@ typedef vector<Event> EventBox;
  *
  * \class CombinedEvent
  * \brief Container for combined production+decay event
+ * \note  Switch to references instead of pointers?
+ * \todo  Extend decay to be a vector of decays, so that more than one particle can decay
  *
  */
 
@@ -112,14 +123,35 @@ class CombinedEvent
 {
 public:
 
+    /// \name Constructors and Destructor
+    /// @{
+
+    /// Constructor with data
     CombinedEvent(Event* prod, Event* dec) :
     production(prod),decay(dec)
     {}
 
-    Event* production;
-    Event* decay;
-    double weight() const ;
+    /// @}
+
+    /// \name Data members
+    /// @{
+
+    Event* production; /// < Pointer to the production event
+    Event* decay;      /// < Pointer to the decay event
+
+    /// @}
+
+    /// \name Input/output functions
+    /// @{
+
+    /// Returns the weight of the combined event
+    double weight() const;
+
+    /// Prints information about the event
     friend ostream& operator<<(ostream&, const CombinedEvent&);
+
+    /// @}
+
 };
 
 #endif
