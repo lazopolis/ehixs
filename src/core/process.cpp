@@ -274,7 +274,7 @@ void Process::proceed_to_production_phase()
      if (production_is_defined) 
         {
         my_production->evaluate_sector();
-        int number_of_prod_events = my_production->event_box.size();
+        size_t number_of_prod_events = my_production->event_box.size();
         if (number_of_prod_events==0) book_null_event();
         else
             {

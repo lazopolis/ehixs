@@ -33,7 +33,8 @@ _n(p.size()), _s(p.size()), _q(p.size())
     for (size_t i = 0; i < _n; ++i)
         for (size_t j = 0; j < _n-i; ++j)
         {
-            _s[i].push_back(s(p[i+1],p[j+1]));
+            if ( i != j ) _s[i].push_back(s(p[i+1],p[j+1]));
+            else _s[i].push_back(square(p[i+1]));
             _q[i].push_back(_s[i][j]/s12);
         }
     return;
@@ -51,8 +52,9 @@ void KinematicInvariants::set(const Momenta& p)
     for (size_t i = 0; i < _n; ++i)
         for (size_t j = 0; j < _n-i; ++j)
         {
-            _s[i][j]=s(p[i+1],p[j+1]);
-            _q[i][j]=_s[i][j]/s12;
+            if ( i != j ) _s[i][j] = s(p[i+1],p[j+1]);
+            else _s[i][i] = square(p[i+1]);
+            _q[i][j] = _s[i][j]/s12;
         }
     return;
 }
