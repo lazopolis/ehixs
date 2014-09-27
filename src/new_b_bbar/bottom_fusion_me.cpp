@@ -1,19 +1,15 @@
 #include "bottom_fusion_me.h"
 
 
-// BottomFusion_bb_Delta
+// BottomFusion_bb_LO
 
-BottomFusion_bb_Delta::BottomFusion_bb_Delta(const UserInterface& UI, const SectorInfo& info) :
-XSection(UI, info)
+void BottomFusion_bb_LO::generateEvents(const double* const randoms)
 {
-    _prefactor *= consts::Pi * pow(yukawa_bottom,2.) / (2. * QCD::Nc * pow(UI.m_higgs,2.));
-    _kin = new KinematicVariables<OneXGenerator,DeltaPG>(UI.Etot*UI.Etot,{UI.m_higgs},info.dim);
+    _pg(randoms+1);
+    ///////HMMMMMM?!?!?!
+    const double w = _prefactor * _factor / (2. * 125.4 * 125.4);
+    _eventBox->push_back(Event(w,_p));
     return;
-}
-
-double BottomFusion_bb_LO::matrixElement(const KinematicInvariants& invariants) const
-{
-    return 1.0;
 }
 
 template<>

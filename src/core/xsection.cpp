@@ -17,8 +17,8 @@
 /// Default constructor
 XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
     // Initializing empty stuff
-    _model(), _eventBox(NULL), _lumi(NULL), _kin(NULL),
-    _as_pi(0.), _prefactor(consts::convert_GeV_to_pb),
+    _model(), _eventBox(NULL), _lumi(NULL), _x(),
+    _as_pi(0.), _prefactor(consts::convert_GeV_to_pb), _factor(1.),
     // Getting general parameters from the user interface
     info(&myInfo), _muR(UI.mur), _muF(UI.muf)
 {
@@ -26,7 +26,8 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
     /// \warning Luminosity allocation assumes left-right symmetry right now
     _lumi = new NewLuminosity(UI);
     _lumi->add_pair(info->isf.left, info->isf.right);
-    _lumi->add_pair(info->isf.right, info->isf.left);
+    if (info->isf.left != info->isf.right)
+        _lumi->add_pair(info->isf.right, info->isf.left);
     // Starting to run
     /// \note Model does not seem to be particularly generic...
     _model.Configure(
@@ -42,18 +43,13 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
 }
 
 /// Evaluate this cross section from Vegas random numbers
-Event XSection::evaluate(double* xx_vegas) const
+void XSection::evaluate(const double* const randoms)
 {
-    _kin->generate(xx_vegas);
-    const double myxlumi = _lumi->give(_kin->x1,_kin->x2);
-    if (myxlumi!=0.0)
-    {
-        const double sigma = _prefactor * _kin->jacobian
-        * myxlumi
-        * 1.0/(2.0*_kin->s(1,2)) //flux
-        * matrixElement(*_kin)
-        ;
-        return Event(sigma, _kin->p);
-    }
-    else return Event();
+    _eventBox->clear();
+    _factor = 1.; // generateXs may change _factor!
+    generateXs(randoms);
+    _factor *= _lumi->give(_x.x1,_x.x2);
+    if ( _factor != 0. ) generateEvents(randoms);
+    else _eventBox->push_back(Event());
+    return;
 }

@@ -13,9 +13,9 @@
 
 #include <map>
 #include <string>
-#include "convolutions.h"   // InitialStateFlavors, Event, NewLuminosity
-#include "model.h"          // Model
-#include "variables.h"      // IKinematicVariables
+#include "convolutions.h" // InitialStateFlavors, Event, NewLuminosity
+#include "model.h"        // Model
+#include "bjorken.h"      // Bjorken
 using namespace std;
 
 /**
@@ -83,6 +83,7 @@ struct SectorInfo
  *
  * \class XSection
  * \brief Base object for cross section evaluation
+ * \todo   Meditate on membership of EventBox
  *
  */
 
@@ -101,7 +102,6 @@ public:
     virtual ~XSection()
     {
         delete _lumi;
-        delete _kin;
         return;
     }
 
@@ -110,16 +110,27 @@ public:
     /// \name Input/output functions
     /// @{
 
-    /// Evaluate this cross section from Vegas random numbers
-    virtual Event evaluate(double*) const;
+    /// Set the EventBox
+    void setEventBox(EventBox* const ev)
+    {
+        _eventBox = ev;
+        return;
+    }
+
+    /// Send events from this cross section to the EventBox
+    /// \note Override if both delta and non-delta kinematics in the same sector
+    virtual void evaluate(const double* const randoms);
 
     /// @}
 
     /// \name Pure virtual functions
     /// @{
 
-    /// Compute the matrix element of the instantiated concrete cross section
-    virtual double matrixElement(const KinematicInvariants& s) const = 0;
+    /// Generate Bjorken Xs
+    virtual void generateXs(const double* const randoms) = 0;
+
+    /// Compute the events of the current sector
+    virtual void generateEvents(const double* const randoms) = 0;
 
     /// @}
     
@@ -139,115 +150,16 @@ protected:
     CModel _model;             ///< Model for the running of this cross section
     EventBox* _eventBox;       ///< Pointer to the box where generated events are stored
     NewLuminosity* _lumi;      ///< Pointer to the luminosity
-    IKinematicVariables* _kin; ///< Pointer to the interface with kinematis
+    Bjorken _x;                ///< Storage box for Bjorken xs
 
     double _as_pi;             ///< Strong coupling constants over Pi
     double _muR;               ///< Renormalization scale
     double _muF;               ///< Factorization scale
-    double _prefactor;         ///< Constant prefactor multiplying matrix element outside of the phase space integral
+    double _prefactor;         ///< Constant prefactor outside of the phase space integral
+    double _factor;            ///< Factor inside the phase space integral (luminosity, jacobian...)
 
     /// @}
     
-};
-
-/**
- *
- * \struct BaseXSectionMaker
- * \brief  Base class for booking cross sections
- *
- */
-
-struct BaseXSectionMaker
-{
-
-    /// \name Constructors and destructor
-    /// @{
-
-    /// Default constructor
-    BaseXSectionMaker()
-    {}
-
-    /// Copy constructor
-    BaseXSectionMaker(const BaseXSectionMaker& that)
-    {}
-
-    /// Destructor
-    ~BaseXSectionMaker()
-    {}
-
-    /// @}
-
-    /// \name Member functions
-    /// @{
-
-    /// Calls the constructor for a specific type of cross section
-    virtual XSection* create(const UserInterface& UI) = 0;
-
-    /// Returns information about the cross section
-    virtual const SectorInfo& info() const = 0;
-
-    /// @}
-
-};
-
-/**
- *
- * \struct XSectionMaker
- * \brief  Templatized creator object for different types of cross sections
- *
- */
-
-template<typename XSectionType>
-struct XSectionMaker : public BaseXSectionMaker
-{
-
-public:
-
-    /// \name Constructors and destructor
-    /// @{
-
-    /// Default constructor
-    XSectionMaker() :
-    BaseXSectionMaker()
-    {}
-
-    /// Copy constructor
-    XSectionMaker(const XSectionMaker& that) :
-    BaseXSectionMaker()
-    {}
-
-    /// Destructor
-    ~XSectionMaker()
-    {}
-
-    /// @}
-
-    /// \name Member functions
-    /// @{
-
-    /// Calls the constructor for a specific type of cross section
-    virtual XSection* create(const UserInterface& UI)
-    {
-        XSectionType* foo = new XSectionType(UI);
-        foo->info = &_info;
-        return dynamic_cast<XSection*>(foo);
-    };
-
-    /// Returns information about the cross section
-    virtual const SectorInfo& info() const
-    {
-        return _info;
-    }
-
-    /// @}
-
-    /// \name Data members
-    /// @{
-
-    static const SectorInfo _info;  ///< Information about this specific type of cross section
-
-    /// @}
-
 };
 
 #endif

@@ -19,7 +19,7 @@
 #include "luminosity.h"
 #include "hub.hpp"
 #include "event.h"
-#include "xsection.h"
+#include "xsectionmaker.h"
 using namespace std;
 
 ///\class Production

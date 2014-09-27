@@ -58,7 +58,10 @@ void Production::find_the_xs(const UserInterface& UI)
     {
         size_t sector_id=atoi(UI.sector_for_production.c_str());
         if (sector_id<sectors.size())
+        {
             the_xs_ = sectors[sector_id]->create(UI);
+            the_xs_->setEventBox(&event_box);
+        }
         else
         {
             cout<<"\n[find_sector] The sector id number you asked for, "
@@ -98,7 +101,7 @@ void Production::set_up_the_hatch(TheHatch* the_hatch)
 void Production::evaluate_sector()
 {
     event_box.clear();
-    event_box.push_back(the_xs_->evaluate(xx_vegas));
+    the_xs_->evaluate(xx_vegas);
     return;
 }
 
