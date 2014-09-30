@@ -76,8 +76,8 @@ public:
 
     /// Default constructor
     /// It is mandatory to pass the needed references where variables will be generated
-    XGenerator(Bjorken& x, double& jacobian) :
-    _x(x), _jacobian(jacobian), _x1x2min(0.)
+    XGenerator(Bjorken& x) :
+    _x(x), _x1x2min(0.)
     {}
 
     /// @}
@@ -99,7 +99,7 @@ public:
     /// @{
 
     /// Generates the Bjorken variables into the target according to some distribution
-    virtual void operator()(const double* const randoms) = 0;
+    virtual double operator()(const double* const randoms) = 0;
 
     /// Returns the number of used random [0,1] variables
     virtual size_t Nran() const = 0;
@@ -112,7 +112,6 @@ protected:
     /// @{
 
     Bjorken& _x;       ///< Reference to target Bjorken variables to be generated
-    double& _jacobian; ///< Reference to target jacobian
 
     double _x1x2min;   ///< Auxiliary variable that specifies the minimum value of the product x1*x2
 
@@ -139,8 +138,8 @@ public:
 
     /// Default constructor
     /// It is mandatory to pass the needed references where variables will be generated
-    TwoXGenerator(Bjorken& x, double& jacobian) :
-    XGenerator(x,jacobian)
+    TwoXGenerator(Bjorken& x) :
+    XGenerator(x)
     {}
 
     /// @}
@@ -149,7 +148,7 @@ public:
     /// @{
     
     /// Generates the product x1*x2 in the range [_x1x2min, 1] and x1 in [x1*x2, 1]
-    void operator()(const double* const randoms);
+    double operator()(const double* const randoms);
 
     /// Returns the number of used random [0,1] variables
     size_t Nran() const {return 2;}
@@ -177,8 +176,8 @@ public:
 
     /// Default constructor
     /// It is mandatory to pass the needed references where variables will be generated
-    OneXGenerator(Bjorken& x, double& jacobian) :
-    XGenerator(x,jacobian)
+    OneXGenerator(Bjorken& x) :
+    XGenerator(x)
     {}
 
     /// @}
@@ -187,7 +186,7 @@ public:
     /// @{
     
     /// Sets the product x1*x2 to _x1x2min (using the delta), then generates x1 in the range [x1*x2, 1]
-    void operator()(const double* const randoms);
+    double operator()(const double* const randoms);
 
     /// Returns the number of used random [0,1] variables
     size_t Nran() const {return 1;}

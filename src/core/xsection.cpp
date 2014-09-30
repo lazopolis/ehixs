@@ -46,8 +46,7 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
 void XSection::evaluate(const double* const randoms)
 {
     _eventBox->clear();
-    _factor = 1.; // generateXs may change _factor!
-    generateXs(randoms);
+    _factor = generateXs(randoms);
     _factor *= _lumi->give(_x.x1,_x.x2);
     if ( _factor != 0. ) generateEvents(randoms);
     else _eventBox->push_back(Event());

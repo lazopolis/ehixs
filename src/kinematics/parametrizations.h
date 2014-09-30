@@ -52,8 +52,8 @@ public:
 
     /// Default constructor
     /// It is mandatory to pass the needed references where variables will be generated
-    PGenerator(Momenta& ps, double& jacobian, const Bjorken& xs) :
-    _p(ps), _jacobian(jacobian), _xs(xs), _E(), _m()
+    PGenerator(Momenta& ps, const Bjorken& xs) :
+    _p(ps), _xs(xs), _E(), _m()
     {}
 
     /// @}
@@ -65,8 +65,8 @@ public:
     virtual void setParameters(const double& S, const vector<double>& masses);
 
     /// Generates the first two momenta that are common for all processes,
-    /// then passes the job on to generateFSMomenta
-    virtual void operator()(const double* const randoms) const;
+    /// then passes the job on to generateFSMomenta, returns jacobian
+    virtual double operator()(const double* const randoms) const;
 
     /// @}
 
@@ -76,8 +76,8 @@ public:
     /// Sets the constants in child class
     virtual void computeConstants() = 0;
 
-    /// Generates the momenta of particles in the final state
-    virtual void generateFSMomenta(const double* const randoms) const = 0;
+    /// Generates the momenta of particles in the final state, returns the jacobian
+    virtual double generateFSMomenta(const double* const randoms) const = 0;
 
     /// Returns the number of final-state particles
     virtual size_t Nfs() const = 0;
@@ -93,7 +93,6 @@ protected:
     /// @{
     
     Momenta& _p;               ///< Reference to target momenta to be generated
-    double& _jacobian;         ///< Reference to target jacobian
 
     double _E;                 ///< COM energy of the incoming hadrons
     const Bjorken& _xs;        ///< Where to read Bjorken xs
@@ -122,8 +121,8 @@ public:
 
     /// Default Constructor
     /// It is mandatory to pass the needed references where variables will be generated
-    DeltaPG(Momenta& ps, double& jacobian, const Bjorken& xs) :
-    PGenerator(ps, jacobian, xs)
+    DeltaPG(Momenta& ps, const Bjorken& xs) :
+    PGenerator(ps, xs)
     {}
 
     /// @}
@@ -136,10 +135,10 @@ public:
     {}
 
     /// Set the only final-state momentum via conservation
-    void generateFSMomenta(const double* const randoms) const
+    double generateFSMomenta(const double* const randoms) const
     {
         _p[3] = _p[1] + _p[2];
-        return;
+        return 1.;
     }
 
     /// Returns the number of final-state particles
@@ -180,8 +179,8 @@ public:
 
     /// Default Constructor
     /// It is mandatory to pass the needed references where variables will be generated
-    ZlambdaPG(Momenta& ps, double& jacobian, const Bjorken& xs) :
-    PGenerator(ps, jacobian, xs)
+    ZlambdaPG(Momenta& ps, const Bjorken& xs) :
+    PGenerator(ps, xs)
     {}
 
     /// @}
@@ -193,7 +192,7 @@ public:
     void computeConstants();
 
     /// Implements the parametrization
-    void generateFSMomenta(const double* const randoms) const;
+    double generateFSMomenta(const double* const randoms) const;
 
     /// Returns the number of final-state particles
     size_t Nfs() const {return 2;}

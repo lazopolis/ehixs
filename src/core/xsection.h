@@ -126,8 +126,8 @@ public:
     /// \name Pure virtual functions
     /// @{
 
-    /// Generate Bjorken Xs
-    virtual void generateXs(const double* const randoms) = 0;
+    /// Generate Bjorken Xs and return the jacobian
+    virtual double generateXs(const double* const randoms) = 0;
 
     /// Compute the events of the current sector
     virtual void generateEvents(const double* const randoms) = 0;

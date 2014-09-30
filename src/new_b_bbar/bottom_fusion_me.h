@@ -25,7 +25,7 @@ class BottomFusion_bb<0> : public XSection
 public:
 
     BottomFusion_bb<0>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x, _factor), _pg(_p, _factor, _x)
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x)
     {
         _p.resize(3);
         _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
@@ -34,10 +34,9 @@ public:
         return;
     }
 
-    void generateXs(const double* const randoms)
+    double generateXs(const double* const randoms)
     {
-        _xg(randoms);
-        return;
+        return _xg(randoms);
     }
 
 
@@ -63,18 +62,22 @@ class BottomFusion_bb<1> : public XSection
 public:
 
     BottomFusion_bb<1>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _lambda(), _phi(), _xg(_x, _factor)
+    XSection(UI, info), _p(), /*_lambda(), _phi(), */_xg(_x), _pg(_p, _x)
     {
-        _prefactor *= consts::Pi * pow(yukawa_bottom,2.) / (2. * QCD::Nc * pow(UI.m_higgs,2.));
+        _p.resize(4);
+        _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
+        _xg.setParameters(pow(UI.m_higgs/UI.Etot,2));
+        _pg.setParameters(UI.Etot*UI.Etot, vector<double>({UI.m_higgs}));
         return;
     }
 
-private:
+protected:
 
-    double _lambda;
-    double _phi;
+    Momenta _p;
+    //double _lambda;
+    //double _phi;
     TwoXGenerator _xg;
-    //ZlambdaPG _pg;
+    ZlambdaPG _pg;
 
 };
 
@@ -97,6 +100,34 @@ public:
 
     void generateEvents(const double* const randoms);
 
+};
+
+/**
+ *
+ * \class BottomFusion_bb_NLO_real
+ * LO sector for bbar->H
+ *
+ */
+
+class BottomFusion_bb_NLO_real : public BottomFusion_bb<1>
+{
+
+public:
+
+
+    BottomFusion_bb_NLO_real(const UserInterface& UI) :
+    BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_real>::_info)
+    {}
+
+    void generateEvents(const double* const randoms);
+
+private:
+
+    double regularME(const double& lambda, const double& z) const
+    {
+        return 0;
+    }
+    
 };
 
 #endif
