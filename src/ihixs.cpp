@@ -72,7 +72,7 @@ int main(int argc, char** argv)
         }
         else{
             InclusiveProcess* cur_process = new InclusiveProcess(UI);
-            cur_process->perform();
+            cur_process->Evaluate();
         }
         
     }

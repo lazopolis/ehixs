@@ -20,6 +20,7 @@ NewLuminosity::NewLuminosity(const UserInterface& UI)
 
 string NewLuminosity::determine_gridname(const string& provider,int order)
 {
+    cout<<"\n[NewLuminosity] perturbative order = "<<order<<endl;
     string mstw[3]={"MSTW2008lo68cl","MSTW2008nlo68cl","MSTW2008nnlo68cl"};
     if (provider == "MSTW") return mstw[order];
     else

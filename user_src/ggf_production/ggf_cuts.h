@@ -16,6 +16,7 @@
 //};
 
 
+
 class GluonFusionCut_Higgs_pt : public CCut
 {
 public:
@@ -23,9 +24,7 @@ public:
     : CCut("CutHiggsPT",cutvalue){};
     bool operator()(Event* the_event)
         {
-        double* ph = the_event->ParticleMomentum(5);
-        const double pth = sqrt(ph[1] * ph[1] + ph[2]*ph[2]);
-        if (pth>min)
+        if (the_event->p[3].T()>min)
             {
             //cout<<"\n event accepted with ptH = "<<pth;
             return true;
@@ -44,9 +43,7 @@ public:
     : CCut("CutHiggsPTVeto",cutvalue){};
     bool operator()(Event* the_event)
     {
-        double* ph = the_event->ParticleMomentum(5);
-        const double pth = sqrt(ph[1] * ph[1] + ph[2]*ph[2]);
-        if (pth<min)
+        if (the_event->p[3].T()<min)
         {
             //cout<<"\n event accepted with ptH = "<<pth;
             return true;
@@ -57,12 +54,7 @@ public:
 };
 
 
-
-double transverse_momentum(double* p)
-{
-    return sqrt(p[1]*p[1]+p[2]*p[2]);
-}
-
+/*
 double zrap(double* p)
 {
     return 0.5*log((p[0]+p[3])/(p[0]-p[3]));
@@ -193,74 +185,7 @@ public:
     return false;
     }
 };
-
-/*
- if(jetalgorithm)
- {
- //jet algorithm definitions
- const double ptjetmin=20.0;
- //const double yjetmax=2.5;
- const double R=0.4;
- 
- all_momenta.jetnumber=0;
- 
- 
- //: p3 and p4 are ultra soft
- if (pt3<=ptbuf and pt4<=ptbuf)  //0-jet bin
- {
- //:nothing needs to be done here
- }
- //: p3 ultra soft
- if (pt3<=ptbuf and pt4>ptbuf)
- {
- //const double y4=p4.zrap();
- if (pt4>ptjetmin) //: p4 is hard enough to be a jet
- {
- all_momenta.pjet1=all_momenta["pf4"];
- all_momenta.jetnumber=1;
- }
- }
- //: p4 ultra soft
- if (pt4<=ptbuf and pt3>ptbuf)
- {
- //const double y3=p3.zrap();
- if (pt3>ptjetmin) //: p3 is hard enough to be a jet
- {
- all_momenta.pjet1=all_momenta["pf3"];
- all_momenta.jetnumber=1;
- }
- }
- //: none ultra soft, this is an event coming from honest RR
- if (pt3>ptbuf and pt4>ptbuf)
- {
- //const double pi = 3.141592653589793;
- //: now we have to calculate angular seperation
- const double y3=all_momenta["pf3"].zrap();
- const double y4=all_momenta["pf4"].zrap();
- //cout<<"\n phi3 "<<acos(0.7);
- //cout<<"\n phi4 "<<acos(-0.7);
- const double delta_phi = all_momenta["pf3"].phi() -  all_momenta["pf4"].phi()  ;
- //: taking care of the dphi>Pi case
- //if (delta_phi>pi) {delta_phi = 2*pi -delta_phi;cout<<"\n it happened";}
- const double d12 = pow(y3-y4,2.0) + pow(delta_phi,2.0);
- //cout<<"\n-----\nd12="<<d12<<"\tRR="<<R<<"\t delta_phi^2="<<delta_phi
- //<<"\t"<<X->p3.phi()<<"\t"<<X->p4.phi();
- //cout<<"\np3="<<X->p3<<"\tp4="<<X->p4;
- if (d12>R*R)//: potential 2-jet case / no parton merging
- {
- all_momenta.pjet1=all_momenta["pf3"];
- all_momenta.pjet2=all_momenta["pf4"];
- all_momenta.jetnumber=2;
- }
- else //: we need to merge the two partons in one jet
- {
- all_momenta.pjet1 = all_momenta["pf3"]+all_momenta["pf4"];
- all_momenta.jetnumber=1;
- 
- }
- }
- }
- */
+*/
 
 
 

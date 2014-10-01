@@ -1,5 +1,5 @@
 #include "process.h"
-//#include "gluon_fusion.h"
+#include "gluon_fusion.h"
 #include "gamma_star_gamma_star.h"
 #include "bottom_fusion.h"
 
@@ -85,8 +85,8 @@ void Process::choose_production(const UserInterface & UI)
 //    std::cout<<"\n[ehixs] Process initiated with production "
 //            <<UI.production<<endl;
     if (UI.production=="ggF")
-    {cout<<"\nError: ggF temporarily unavailable"<<endl;exit(0);}
-        //my_production = new GluonFusion;
+    //{cout<<"\nError: ggF temporarily unavailable"<<endl;exit(0);}
+        my_production = new GluonFusion;
     else if (UI.production=="GammaStarGammaStar")
         //my_production = new GammaStarGammaStar;
     {cout<<"\nError: GammaStarGammaStar temporarily unavailable"<<endl;exit(0);}

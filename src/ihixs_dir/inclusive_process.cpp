@@ -28,7 +28,47 @@ double LuminosityIntegralPlus::evaluateIntegral(const double* xx)
 }
 
 
+InclusiveProcess::InclusiveProcess(const UserInterface& UI)
+{
+    _lumi = new NewLuminosity(UI);
+    const double tau = pow(UI.m_higgs,2.)/pow(UI.Etot,2.);
+    D_gg.Configure(_lumi,tau);
+    P0_gg.Configure(_lumi,tau);
+    P1_gg.Configure(_lumi,tau);
+    P2_gg.Configure(_lumi,tau);
+    P3_gg.Configure(_lumi,tau);
+    P4_gg.Configure(_lumi,tau);
+    P5_gg.Configure(_lumi,tau);
+    _model.Configure(
+                     _lumi->alpha_s_at_mz(),
+                     UI.mur_over_mhiggs,
+                     UI.perturbative_order,
+                     UI.m_higgs
+                     );
+    // Setting up alpha_s
+    _as_pi = _model.alpha_strong()/consts::Pi;
+    cout << "\n[CrossSection]: a_s = " << _as_pi * consts::Pi;
 
+}
+
+void InclusiveProcess::Evaluate()
+{
+    D_gg.call_vegas();
+    P0_gg.call_vegas();
+    P1_gg.call_vegas();
+    P2_gg.call_vegas();
+    P3_gg.call_vegas();
+    P4_gg.call_vegas();
+    P5_gg.call_vegas();
+    //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
+    //: Gf = 1.16637*10^{-5} * 0.389379*10^9
+    _prefactor = 35.0309;
+    gg_delta_LO = _prefactor * pow(_as_pi,2.)* _eft.n_LO_delta() * D_gg.result();
+    gg_delta_NLO =_prefactor * pow(_as_pi,3.)* _eft.n_NLO_delta() * D_gg.result();
+    gg_delta_NNLO =_prefactor * pow(_as_pi,4.)* _eft.n_NNLO_delta() * D_gg.result();
+    gg_delta_N3LO =_prefactor * pow(_as_pi,5.)* _eft.n_N3LO_delta() * D_gg.result();
+
+}
 
 /*
 

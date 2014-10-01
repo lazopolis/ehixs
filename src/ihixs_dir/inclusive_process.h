@@ -5,6 +5,7 @@
 #include "vegas_adaptor.h"
 #include "luminosity.h"
 #include "constants.h"
+#include "model.h"
 #include <vector>
 using namespace std;
 
@@ -13,8 +14,6 @@ using namespace std;
 class HiggsEFT
 {
 public:
-
-private:
     double n_LO_delta(){return 1.0;}
     double n_NLO_delta(){return 6.0*consts::z2;}
     double n_NNLO_delta(){return
@@ -65,10 +64,10 @@ class LuminosityIntegral: public CoolInt
 {
 public:
     virtual double evaluateIntegral(const double* xx)=0;
-    void Configure(LuminosityStack* lumi, const double& tau)
+    void Configure(NewLuminosity* lumi, const double& tau)
         {lumi_=lumi; tau_ = tau;}
 protected:
-    LuminosityStack* lumi_;
+    NewLuminosity* lumi_;
     double tau_;
 };
 
@@ -86,41 +85,80 @@ public:
     virtual double log_power()=0;
 };
 
-class LuminosityIntegralDD0: public LuminosityIntegralPlus
+class gg_delta : public LuminosityIntegralDelta
 {
 public:
+    gg_delta(){lumi_->add_pair(QCD::g, QCD::g);}
+};
+
+class gg_plus_0 : public LuminosityIntegralPlus
+{
+public:
+    gg_plus_0(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 0.0;}
 };
 
-class LuminosityIntegralDD1: public LuminosityIntegralPlus
+class gg_plus_1 : public LuminosityIntegralPlus
 {
 public:
+    gg_plus_1(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 1.0;}
 };
 
-class LuminosityIntegralDD2: public LuminosityIntegralPlus
+class gg_plus_2 : public LuminosityIntegralPlus
 {
 public:
+    gg_plus_2(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 2.0;}
 };
 
-class LuminosityIntegralDD3: public LuminosityIntegralPlus
+class gg_plus_3 : public LuminosityIntegralPlus
 {
 public:
+    gg_plus_3(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 3.0;}
 };
 
-class LuminosityIntegralDD4: public LuminosityIntegralPlus
+class gg_plus_4 : public LuminosityIntegralPlus
 {
 public:
+    gg_plus_4(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 4.0;}
 };
 
-class LuminosityIntegralDD5: public LuminosityIntegralPlus
+class gg_plus_5 : public LuminosityIntegralPlus
 {
 public:
+    gg_plus_5(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 5.0;}
 };
+
+class InclusiveProcess
+{
+public:
+    InclusiveProcess(const UserInterface& UI);
+    void Evaluate();
+    double gg_delta_LO;
+    double gg_delta_NLO;
+    double gg_delta_NNLO;
+    double gg_delta_N3LO;
+
+private:
+    gg_delta D_gg;
+    gg_plus_0 P0_gg;
+    gg_plus_1 P1_gg;
+    gg_plus_2 P2_gg;
+    gg_plus_3 P3_gg;
+    gg_plus_4 P4_gg;
+    gg_plus_5 P5_gg;
+private:
+    CModel _model;
+    double _as_pi;
+    NewLuminosity* _lumi;
+    HiggsEFT _eft;
+    double _prefactor;
+};
+
 
 /*
 class CrossSectionTerm : public CoolInt

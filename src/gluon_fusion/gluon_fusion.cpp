@@ -1,3 +1,22 @@
+#include <iostream>
+using namespace std;
+#include "gluon_fusion.h"
+
+#include "ggf_cuts.h"
+
+void GluonFusion::ConfigureCuts()
+{
+    // The file includes the explicit declarations of cut objects.
+    // The cuts declared there are available, not actually active.
+    // They can be activated in runcard. The parsing of runcard for cuts
+    // is done in Production, after the call to this function.
+#include "ggf_cut_initialization.h"
+    
+}
+
+
+
+/*
 #include "gluon_fusion.h"
 
 #ifndef ONCE_PTR_TO_GGF
@@ -1399,7 +1418,7 @@ void GluonFusion::NLO_ewk_h_plus_j_fork(const string& channel_selector)
 }
 
 
-
+*/
 
 
 

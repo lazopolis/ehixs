@@ -73,7 +73,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/core
                     ${EHIXS_SRC_DIR}/pdf
                     ${EHIXS_SRC_DIR}/chaplin
-                    ${EHIXS_SRC_DIR}/ihixs
+                    ${EHIXS_SRC_DIR}/ihixs_dir
                     ${EHIXS_SRC_DIR}/../user_src
                     ${EHIXS_SRC_DIR}/../user_src/ggf_production
                     ${EHIXS_SRC_DIR}/../user_src/WWZZ_decay
@@ -109,12 +109,12 @@ add_subdirectory(gtests)
 #
 #   production modes
 #
-#add_subdirectory(gluon_fusion)
+add_subdirectory(gluon_fusion)
 #add_subdirectory(gluon_fusion_inclusive)
 #add_subdirectory(bottom_fusion)
 add_subdirectory(new_b_bbar)
 #add_subdirectory(gamma_star_gamma_star)
-add_subdirectory(ihixs)
+add_subdirectory(ihixs_dir)
 #
 #   decay modes
 #
@@ -155,6 +155,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             #
             #gamma_star_gamma_star 
             #
+            gluon_fusion
             #GGF_LIBS
             #fortran_bbh
             bbh
@@ -171,5 +172,16 @@ add_executable(ehixs
             ${EHIXS_SRC_DIR}/ehixs.cpp)
 target_link_libraries(ehixs 
             ${LIBRARIES_FOR_GLOBAL_TESTS})
+            
+            
+add_executable(ihixs
+            ${EHIXS_SRC_DIR}/ihixs.cpp)
+target_link_libraries(ihixs
+            ihixs_lib
+            models
+            tools
+            pdf
+            LHAPDF
+            mincuba)
 
 set(CMAKE_BUILD_TYPE Release)

@@ -1,5 +1,44 @@
 #ifndef GLUON_FUSION_H
+#define GLUON_FUSION_H
+
+// implementing the process P P -> Higgs + X via bottom fusion
+// we can have up to 2 extra emission particles.
+
+// including base class
+#include "production.h"
+#include "xsection.h"
+#include "gluon_fusion_me.h"
+
+class GluonFusion : public Production
+{
+    
+public:
+    
+    
+    GluonFusion()
+    {
+        sectors.push_back(new XSectionMaker<GluonFusion_gg_LO>());
+        return;
+    }
+    
+    void ConfigureCuts();
+    
+};
+
+
+
+
+
+
+#endif
+
+
+
+/*
+#ifndef GLUON_FUSION_H
 #define GLUON_FUSION_H 
+
+
 
 #include "production.h"
 //#include "interface_to_amplitudes.h"
@@ -172,3 +211,4 @@ private://methods
 
 
 #endif
+*/
