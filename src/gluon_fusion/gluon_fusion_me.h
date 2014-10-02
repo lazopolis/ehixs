@@ -2,7 +2,7 @@
 #define GLUON_FUSION_ME_H
 
 #include <stdlib.h>
-#include "xsection.h"
+#include "xsectionmaker.h"
 #include "variables.h"
 
 
@@ -20,7 +20,14 @@ class GluonFusion_gg_Delta : public XSection
 public:
     
     GluonFusion_gg_Delta(const UserInterface& UI, const SectorInfo& info);
-    
+    double generateXs(const double* const randoms)
+    {
+        return _xg(randoms);
+    }
+protected:
+    Momenta _p;
+    OneXGenerator _xg;
+    DeltaPG _pg;
 };
 
 /**
@@ -41,7 +48,7 @@ public:
     {}
     
     double matrixElement(const KinematicInvariants& invariants) const;
-    
+    void generateEvents(const double* const randoms);
 };
 
 #endif

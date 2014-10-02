@@ -15,13 +15,13 @@ complex<double> born_single_quark(complex<double> x)
 // GluonFusion_gg_Delta
 
 GluonFusion_gg_Delta::GluonFusion_gg_Delta(const UserInterface& UI, const SectorInfo& info) :
-XSection(UI, info)
+XSection(UI, info),_p(), _xg(_x), _pg(_p, _x)
 {
     //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
     //: Gf = 1.16637*10^{-5} * 0.389379*10^9
     _prefactor = 35.0309;
 //    _prefactor *= consts::Pi * pow(yukawa_bottom,2.) / (2. * QCD::Nc * pow(UI.m_higgs,2.));
-    _kin = new KinematicVariables<OneXGenerator,DeltaPG>(UI.Etot*UI.Etot,{UI.m_higgs},info.dim);
+//    _kin = new KinematicVariables<OneXGenerator,DeltaPG>(UI.Etot*UI.Etot,{UI.m_higgs},info.dim);
     return;
 }
 
@@ -50,7 +50,14 @@ const SectorInfo XSectionMaker<GluonFusion_gg_LO>::_info(
                                                           0,
                                                           1
                                                           );
-
+void GluonFusion_gg_LO::generateEvents(const double* const randoms)
+{
+    _pg(randoms+1);
+    ///////HMMMMMM?!?!?!
+    const double w = _prefactor * _factor;
+    _eventBox->push_back(Event(w,_p));
+    return;
+}
 
 
 
