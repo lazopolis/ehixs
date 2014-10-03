@@ -40,7 +40,6 @@ public:
         return _xg(randoms);
     }
 
-
 protected:
 
     Momenta _p;
@@ -63,13 +62,18 @@ class BottomFusion_bb<1> : public XSection
 public:
 
     BottomFusion_bb<1>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), /*_lambda(), _phi(), */_xg(_x), _pg(_p, _x)
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x)
     {
         _p.resize(4);
         _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
         _xg.setParameters(pow(UI.m_higgs/UI.Etot,2));
         _pg.setParameters(UI.Etot*UI.Etot, vector<double>({UI.m_higgs}));
         return;
+    }
+
+    double generateXs(vector<double>& randoms)
+    {
+        return _xg(randoms);
     }
 
 protected:
@@ -116,15 +120,18 @@ public:
 
     BottomFusion_bb_NLO_real(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_real>::_info)
-    {}
+    {
+        _prefactor *= 8. * consts::Pi * QCD::CF /*alphas2*/;
+        return;
+    }
 
     void generateEvents(vector<double>& randoms);
 
 private:
 
-    double regularME(const double& lambda, const double& z) const
+    double regularME(const double& z) const
     {
-        return 0;
+        return (1.+z*z)/(1.-z)/(1.-z);
     }
     
 };

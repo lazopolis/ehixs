@@ -25,6 +25,7 @@ using namespace std;
  *
  * \enum  Axis
  * \brief Shorthand for calling axes
+ * \warning Seems to be readable globally: needs fixing!!!
  *
  */
 

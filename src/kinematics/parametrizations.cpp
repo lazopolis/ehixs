@@ -27,10 +27,8 @@ void ZlambdaPG::computeConstants()
 /// Implements the parametrization
 double ZlambdaPG::generateFSMomenta(vector<double>& randoms) const
 {
-    const double phi = 2.*consts::Pi*randoms.back();
-    randoms.pop_back();
-    const double lambda = randoms.back();
-    randoms.pop_back();
+    const double phi = 2.*consts::Pi*randoms[1];
+    const double lambda = randoms[0];
     const double z = _tau / (x1*x2);
     const double sllbar = sqrt(lambda*(1.-lambda))*x1*x2*_E;
     _p[4] = (1.-z)*(

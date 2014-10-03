@@ -18,6 +18,7 @@ public:
     BottomFusion()
     {
         sectors.push_back(new XSectionMaker<BottomFusion_bb_LO>());
+        sectors.push_back(new XSectionMaker<BottomFusion_bb_NLO_real>());
         return;
     }
 

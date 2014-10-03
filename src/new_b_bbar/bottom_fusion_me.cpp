@@ -23,16 +23,24 @@ const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
 
 void BottomFusion_bb_NLO_real::generateEvents(vector<double>& randoms)
 {
-    const double w = _prefactor * _factor;
-    double& lambda = randoms[randoms.size()-2];
+    // Setting up convenient variable names
+    double& lambdaR = randoms[randoms.size()-2];
+    const double& z = randoms.back();
+    const double lambda = lambdaR;
+    const double w = _prefactor * _factor * regularME(z);
+    // Generating main event
     _pg(randoms);
-    _eventBox->push_back(Event(w,_p));
-    lambda = 0.;
+    _eventBox->push_back(Event(w/(lambda*(1.-lambda)),_p));
+    // Generating collinear counterterms
+    lambdaR = 0.;
     _pg(randoms);
-    _eventBox->push_back(Event(w,_p));
-    lambda = 1.;
+    _eventBox->push_back(Event(-w/(1.-lambda),_p));
+    lambdaR = 1.;
     _pg(randoms);
-    _eventBox->push_back(Event(w,_p));
+    _eventBox->push_back(Event(-w/lambda,_p));
+    // There should be no variables left, although not checking for efficiency
+    // Cleanup for safety reasons
+    randoms.clear();
     return;
 }
 
