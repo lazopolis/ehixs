@@ -119,7 +119,7 @@ public:
 
     /// Send events from this cross section to the EventBox
     /// \note Override if both delta and non-delta kinematics in the same sector
-    virtual void evaluate(const double* const randoms);
+    virtual void evaluate(vector<double>& randoms);
 
     /// @}
 
@@ -127,10 +127,10 @@ public:
     /// @{
 
     /// Generate Bjorken Xs and return the jacobian
-    virtual double generateXs(const double* const randoms) = 0;
+    virtual double generateXs(vector<double>& randoms) = 0;
 
     /// Compute the events of the current sector
-    virtual void generateEvents(const double* const randoms) = 0;
+    virtual void generateEvents(vector<double>& randoms) = 0;
 
     /// @}
     

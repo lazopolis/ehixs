@@ -50,10 +50,9 @@ const SectorInfo XSectionMaker<GluonFusion_gg_LO>::_info(
                                                           0,
                                                           1
                                                           );
-void GluonFusion_gg_LO::generateEvents(const double* const randoms)
+void GluonFusion_gg_LO::generateEvents(vector<double>& randoms)
 {
-    _pg(randoms+1);
-    ///////HMMMMMM?!?!?!
+    _pg(randoms);
     const double w = _prefactor * _factor;
     _eventBox->push_back(Event(w,_p));
     return;

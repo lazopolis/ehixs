@@ -3,10 +3,9 @@
 
 // BottomFusion_bb_LO
 
-void BottomFusion_bb_LO::generateEvents(const double* const randoms)
+void BottomFusion_bb_LO::generateEvents(vector<double>& randoms)
 {
-    _pg(randoms+1);
-    ///////HMMMMMM?!?!?!
+    _pg(randoms);
     const double w = _prefactor * _factor;
     _eventBox->push_back(Event(w,_p));
     return;
@@ -22,9 +21,9 @@ const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
 
 // BottomFusion_bb_NLO_real
 
-void BottomFusion_bb_NLO_real::generateEvents(const double* const randoms)
+void BottomFusion_bb_NLO_real::generateEvents(vector<double>& randoms)
 {
-    _pg(randoms+2);
+    _pg(randoms);
     const double w = _prefactor * _factor;
     _eventBox->push_back(Event(w,_p));
     return;

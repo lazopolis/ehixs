@@ -1,5 +1,5 @@
 add_library(tools  
-                    hub.cpp
+                    thehatch.cpp
                     vegas_adaptor.cpp
                     histogram.cpp
                     cut.cpp

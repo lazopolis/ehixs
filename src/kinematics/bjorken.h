@@ -99,7 +99,7 @@ public:
     /// @{
 
     /// Generates the Bjorken variables into the target according to some distribution
-    virtual double operator()(const double* const randoms) = 0;
+    virtual double operator()(vector<double>& randoms) = 0;
 
     /// Returns the number of used random [0,1] variables
     virtual size_t Nran() const = 0;
@@ -148,7 +148,7 @@ public:
     /// @{
     
     /// Generates the product x1*x2 in the range [_x1x2min, 1] and x1 in [x1*x2, 1]
-    double operator()(const double* const randoms);
+    double operator()(vector<double>& randoms);
 
     /// Returns the number of used random [0,1] variables
     size_t Nran() const {return 2;}
@@ -186,7 +186,7 @@ public:
     /// @{
     
     /// Sets the product x1*x2 to _x1x2min (using the delta), then generates x1 in the range [x1*x2, 1]
-    double operator()(const double* const randoms);
+    double operator()(vector<double>& randoms);
 
     /// Returns the number of used random [0,1] variables
     size_t Nran() const {return 1;}

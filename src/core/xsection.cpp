@@ -43,7 +43,7 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
 }
 
 /// Evaluate this cross section from Vegas random numbers
-void XSection::evaluate(const double* const randoms)
+void XSection::evaluate(vector<double>& randoms)
 {
     _eventBox->clear();
     _factor = generateXs(randoms);

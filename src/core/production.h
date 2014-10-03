@@ -17,7 +17,7 @@
 #include "interface_to_amplitudes.h"
 #include "user_interface.h"
 #include "luminosity.h"
-#include "hub.hpp"
+#include "thehatch.h"
 #include "event.h"
 #include "xsectionmaker.h"
 using namespace std;
@@ -33,7 +33,7 @@ public:
 
     /// Default constructor
     Production() :
-    event_box(), xx_vegas(NULL), cuts_(), the_xs_(NULL), sectors()
+    event_box(), xx_vegas(), cuts_(), the_xs_(NULL), sectors()
     {}
 
     /// Destructor
@@ -50,7 +50,12 @@ public:
     {
         return the_xs_ != NULL;
     }
-    void set_up_the_hatch(TheHatch*);
+
+    void set_up_the_hatch(TheHatch& the_hatch)
+    {
+        the_hatch.request(xx_vegas, dimension_of_integration());
+    }
+
     bool this_event_passes_cuts(const size_t i)
     {
         return cuts_.passes_cuts(&(event_box[i]));
@@ -77,10 +82,10 @@ public:
 
 protected:
 
-    double* xx_vegas;
     CutBox cuts_;
     XSection* the_xs_;
     vector<BaseXSectionMaker*> sectors;
+    vector<double> xx_vegas;
 
 private:
 

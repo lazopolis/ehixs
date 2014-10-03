@@ -24,7 +24,7 @@ void PGenerator::setParameters(const double& S, const vector<double>& masses)
 
 /// Generates the first two momenta that are common for all processes,
 /// then passes the job on to generateFSMomenta
-double PGenerator::operator()(const double* const randoms) const
+double PGenerator::operator()(vector<double>& randoms) const
 {
     _p[1] = x1 * _E * LightCone::n;
     _p[2] = x2 * _E * LightCone::nbar;
@@ -47,10 +47,12 @@ void ZlambdaPG::computeConstants()
 }
 
 /// Implements the parametrization
-double ZlambdaPG::generateFSMomenta(const double* const randoms) const
+double ZlambdaPG::generateFSMomenta(vector<double>& randoms) const
 {
-    const double phi = 2.*consts::Pi*randoms[0];
-    const double lambda = randoms[1];
+    const double phi = 2.*consts::Pi*randoms.back();
+    randoms.pop_back();
+    const double lambda = randoms.back();
+    randoms.pop_back();
     const double z = _tau / (x1*x2);
     const double sllbar = sqrt(lambda*(1.-lambda))*x1*x2*_E;
     _p[4] = (1.-z)*(

@@ -119,9 +119,9 @@ add_subdirectory(ihixs_dir)
 #   decay modes
 #
 #add_subdirectory(decay_bb)
-add_subdirectory(decay_z_gamma)
-add_subdirectory(decay_h_to_gamma_gamma)
-add_subdirectory(decay_wwzz)
+#add_subdirectory(decay_z_gamma)
+#add_subdirectory(decay_h_to_gamma_gamma)
+#add_subdirectory(decay_wwzz)
 #-------------------------------------------------------------------------------
 
 #find_library(gtest ssl{GTEST_PATH})
@@ -145,10 +145,10 @@ SET(GGF_LIBS gluon_fusion
 SET(LIBRARIES_FOR_GLOBAL_TESTS 
             #test_utils 
             core  
-            decay_zzww 
-            decay_z_gamma 
-            higgs_zerfal 
-            decay_h_to_gamma_gamma
+            #decay_zzww
+            #decay_z_gamma
+            #higgs_zerfal
+            #decay_h_to_gamma_gamma
             kinematics
             models
             tools

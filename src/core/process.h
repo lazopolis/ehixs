@@ -30,7 +30,7 @@ using namespace std;
 //#include "Interface_to_amplitudes.h"
 #include "user_interface.h"
 //#include "luminosity.h"
-#include "hub.hpp"
+#include "thehatch.h"
 #include "decay.h"
 #include "decay_wwzz.h"
 #include "decay_h_to_gamma_gamma.h"

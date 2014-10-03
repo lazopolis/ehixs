@@ -34,7 +34,7 @@ public:
         return;
     }
 
-    double generateXs(const double* const randoms)
+    double generateXs(vector<double>& randoms)
     {
         return _xg(randoms);
     }
@@ -98,7 +98,7 @@ public:
     BottomFusion_bb<0>(UI, XSectionMaker<BottomFusion_bb_LO>::_info)
     {}
 
-    void generateEvents(const double* const randoms);
+    void generateEvents(vector<double>& randoms);
 
 };
 
@@ -119,7 +119,7 @@ public:
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_real>::_info)
     {}
 
-    void generateEvents(const double* const randoms);
+    void generateEvents(vector<double>& randoms);
 
 private:
 

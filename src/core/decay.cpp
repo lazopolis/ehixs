@@ -2,19 +2,6 @@
 #include "decay.h"
 //------------------------------------------------------------------------------
 
-
-void Decay::set_up_the_hatch(TheHatch* the_hatch)
-{
-
-     decay_xx_vegas = the_hatch->RequestPtr();
-     for (unsigned i=0;i<dimension_of_integration_for_decay;i++) 
-          the_hatch->RequestVar("VEGAS");
-}
-
-
-
-
-
 /*
  double ExclusiveClass::decay_WW()
  {

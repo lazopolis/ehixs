@@ -20,7 +20,7 @@ class GluonFusion_gg_Delta : public XSection
 public:
     
     GluonFusion_gg_Delta(const UserInterface& UI, const SectorInfo& info);
-    double generateXs(const double* const randoms)
+    double generateXs(vector<double>& randoms)
     {
         return _xg(randoms);
     }
@@ -48,7 +48,7 @@ public:
     {}
     
     double matrixElement(const KinematicInvariants& invariants) const;
-    void generateEvents(const double* const randoms);
+    void generateEvents(vector<double>& randoms);
 };
 
 #endif

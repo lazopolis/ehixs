@@ -8,7 +8,7 @@ using namespace std;
 #include "user_interface.h"
 //#include "fvector.h"
 #include "constants.h"
-#include "hub.hpp"
+#include "thehatch.h"
 //#include "momenta.h"
 #include "model.h"
 #include "chaplin.h"
@@ -47,12 +47,15 @@ public:
     void SetModel(const CModel& model_input){Model = model_input;}
     CModel Model;
     bool is_sector_defined(){return sector_defined;}
-    void set_up_the_hatch(TheHatch*);
+    void set_up_the_hatch(TheHatch& the_hatch)
+    {
+        the_hatch.request(decay_xx_vegas, dimension_of_integration());
+    }
     CutBox* cuts_;
     bool this_event_passes_cuts(int i){return cuts_->passes_cuts(&event_box[i]);}
 protected:
     string decay_mode;
-    double* decay_xx_vegas;
+    vector<double> decay_xx_vegas;
 
     string my_sector_name;
 

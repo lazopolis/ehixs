@@ -66,7 +66,7 @@ public:
 
     /// Generates the first two momenta that are common for all processes,
     /// then passes the job on to generateFSMomenta, returns jacobian
-    virtual double operator()(const double* const randoms) const;
+    virtual double operator()(vector<double>& randoms) const;
 
     /// @}
 
@@ -77,7 +77,7 @@ public:
     virtual void computeConstants() = 0;
 
     /// Generates the momenta of particles in the final state, returns the jacobian
-    virtual double generateFSMomenta(const double* const randoms) const = 0;
+    virtual double generateFSMomenta(vector<double>& randoms) const = 0;
 
     /// Returns the number of final-state particles
     virtual size_t Nfs() const = 0;
@@ -135,7 +135,7 @@ public:
     {}
 
     /// Set the only final-state momentum via conservation
-    double generateFSMomenta(const double* const randoms) const
+    double generateFSMomenta(vector<double>& randoms) const
     {
         _p[3] = _p[1] + _p[2];
         return 1.;
@@ -192,7 +192,7 @@ public:
     void computeConstants();
 
     /// Implements the parametrization
-    double generateFSMomenta(const double* const randoms) const;
+    double generateFSMomenta(vector<double>& randoms) const;
 
     /// Returns the number of final-state particles
     size_t Nfs() const {return 2;}

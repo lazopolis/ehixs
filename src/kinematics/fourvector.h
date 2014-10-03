@@ -51,7 +51,7 @@ class FourVector : public array<double,4>
 
 public:
     
-    /// \name Constructors
+    /// \name Constructors and destructor
     /// @{
     
     /// Default constructor

@@ -25,9 +25,10 @@ using namespace std;
 
 class Event
 {
+    
 public:
 
-    /// \name Constructors
+    /// \name Constructors and destructor
     /// @{
 
     /// Default constructor
