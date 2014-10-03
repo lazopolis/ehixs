@@ -3,7 +3,8 @@
 
 #include <stdlib.h>
 #include "xsectionmaker.h"
-#include "variables.h"
+#include "parametrizations.h"
+#include "xgenerator.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double yukawa_bottom = 1.0;
@@ -74,8 +75,6 @@ public:
 protected:
 
     Momenta _p;
-    //double _lambda;
-    //double _phi;
     TwoXGenerator _xg;
     ZlambdaPG _pg;
 

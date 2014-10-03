@@ -25,6 +25,7 @@ XSection(UI, info),_p(), _xg(_x), _pg(_p, _x)
     return;
 }
 
+/*
 double GluonFusion_gg_LO::matrixElement(const KinematicInvariants& invariants) const
 {
     std::complex<double> LO_top_only_exact_coeff(0.0,0.0);
@@ -40,8 +41,9 @@ double GluonFusion_gg_LO::matrixElement(const KinematicInvariants& invariants) c
     
     const double wc0 = abs(LO_top_only_exact_coeff*conj(LO_top_only_exact_coeff));
     
-    return wc0 * pow(_as_pi,2.) * 2.*invariants.s(1,2) * 1./2./* for left-right symmetry in lumi */;
+    return wc0 * pow(_as_pi,2.) * 2.*invariants.s(1,2);
 }
+*/
 
 template<>
 const SectorInfo XSectionMaker<GluonFusion_gg_LO>::_info(
@@ -50,6 +52,7 @@ const SectorInfo XSectionMaker<GluonFusion_gg_LO>::_info(
                                                           0,
                                                           1
                                                           );
+
 void GluonFusion_gg_LO::generateEvents(vector<double>& randoms)
 {
     _pg(randoms);

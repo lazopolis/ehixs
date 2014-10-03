@@ -1,13 +1,13 @@
 /**
  *
- * \file    bjorken.cpp
+ * \file    xgenerator.cpp
  * \ingroup kinematics
  * \author  Simone Lionetti
  * \date    September 2014
  *
  */
 
-#include "bjorken.h"
+#include "xgenerator.h"
 
 /// \class TwoXGenerator
 
@@ -21,6 +21,18 @@ double TwoXGenerator::operator()(vector<double>& randoms)
         _x.x2 = x1x2/_x.x1;
         return 1./_x.x1;
     }
+
+/// \class FlatXGenerator
+
+/// Generates x1 and x2 between 0 and 1, returning 0. jacobian if their product is too small
+double FlatXGenerator::operator()(vector<double>& randoms)
+{
+    _x.x1 = randoms.back();
+    randoms.pop_back();
+    _x.x2 = randoms.back();
+    randoms.pop_back();
+    return ( _x.x1*_x.x2 > _x1x2min );
+}
 
 /// \class OneXGenerator
 

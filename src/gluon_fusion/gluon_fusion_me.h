@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 #include "xsectionmaker.h"
-#include "variables.h"
-
+#include "parametrizations.h"
+#include "xgenerator.h"
 
 
 /**
@@ -47,7 +47,7 @@ public:
     GluonFusion_gg_Delta(UI, XSectionMaker<GluonFusion_gg_LO>::_info)
     {}
     
-    double matrixElement(const KinematicInvariants& invariants) const;
+//  double matrixElement(const KinematicInvariants& invariants) const;
     void generateEvents(vector<double>& randoms);
 };
 

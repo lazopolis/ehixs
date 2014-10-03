@@ -10,100 +10,8 @@
 #ifndef KINEMATICS_PARAMETRIZATIONS_H
 #define KINEMATICS_PARAMETRIZATIONS_H
 
-#include "fourvector.h"
-#include <vector>
-#include "bjorken.h"
+#include "pgenerator.h"
 using namespace std;
-
-/**
- *
- * \namespace LightCone
- * \brief     Contains functions and definitions for light-cone coordinates
- * \todo      Complete with functions that return the plus, minus and perp components
- *
- */
-
-namespace LightCone
-{
-    const FourVector n    = FourVector(1., 0., 0.,  1.);
-    const FourVector nbar = FourVector(1., 0., 0., -1.);
-
-    inline FourVector eperp(const double& phi)
-    {
-        return FourVector(0.,cos(phi),sin(phi),0.);
-    }
-};
-
-/**
- *
- * \class PGenerator
- * \brief Base class for generators of four-momenta according to some parametrization
- * \todo  Include generation of momenta in the center of mass frame, now lab only
- *
- */
-
-class PGenerator
-{
-
-public:
-
-    /// \name Constructors and destructor
-    /// @{
-
-    /// Default constructor
-    /// It is mandatory to pass the needed references where variables will be generated
-    PGenerator(Momenta& ps, const Bjorken& xs) :
-    _p(ps), _xs(xs), _E(), _m()
-    {}
-
-    /// @}
-
-    /// \name Member functions
-    /// @{
-
-    /// Sets the parameters needed for generation
-    virtual void setParameters(const double& S, const vector<double>& masses);
-
-    /// Generates the first two momenta that are common for all processes,
-    /// then passes the job on to generateFSMomenta, returns jacobian
-    virtual double operator()(vector<double>& randoms) const;
-
-    /// @}
-
-    /// \name Pure virtual functions
-    /// @{
-    
-    /// Sets the constants in child class
-    virtual void computeConstants() = 0;
-
-    /// Generates the momenta of particles in the final state, returns the jacobian
-    virtual double generateFSMomenta(vector<double>& randoms) const = 0;
-
-    /// Returns the number of final-state particles
-    virtual size_t Nfs() const = 0;
-
-    /// Returns the number of random numbers needed for correct generation
-    virtual size_t Nran() const = 0;
-
-    /// @}
-
-protected:
-
-    /// \name Data members
-    /// @{
-    
-    Momenta& _p;               ///< Reference to target momenta to be generated
-
-    double _E;                 ///< COM energy of the incoming hadrons
-    const Bjorken& _xs;        ///< Where to read Bjorken xs
-    vector<double> _m;         ///< Masses (beware: counting from 0)
-
-    const double& x1 = _xs.x1; ///< Alias for the 1st Bjorken x
-    const double& x2 = _xs.x2; ///< Alias for the 2nd Bjorken x
-
-    /// @}
-
-};
 
 /**
  *
@@ -140,12 +48,6 @@ public:
         _p[3] = _p[1] + _p[2];
         return 1.;
     }
-
-    /// Returns the number of final-state particles
-    size_t Nfs() const {return 1;}
-
-    /// Returns the number of random numbers needed for correct generation
-    size_t Nran() const {return 0;}
 
     /// @}
 
@@ -192,13 +94,9 @@ public:
     void computeConstants();
 
     /// Implements the parametrization
+    /// The last element of the "randoms" vector is interpreted as phi
+    /// The next-to-last element of the "randoms" vector is interpreted as lambda
     double generateFSMomenta(vector<double>& randoms) const;
-
-    /// Returns the number of final-state particles
-    size_t Nfs() const {return 2;}
-
-    /// Returns the number of random numbers needed for correct generation
-    size_t Nran() const {return 2;}
 
     /// @}
 

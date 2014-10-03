@@ -1,6 +1,7 @@
 add_library(kinematics
-                    bjorken.cpp
                     fourvector.cpp
                     invariants.cpp
+                    xgenerator.cpp
+                    pgenerator.cpp
                     parametrizations.cpp
                     )

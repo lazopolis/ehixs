@@ -23,8 +23,15 @@ const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
 
 void BottomFusion_bb_NLO_real::generateEvents(vector<double>& randoms)
 {
-    _pg(randoms);
     const double w = _prefactor * _factor;
+    double& lambda = randoms[randoms.size()-2];
+    _pg(randoms);
+    _eventBox->push_back(Event(w,_p));
+    lambda = 0.;
+    _pg(randoms);
+    _eventBox->push_back(Event(w,_p));
+    lambda = 1.;
+    _pg(randoms);
     _eventBox->push_back(Event(w,_p));
     return;
 }
