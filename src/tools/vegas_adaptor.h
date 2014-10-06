@@ -134,13 +134,14 @@ private: //data
     int _gridno;
     int _seed;
     
-    int _nbatch,_verbose;
-    double _epsrel,_epsabs;
-    int _mineval,_maxeval,_nstart,_nincrease;
+    
     unsigned _iter_num;
     vector<Bin*> _vector_of_xs;
 protected://data
     vector<double> _running_xs_values;
+    int _nbatch,_verbose;
+    double _epsrel,_epsabs;
+    int _mineval,_maxeval,_nstart,_nincrease;
 };
 
 

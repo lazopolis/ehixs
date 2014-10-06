@@ -36,6 +36,7 @@ private:
     double muf_;
     vector<pair<int,int> > pairs;
     vector<double> coeff_;
+    double _almost_zero;
 private:
     string determine_gridname(const string& provider, int order);
 };

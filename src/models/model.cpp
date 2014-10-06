@@ -58,7 +58,7 @@ void CModel::Configure(const double & a_at_mz,
                          const double & mur_over_mh, int porder,
                          const double& mh)
 {
-    cout<<"[ehixs]"<<endl<<"[ehixs] couplings and masses "<<endl;
+    cout<<"[ehixs]"<<endl<<"[ehixs] couplings and masses evolved to order "<<porder<<endl;
     cout<<"[ehixs]"<<endl;
     higgs.set_pole_mass(mh);
     mu_r_ = mur_over_mh * higgs.m();

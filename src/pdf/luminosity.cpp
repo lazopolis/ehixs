@@ -16,6 +16,9 @@ NewLuminosity::NewLuminosity(const UserInterface& UI)
     string gridname = determine_gridname(UI.pdf_provider,UI.perturbative_order);
     pdf_ = LHAPDF::mkPDF( gridname, 0);
     muf_ = UI.muf;
+    // if any of x1, x2 are closer to 0 or 1 than _almost_zero we will return 0.0
+    _almost_zero =1e-6;
+
 }
 
 string NewLuminosity::determine_gridname(const string& provider,int order)
@@ -33,6 +36,10 @@ string NewLuminosity::determine_gridname(const string& provider,int order)
 
 double NewLuminosity::give(const double& x1,const double& x2)
 {
+    if (x1>1.0-_almost_zero or x2>1.0-_almost_zero or x1<_almost_zero or x2<_almost_zero)
+    {
+        return 0.0;
+    }
     double res=0.0;
     for (int i=0;i<pairs.size();i++)
     {

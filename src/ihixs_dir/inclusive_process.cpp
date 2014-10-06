@@ -9,6 +9,7 @@ double LuminosityIntegralDelta::evaluateIntegral(const double* xx)
     const double measure = 1./x1;
     // the check :  x2 = tau/x1 is in [0,1]
     // is done in lumi and 0.0 is returned if it fails
+    //cout<<"x1="<<x1<<" x2= "<<tau_/x1<<" tau = "<<tau_<<" L="<<lumi_->give(x1,tau_/x1)<<endl;
     return measure*lumi_->give(x1,tau_/x1);
 }
 
@@ -30,15 +31,17 @@ double LuminosityIntegralPlus::evaluateIntegral(const double* xx)
 
 InclusiveProcess::InclusiveProcess(const UserInterface& UI)
 {
+    
     _lumi = new NewLuminosity(UI);
+    
     const double tau = pow(UI.m_higgs,2.)/pow(UI.Etot,2.);
-    D_gg.Configure(_lumi,tau);
-    P0_gg.Configure(_lumi,tau);
-    P1_gg.Configure(_lumi,tau);
-    P2_gg.Configure(_lumi,tau);
-    P3_gg.Configure(_lumi,tau);
-    P4_gg.Configure(_lumi,tau);
-    P5_gg.Configure(_lumi,tau);
+    D_gg.Configure(new NewLuminosity(UI),tau);
+    P0_gg.Configure(new NewLuminosity(UI),tau);
+    P1_gg.Configure(new NewLuminosity(UI),tau);
+    P2_gg.Configure(new NewLuminosity(UI),tau);
+    P3_gg.Configure(new NewLuminosity(UI),tau);
+    P4_gg.Configure(new NewLuminosity(UI),tau);
+    P5_gg.Configure(new NewLuminosity(UI),tau);
     _model.Configure(
                      _lumi->alpha_s_at_mz(),
                      UI.mur_over_mhiggs,
@@ -47,12 +50,14 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
                      );
     // Setting up alpha_s
     _as_pi = _model.alpha_strong()/consts::Pi;
-    cout << "\n[CrossSection]: a_s = " << _as_pi * consts::Pi;
-
+    cout << "\n[CrossSection]: a_s = " << _as_pi * consts::Pi<<endl;
+    _log_muf_over_mt_sq = 2.*log(UI.muf/_model.top.m());
+    _log_muf_mh_sq = 2. * log(UI.muf/_model.higgs.m());
 }
 
 void InclusiveProcess::Evaluate()
 {
+    
     D_gg.call_vegas();
     P0_gg.call_vegas();
     P1_gg.call_vegas();
@@ -60,14 +65,166 @@ void InclusiveProcess::Evaluate()
     P3_gg.call_vegas();
     P4_gg.call_vegas();
     P5_gg.call_vegas();
+    
     //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
     //: Gf = 1.16637*10^{-5} * 0.389379*10^9
     _prefactor = 35.0309;
-    gg_delta_LO = _prefactor * pow(_as_pi,2.)* _eft.n_LO_delta() * D_gg.result();
-    gg_delta_NLO =_prefactor * pow(_as_pi,3.)* _eft.n_NLO_delta() * D_gg.result();
-    gg_delta_NNLO =_prefactor * pow(_as_pi,4.)* _eft.n_NNLO_delta() * D_gg.result();
-    gg_delta_N3LO =_prefactor * pow(_as_pi,5.)* _eft.n_N3LO_delta() * D_gg.result();
-
+    double c0 = 1.;
+    double c1 = 11./4.;
+    double c2 = 2777./288. - consts::nf * 67./96.+ _log_muf_over_mt_sq * (19./16.+consts::nf/3.);
+    double c3 = -2892659.0/41472.
+                +(897943./9216.)*consts::z3
+                +(1733./288.)*_log_muf_over_mt_sq
+                +(209./64.)* pow(_log_muf_over_mt_sq,2.)
+                +consts::nf*(
+                     (55./54.)*_log_muf_over_mt_sq
+                     +40291./20736.
+                     -(110779./13824.)*consts::z3
+                     +(23./32.)*pow(_log_muf_over_mt_sq,2.)
+                     )
+                +pow(consts::nf,2.)*(
+                        -6865./31104.
+                        +(77./1728.)*_log_muf_over_mt_sq
+                        -(1./18.)* pow(_log_muf_over_mt_sq,2)
+                 );
+    
+    double w0 = c0*c0;
+    double w1 = 2.*c0*c1;
+    double w2 = c1*c1+2.*c0*c2;
+    double w3 = 2.*c1*c2+2.*c3*c0;
+    
+    
+    gg_delta_LO = _prefactor * pow(_as_pi,2.) * D_gg.result()
+                        * (
+                             w0 * _eft.n_LO_delta()
+                            );
+    gg_delta_NLO =_prefactor * pow(_as_pi,3.) * D_gg.result()
+                        * (
+                             w0 * _eft.n_NLO_delta()
+                           + w1 * _eft.n_LO_delta()
+                           );
+    gg_delta_NNLO =_prefactor * pow(_as_pi,4.) * D_gg.result()
+                        * (
+                             w0 * (  _eft.n_NNLO_delta()
+                                   + _eft.n_NNLO_delta_L()*_log_muf_mh_sq
+                                   + _eft.n_NNLO_delta_L2()*pow(_log_muf_mh_sq,2.)
+                                   )
+                           + w1 * _eft.n_NLO_delta()
+                           + w2 * _eft.n_LO_delta()
+                           );
+    gg_delta_N3LO =_prefactor * pow(_as_pi,5.) * D_gg.result()
+                        *(
+                              w0 * (
+                                    _eft.n_N3LO_delta()
+                                    + _eft.n_N3LO_delta_L()*_log_muf_mh_sq
+                                    + _eft.n_N3LO_delta_L2()*pow(_log_muf_mh_sq,2.)
+                                    + _eft.n_N3LO_delta_L3()*pow(_log_muf_mh_sq,3.)
+                                    )
+                          + w1 * (  _eft.n_NNLO_delta()
+                                  + _eft.n_NNLO_delta_L()*_log_muf_mh_sq
+                                  + _eft.n_NNLO_delta_L2()*pow(_log_muf_mh_sq,2.)
+                                  )
+                            + w2 * _eft.n_NLO_delta()
+                            + w3 * _eft.n_LO_delta()
+                        );
+    gg_D0_NLO = _prefactor * pow(_as_pi,3.) * P0_gg.result()
+                        * w0 * _eft.n_NLO_D0_L() * _log_muf_mh_sq ;
+    gg_D1_NLO = _prefactor * pow(_as_pi,3.) * P1_gg.result()
+                        * w0 * _eft.n_NLO_D1();
+    
+    gg_D0_NNLO = _prefactor * pow(_as_pi,4.) * P0_gg.result()
+                        * (
+                            w0 * (  _eft.n_NNLO_D0()
+                                  + _eft.n_NNLO_D0_L()*_log_muf_mh_sq
+                                  + _eft.n_NNLO_D0_L2()*pow(_log_muf_mh_sq,2.)
+                                  )
+                           + w1 * _eft.n_NLO_D0_L() * _log_muf_mh_sq
+                           );
+    gg_D1_NNLO = _prefactor * pow(_as_pi,4.) * P1_gg.result()
+                        * (
+                           w0 * (  _eft.n_NNLO_D1()
+                                 + _eft.n_NNLO_D1_L()*_log_muf_mh_sq
+                                 + _eft.n_NNLO_D1_L2()*pow(_log_muf_mh_sq,2.)
+                                 )
+                           + w1 * _eft.n_NLO_D1()
+                           );
+    gg_D2_NNLO = _prefactor * pow(_as_pi,4.) * P2_gg.result()
+                        *   w0 * (  _eft.n_NNLO_D2()
+                                 + _eft.n_NNLO_D2_L()*_log_muf_mh_sq
+                                 )
+                           ;
+    gg_D3_NNLO = _prefactor * pow(_as_pi,4.) * P3_gg.result()
+                        *   w0 * (  _eft.n_NNLO_D3()
+                                  )
+                            ;
+    
+    gg_D0_N3LO = _prefactor * pow(_as_pi,5.) * P0_gg.result()
+                        *(
+                        w0 * (
+                              _eft.n_N3LO_D0()
+                              + _eft.n_N3LO_D0_L()*_log_muf_mh_sq
+                              + _eft.n_N3LO_D0_L2()*pow(_log_muf_mh_sq,2.)
+                              + _eft.n_N3LO_D0_L3()*pow(_log_muf_mh_sq,3.)
+                              )
+                          + w1 * (  _eft.n_NNLO_D0()
+                                  + _eft.n_NNLO_D0_L()*_log_muf_mh_sq
+                                  + _eft.n_NNLO_D0_L2()*pow(_log_muf_mh_sq,2.)
+                                  )
+                          + w2 * _eft.n_NLO_D0_L() * _log_muf_mh_sq
+                        );
+    
+    gg_D1_N3LO = _prefactor * pow(_as_pi,5.) * P1_gg.result()
+                        *(
+                            w0 * (
+                                  _eft.n_N3LO_D1()
+                                  + _eft.n_N3LO_D1_L()*_log_muf_mh_sq
+                                  + _eft.n_N3LO_D1_L2()*pow(_log_muf_mh_sq,2.)
+                                  + _eft.n_N3LO_D1_L3()*pow(_log_muf_mh_sq,3.)
+                                  )
+                          + w1 * (  _eft.n_NNLO_D1()
+                                  + _eft.n_NNLO_D1_L()*_log_muf_mh_sq
+                                  + _eft.n_NNLO_D1_L2()*pow(_log_muf_mh_sq,2.)
+                                  )
+                          + w2 * _eft.n_NLO_D1()
+                          );
+    gg_D2_N3LO = _prefactor * pow(_as_pi,5.) * P2_gg.result()
+                        *(
+                            w0 * (
+                                  _eft.n_N3LO_D2()
+                                  + _eft.n_N3LO_D2_L()*_log_muf_mh_sq
+                                  + _eft.n_N3LO_D2_L2()*pow(_log_muf_mh_sq,2.)
+                                  + _eft.n_N3LO_D2_L3()*pow(_log_muf_mh_sq,3.)
+                                  )
+                          + w1 * (  _eft.n_NNLO_D2()
+                                  + _eft.n_NNLO_D2_L()*_log_muf_mh_sq
+                                  )
+                          );
+    gg_D3_N3LO = _prefactor * pow(_as_pi,5.) * P3_gg.result()
+                        *(
+                          w0 * (
+                                _eft.n_N3LO_D3()
+                                + _eft.n_N3LO_D3_L()*_log_muf_mh_sq
+                                + _eft.n_N3LO_D3_L2()*pow(_log_muf_mh_sq,2.)
+                                )
+                          + w1 * (  _eft.n_NNLO_D3()
+                                  )
+                          );
+    gg_D4_N3LO = _prefactor * pow(_as_pi,5.) * P4_gg.result()
+    *(
+      w0 * (
+            _eft.n_N3LO_D4()
+            + _eft.n_N3LO_D4_L()*_log_muf_mh_sq
+            )
+      );
+    
+    gg_D5_N3LO = _prefactor * pow(_as_pi,5.) * P5_gg.result()
+    *(
+      w0 * (
+            _eft.n_N3LO_D5()
+            )
+      );
+    
+    
 }
 
 /*

@@ -122,3 +122,14 @@ target_link_libraries(
                     gtest
                     kinematics
                     )
+                    
+                
+add_executable(
+            ihixs_tests
+            ihixs_tests.cpp
+            )
+target_link_libraries(
+                    ihixs_tests
+                    ihixs_lib
+                    gtest
+                    )

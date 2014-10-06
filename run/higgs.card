@@ -1,8 +1,11 @@
 # example runcard for ehixs
 #
 Etot = 13000
-muf_over_mhiggs = 0.5
-mur_over_mhiggs = 0.5
+muf_over_mhiggs = 1.0
+mur_over_mhiggs = 1.0
+m_higgs = 125.0
+mur=125.0
+muf=125.0
 # ggF, GammaStarGammaStar
 production = ggF
 #
@@ -20,8 +23,8 @@ Fright = gluon
 m_higgs = 125.0
 rr_treatment = split
 #matrix_element_approximation = effective
-qcd_perturbative_order = LO
-perturbative_order = 0
+qcd_perturbative_order = NNLO
+perturbative_order = 2
 #ew_soft = false
 #ew_h_plus_j = false
 #ew_h_plus_j_only = true

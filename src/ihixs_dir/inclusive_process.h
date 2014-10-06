@@ -9,63 +9,19 @@
 #include <vector>
 using namespace std;
 
-
-
-class HiggsEFT
-{
-public:
-    double n_LO_delta(){return 1.0;}
-    double n_NLO_delta(){return 6.0*consts::z2;}
-    double n_NNLO_delta(){return
-                    1071.0 / 8.0 * consts::z4
-                    - 54.0 * pow(consts::z2,2.0)
-                    + 67.0/2.0 * consts::z2
-                    - 165./4. * consts::z3
-                    + 873./16.
-                    + ( - 5./3. * consts::z2
-                       + 5./6.*consts::z3
-                       - 247./36.)
-                    * consts::nf;
-                            }
-    double n_NNLO_delta_L(){return
-                    33./2. * consts::z2
-                    -171./2.*consts::z3
-                    +27./2.
-                    + (-consts::z2 - 11./6.)
-                        * consts::nf;
-        }
-    double n_NNLO_delta_L2(){return
-                    - 18. * consts::z2;
-        }
-    double n_N3LO_delta(){return
-            (-35.*pow(consts::nf,2.)*(-103753.0
-                              + 25776.*consts::z2
-                              + 5616.*consts::z3
-                              + 25200.*consts::z4)
-            + 105.*consts::nf*(-1128767.
-                       + 429096.*consts::z3
-                       - 432.*consts::z2*(188. + 981.*consts::z3)
-                       + 287100.*consts::z4
-                       + 568872.*consts::z5
-                       )
-              - 27.*(-420.*consts::z2*(16151. + 52866.*consts::z3)
-                     + 9611910.*consts::z4
-                     - 105.*(215131.
-                             - 265356.*consts::z3
-                             + 356832.*pow(consts::z3,2.)
-                             - 272844.*consts::z5)
-                     + 22714020.*consts::z6)
-             )/544320.;
-        }
-};
+#include "higgs_eft.h"
 
 
 class LuminosityIntegral: public CoolInt
 {
 public:
     virtual double evaluateIntegral(const double* xx)=0;
+    virtual void set_initial_flavors()=0;
     void Configure(NewLuminosity* lumi, const double& tau)
-        {lumi_=lumi; tau_ = tau;}
+    {lumi_=lumi; tau_ = tau;set_initial_flavors();
+        _epsrel = 1e-4;
+        _epsabs = 1e-4;
+    }
 protected:
     NewLuminosity* lumi_;
     double tau_;
@@ -88,48 +44,48 @@ public:
 class gg_delta : public LuminosityIntegralDelta
 {
 public:
-    gg_delta(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
 };
 
 class gg_plus_0 : public LuminosityIntegralPlus
 {
 public:
-    gg_plus_0(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 0.0;}
 };
 
 class gg_plus_1 : public LuminosityIntegralPlus
 {
 public:
-    gg_plus_1(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 1.0;}
 };
 
 class gg_plus_2 : public LuminosityIntegralPlus
 {
 public:
-    gg_plus_2(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 2.0;}
 };
 
 class gg_plus_3 : public LuminosityIntegralPlus
 {
 public:
-    gg_plus_3(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 3.0;}
 };
 
 class gg_plus_4 : public LuminosityIntegralPlus
 {
 public:
-    gg_plus_4(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 4.0;}
 };
 
 class gg_plus_5 : public LuminosityIntegralPlus
 {
 public:
-    gg_plus_5(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 5.0;}
 };
 
@@ -142,8 +98,22 @@ public:
     double gg_delta_NLO;
     double gg_delta_NNLO;
     double gg_delta_N3LO;
+    double gg_D0_NLO;
+    double gg_D1_NLO;
+    
+    double gg_D0_NNLO;
+    double gg_D1_NNLO;
+    double gg_D2_NNLO;
+    double gg_D3_NNLO;
 
+    double gg_D0_N3LO;
+    double gg_D1_N3LO;
+    double gg_D2_N3LO;
+    double gg_D3_N3LO;
+    double gg_D4_N3LO;
+    double gg_D5_N3LO;
 private:
+    
     gg_delta D_gg;
     gg_plus_0 P0_gg;
     gg_plus_1 P1_gg;
@@ -151,12 +121,16 @@ private:
     gg_plus_3 P3_gg;
     gg_plus_4 P4_gg;
     gg_plus_5 P5_gg;
+     
 private:
     CModel _model;
     double _as_pi;
     NewLuminosity* _lumi;
     HiggsEFT _eft;
     double _prefactor;
+    
+    double _log_muf_over_mt_sq;
+    double _log_muf_mh_sq;
 };
 
 
