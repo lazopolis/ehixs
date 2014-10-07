@@ -15,7 +15,7 @@ class BottomFusion_bb;
 /**
  *
  * \class BottomFusion_bb<0>
- * Mother class for subprocesses with bbar initial state and delta-like kinematics
+ * \brief Mother class for subprocesses with bbar initial state and delta-like kinematics
  *
  */
 
@@ -26,11 +26,11 @@ class BottomFusion_bb<0> : public XSection
 public:
 
     BottomFusion_bb<0>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x)
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(UI.m_higgs/UI.Etot,2))
     {
         _p.resize(3);
         _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
-        _xg.setParameters(pow(UI.m_higgs/UI.Etot,2));
+        _xg.setParameters(_tau);
         _pg.setParameters(UI.Etot*UI.Etot, vector<double>({UI.m_higgs}));
         return;
     }
@@ -45,13 +45,14 @@ protected:
     Momenta _p;
     OneXGenerator _xg;
     DeltaPG _pg;
+    double _tau;
 
 };
 
 /**
  *
  * \class BottomFusion_bb<1>
- * Mother class for subprocesses with bbar initial state and one extra particle in the final state
+ * \brief Mother class for subprocesses with bbar initial state and one extra particle in the final state
  *
  */
 
@@ -62,11 +63,11 @@ class BottomFusion_bb<1> : public XSection
 public:
 
     BottomFusion_bb<1>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x)
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(UI.m_higgs/UI.Etot,2))
     {
         _p.resize(4);
         _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
-        _xg.setParameters(pow(UI.m_higgs/UI.Etot,2));
+        _xg.setParameters(_tau);
         _pg.setParameters(UI.Etot*UI.Etot, vector<double>({UI.m_higgs}));
         return;
     }
@@ -81,13 +82,14 @@ protected:
     Momenta _p;
     TwoXGenerator _xg;
     ZlambdaPG _pg;
+    double _tau;
 
 };
 
 /**
  *
  * \class BottomFusion_bb_LO
- * LO sector for bbar->H
+ * \brief LO sector for bbar->H
  *
  */
 
@@ -108,7 +110,7 @@ public:
 /**
  *
  * \class BottomFusion_bb_NLO_real
- * LO sector for bbar->H
+ * \brief LO sector for bbar->H
  *
  */
 
@@ -121,7 +123,7 @@ public:
     BottomFusion_bb_NLO_real(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_real>::_info)
     {
-        _prefactor *= 8. * consts::Pi * QCD::CF /*alphas2*/;
+        _prefactor *= 8. * consts::Pi * QCD::CF /*alphas*/;
         return;
     }
 
@@ -135,5 +137,45 @@ private:
     }
     
 };
+
+/**
+ *
+ * \class BottomFusion_bb_NLO_soft
+ * \brief NLO soft sector for bbar->H
+ * \todo  Divide stuff between soft and collinear sectors
+ *
+ */
+
+class BottomFusion_bb_NLO_soft : public BottomFusion_bb<0>
+{
+
+public:
+
+
+    BottomFusion_bb_NLO_soft(const UserInterface& UI) :
+    BottomFusion_bb<0>(UI, XSectionMaker<BottomFusion_bb_NLO_soft>::_info)
+    {
+        _prefactor *= 2. * QCD::CF /*alphas*/;
+        return;
+    }
+
+    void generateEvents(vector<double>& randoms);
+
+private:
+
+    double f0(const double& z) const
+    {
+        const double zbar = 1.-z;
+        return zbar*zbar + log(z);
+    }
+
+    double f1(const double& z) const
+    {
+        return 2.*(1.+z*z);
+    }
+
+};
+
+
 
 #endif
