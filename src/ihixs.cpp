@@ -76,36 +76,45 @@ int main(int argc, char** argv)
             cur_process->Evaluate();
             cout<<"--------"<<endl;
             const double Kfactor = 1.065;
-            cout<<"LO delta = "<<cur_process->gg_delta_LO * Kfactor<<endl;
-            cout<<"NLO delta = "<<cur_process->gg_delta_NLO * Kfactor<<endl;
-            cout<<"NLO D0 = "<<cur_process->gg_D0_NLO * Kfactor<<endl;
-            cout<<"NLO D1 = "<<cur_process->gg_D1_NLO * Kfactor<<endl;
-            cout<<"NLO +  = "<<cur_process->gg_D0_NLO * Kfactor
-                            +cur_process->gg_D1_NLO * Kfactor<<endl;
+            cout<<" LO delta = "<<cur_process->sigma_delta(0) * Kfactor
+                <<endl;
+            cout<<" NLO delta = "<<cur_process->sigma_delta(1) * Kfactor
+                <<endl;
+            cout<<"NLO D0 = "<<cur_process->sigma_D0(1) * Kfactor<<endl;
+
+            cout<<"NLO D1 = "<<cur_process->sigma_D1(1) * Kfactor<<endl;
+
             
-            cout<<"N2LO delta = "<<cur_process->gg_delta_NNLO * Kfactor<<endl;
-            cout<<"N2LO D0 = "<<cur_process->gg_D0_NNLO * Kfactor<<endl;
-            cout<<"N2LO D1 = "<<cur_process->gg_D1_NNLO * Kfactor<<endl;
-            cout<<"N2LO D2 = "<<cur_process->gg_D2_NNLO * Kfactor<<endl;
-            cout<<"N2LO D3 = "<<cur_process->gg_D3_NNLO * Kfactor<<endl;
-            cout<<"N2LO +  = "<<(cur_process->gg_D0_NNLO
-                                 + cur_process->gg_D1_NNLO
-                                 + cur_process->gg_D2_NNLO
-                                 + cur_process->gg_D3_NNLO) * Kfactor<<endl;
+            cout<<" N2LO delta = "<<cur_process->sigma_delta(2) * Kfactor
+                <<endl;
+
+            cout<<"N2LO D0 = "<<cur_process->sigma_D0(2) * Kfactor<<endl;
+
+            cout<<"N2LO D1 = "<<cur_process->sigma_D1(2) * Kfactor<<endl;
+
+            cout<<"N2LO D2 = "<<cur_process->sigma_D2(2) * Kfactor<<endl;
+
+            cout<<"N2LO D3 = "<<cur_process->sigma_D3(2) * Kfactor<<endl;
+
             
-            cout<<"N3LO delta = "<<cur_process->gg_delta_N3LO * Kfactor<<endl;
-            cout<<"N3LO D0 = "<<cur_process->gg_D0_N3LO * Kfactor<<endl;
-            cout<<"N3LO D1 = "<<cur_process->gg_D1_N3LO * Kfactor<<endl;
-            cout<<"N3LO D2 = "<<cur_process->gg_D2_N3LO * Kfactor<<endl;
-            cout<<"N3LO D3 = "<<cur_process->gg_D3_N3LO * Kfactor<<endl;
-            cout<<"N3LO D4 = "<<cur_process->gg_D4_N3LO * Kfactor<<endl;
-            cout<<"N3LO D5 = "<<cur_process->gg_D5_N3LO * Kfactor<<endl;
-            cout<<"N3LO +  = "<< cur_process->gg_D0_N3LO * Kfactor
-                                +cur_process->gg_D1_N3LO * Kfactor
-                                +cur_process->gg_D2_N3LO * Kfactor
-                                +cur_process->gg_D3_N3LO * Kfactor
-                                +cur_process->gg_D4_N3LO * Kfactor
-                                +cur_process->gg_D5_N3LO * Kfactor<<endl;
+            cout<<" N3LO delta = "<<cur_process->sigma_delta(3) * Kfactor
+                <<endl;
+
+            cout<<"N3LO D0 = "<<cur_process->sigma_D0(3) * Kfactor<<endl;
+
+            cout<<"N3LO D1 = "<<cur_process->sigma_D1(3) * Kfactor<<endl;
+
+            cout<<"N3LO D2 = "<<cur_process->sigma_D2(3) * Kfactor<<endl;
+
+            cout<<"N3LO D3 = "<<cur_process->sigma_D3(3) * Kfactor<<endl;
+
+            cout<<"N3LO D4 = "<<cur_process->sigma_D4(3) * Kfactor<<endl;
+
+            cout<<"N3LO D5 = "<<cur_process->sigma_D5(3) * Kfactor<<endl;
+            
+            cout<<" --- "<<endl;
+            cout<< *cur_process<<endl;
+
         }
         
     }
