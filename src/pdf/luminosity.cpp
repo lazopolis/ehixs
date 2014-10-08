@@ -9,15 +9,14 @@ using namespace std;
 #include "luminosity.h"
 #include<algorithm>
 
-
+const double NewLuminosity::_almost_zero = 1e-12;
 
 NewLuminosity::NewLuminosity(const UserInterface& UI)
 {
     string gridname = determine_gridname(UI.pdf_provider,UI.perturbative_order);
     pdf_ = LHAPDF::mkPDF( gridname, 0);
     muf_ = UI.muf;
-    // if any of x1, x2 are closer to 0 or 1 than _almost_zero we will return 0.0
-    _almost_zero =1e-6;
+
 
 }
 

@@ -45,6 +45,22 @@ double hpl4im_  (int*, int*, int*, int*, double*, double*);
 #endif
 
 /* C declarations */
+
+inline complex_double HPL(const int& n1, const complex_double& z)
+{ return hpl1_((int*)&n1, (complex_double*)&z); }
+
+inline complex_double HPL(const int& n1, const int& n2, const complex_double& z)
+{ return hpl2_((int*)&n1, (int*)&n2, (complex_double*)&z); }
+
+inline complex_double HPL(const int& n1, const int& n2, const int& n3, const complex_double& z)
+{ return hpl3_((int*)&n1, (int*)&n2, (int*)&n3, (complex_double*)&z); }
+
+inline complex_double HPL(const int& n1, const int& n2, const int& n3, const int& n4, const complex_double& z)
+{ return hpl4_((int*)&n1, (int*)&n2, (int*)&n3, (int*)&n4, (complex_double*)&z); }
+
+
+
+
 inline complex_double HPL1(const int& n1, const complex_double& z)
 { return hpl1_((int*)&n1, (complex_double*)&z); }
 

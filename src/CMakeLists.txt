@@ -180,6 +180,7 @@ target_link_libraries(ihixs
             ihixs_lib
             models
             tools
+            chaplin
             pdf
             LHAPDF
             mincuba)

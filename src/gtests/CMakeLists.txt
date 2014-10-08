@@ -131,5 +131,6 @@ add_executable(
 target_link_libraries(
                     ihixs_tests
                     ihixs_lib
+                    chaplin
                     gtest
                     )

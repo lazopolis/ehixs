@@ -36,7 +36,8 @@ private:
     double muf_;
     vector<pair<int,int> > pairs;
     vector<double> coeff_;
-    double _almost_zero;
+    // if any of x1, x2 are closer to 0 or 1 than _almost_zero we will return 0.0
+    static const double _almost_zero;
 private:
     string determine_gridname(const string& provider, int order);
 };
