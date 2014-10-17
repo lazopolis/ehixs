@@ -28,15 +28,16 @@ double TwoXGenerator::operator()(vector<double>& randoms)
 double ZXGenerator::operator()(vector<double>& randoms)
 {
     const double& tau = _x1x2min;
+    const double logtau = log(tau);
     const double z = randoms.back()*(1.-tau)+tau;
     randoms.pop_back();
-    const double Y = (2.*randoms.back()-1.)*log(tau);
+    const double Y = (2.*randoms.back()-1.)*logtau;
     randoms.pop_back();
     const double s_x1x2 = sqrt(tau/z);
     const double s_x1_x2 = exp(Y);
     _x.x1 = s_x1x2 * s_x1_x2;
     _x.x2 = s_x1x2 / s_x1_x2;
-    return tau/(z*z);
+    return fabs(2.*logtau*tau/(z*z));
 }
 
 /// \class FlatXGenerator

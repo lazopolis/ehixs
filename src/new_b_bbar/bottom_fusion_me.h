@@ -82,7 +82,7 @@ public:
 protected:
 
     Momenta _p;
-    TwoXGenerator _xg;
+    FlatXGenerator _xg;
     ZlambdaPG _pg;
     double _tau;
 
