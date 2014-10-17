@@ -28,4 +28,16 @@ public:
     }
 };
 
+class BbhCut_Higgs_Ylarge : public CCut
+{
+public:
+    BbhCut_Higgs_Ylarge(const double& cutvalue)
+    : CCut("CutBBhHiggsYlarge",cutvalue){};
+    bool operator()(Event* the_event)
+    {
+        if (fabs(the_event->p[3].Y())>min) return true;
+        return false;
+    }
+};
+
 #endif

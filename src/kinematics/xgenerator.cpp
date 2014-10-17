@@ -22,6 +22,23 @@ double TwoXGenerator::operator()(vector<double>& randoms)
         return 1./_x.x1;
     }
 
+/// \class ZXGenerator
+
+/// Given tau=_x1x2min, generates z=tau/(x1*x2) in the range [tau, 1] and the log of their ratio in [-log(tau), log(tau)]
+double ZXGenerator::operator()(vector<double>& randoms)
+{
+    const double& tau = _x1x2min;
+    const double z = randoms.back()*(1.-tau)+tau;
+    randoms.pop_back();
+    const double Y = (2.*randoms.back()-1.)*log(tau);
+    randoms.pop_back();
+    const double s_x1x2 = sqrt(tau/z);
+    const double s_x1_x2 = exp(Y);
+    _x.x1 = s_x1x2 * s_x1_x2;
+    _x.x2 = s_x1x2 / s_x1_x2;
+    return tau/(z*z);
+}
+
 /// \class FlatXGenerator
 
 /// Generates x1 and x2 between 0 and 1, returning 0. jacobian if their product is too small

@@ -21,26 +21,31 @@ const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
 
 // BottomFusion_bb_NLO_hard
 
+const double BottomFusion_bb_NLO_hard::_cutoff = 100*DBL_EPSILON;
+
 void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
 {
     // Setting up convenient variable names
-    double& lambda = randoms[randoms.size()-2];
+    double& lambdaR = randoms[randoms.size()-2];
+    const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor * regularME(z);
-    const double w_l = w/lambda;
-    const double w_llbar = w_l/(1.-lambda);
-    // Hacking known analytical zero by hand
-    const double w_lbar = w_llbar-w_l;
+    // Technical cutoff
+    if ( lambda < _cutoff || 1.-lambda < _cutoff || 1.-z < _cutoff )
+    {
+        _eventBox->push_back(Event());
+        return;
+    }
     // Generating main event
     _pg(randoms);
-    _eventBox->push_back(Event(w_llbar,_p));
+    _eventBox->push_back(Event(w/(lambda*(1.-lambda)),_p));
     // Generating collinear counterterms
-    lambda = 0.;
+    lambdaR = 0.;
     _pg(randoms);
-    _eventBox->push_back(Event(-w_l,_p));
-    lambda = 1.;
+    _eventBox->push_back(Event(-w/lambda,_p));
+    lambdaR = 1.;
     _pg(randoms);
-    _eventBox->push_back(Event(-w_lbar,_p));
+    _eventBox->push_back(Event(-w/(1.-lambda),_p));
     // There should be no variables left, although not checking for efficiency
     // Cleanup for safety reasons
     randoms.clear();
@@ -90,23 +95,45 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
+    const double myFull = full(z,lambda);
+    const double myColl1 = coll(z,lambda);
+    const double myColl2 = coll(z,1.-lambda);
+    // Sanity check
+    if (!isfinite(myFull) || !isfinite(myColl1) || !isfinite(myColl2))
+    {
+        cout.precision(16);
+        cout << "\n\n[ERROR] Values \tlambda = " << lambda << ",\tz = " << z << "\t produced a non-finite weight.\n";
+        throw;
+    }
     // Generating main event
     _pg(randoms);
     _eventBox->push_back(Event(w*full(z,lambda),_p));
     // Generating collinear counterterms
     lambdaR = 0.;
     _pg(randoms);
-    _eventBox->push_back(Event(w*coll(z,lambda),_p));
+    _eventBox->push_back(Event(-w*coll(z,lambda),_p));
     lambdaR = 1.;
     _pg(randoms);
-    _eventBox->push_back(Event(w*coll(z,1.-lambda),_p));
+    _eventBox->push_back(Event(-w*coll(z,1.-lambda),_p));
+    /*if (z>lambdat)
+    {
+        cout.precision(15);
+        cout << lambda << "\t" << z << "\t" << myFull << "\t" << myColl1 << "\t" << myColl2
+            << "\t" << myFull-myColl1-myColl2 << endl;
+        lambdat=z;
+    }*/
+
+    double _1mz = 0.1;
+    const double foolambda = 0.234;
+    while (_1mz>DBL_EPSILON)
+    {
+        _1mz/=2.;
+        cout << _1mz << "\t" << (full(1.-_1mz,foolambda)-coll(1.-_1mz,foolambda)-coll(1.-_1mz,1.-foolambda))*_1mz/log(_1mz) << endl;
+    }
+    exit(0);
+
     // There should be no variables left, although not checking for efficiency
     // Cleanup for safety reasons
-    if (lambda>lambdat)
-    {
-        cout << lambda << "\t" << full(z,lambda) << " " << coll(z,1.-lambda) << endl;
-        lambdat=lambda;
-    }
     randoms.clear();
     return;
 }

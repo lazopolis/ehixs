@@ -27,12 +27,12 @@ class BottomFusion_bb<0> : public XSection
 public:
 
     BottomFusion_bb<0>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(UI.m_higgs/UI.Etot,2))
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
     {
         _p.resize(3);
         _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
         _xg.setParameters(_tau);
-        _pg.setParameters(UI.Etot*UI.Etot, vector<double>({UI.m_higgs}));
+        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
         return;
     }
 
@@ -64,12 +64,13 @@ class BottomFusion_bb<1> : public XSection
 public:
 
     BottomFusion_bb<1>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(UI.m_higgs/UI.Etot,2))
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
     {
         _p.resize(4);
+        cout << "\nmH:\t" << UI.m_higgs << "\nEtot:\t" << UI.Etot << "\ntau:\t" << _tau << endl;
         _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
         _xg.setParameters(_tau);
-        _pg.setParameters(UI.Etot*UI.Etot, vector<double>({UI.m_higgs}));
+        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
         return;
     }
 
@@ -134,9 +135,11 @@ private:
 
     double regularME(const double& z) const
     {
-        return (1.+z*z)/(1.-z)/(1.-z);
+        return (1.+z*z)/(1.-z);
     }
     
+    static const double _cutoff;
+
 };
 
 /**
@@ -204,28 +207,28 @@ private:
     static double full(const double& z, const double& lambda)
     {
         const double pl1 = HPL2(0,1, 1./(1. + (z*pow(1.-z,-2))/((1.-lambda)*lambda)) ).real();
-        const double pl2 = HPL2(0,1,1 - lambda).real();
-        const double pl3 = HPL2(0,1,(1 - lambda)*(1 - z)).real();
+        const double pl2 = HPL2(0,1,1.-lambda).real();
+        const double pl3 = HPL2(0,1,(1.-lambda)*(1.-z)).real();
         const double pl4 = HPL2(0,1,lambda).real();
-        const double pl5 = HPL2(0,1,lambda - lambda*z).real();
-        const double pl6 = HPL2(0,1,lambda/(lambda + z - lambda*z)).real();
-        const double pl7 = HPL2(0,1,1/(1 + (lambda*z)/(1 - lambda))).real();
-        const double l1 = log(1 - z);
+        const double pl5 = HPL2(0,1,lambda*(1.-z)).real();
+        const double pl6 = HPL2(0,1,lambda/(z + lambda*(1.-z))).real();
+        const double pl7 = HPL2(0,1,(1.-lambda)/(1. - lambda*(1.-z))).real();
+        const double l1 = log(1.-z);
         const double l2 = log(z);
-        const double l3 = log(1 - lambda);
+        const double l3 = log(1.-lambda);
         const double l4 = log(lambda);
-        const double l5 = log(1 - lambda*(1 - z));
-        const double l6 = log(lambda + z - lambda*z);
-        const double compr = 18*l3 + 18*l4 + 18*l3*l4 - 2*l2*(17 + 9*l3 + 9*l4) - 16*l3*l5 + 2*l4*l5
-            + 2*l3*l6 - 16*l4*l6 + 18*l5*l6
-            - 4*l1*(-9 + 9*l2 - 9*l3 - 9*l4 + 4*l5 + 4*l6)
-            + 18*pl1 + 2*pl2 + 20*pl3 + 2*pl4 + 20*pl5 - 2*pl6 - 2*pl7
-            + 36*l1*l1 + 17*l2*l2 + 9*l3*l3 + 9*l4*l4 + 8*l5*l5 + 8*l6*l6 - 14*consts::pi_square;
-        return 16 * (
-                (16+compr)
-                - 2 * (-5 + 36*l1 - 34*l2 + 18*l3 + 18*l4)*z
-                + (6+compr)*z*z
-                ) * pow(1.-z,-2) / (3.*(1.-lambda)*lambda);
+        const double l5 = log(1.- lambda*(1.-z));
+        const double l6 = log(z + lambda*(1.-z));
+        const double compr = 18.*l3 + 18.*l4 + 18.*l3*l4 - 2.*l2*(17. + 9.*l3 + 9.*l4) - 16.*l3*l5 + 2.*l4*l5
+            + 2.*l3*l6 - 16.*l4*l6 + 18.*l5*l6
+            - 4.*l1*(-9. + 9.*l2 - 9.*l3 - 9.*l4 + 4.*l5 + 4.*l6)
+            + 18.*pl1 + 2.*pl2 + 20.*pl3 + 2.*pl4 + 20.*pl5 - 2.*pl6 - 2.*pl7
+            + 36.*l1*l1 + 17.*l2*l2 + 9.*l3*l3 + 9.*l4*l4 + 8.*l5*l5 + 8.*l6*l6 - 14.*consts::pi_square;
+        return 16. * (
+                (16.+compr)
+                - 2. * (-5. + 36.*l1 - 34.*l2 + 18.*l3 + 18.*l4)*z
+                + (6.+compr)*z*z
+                ) / (3.*(1.-lambda)*lambda*(1.-z));
     }
 
     static double coll(const double& z, const double& lambda)
@@ -243,7 +246,7 @@ private:
                  -25*z2*lz*lz - 18*ll + 36*z*ll - 18*z2*ll + 34*lz*ll + 34*z2*lz*ll - 9*ll*ll*(1.+z2)
                  +4*l1z*(13*(1.+z2)*lz - 9*((1.-z)*(1.-z) + (1.+z2)*ll))
                  - 20*(1.+z2)*dilog
-                 )/(3.*(1.-z)*(1.-z)*lambda);
+                 )/(3.*(1.-z)*lambda);
     }
 
     static double lambdat;

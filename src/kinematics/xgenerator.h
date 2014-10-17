@@ -111,6 +111,42 @@ public:
 
 /**
  *
+ * \class ZXGenerator
+ * \brief Generator of Bjorken x1 and x2, starting from z and without rejection
+ *
+ * This x-generator produces two valid values of x1 and x2 by generating z and their ratio.
+ *
+ */
+
+class ZXGenerator : public XGenerator
+{
+
+public:
+
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
+    /// It is mandatory to pass the needed references where variables will be generated
+    ZXGenerator(Bjorken& x) :
+    XGenerator(x)
+    {}
+
+    /// @}
+
+    /// \name Member functions
+    /// @{
+
+    /// Given tau=_x1x2min, generates z=tau/(x1*x2) in the range [tau, 1] and the log of their ratio in [-log(tau), log(tau)]
+    /// Eliminates used randoms from vector
+    double operator()(vector<double>& randoms);
+    
+    /// @}
+    
+};
+
+/**
+ *
  * \class FlatXGenerator
  * \brief Generator of Bjorken momentum fractions x1 and x2, flat and with rejection
  *
