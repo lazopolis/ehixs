@@ -73,7 +73,7 @@ void BottomFusion_bb_NLO_soft::generateEvents(vector<double>& randoms)
     cout << "z = " << z << ", w = " << w << endl;
     _pg(randoms);
     _eventBox->push_back(Event(w,_p));
-    // There should be no variables in randoms, although not checking for efficiency
+    // No variables in randoms, although not checking for efficiency
     return;
 }
 
@@ -84,7 +84,6 @@ const SectorInfo XSectionMaker<BottomFusion_bb_NLO_soft>::_info(
                                                                 1,
                                                                 1
                                                                 );
-double BottomFusion_bb_NNLO_RV::lambdat=0.5;
 
 // BottomFusion_bb_NNLO_RV
 
@@ -95,44 +94,33 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
-    const double myFull = full(z,lambda);
-    const double myColl1 = coll(z,lambda);
-    const double myColl2 = coll(z,1.-lambda);
-    // Sanity check
-    if (!isfinite(myFull) || !isfinite(myColl1) || !isfinite(myColl2))
-    {
-        cout.precision(16);
-        cout << "\n\n[ERROR] Values \tlambda = " << lambda << ",\tz = " << z << "\t produced a non-finite weight.\n";
-        throw;
-    }
     // Generating main event
     _pg(randoms);
     _eventBox->push_back(Event(w*full(z,lambda),_p));
-    // Generating collinear counterterms
+    // Subtracting collinear counterterms
     lambdaR = 0.;
     _pg(randoms);
     _eventBox->push_back(Event(-w*coll(z,lambda),_p));
     lambdaR = 1.;
     _pg(randoms);
     _eventBox->push_back(Event(-w*coll(z,1.-lambda),_p));
-    /*if (z>lambdat)
-    {
-        cout.precision(15);
-        cout << lambda << "\t" << z << "\t" << myFull << "\t" << myColl1 << "\t" << myColl2
-            << "\t" << myFull-myColl1-myColl2 << endl;
-        lambdat=z;
-    }*/
-
-    double _1mz = 0.1;
-    const double foolambda = 0.234;
-    while (_1mz>DBL_EPSILON)
-    {
-        _1mz/=2.;
-        cout << _1mz << "\t" << (full(1.-_1mz,foolambda)-coll(1.-_1mz,foolambda)-coll(1.-_1mz,1.-foolambda))*_1mz/log(_1mz) << endl;
-    }
-    exit(0);
-
-    // There should be no variables left, although not checking for efficiency
+    // Subtracting soft counterterm
+    lambdaR = lambda;
+    _x.x1 *= sqrt(z);
+    _x.x2 *= sqrt(z);
+    _pg(randoms);
+    _eventBox->push_back(Event(-w*soft(z,lambda),_p));
+    // Adding back double limit
+    lambdaR = 0.;
+    _pg(randoms);
+    _eventBox->push_back(Event(w*softcoll(z,lambda),_p));
+    lambdaR = 1.;
+    _pg(randoms);
+    _eventBox->push_back(Event(w*softcoll(z,1.-lambda),_p));
+    // Restoring original Bjorkens
+    _x.x1 /= sqrt(z);
+    _x.x2 /= sqrt(z);
+    // No variables left, although not checking for efficiency
     // Cleanup for safety reasons
     randoms.clear();
     return;

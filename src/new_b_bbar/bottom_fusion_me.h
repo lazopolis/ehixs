@@ -137,7 +137,7 @@ private:
     {
         return (1.+z*z)/(1.-z);
     }
-    
+
     static const double _cutoff;
 
 };
@@ -249,7 +249,27 @@ private:
                  )/(3.*(1.-z)*lambda);
     }
 
-    static double lambdat;
+    static double soft(const double& z, const double& lambda)
+    {
+        const double _1ml = 1.-lambda;
+        const double l1 = log(_1ml);
+        const double l2 = log(lambda);
+        const double l3 = log(1.-z);
+        return 32.*QCD::CA*(
+                            6.*l1*l2 + 12.*(l1+l2)*l3 + 3.*l1*l1 + 3.*l2*l2
+                            + 12.*l3*l3 - 2.*consts::pi_square
+                            ) / (3.*_1ml*lambda*(1.-z));
+    }
+
+    static double softcoll(const double& z, const double& lambda)
+    {
+        const double l1 = log(lambda);
+        const double l2 = log(1.-z);
+        return 32.*QCD::CA*(
+                            12.*l1*l2 + 3.*l1*l1 + 12.*l2*l2
+                            - 2.*consts::pi_square
+                            ) / (3.*lambda*(1.-z));
+    }
 
 };
 
