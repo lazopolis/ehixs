@@ -12,23 +12,28 @@
 using namespace std;
 
 #include "higgs_eft.h"
-
+#include "luminosity_integrals.h"
 
 class InclusiveProcess
 {
 public:
     InclusiveProcess(const UserInterface& UI);
     void Evaluate();
-    
+    void Evaluate(const string& type);
+    void Evaluate(SigmaTerm* term);
     double CoefficientAlphaS(int i);
+    double CoefficientAlphaSError(int i);
+
+    ResultPair TotalCentral();
     friend ostream& operator<<(ostream&, const InclusiveProcess&);
 
     
-    double sigma(const string& type_id,int i);
 
-private:
+
     
 private:
+    UserInterface _UI;
+    bool _scale_variation;
     CModel _model;
     double _as_pi;
     NewLuminosity* _lumi;
@@ -36,17 +41,22 @@ private:
     WilsonCoefficient _wc;
     double _prefactor;
     
+    vector<double> _mur_vector;
+    double _current_mur;
+    bool _is_central_scale;
+    
     double _log_muf_over_mt_sq;
     double _log_muf_mh_sq;
     double _log_mur_over_muf_sq;
     
     vector<SigmaTerm*> _sigma;
 
+    int _int_qcd_perturbative_order;
     
-    vector<double> evolve_xs_to_mur(const vector<double>& x);
+    SigmaTerm* find_term(const string& type);
     
-    
-    vector<double> wc_x_n(const WilsonCoefficient& wc, const vector<double> x);
+    void SetMurDependentParameters(const double& mur);
+    void Truncate();
 
 };
 

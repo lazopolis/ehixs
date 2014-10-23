@@ -77,13 +77,20 @@ int main(int argc, char** argv)
             cout<<"--------"<<endl;
             const double Kfactor = 1.065;
             cout<< *cur_process<<endl;
-            cout<<"-----------------------------------------------------"<<endl;
-            cout<<setw(22)<<" "
-            <<setw(12)<<cur_process->CoefficientAlphaS(2)
-            <<setw(12)<<cur_process->CoefficientAlphaS(3)
-            <<setw(12)<<cur_process->CoefficientAlphaS(4)
-            <<setw(12)<<cur_process->CoefficientAlphaS(5)
-            <<endl;
+            cout<<"-----------------------------------------------------"
+                <<"-----------------------------------------------------"
+                <<"---------"
+                <<endl;
+            cout<<"Total contributions for the N3LO cross section"
+                <<" at central scale mur="<<UI.mur<<endl;
+            cout<<setprecision(4)
+            <<setw(6)<<"LO"<<setw(24)<<cur_process->CoefficientAlphaS(2)<<endl
+            <<setw(6)<<"NLO"<<setw(24)<<cur_process->CoefficientAlphaS(3)<<endl
+            <<setw(6)<<"NNLO"<<setw(24)<<cur_process->CoefficientAlphaS(4)<<endl
+            <<setw(6)<<"N3LO"<<setw(25)<<cur_process->CoefficientAlphaS(5)<<endl
+            <<"-----------------"<<endl
+            <<setw(6)<<"Total"<<cur_process->TotalCentral()
+            <<endl<<endl;
             
         }
         

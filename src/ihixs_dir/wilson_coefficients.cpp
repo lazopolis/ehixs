@@ -3,6 +3,7 @@
 
 void WilsonCoefficient::Configure(const double& log_muf_over_mt_sq)
 {
+    _w.clear();
     double c0 = 1.;
     double c1 = 11./4.;
     double c2 = 2777./288. - consts::nf * 67./96.+ log_muf_over_mt_sq * (19./16.+consts::nf/3.);

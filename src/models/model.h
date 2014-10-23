@@ -35,6 +35,7 @@ public:
     Particle bottom;
 private:
 	double mu_r_;
+    double _porder;
     CouplingConstant* alpha_s;
     
     

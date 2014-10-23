@@ -4,6 +4,8 @@ add_library(ihixs_lib
                 luminosity_integrals.cpp
                 wilson_coefficients.cpp
                 sigma_term.cpp
+                as_series.cpp
+                result_pair.cpp
                 )
                 
 

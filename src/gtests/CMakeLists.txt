@@ -132,5 +132,46 @@ target_link_libraries(
                     ihixs_tests
                     ihixs_lib
                     chaplin
+                    pdf
+                    tools
+                    models
+                    LHAPDF
+                    mincuba
                     gtest
                     )
+                    
+add_executable(
+            ihixs_as_series
+            ihixs_as_series.cpp
+            )
+target_link_libraries(
+                    ihixs_as_series
+                    ihixs_lib
+                    mincuba
+                    tools
+                    gtest
+                    )
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+
+

@@ -9,28 +9,62 @@ using namespace std;
 #include "luminosity.h"
 #include "luminosity_integrals.h"
 #include "wilson_coefficients.h"
+#include "user_interface.h"
+
+#include "as_series.h"
+
+class SavedResult{
+public:
+    SavedResult(const AsSeries& rp, const double& mur):_rp(rp),_mur(mur){}
+    AsSeries Result(){return _rp;}
+    bool IsMur(const double& mur){return _mur==mur;}
+    void Truncate(int n){_rp.Truncate(n);}
+private:
+    AsSeries _rp;
+    double _mur;
+};
+
+
 
 class SigmaTerm{
 public:
-    SigmaTerm(const string& thetype, const vector<double>& val,
+    SigmaTerm(const string& thetype, const AsSeries& val,
               LuminosityIntegral* lumi_int)
-    :_type(thetype),_val(val),_err(val),_lumi_int(lumi_int){};
+    :_type(thetype),_result(val),_lumi_int(lumi_int),_evaluated(false)
+    {}
     
-    void ConfigureLumi(NewLuminosity* lumi,const double& tau);
+    void ConfigureLumi(NewLuminosity* lumi,const double& tau,const UserInterface& UI);
     void CallVegas();
-    double operator[](int i);
+    AsSeries ResultCentral(){return _result_central;}
+
+    void Truncate(int);
+    ResultPair give(int i,const double& mur);
+    
+    bool IsZero(int porder);
+    
     void multiply(const double& c);
     void wc_expansion(const WilsonCoefficient& wc);
     
     void multiply_by_as_pi(const double& as_pi);
+    void evolve_from_muf_to_mur(const double& Lrf);
+
+    void Save(const double& mur){_saved_results.push_back(SavedResult(_result,mur));}
+    void SaveCentral(const double& mur){_result_central = _result;}
+    void RewindToPostVegas(){_result = _post_vegas_result;}
     
     friend ostream& operator<<(ostream&, const SigmaTerm&);
+    string print_scale_result(const double& mur,int porder);
     string type();
+    bool Evaluated(){return _evaluated;}
 private:
     string _type;//delta, plus, reg
-    vector<double> _val;
-    vector<double> _err;
+    AsSeries _result;
+    AsSeries _result_central;
+    AsSeries _post_vegas_result;
+    vector<SavedResult> _saved_results;
     LuminosityIntegral* _lumi_int;
+    bool _evaluated;
+    double err_in_quadrature(const vector<double>& v);
 };
 
 #endif

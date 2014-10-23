@@ -47,7 +47,7 @@ UserInterface::UserInterface()
 
      options.push_back(new StringOption("production",0,"production process","Required",&production,"ggF"));
      options.push_back(new StringOption("decay",0,"decay process","Required",&decay,""));
-     options.push_back(new StringOption("pdf_provider",0,"pdf provider","Required",&pdf_provider,"MSTW"));
+     options.push_back(new StringOption("pdf_provider",0,"pdf provider","Required",&pdf_provider,"none"));
      options.push_back(new StringOption("sector_name",0,"name of the production sector to run","Required",&sector_name,"none"));
      options.push_back(new StringOption("sector_for_production",'s',"number of the production sector to run: attention: the id number depends on other user defined parameters, like the channel, the perturbative order, the pole etc.  ","Required",&sector_for_production,"none"));
      options.push_back(new StringOption("input_filename",'i',"filename to use as runcard","Required",&input_filename,"runcard"));
@@ -69,7 +69,13 @@ UserInterface::UserInterface()
                                        "Required",
                                        &rr_treatment,
                                        "none"));
-    
+    options.push_back(new StringOption(
+                                       "pdf_set",0,
+                                       "choose a specific pdf set name (one from the LHAPDF6 list found at\
+                                       lhapdf.hepforge.org/pdfsets.html). This set will be used irresspectively of order for the entire computation. This option is incompatible with pdf_provider. ",
+                                       "Required",
+                                       &pdf_set,
+                                       "none"));
     
      options.push_back(new IntOption("verbose",0,"level of verbosity","Required",&verbose,2));
      options.push_back(new IntOption("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,200000));

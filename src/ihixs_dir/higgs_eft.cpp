@@ -5,96 +5,81 @@ using namespace std;
 
 namespace HEFT {
 
-    vector<double> n_delta_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_delta_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(n_LO_delta());
-        res.push_back(n_NLO_delta());
-        res.push_back(n_NNLO_delta()
+        return AsSeries(0,
+                        n_LO_delta(),
+                        n_NLO_delta(),
+                        n_NNLO_delta()
                       + n_NNLO_delta_L()*_log_muf_mh_sq
-                      + n_NNLO_delta_L2()*pow(_log_muf_mh_sq,2.));
-        res.push_back(n_N3LO_delta()
+                      + n_NNLO_delta_L2()*pow(_log_muf_mh_sq,2.),
+                        n_N3LO_delta()
                              + n_N3LO_delta_L()*_log_muf_mh_sq
                              + n_N3LO_delta_L2()*pow(_log_muf_mh_sq,2.)
-                             + n_N3LO_delta_L3()*pow(_log_muf_mh_sq,3.));
-        return res;
+                             + n_N3LO_delta_L3()*pow(_log_muf_mh_sq,3.)
+                      );
     }
     
-    vector<double> n_D0_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_D0_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(0.0);
-        res.push_back(n_NLO_D0_L() * _log_muf_mh_sq);
-        res.push_back(n_NNLO_D0()
+        return AsSeries(1,
+                        n_NLO_D0_L() * _log_muf_mh_sq,
+                        n_NNLO_D0()
                       + n_NNLO_D0_L()*_log_muf_mh_sq
-                      + n_NNLO_D0_L2()*pow(_log_muf_mh_sq,2.));
-        res.push_back(n_N3LO_D0()
+                      + n_NNLO_D0_L2()*pow(_log_muf_mh_sq,2.),
+                        n_N3LO_D0()
                       + n_N3LO_D0_L()*_log_muf_mh_sq
                       + n_N3LO_D0_L2()*pow(_log_muf_mh_sq,2.)
-                      + n_N3LO_D0_L3()*pow(_log_muf_mh_sq,3.));
-        return res;
+                      + n_N3LO_D0_L3()*pow(_log_muf_mh_sq,3.)
+                        );
     }
     
-    vector<double> n_D1_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_D1_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(0.0);
-        res.push_back(n_NLO_D1());
-        res.push_back(n_NNLO_D1()
+        return AsSeries(1,
+                        n_NLO_D1(),
+        n_NNLO_D1()
                       + n_NNLO_D1_L()*_log_muf_mh_sq
-                      + n_NNLO_D1_L2()*pow(_log_muf_mh_sq,2.));
-        res.push_back(n_N3LO_D1()
+                      + n_NNLO_D1_L2()*pow(_log_muf_mh_sq,2.),
+        n_N3LO_D1()
                       + n_N3LO_D1_L()*_log_muf_mh_sq
                       + n_N3LO_D1_L2()*pow(_log_muf_mh_sq,2.)
-                      + n_N3LO_D1_L3()*pow(_log_muf_mh_sq,3.));
-        return res;
+                        + n_N3LO_D1_L3()*pow(_log_muf_mh_sq,3.)
+                        );
     }
     
-    vector<double> n_D2_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_D2_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(0.0);
-        res.push_back(0.0);
-        res.push_back(n_NNLO_D2()
-                      + n_NNLO_D2_L()*_log_muf_mh_sq);
-        res.push_back(n_N3LO_D2()
+        return AsSeries(2,
+                        n_NNLO_D2()
+                      + n_NNLO_D2_L()*_log_muf_mh_sq,
+                        n_N3LO_D2()
                       + n_N3LO_D2_L()*_log_muf_mh_sq
                       + n_N3LO_D2_L2()*pow(_log_muf_mh_sq,2.)
-                      + n_N3LO_D2_L3()*pow(_log_muf_mh_sq,3.));
-        return res;
+                      + n_N3LO_D2_L3()*pow(_log_muf_mh_sq,3.)
+                      );
     }
     
-    vector<double> n_D3_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_D3_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(0.0);
-        res.push_back(0.0);
-        res.push_back(n_NNLO_D3());
-        res.push_back(n_N3LO_D3()
+        return AsSeries(2,
+                        n_NNLO_D3(),
+                        n_N3LO_D3()
                       + n_N3LO_D3_L()*_log_muf_mh_sq
-                      + n_N3LO_D3_L2()*pow(_log_muf_mh_sq,2.));
-        return res;
+                      + n_N3LO_D3_L2()*pow(_log_muf_mh_sq,2.)
+                      );
     }
     
-    vector<double> n_D4_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_D4_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(0.0);
-        res.push_back(0.0);
-        res.push_back(0.0);
-        res.push_back(n_N3LO_D4()
+        return AsSeries(3,
+                        n_N3LO_D4()
                       + n_N3LO_D4_L()*_log_muf_mh_sq);
-        return res;
     }
     
-    vector<double> n_D5_at_muf(const double& _log_muf_mh_sq)
+    AsSeries n_D5_at_muf(const double& _log_muf_mh_sq)
     {
-        vector<double> res;
-        res.push_back(0.0);
-        res.push_back(0.0);
-        res.push_back(0.0);
-        res.push_back(n_N3LO_D5());
-        return res;
+        return AsSeries(3,n_N3LO_D5());
     }
     
     double n_LO_delta(){return 1.0;}
@@ -143,6 +128,11 @@ namespace HEFT {
                 + 22714020.*consts::z6)
          )/544320.;
     }
+    
+    
+    
+    
+    
     double n_N3LO_delta_L(){
         return  (1201. / 576.
                  + 5. / 54. * consts::pi_square
@@ -161,6 +151,7 @@ namespace HEFT {
         - 9453. / 8. * consts::z3
         + 55. / 64. * pow(consts::pi_square,2.)  ;
     }
+    
     double n_N3LO_delta_L2(){
         return (-2. / 9.
                 + consts::pi_square / 36.)
@@ -176,6 +167,7 @@ namespace HEFT {
         - 415. / 16. * consts::pi_square
         + 11. * consts::beta_one ;
     }
+    
     double n_N3LO_delta_L3(){
         return -72. * consts::z3
         - 33. / 4. * consts::pi_square
@@ -183,7 +175,6 @@ namespace HEFT {
     }
     
    
-    
   
     
     double n_NLO_D0_L(){return -6.;}

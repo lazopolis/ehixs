@@ -1,0 +1,91 @@
+#ifndef RESULT_PAIR_H
+#define RESULT_PAIR_H
+
+#include "math.h"
+using namespace std;
+class ResultPair{
+public:
+    /// Constructor
+    ResultPair(const double& val, const double& err):_val(val),_err(err){};
+    
+    /// Copy constructor
+    ResultPair(const ResultPair& that) :
+    _val(that.val()),_err(that.err())
+    {}
+    
+    /// Move constructor
+    ResultPair(ResultPair&& that) :
+    _val(that.val()),_err(that.err())
+    {}
+    
+    /// Destructor
+    ~ResultPair()
+    {}
+    
+    /// @}
+    
+    /// \name Input/output functions
+    /// @{
+    
+    /// Assignment operator
+    ResultPair& operator=(const ResultPair& that)
+    {
+        _val = that.val();
+        _err = that.err();
+        return (*this);
+    }
+    
+    /// Move assignment operator
+    ResultPair& operator=(ResultPair&& that)
+    {
+        _val = that.val();
+        _err = that.err();
+        return (*this);
+    }
+    
+    /// Return the value
+    double val() const {return _val;}
+    
+    /// Return the error
+    double err() const {return _err;}
+    
+    
+    /// @}
+    
+    /// \name Operations
+    /// @{
+    
+    /// Multiply this ResultPair with a number
+    ResultPair operator*(const double& that) const
+    {
+        return ResultPair(that*_val,that*_err);
+    }
+    
+    /// Multiply the ResultPair v with a number k
+    friend ResultPair operator*(const double k, const ResultPair& v)
+    {
+        return ResultPair(k*v.val(),k*v.err());
+    }
+    
+    /// Multiply this ResultPair with another Resultpair
+    ResultPair operator*(const ResultPair& that) const
+    {
+        return ResultPair(that.val()*_val,
+                          sqrt(pow(that.val()*_err,2.)+pow(_val*that.err(),2.))
+                          );
+    }
+    
+    /// Add this ResultPair to another one
+    ResultPair operator+(const ResultPair& that) const
+    {
+        return ResultPair(_val+that.val(),sqrt(pow(_err,2.)+pow(that.err(),2.)));
+    }
+    
+    friend ostream& operator<<(ostream& stream, const ResultPair& );
+    
+private:
+    double _val;
+    double _err;
+};
+
+#endif

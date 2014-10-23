@@ -13,22 +13,36 @@ const double NewLuminosity::_almost_zero = 1e-12;
 
 NewLuminosity::NewLuminosity(const UserInterface& UI)
 {
-    string gridname = determine_gridname(UI.pdf_provider,UI.perturbative_order);
+    string gridname = determine_gridname(UI.pdf_provider,
+                                         UI.perturbative_order,
+                                         UI.pdf_set);
     pdf_ = LHAPDF::mkPDF( gridname, 0);
     muf_ = UI.muf;
 
 
 }
 
-string NewLuminosity::determine_gridname(const string& provider,int order)
+string NewLuminosity::determine_gridname(const string& provider,int order, const string& specific_set)
 {
-    cout<<"\n[NewLuminosity] perturbative order = "<<order<<endl;
-    string mstw[3]={"MSTW2008lo68cl","MSTW2008nlo68cl","MSTW2008nnlo68cl"};
-    if (provider == "MSTW") return mstw[order];
+    if (specific_set!="none" and provider=="none") return specific_set;
+    else if (specific_set=="none" and provider!="none")
+    {
+        cout<<"\n[NewLuminosity] perturbative order = "<<order<<endl;
+        string mstw[3]={"MSTW2008lo68cl","MSTW2008nlo68cl","MSTW2008nnlo68cl"};
+        if (provider == "MSTW") return mstw[order];
+        else
+        {
+            cerr   << "Error: PDF-provider '" << provider
+                    << "' is not supported.";
+            exit(1);
+        }
+    }
     else
     {
-        cerr   << "Error: PDF-provider '" << provider
-                    << "' is not supported.";
+        cout<<"\nError in determining pdf sets: you have declared both (or none) of pdf_set and pdf_provider."
+        <<"\n pdf_set = "<<specific_set
+        <<"\n pdf_provider = "<<provider
+        <<"\nPlease choose one of the two options and rerun"<<endl;
         exit(1);
     }
 }

@@ -5,17 +5,21 @@
 
 #include "vegas_adaptor.h"
 #include "luminosity.h"
-
+#include "user_interface.h"
 
 class LuminosityIntegral: public CoolInt
 {
 public:
     virtual double evaluateIntegral(const double* xx)=0;
     virtual void set_initial_flavors()=0;
-    void Configure(NewLuminosity* lumi, const double& tau)
+    void Configure(NewLuminosity* lumi, const double& tau,const UserInterface UI)
     {lumi_=lumi; tau_ = tau;set_initial_flavors();
-        _epsrel = 1e-2;
-        _epsabs = 1e-10;
+        _epsrel = UI.epsrel;
+        _epsabs = UI.epsabs;
+        _mineval = UI.mineval;
+        _maxeval = UI.maxeval;
+        _nstart = UI.nstart;
+        _nincrease = UI.nincrease;
     }
 protected:
     NewLuminosity* lumi_;
@@ -53,7 +57,7 @@ class gg_real : public LuminosityIntegralReal
 public:
     gg_real(f_ptr f,const double& L):LuminosityIntegralReal(f,L){};
     
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
 };
 
 
@@ -61,48 +65,48 @@ public:
 class gg_delta : public LuminosityIntegralDelta
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
 };
 
 class gg_plus_0 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 0.0;}
 };
 
 class gg_plus_1 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 1.0;}
 };
 
 class gg_plus_2 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 2.0;}
 };
 
 class gg_plus_3 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 3.0;}
 };
 
 class gg_plus_4 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 4.0;}
 };
 
 class gg_plus_5 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
     double log_power(){return 5.0;}
 };
 

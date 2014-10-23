@@ -3,17 +3,18 @@
 
 #include "constants.h"
 #include<vector>
+#include "as_series.h"
 using namespace std;
 
 
 namespace HEFT {
-    vector<double> n_delta_at_muf(const double& L);
-    vector<double> n_D0_at_muf(const double& L);
-    vector<double> n_D1_at_muf(const double& L);
-    vector<double> n_D2_at_muf(const double& L);
-    vector<double> n_D3_at_muf(const double& L);
-    vector<double> n_D4_at_muf(const double& L);
-    vector<double> n_D5_at_muf(const double& L);
+    AsSeries n_delta_at_muf(const double& L);
+    AsSeries n_D0_at_muf(const double& L);
+    AsSeries n_D1_at_muf(const double& L);
+    AsSeries n_D2_at_muf(const double& L);
+    AsSeries n_D3_at_muf(const double& L);
+    AsSeries n_D4_at_muf(const double& L);
+    AsSeries n_D5_at_muf(const double& L);
     double nlo_r_lz0(const double& z, const double& L);
     double nlo_r_lz1(const double& z, const double& L);
     double nnlo_r_lz0(const double& z, const double& L);

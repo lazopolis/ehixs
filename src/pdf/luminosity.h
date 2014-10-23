@@ -28,6 +28,7 @@ public:
         coeff_.push_back(c);
     }
     
+    void clear_pairs(){pairs.clear();coeff_.clear();}
     double give(const double& x1,const double& x2);
 
     double alpha_s_at_mz(){return pdf_->alphasQ(91.1876);}
@@ -39,7 +40,7 @@ private:
     // if any of x1, x2 are closer to 0 or 1 than _almost_zero we will return 0.0
     static const double _almost_zero;
 private:
-    string determine_gridname(const string& provider, int order);
+    string determine_gridname(const string& provider, int order,const string&);
 };
 
 
