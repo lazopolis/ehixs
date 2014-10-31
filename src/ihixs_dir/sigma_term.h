@@ -31,7 +31,8 @@ public:
     SigmaTerm(const string& thetype, const AsSeries& val,
               LuminosityIntegral* lumi_int)
     :_type(thetype),_result(val),_lumi_int(lumi_int),_evaluated(false)
-    {}
+    {
+    }
     
     void ConfigureLumi(NewLuminosity* lumi,const double& tau,const UserInterface& UI);
     void CallVegas();

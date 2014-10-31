@@ -76,19 +76,13 @@ void SigmaTerm::evolve_from_muf_to_mur(const double& L)
 
 ostream& operator<<(ostream& stream, const SigmaTerm& st)
 {
-    stream<<setw(22)<<left<<st._type<<st._result_central<<endl;
+    stream<<setw(22)<<left<<st._type<<st._result<<endl;
     return stream;
 }
 
 
 
-ostream& operator<<(ostream& stream, const ResultPair& rs)
-{
-    stream<<setw(11)<<setprecision(6)<<right<<rs.val()
-        <<scientific<<setprecision(0)<<left<<"["<<rs.err()<<"] "
-        <<setprecision(16)<<fixed;
-    return stream;
-}
+
 
 
 string SigmaTerm::print_scale_result(const double& mur,int porder)

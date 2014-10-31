@@ -26,6 +26,54 @@ namespace HEFT {
     double nnlo_r_lz0_logz_sq(const double& z, const double& L);
     double nnlo_r_lz0_logz_cube(const double& z, const double& L);
     
+    double qg_nnlo_r_lz0(const double& z, const double& L);
+    double qg_nnlo_r_lz1(const double& z, const double& L);
+    double qg_nnlo_r_lz2(const double& z, const double& L);
+    double qg_nnlo_r_lz3(const double& z, const double& L);
+    double qg_nnlo_r_lz0_const(const double& z, const double& L);
+    double qg_nnlo_r_lz0_logz(const double& z, const double& L);
+    double qg_nnlo_r_lz0_logz_sq(const double& z, const double& L);
+    double qg_nnlo_r_lz0_logz_cube(const double& z, const double& L);
+    
+    double qg_n3lo_r_lz0(const double& z, const double& L);
+    double qg_n3lo_r_lz1(const double& z, const double& L);
+    double qg_n3lo_r_lz2(const double& z, const double& L);
+    double qg_n3lo_r_lz3(const double& z, const double& L);
+    double qg_n3lo_r_lz4(const double& z, const double& L);
+    double qg_n3lo_r_lz5(const double& z, const double& L);
+
+    double qg_nlo_r_lz0(const double& z, const double& L);
+    double qg_nlo_r_lz1(const double& z, const double& L);
+    
+    double qqb_nlo_r_lz0(const double& z, const double& L);
+    
+    double qqb_nnlo_r_lz0(const double& z, const double& L);
+    double qqb_nnlo_r_lz1(const double& z, const double& L);
+    double qqb_nnlo_r_lz2(const double& z, const double& L);
+
+    double qqb_nnlo_r_lz0_const(const double& z, const double& L);
+    double qqb_nnlo_r_lz0_logz(const double& z, const double& L);
+    double qqb_nnlo_r_lz0_logz_sq(const double& z, const double& L);
+    double qqb_nnlo_r_lz0_logz_cube(const double& z, const double& L);
+    
+    double qq_nnlo_r_lz0(const double& z, const double& L);
+    double qq_nnlo_r_lz1(const double& z, const double& L);
+    double qq_nnlo_r_lz2(const double& z, const double& L);
+    
+    double qq_nnlo_r_lz0_const(const double& z, const double& L);
+    double qq_nnlo_r_lz0_logz(const double& z, const double& L);
+    double qq_nnlo_r_lz0_logz_sq(const double& z, const double& L);
+    double qq_nnlo_r_lz0_logz_cube(const double& z, const double& L);
+    
+    double q1q2_nnlo_r_lz0(const double& z, const double& L);
+    double q1q2_nnlo_r_lz1(const double& z, const double& L);
+    double q1q2_nnlo_r_lz2(const double& z, const double& L);
+    
+    double q1q2_nnlo_r_lz0_const(const double& z, const double& L);
+    double q1q2_nnlo_r_lz0_logz(const double& z, const double& L);
+    double q1q2_nnlo_r_lz0_logz_sq(const double& z, const double& L);
+    double q1q2_nnlo_r_lz0_logz_cube(const double& z, const double& L);
+    
     double n_LO_delta();
     
     double n_NLO_delta();

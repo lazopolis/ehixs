@@ -21,6 +21,7 @@ public:
         _nstart = UI.nstart;
         _nincrease = UI.nincrease;
     }
+    double tau(){return tau_;}
 protected:
     NewLuminosity* lumi_;
     double tau_;
@@ -51,6 +52,92 @@ private:
     f_ptr _f;
     double _L;//log(muf^2/mh^2)
 };
+
+class qg_real : public LuminosityIntegralReal
+{
+public:
+    qg_real(f_ptr f,const double& L):LuminosityIntegralReal(f,L){};
+    
+    void set_initial_flavors()
+    {
+        lumi_->clear_pairs();
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                //:  q g + qbar g
+                lumi_->add_pair(i, QCD::g);
+                //:  g q + g qbar
+                lumi_->add_pair(QCD::g, i);
+            }
+        }
+        
+    }
+};
+
+class qqb_real : public LuminosityIntegralReal
+{
+public:
+    qqb_real(f_ptr f,const double& L):LuminosityIntegralReal(f,L){};
+    
+    void set_initial_flavors()
+    {
+        lumi_->clear_pairs();
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                //:  q qbar + qbar q
+                lumi_->add_pair(i, -i);
+            }
+        }
+        
+    }
+};
+
+class qq_real : public LuminosityIntegralReal
+{
+public:
+    qq_real(f_ptr f,const double& L):LuminosityIntegralReal(f,L){};
+    
+    void set_initial_flavors()
+    {
+        lumi_->clear_pairs();
+        for (int i=-5;i<6;i++)
+        {
+            if (i!=0)
+            {
+                //:  q q
+                lumi_->add_pair(i, i);
+            }
+        }
+        
+    }
+};
+
+class q1q2_real : public LuminosityIntegralReal
+{
+public:
+    q1q2_real(f_ptr f,const double& L):LuminosityIntegralReal(f,L){};
+    
+    void set_initial_flavors()
+    {
+        lumi_->clear_pairs();
+        for (int i=-5;i<6;i++)
+        {
+            for (int j=-5;j<6;j++)
+            {
+                if (i!=0 and j!=0 and i!=j and i!=-j)
+                {
+                //:  q1 q2
+                lumi_->add_pair(i, j);
+                }
+            }
+        }
+        
+    }
+};
+
 
 class gg_real : public LuminosityIntegralReal
 {

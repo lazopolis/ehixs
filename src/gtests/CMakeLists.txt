@@ -152,15 +152,27 @@ target_link_libraries(
                     gtest
                     )
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+add_executable(
+            ihixs_eft
+            ihixs_eft.cpp
+            )
+
+target_link_libraries(
+            ihixs_eft
+            ihixs_lib
+            mincuba
+            chaplin
+            tools
+            gtest
+)
+
+
+
+
+
+
+
+
                     
                     
                     

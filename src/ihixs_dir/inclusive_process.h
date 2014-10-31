@@ -40,7 +40,7 @@ private:
     
     WilsonCoefficient _wc;
     double _prefactor;
-    
+    double _tau;
     vector<double> _mur_vector;
     double _current_mur;
     bool _is_central_scale;

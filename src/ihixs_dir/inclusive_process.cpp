@@ -92,7 +92,7 @@ ostream& operator<<(ostream& stream, const InclusiveProcess& ip)
 InclusiveProcess::InclusiveProcess(const UserInterface& UI)
 {
     _UI=UI;
-    _scale_variation=true;
+    _scale_variation=false;
     _is_central_scale = true;
     _int_qcd_perturbative_order = 0;
     if (UI.qcd_perturbative_order=="LO") _int_qcd_perturbative_order=2;
@@ -108,7 +108,7 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
     }
     _lumi = new NewLuminosity(UI);
     
-    const double tau = pow(UI.m_higgs,2.)/pow(UI.Etot,2.);
+    _tau = pow(UI.m_higgs,2.)/pow(UI.Etot,2.);
     
     //: 35.0309 = Gf*pi/sqrt(2)/288 with the Gf in pb
     //: Gf = 1.16637*10^{-5} * 0.389379*10^9
@@ -141,7 +141,7 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
     }
     if (UI.qcd_perturbative_order=="NLO")
     {
-        Delta.Truncate(1);
+        //Delta.Truncate(1);
         D0.Truncate(1);
         D1.Truncate(1);
         _sigma.push_back(new SigmaTerm("delta",Delta,new gg_delta));
@@ -151,6 +151,15 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
                                        new gg_real(&HEFT::nlo_r_lz0,_log_muf_mh_sq)));
         _sigma.push_back(new SigmaTerm("NLO Real log(1-z)",AsSeries(1,1.0),
                                        new gg_real(&HEFT::nlo_r_lz1,_log_muf_mh_sq)));
+        //qg channel
+        _sigma.push_back(new SigmaTerm("qg NLO Real const",AsSeries(1,1.0),
+                                       new qg_real(&HEFT::qg_nlo_r_lz0,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NLO Real log(1-z)",AsSeries(1,1.0),
+                                       new qg_real(&HEFT::qg_nlo_r_lz1,_log_muf_mh_sq)));
+        
+        //q qb channel
+        _sigma.push_back(new SigmaTerm("qqb NLO Real const",AsSeries(1,1.0),
+                                       new qqb_real(&HEFT::qqb_nlo_r_lz0,_log_muf_mh_sq)));
     }
     if (UI.qcd_perturbative_order=="NNLO")
     {
@@ -169,9 +178,9 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
                                        new gg_real(&HEFT::nlo_r_lz0,_log_muf_mh_sq)));
         _sigma.push_back(new SigmaTerm("NLO Real log(1-z)",AsSeries(1,1.0),
                                        new gg_real(&HEFT::nlo_r_lz1,_log_muf_mh_sq)));
+        
         _sigma.push_back(new SigmaTerm("NNLO Real const",AsSeries(2,1.0),
                                        new gg_real(&HEFT::nnlo_r_lz0_const,_log_muf_mh_sq)));
-        
         _sigma.push_back(new SigmaTerm("NNLO Real log(z)",AsSeries(2,1.0),
                                        new gg_real(&HEFT::nnlo_r_lz0_logz,_log_muf_mh_sq)));
         _sigma.push_back(new SigmaTerm("NNLO Real log(z)^2",AsSeries(2,1.0),
@@ -184,6 +193,70 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
                                        new gg_real(&HEFT::nnlo_r_lz2,_log_muf_mh_sq)));
         _sigma.push_back(new SigmaTerm("NNLO Real log(1-z)^3",AsSeries(2,1.0),
                                        new gg_real(&HEFT::nnlo_r_lz3,_log_muf_mh_sq)));
+        //qg channel
+        _sigma.push_back(new SigmaTerm("qg NLO Real const",AsSeries(1,1.0),
+                                       new qg_real(&HEFT::qg_nlo_r_lz0,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NLO Real log(1-z)",AsSeries(1,1.0),
+                                       new qg_real(&HEFT::qg_nlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real const",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(z)",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz2,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(1-z)^3",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz3,_log_muf_mh_sq)));
+        
+        //q qb channel
+        _sigma.push_back(new SigmaTerm("qqb NLO Real const",AsSeries(1,1.0),
+                                       new qqb_real(&HEFT::qqb_nlo_r_lz0,_log_muf_mh_sq)));
+        
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real const",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(z)",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz2,_log_muf_mh_sq)));
+        
+        //q q channel
+        _sigma.push_back(new SigmaTerm("qq NNLO Real const",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(z)",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz2,_log_muf_mh_sq)));
+        
+        // q1 q2 channel
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real const",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(z)",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz2,_log_muf_mh_sq)));
     }
     if (UI.qcd_perturbative_order=="N3LO")
     {
@@ -222,12 +295,91 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
         _sigma.push_back(new SigmaTerm("NNLO Real log(1-z)^3",AsSeries(2,1.0),
                                        new gg_real(&HEFT::nnlo_r_lz3,_log_muf_mh_sq)));
         
+        //qg channel
+        _sigma.push_back(new SigmaTerm("qg NLO Real const",AsSeries(1,1.0),
+                                       new qg_real(&HEFT::qg_nlo_r_lz0,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NLO Real log(1-z)",AsSeries(1,1.0),
+                                       new qg_real(&HEFT::qg_nlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real const",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(z)",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz2,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg NNLO Real log(1-z)^3",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_nnlo_r_lz3,_log_muf_mh_sq)));
+        
+        _sigma.push_back(new SigmaTerm("qg N3LO Real const",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_n3lo_r_lz0,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg N3LO Real log(1-z)",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_n3lo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg N3LO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_n3lo_r_lz2,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg N3LO Real log(1-z)^3",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_n3lo_r_lz3,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg N3LO Real log(1-z)^4",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_n3lo_r_lz4,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qg N3LO Real log(1-z)^5",AsSeries(2,1.0),
+                                       new qg_real(&HEFT::qg_n3lo_r_lz5,_log_muf_mh_sq)));
+        
+        //q qb channel
+        _sigma.push_back(new SigmaTerm("qqb NLO Real const",AsSeries(1,1.0),
+                                       new qqb_real(&HEFT::qqb_nlo_r_lz0,_log_muf_mh_sq)));
+        
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real const",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(z)",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qqb NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qqb_real(&HEFT::qqb_nnlo_r_lz2,_log_muf_mh_sq)));
+        
+        //q q channel
+        _sigma.push_back(new SigmaTerm("qq NNLO Real const",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(z)",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("qq NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new qq_real(&HEFT::qq_nnlo_r_lz2,_log_muf_mh_sq)));
+        
+        // q1 q2 channel
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real const",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_const,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(z)",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_logz,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(z)^2",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_logz_sq,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(z)^3",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz0_logz_cube,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(1-z)",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz1,_log_muf_mh_sq)));
+        _sigma.push_back(new SigmaTerm("q1q2 NNLO Real log(1-z)^2",AsSeries(2,1.0),
+                                       new q1q2_real(&HEFT::q1q2_nnlo_r_lz2,_log_muf_mh_sq)));
+        
+        
     }
     
-    for (int i=0;i<_sigma.size();i++)
-    {
-        _sigma[i]->ConfigureLumi(_lumi,tau,UI);
-    }
+//    for (int i=0;i<_sigma.size();i++)
+//    {
+//        _sigma[i]->ConfigureLumi(_lumi,tau,UI);
+//    }
 }
 
 
@@ -264,6 +416,7 @@ void InclusiveProcess::Evaluate(const string& type)
 
 void InclusiveProcess::Evaluate(SigmaTerm* term)
 {
+    term->ConfigureLumi(_lumi,_tau,_UI);
     term->CallVegas();
     term->multiply(_prefactor);
     term->wc_expansion(_wc);
@@ -272,6 +425,7 @@ void InclusiveProcess::Evaluate(SigmaTerm* term)
     if (_is_central_scale) term->SaveCentral(_current_mur);
     else term->Save(_current_mur);
     term->Truncate(_int_qcd_perturbative_order);
+
 }
 
 void InclusiveProcess::SetMurDependentParameters(const double& mur)
@@ -337,6 +491,10 @@ SigmaTerm* InclusiveProcess::find_term(const string& type_id)
         if (type_id==_sigma[k]->type())
         {
             return _sigma[k];
+        }
+        else
+        {
+            //cout<<"\n current term is "<<_sigma[k]->type()<<" and doesn't match"<<endl;
         }
     }
     cout<<"\nThe term "<<type_id<<" you asked for was not found!"<<endl;

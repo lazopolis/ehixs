@@ -50,12 +50,14 @@ public:
     /// Copy constructor
     AsSeries(const AsSeries& that) :
     _terms(that.terms()), _starting_exponent(that.starting_exponent())
-    {}
+    {
+    }
     
     /// Move constructor
     AsSeries(AsSeries&& that) :
     _terms(that.terms()), _starting_exponent(that.starting_exponent())
-    {}
+    {
+    }
     
     /// Destructor
     ~AsSeries()

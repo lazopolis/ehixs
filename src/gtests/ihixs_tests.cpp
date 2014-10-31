@@ -116,6 +116,8 @@ protected:
         UI.perturbative_order = 2;
         UI.epsrel = 0.5e-3;
         UI.matrix_element_approximation = "pure_eft";
+        UI.pdf_provider = "MSTW";
+        UI.qcd_perturbative_order = "N3LO";
         IP = new InclusiveProcess(UI);
         Kfactor = 1.0621829361965891;
         // ihixs 3.0 returns the xs * rescaling factor
@@ -276,6 +278,8 @@ protected:
         UI.perturbative_order = 2;
         UI.epsrel = 0.5e-4;
         UI.matrix_element_approximation = "pure_eft";
+        UI.pdf_provider = "MSTW";
+        UI.qcd_perturbative_order = "N3LO";
         IP = new InclusiveProcess(UI);
         Kfactor = 1.0547838527754434;
         // ihixs 3.0 returns the xs * rescaling factor
@@ -442,6 +446,8 @@ protected:
         UI.perturbative_order = 2;
         UI.epsrel = 0.5e-4;
         UI.matrix_element_approximation = "pure_eft";
+        UI.pdf_provider = "MSTW";
+        UI.qcd_perturbative_order = "N3LO";
         IP = new InclusiveProcess(UI);
         Kfactor = 1.0547838527754434;
         // ihixs 3.0 returns the xs * rescaling factor
