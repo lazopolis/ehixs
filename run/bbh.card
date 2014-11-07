@@ -8,6 +8,8 @@ Etot = 13000
 m_higgs = 125.4
 muf = 125.4
 mur = 125.4
+qcd_perturbative_order = NLO #LO, NLO, NNLO, N3LO, ALL
+pdf_provider = MSTW
 #---------- selecting initial state channels
 # the flavor of the parton from the left
 # if not declared all flavors are considered

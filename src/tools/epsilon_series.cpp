@@ -1,25 +1,26 @@
 #include "epsilon_series.h"
 
-MonomialEpsilon operator*(MonomialEpsilon lhs,
-                          const MonomialEpsilon& rhs)
+MonomialEpsilon operator*(
+                          MonomialEpsilon lhs,
+                          const MonomialEpsilon& rhs
+                          )
 {
-    for (int i=0;i<rhs.funcs_.size();i++)
-        {
-            lhs.funcs_.push_back(rhs.funcs_[i]);
-        }
+    for (size_t i=0;i<rhs.funcs_.size();i++)
+    {
+        lhs.funcs_.push_back(rhs.funcs_[i]);
+    }
     lhs.epsilon_ += rhs.epsilon_;
     return lhs;
 }
 
 double MonomialEpsilon::operator()(const vector<double>& x) const
 {
-if (funcs_.empty()) return 0.0;
-else
-    {
-    double res=1.0;
-    for (int i=0;i<funcs_.size();i++)
-        res = res * (*(funcs_[i]))(x);
-    return res;
+    if (funcs_.empty()) return 0.0;
+    else {
+        double res=1.0;
+        for (size_t i=0;i<funcs_.size();i++)
+            res = res * (*(funcs_[i]))(x);
+        return res;
     }
 }
 
@@ -31,29 +32,33 @@ ostream& operator<<(ostream& ss, const MonomialEpsilon& M)
 
 ostream& operator<<(ostream& ss, const PolynomialEpsilon& M)
 {
-    for (int i=0;i<M.size()-1;i++)
+    for (size_t i=0;i<M.size()-1;i++)
         ss<<M.terms_[i]<<" + ";
     ss<<M.terms_[M.size()-1];
     return ss;
 }
 
-double PolynomialEpsilon::operator()(const vector<double>& x)const
+double PolynomialEpsilon::operator()(const vector<double>& x) const
 {
     double res=0.0;
-    for (int i=0;i<terms_.size();i++)
+    for (size_t i=0;i<terms_.size();i++)
         res += terms_[i](x);
     return res;
 }
 
 
-inline PolynomialEpsilon operator+(PolynomialEpsilon lhs, 
-                            const PolynomialEpsilon& rhs)
+inline PolynomialEpsilon operator+(
+                                   PolynomialEpsilon lhs,
+                                   const PolynomialEpsilon& rhs
+                                   )
 {
     lhs += rhs;
     return lhs;
 }
-inline PolynomialEpsilon operator+(PolynomialEpsilon lhs, 
-                                   const MonomialEpsilon& rhs)
+inline PolynomialEpsilon operator+(
+                                   PolynomialEpsilon lhs,
+                                   const MonomialEpsilon& rhs
+                                   )
 {
     lhs += rhs;
     return lhs;
@@ -63,9 +68,9 @@ PolynomialEpsilon operator*(const PolynomialEpsilon& lhs,
                             const PolynomialEpsilon& rhs)
 {
     PolynomialEpsilon res;
-    for (int i=0;i<lhs.size();i++)
+    for (size_t i=0;i<lhs.size();i++)
         {
-            for (int j=0;j<rhs.size();j++)
+            for (size_t j=0;j<rhs.size();j++)
                 {
                     res += lhs[i]*rhs[j];
                 }
@@ -75,7 +80,7 @@ PolynomialEpsilon operator*(const PolynomialEpsilon& lhs,
 
 PolynomialEpsilon& PolynomialEpsilon::operator+=(const PolynomialEpsilon& rhs)
 {
-    for (int i=0;i<rhs.size();i++)
+    for (size_t i=0;i<rhs.size();i++)
     {
         terms_.push_back(rhs[i]);
     }
@@ -91,11 +96,11 @@ PolynomialEpsilon& PolynomialEpsilon::operator+=(const MonomialEpsilon& rhs)
 
 double null_function(const vector<double>&){return 0.0;}
 
-PolynomialEpsilon PolynomialEpsilon::EpsilonCoefficient(int eps) const
+PolynomialEpsilon PolynomialEpsilon::EpsilonCoefficient(const int eps) const
 {
     PolynomialEpsilon res;
     bool found = false;
-    for (int i=0;i<terms_.size();i++)
+    for (size_t i=0;i<terms_.size();i++)
         {
             if (terms_[i].EpsPower() == eps)
                 {

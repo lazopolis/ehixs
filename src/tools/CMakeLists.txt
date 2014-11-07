@@ -9,4 +9,5 @@ add_library(tools
                     user_interface.cpp
                     epsilon_series.cpp
                     constants.cpp
+                    formalsum.cpp
                     )
