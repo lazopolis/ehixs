@@ -122,7 +122,15 @@ target_link_libraries(
                     gtest
                     kinematics
                     )
-                    
+add_executable(
+            expansion_test
+            expansion_test.cpp
+            )
+target_link_libraries(
+                    expansion_test
+                    gtest
+                    tools
+                    )
                 
 add_executable(
             ihixs_tests

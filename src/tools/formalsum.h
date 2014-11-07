@@ -123,13 +123,13 @@ public:
     virtual bool operator!=(const FormalSum<Type>& that) const;
 
     /// Negative of this formal expression
-    virtual FormalSum<Type> operator-(void) const;
+    FormalSum<Type> operator-(void) const;
 
     /// Add the formal expression to another one
-    virtual FormalSum<Type> operator+(const FormalSum<Type>& that) const;
+    FormalSum<Type> operator+(const FormalSum<Type>& that) const;
 
     /// Subtract a formal expression from this one
-    virtual FormalSum<Type> operator-(const FormalSum<Type>& that) const;
+    FormalSum<Type> operator-(const FormalSum<Type>& that) const;
 
     /// Add the formal expression to another one
     const FormalSum<Type>& operator+=(const FormalSum<Type>& that);
@@ -144,10 +144,10 @@ public:
     const FormalSum<Type>& operator/=(const double that);
 
     /// Truncate the sum after the n-th term
-    FormalSum<Type>& truncate(const int n);
+    void truncate(const int n);
 
-    /// Cut the sum after the first n elements
-    FormalSum<Type>& cut(const size_t n);
+    /// Cut the sum after the first n elements (n=0 does not truncate)
+    void cut(const size_t n);
 
     /// @}
 
@@ -184,7 +184,7 @@ _lowestTerm(0), _coefficients(0)
 
 /// Constructor with size and data
 template <class Type>
-FormalSum<Type>::FormalSum(const int lowestTerm, const int highestTerm, const Type * const coefficients) :
+FormalSum<Type>::FormalSum(const int lowestTerm, const int highestTerm, const Type* const coefficients) :
 _lowestTerm(lowestTerm), _coefficients(0)
 {
     if (highestTerm < lowestTerm) {
@@ -210,7 +210,7 @@ template <class Type>
 FormalSum<Type>::FormalSum(const int lowestTerm, const vector<Type>& coefficients) :
 _lowestTerm(lowestTerm), _coefficients(0)
 {
-    for (iterator it = coefficients.begin(); it != coefficients.end(); ++it) {
+    for (typename vector<Type>::const_iterator it = coefficients.begin(); it != coefficients.end(); ++it) {
         if (_coefficients.empty() && *it == Type()) {
             ++_lowestTerm;
         } else {
@@ -438,18 +438,18 @@ const FormalSum<Type>& FormalSum<Type>::operator-=(const FormalSum<Type>& that)
 
 /// Truncate the sum after the n-th term
 template <class Type>
-FormalSum<Type>& FormalSum<Type>::truncate(const int n)
+void FormalSum<Type>::truncate(const int n)
 {
     while (maxTerm()>n) _coefficients.pop_back();
-    return *this;
+    return;
 }
 
 /// Cut the sum after the first n elements
 template <class Type>
-FormalSum<Type>& FormalSum<Type>::cut(const size_t n)
+void FormalSum<Type>::cut(const size_t n)
 {
-    while (size()>n) _coefficients.pop_back();
-    return *this;
+    if (n!=0) while (size()>n) _coefficients.pop_back();
+    return;
 }
 
 

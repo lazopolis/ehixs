@@ -15,7 +15,8 @@ void ASSERT_TRUE(const bool foo)
     return;
 }
 
-void ASSERT_EQUAL(const double a, const double b)
+template<class Type>
+void ASSERT_EQUAL(const Type a, const Type b)
 {
     if ( a == b ) cout << "Passed" << endl;
     else cout << "Failed" << endl;

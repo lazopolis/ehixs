@@ -10,12 +10,13 @@
 #ifndef EXPANSION_H
 #define EXPANSION_H
 
-#include <algorithm>
+#include <algorithm>   // std::min
+#include <cmath>       // std::pow
 #include "FormalSum.h"
 
-enum Parameter{
-    alphas,
-    epsilon
+enum class Parameter : char {
+    alphas='a',
+    epsilon='e'
 };
 
 /**
@@ -35,18 +36,15 @@ public:
     /// @{
 
     // Default constructor
-    Expansion(const bool isExact = false) :
+    Expansion() :
     FormalSum<Type>()
-    {
-        if (!isExact) _cut();
-        return;
-    }
+    {}
 
     /// Constructor with size and data
     Expansion(const int lowestTerm, const int highestTerm, const Type* const coefficients, const bool isExact = false) :
     FormalSum<Type>(lowestTerm, highestTerm, coefficients)
     {
-        if (!isExact) _cut();
+        if (!isExact) _check(highestTerm-lowestTerm+1);
         return;
     }
 
@@ -54,7 +52,7 @@ public:
     Expansion(const int lowestTerm, const vector<Type>& coefficients, const bool isExact = false) :
     FormalSum<Type>(lowestTerm, coefficients)
     {
-        if (!isExact) _cut();
+        if (!isExact) _check(coefficients.size());
         return;
     }
 
@@ -62,7 +60,15 @@ public:
     Expansion(const int lowestTerm, const initializer_list<Type>& coefficients, const bool isExact = false) :
     FormalSum<Type>(lowestTerm, coefficients)
     {
-        if (!isExact) _cut();
+        if (!isExact) _check(coefficients.size());
+        return;
+    }
+
+    /// Constructor with size and data
+    Expansion(const FormalSum<Type>& sum, const bool isExact = false) :
+    FormalSum<Type>(sum)
+    {
+        if (!isExact) _check(sum.size());
         return;
     }
 
@@ -70,7 +76,7 @@ public:
     Expansion(const int term, const Type& coefficient, const bool isExact = false):
     FormalSum<Type>(term, coefficient)
     {
-        if (!isExact) _cut();
+        if (!isExact) _check(1);
         return;
     }
 
@@ -104,11 +110,20 @@ public:
     /// \name Operations
     /// @{
 
+    /// Negative of this expansions
+    Expansion<Par,Type> operator-() const
+    {
+        return Expansion<Par,Type>(this->FormalSum<Type>::operator-(),true);
+    }
+
     /// Add two expansions
-    virtual Expansion<Par,Type> operator+(const Expansion<Par,Type>& that) const;
+    Expansion<Par,Type> operator+(const Expansion<Par,Type>& that) const;
+
+    /// Subtract two expansions
+    Expansion<Par,Type> operator-(const Expansion<Par,Type>& that) const;
 
     /// Multiply two expansions
-    virtual Expansion<Par,Type> operator*(const Expansion<Par,Type>& that) const;
+    Expansion<Par,Type> operator*(const Expansion<Par,Type>& that) const;
 
     /// @}
 
@@ -119,10 +134,12 @@ public:
 
     /// @}
 
-    Expansion<Par,Type>& _cut()
+private:
+
+    Expansion<Par,Type>& _check(const size_t mySize)
     {
         if (accuracy != 0) {
-            if (this->size()<accuracy) {
+            if (mySize < accuracy) {
                 throw "Not enough terms";
             } else {
                 this->cut(accuracy);
@@ -147,6 +164,8 @@ Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom
 template <Parameter Par,typename Type>
 std::ostream& operator<<(std::ostream& myOut, const Expansion<Par,Type>& myExpansion);
 
+template <Parameter Par, typename Type>
+size_t Expansion<Par,Type>::accuracy = 0;
 
 /// \name Input Functions
 
@@ -155,7 +174,8 @@ template <Parameter Par, typename Type>
 Expansion<Par,Type>& Expansion<Par,Type>::setCoefficient(const int term, const Type& value)
 {
     FormalSum<Type>::setCoefficient(term, value);
-    return _cut();
+    this->cut(accuracy);
+    return *this;
 }
 
 /// \name Output Functions
@@ -178,34 +198,39 @@ Type Expansion<Par,Type>::operator()(const double& parvalue) const
 template <Parameter Par, typename Type>
 Expansion<Par,Type> Expansion<Par,Type>::operator+(const Expansion<Par,Type>& that) const
 {
-    int fooMin(min(this->minTerm(),that.minTerm())), fooMax(max(this->maxTerm(),that.minTerm()));
+    int fooMin(min(this->minTerm(),that.minTerm())), fooMax(max(this->maxTerm(),that.maxTerm()));
     if ( accuracy!=0 && fooMax > fooMin+static_cast<int>(accuracy)-1)
         fooMax = fooMin+static_cast<int>(accuracy)-1;
     // By starting with extrema one can avoid a lot of resizing...
-    Expansion<Par,Type> foo(fooMin,this->getCoefficient(fooMin)+that.getCoefficient(fooMin));
+    Expansion<Par,Type> foo(fooMin,this->getCoefficient(fooMin)+that.getCoefficient(fooMin),true);
     for (int counter = fooMax; counter > fooMin; --counter)
         foo.setCoefficient(counter, this->getCoefficient(counter) + that.getCoefficient(counter));
     return foo;
 }
 
+/// Subtract expansions
+template <Parameter Par, typename Type>
+Expansion<Par,Type> Expansion<Par,Type>::operator-(const Expansion<Par,Type>& that) const
+{
+    return *this+(-that);
+}
+    
 /// Multiply expansions
 template <Parameter Par, typename Type>
 Expansion<Par,Type> Expansion<Par,Type>::operator*(const Expansion<Par,Type>& that) const
 {
     // This is maybe slightly heavy from the point of view of resizing, but nicer than everything else I can think about
     Expansion<Par,Type> foo;
-    if (accuracy==0) foo = this->FormalSum<Type>::operator*(that);
-    else {
-        const int aMin = this->minTerm();
-        const int aMax = this->maxTerm();
-        const int bMin = that.minTerm();
-        const int bMax = that.maxTerm();
-        const int cMin = aMin+bMin;
-        const int cMax = min(aMax+bMax,cMin+static_cast<int>(accuracy)-1);
-        for (int c = cMin; c <= cMax; ++c)
-            for (int a = min(c-bMax,aMin); a <= min(c-bMin+1,aMax); ++a)
-                foo.addCoefficient(c, this->getCoefficient(a) * that.getCoefficient(a-c));
-    }
+    const int aMin = this->minTerm();
+    const int aMax = this->maxTerm();
+    const int bMin = that.minTerm();
+    const int bMax = that.maxTerm();
+    const int cMin = aMin+bMin;
+    int cMax = aMax+bMax;
+    if (accuracy!=0) cMax = min(aMax+bMax,cMin+static_cast<int>(accuracy)-1);
+    for (int c = cMin; c <= cMax; ++c)
+        for (int a = max(c-bMax,aMin); a <= min(c-bMin,aMax); ++a)
+            foo.addCoefficient(c, this->getCoefficient(a) * that.getCoefficient(c-a));
     return foo;
 }
 
@@ -240,6 +265,7 @@ std::ostream& operator<<(std::ostream& myOut, const Expansion<Par,Type>& myExpan
     if (myExpansion == Expansion<Par,Type>()) {
         return myOut << "0";
     } else {
+        const char par = static_cast<char>(Par);
         for (int counter = myExpansion.minTerm(); counter <= myExpansion.maxTerm(); counter++)
         {
             if ( myExpansion.getCoefficient(counter) != 0 ) {
@@ -254,12 +280,12 @@ std::ostream& operator<<(std::ostream& myOut, const Expansion<Par,Type>& myExpan
                     myOut << " " << std::abs(myExpansion.getCoefficient(counter));
                 }
                 if (counter < 0) {
-                    myOut << " x^(" << counter <<")";
+                    myOut << " " << par << "^(" << counter <<")";
                 } else if (counter > 0) {
                     if (counter != 1) {
-                        myOut << " x^" << counter;
+                        myOut << " " << par << "^" << counter;
                     } else {
-                        myOut << " x";
+                        myOut << " " << par;
                     }
                 }
             }
