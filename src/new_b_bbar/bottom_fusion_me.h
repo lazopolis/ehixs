@@ -6,6 +6,7 @@
 #include "xsectionmaker.h"
 #include "parametrizations.h"
 #include "xgenerator.h"
+#include "counterforge.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double yukawa_bottom = 1.0;
@@ -125,7 +126,7 @@ public:
     BottomFusion_bb_NLO_hard(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_hard>::_info)
     {
-        _prefactor *= 8. * consts::Pi * QCD::CF /*alphas*/;
+        _prefactor *= 4. * consts::Pi /*alphas*/;
         return;
     }
 
@@ -133,9 +134,14 @@ public:
 
 private:
 
-    static double full(const double& z)
+    static double bb2Hg(const double& z, const double& lambda)
     {
-        return (1.+z*z)/(1.-z);
+        return 2.*QCD::CF*(1.+z*z)/((1.-z)*lambda*(1.-lambda));
+    }
+
+    static double bb2H()
+    {
+        return 1.;
     }
 
     static const double _cutoff;

@@ -17,6 +17,7 @@ const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
                                                     0,
                                                     1
                                                    );
+//double minlambda = 1.;
 
 // BottomFusion_bb_NLO_hard
 
@@ -28,7 +29,7 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
     double& lambdaR = randoms[randoms.size()-2];
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
-    const double w = _prefactor * _factor * full(z);
+    const double w = _prefactor * _factor;
     // Technical cutoff
     if ( lambda < _cutoff || 1.-lambda < _cutoff || 1.-z < _cutoff )
     {
@@ -37,14 +38,23 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
     }
     // Generating main event
     _pg(randoms);
-    _eventBox->push_back(Event(w/(lambda*(1.-lambda)),_p));
+    _eventBox->push_back(Event(w*bb2Hg(z,lambda),_p));
     // Generating collinear counterterms
     lambdaR = 0.;
     _pg(randoms);
-    _eventBox->push_back(Event(-w/lambda,_p));
+    _eventBox->push_back(Event(-w*bb2H()*(CounterForge::Pqq<0>(z,lambda)).getCoefficient(0),_p));
     lambdaR = 1.;
     _pg(randoms);
-    _eventBox->push_back(Event(-w/(1.-lambda),_p));
+    _eventBox->push_back(Event(-w*bb2H()*(CounterForge::Pqq<0>(z,1.-lambda)).getCoefficient(0),_p));
+//    if (lambda<minlambda) {
+//    cout << lambda << "\t"
+//        << w*bb2Hg(z,lambda)/(bb2H()*(CounterForge::Split<0>(z,lambda)).getCoefficient(0))
+//        << "\t"
+//        << -w*bb2H()*(CounterForge::Split<0>(z,1.-lambda)).getCoefficient(0)
+//        << endl;
+//        minlambda=lambda;
+//    }
+    cout << CounterForge::f2() << endl;
     // There should be no variables left, although not checking for efficiency
     // Cleanup for safety reasons
     randoms.clear();
@@ -131,6 +141,7 @@ double BottomFusion_bb_NNLO_RV::coll(const double& z, const double& lambda)
 {
     const double lz = log(z);
     const double l1z = log(1.-z);
+    /// \warning 1-z BUG?!?! check!!
     const double dilog = HPL2(0, 1, 1.-z).real();
     const double ll = log(lambda);
     const double z2 = z*z;

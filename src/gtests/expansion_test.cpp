@@ -1,8 +1,8 @@
 /**
  * \file   expansion_test.cpp
  * \author Simone Lionetti
- * \date   September 2014
- * \brief  This file contains the tests for the FourVector class
+ * \date   November 2014
+ * \brief  This file contains the tests for the Expansion class
  */
 
 #include "gtest/gtest.h"
@@ -12,6 +12,7 @@ using namespace std;
 
 TEST(ExpansionBasicTest,expansion_test)
 {
+
     Expansion<Parameter::epsilon, double>::accuracy = 0;
     Expansion<Parameter::epsilon, double> pippo(-2, {1,3.14,17});
     Expansion<Parameter::epsilon, double> pluto(0, {-7,1.13});
@@ -25,7 +26,7 @@ TEST(ExpansionBasicTest,expansion_test)
     Expansion<Parameter::alphas, double>::accuracy = 2;
     Expansion<Parameter::alphas, double> orazio (0, {1,1});
     Expansion<Parameter::alphas, double> gaspare(0, {1,-1});
-    Expansion<Parameter::alphas,double> one(0,1.,true);
+    Expansion<Parameter::alphas, double> one(0,1.,true);
     ASSERT_TRUE(gaspare*orazio==one);
 
 }

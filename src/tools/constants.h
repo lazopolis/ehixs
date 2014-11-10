@@ -1,5 +1,5 @@
 /** 
- * \file constants.h
+ * \file  constants.h
  * \brief This file contains constant definitions and shorthands
  */
 
@@ -12,6 +12,8 @@
 namespace consts
 {
 
+    /// \todo Reorganize these constants: uniform notation, eliminate unused
+    /// \todo Separate physics from maths
     const double Pi=3.1415926535897932385;
     const double pi_square=Pi*Pi;
     const double G_fermi=1.16637e-5;
