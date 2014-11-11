@@ -107,6 +107,9 @@ public:
     /// Return the terms as a vector<ResultPairs>
     vector<ResultPair> terms() const {return _terms;}
     
+    ///Return the sum of terms
+    ResultPair AddUp(){ResultPair res(0.0,0.0);for (int i=0;i<_terms.size();i++) res = res + _terms[i]; return res;}
+    
     /// @}
     
     /// \name Operations
@@ -146,8 +149,11 @@ public:
     
     /// Truncate the series to order a_s^n (terms with k>n are discarded)
     void Truncate(int n);
-    ///@}
     
+    /// Is the series trivially zero (i.e. is it empty)?
+    bool IsZero(){return _terms.empty();}
+    ///@}
+    /// @{
     /// \name Printing
     friend ostream& operator<<(ostream& stream, const AsSeries& st);
 

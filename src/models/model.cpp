@@ -9,8 +9,8 @@ using namespace::std;
 CModel::CModel()
 {
     top=Particle("top");
-    //top.set_onshell_mass(172.7);
-    top.set_msbar_mass(163.7,163.7);
+    top.set_pole_mass(172.5);
+    //top.set_msbar_mass(163.7,163.7);
     top.set_charge(2.0/3.0);
     top.set_Y(1.0);
     top.set_width(0.0);
@@ -114,9 +114,34 @@ void CModel::Configure(const double & a_at_mz,
 
 
 
+void CModel::RemoveParticle(const string& particle_name)
+{
+    bool found = false;
+    RemoveParticleFromVector(particle_name,found,quarks);
+    if (not(found)) RemoveParticleFromVector(particle_name,found,leptons);
+    if (not(found)) RemoveParticleFromVector(particle_name,found,vector_bosons);
+    if (not(found))
+    {
+        cout<<"\nThe particle you want to remove,"<<particle_name<<" was not found at all."
+        <<"\nSomething is terribly wrong. We abort "<<endl<<endl;
+        exit(0);
+    }
+        
+}
 
-
-
+void CModel::RemoveParticleFromVector(const string& particle_name,bool& found, vector<Particle*>& the_vector )
+{
+    for (vector<Particle*>::iterator it = the_vector.begin() ; it != the_vector.end(); ++it)
+    {
+        if ((*it)->name()==particle_name)
+        {
+            cout<<"\n[CModel] "<<(*it)->name()<<" removed !"<<endl;
+            the_vector.erase(it);
+            found = true;
+            break;
+        }
+    }
+}
 
 
 

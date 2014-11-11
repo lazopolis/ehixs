@@ -76,7 +76,7 @@ void SigmaTerm::evolve_from_muf_to_mur(const double& L)
 
 ostream& operator<<(ostream& stream, const SigmaTerm& st)
 {
-    stream<<setw(22)<<left<<st._type<<st._result<<endl;
+    stream<<setw(22)<<st._type<<st._result_central<<endl;
     return stream;
 }
 
@@ -116,7 +116,7 @@ ResultPair SigmaTerm::give(int porder,const double& mur)
 
 void SigmaTerm::Truncate(int n)
 {
-    _result_central.Truncate(n);
+    _result.Truncate(n);
     for (int i=0;i<_saved_results.size();i++)
     {
         _saved_results[i].Truncate(n);
@@ -130,7 +130,10 @@ bool SigmaTerm::IsZero(int porder)
     else return false;
 }
 
-
+bool SigmaTerm::IsZero()
+{
+    return _result.IsZero();
+}
 
 
 

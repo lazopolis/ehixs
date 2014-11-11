@@ -75,21 +75,21 @@ int main(int argc, char** argv)
             InclusiveProcess* cur_process = new InclusiveProcess(UI);
             cur_process->Evaluate();
             cout<<"--------"<<endl;
-            const double Kfactor = 1.065;
             cout<< *cur_process<<endl;
-            cout<<"-----------------------------------------------------"
-                <<"-----------------------------------------------------"
-                <<"---------"
-                <<endl;
-            cout<<"Total contributions for the N3LO cross section"
+            cout<<"--------"<<endl;
+            cout<<"Total contributions per a_s power"
                 <<" at central scale mur="<<UI.mur<<endl;
             cout<<setprecision(4)
             <<setw(6)<<"LO"<<setw(24)<<cur_process->CoefficientAlphaS(2)<<endl
             <<setw(6)<<"NLO"<<setw(24)<<cur_process->CoefficientAlphaS(3)<<endl
             <<setw(6)<<"NNLO"<<setw(24)<<cur_process->CoefficientAlphaS(4)<<endl
-            <<setw(6)<<"N3LO"<<setw(25)<<cur_process->CoefficientAlphaS(5)<<endl
-            <<"-----------------"<<endl
-            <<setw(6)<<"Total"<<cur_process->TotalCentral()
+            <<setw(6)<<"N3LO"<<setw(25)<<cur_process->CoefficientAlphaS(5)<<endl;
+            cout<<"--------"<<endl;
+            cout<<"Channel Breakdown "<<endl
+            <<cur_process->ChannelBreakdown()<<endl;
+            cout<<"--------"<<endl;
+            cout<<"Total cross section"<<endl
+            <<setw(6)<<"Total"<<cur_process->TotalCentral()<<endl
             <<endl<<endl;
             
         }

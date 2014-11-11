@@ -16,7 +16,7 @@ using namespace std;
 class SavedResult{
 public:
     SavedResult(const AsSeries& rp, const double& mur):_rp(rp),_mur(mur){}
-    AsSeries Result(){return _rp;}
+    AsSeries Result() const {return _rp;}
     bool IsMur(const double& mur){return _mur==mur;}
     void Truncate(int n){_rp.Truncate(n);}
 private:
@@ -57,6 +57,7 @@ public:
     string print_scale_result(const double& mur,int porder);
     string type();
     bool Evaluated(){return _evaluated;}
+    bool IsZero();
 private:
     string _type;//delta, plus, reg
     AsSeries _result;

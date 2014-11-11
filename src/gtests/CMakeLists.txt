@@ -139,6 +139,8 @@ add_executable(
 target_link_libraries(
                     ihixs_tests
                     ihixs_lib
+                    exact_gluon_fusion
+                    avh_olo
                     chaplin
                     pdf
                     tools

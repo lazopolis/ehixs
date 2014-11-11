@@ -13,6 +13,51 @@ using namespace std;
 
 #include "higgs_eft.h"
 #include "luminosity_integrals.h"
+class Channel
+{
+public:
+    int size() const {return _terms.size();}
+    SigmaTerm* Term(int i) const {return _terms[i];}
+    void Truncate(int i);
+    AsSeries Sum();
+    ResultPair Result();
+    ResultPair CoeffAs(int m){return Sum().term_of_order(m);}
+    string Name(){return _name;}
+    friend ostream& operator<<(ostream& stream, const Channel& ch);
+protected:
+    vector<SigmaTerm*> _terms;
+    string _name;
+};
+
+class HiggsGGFChannelGG: public Channel
+{
+public:
+    HiggsGGFChannelGG(const double& L);
+};
+
+class HiggsGGFChannelQG: public Channel
+{
+public:
+    HiggsGGFChannelQG(const double& L);
+};
+
+class HiggsGGFChannelQQBAR: public Channel
+{
+public:
+    HiggsGGFChannelQQBAR(const double& L);
+};
+
+class HiggsGGFChannelQQ: public Channel
+{
+public:
+    HiggsGGFChannelQQ(const double& L);
+};
+
+class HiggsGGFChannelQ1Q2: public Channel
+{
+public:
+    HiggsGGFChannelQ1Q2(const double& L);
+};
 
 class InclusiveProcess
 {
@@ -23,14 +68,11 @@ public:
     void Evaluate(SigmaTerm* term);
     double CoefficientAlphaS(int i);
     double CoefficientAlphaSError(int i);
-
+    ResultPair CoefficientAlphaSResult(int as_order);
+    string ChannelBreakdown();
     ResultPair TotalCentral();
     friend ostream& operator<<(ostream&, const InclusiveProcess&);
 
-    
-
-
-    
 private:
     UserInterface _UI;
     bool _scale_variation;
@@ -49,7 +91,8 @@ private:
     double _log_muf_mh_sq;
     double _log_mur_over_muf_sq;
     
-    vector<SigmaTerm*> _sigma;
+    vector<Channel*> _channels;
+   // vector<SigmaTerm*> _sigma;
 
     int _int_qcd_perturbative_order;
     
@@ -57,6 +100,9 @@ private:
     
     void SetMurDependentParameters(const double& mur);
     void Truncate();
+    
+    bool _is_enhanced_eft;
+    double _exact_LO_coefficient;
 
 };
 

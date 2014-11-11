@@ -2,6 +2,13 @@
 
 #add_subdirectory(RRroutinesv2)
 
+add_library(exact_gluon_fusion
+                gluon_fusion_exact_coefficients.cpp
+                nlo_exact_matrix_elements.cpp
+                         exact_nlo_matrix_elements/massive_ampls.F
+                         exact_nlo_matrix_elements/masters.F
+)
+
 
 add_library(gluon_fusion 
                          gluon_fusion.cpp

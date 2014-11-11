@@ -33,10 +33,16 @@ public:
     VectorBoson Z;
     
     Particle bottom;
+    
+    void RemoveParticle(const string& particle_name);
 private:
 	double mu_r_;
     double _porder;
     CouplingConstant* alpha_s;
+    
+    void RemoveParticleFromVector(const string& particle_name,bool& found,
+                                  vector<Particle*>& the_vector );
+
     
     
     
