@@ -2,14 +2,11 @@
 #define BOTTOM_FUSION_ME_H
 
 #include <stdlib.h>
-#include "chaplin.h"
+#include "bb2HX.h"
 #include "xsectionmaker.h"
 #include "parametrizations.h"
 #include "xgenerator.h"
 #include "counterforge.h"
-
-/// \todo Move this to either Constants, UserInterface, Model or whatever
-constexpr double yukawa_bottom = 1.0;
 
 template<size_t N>
 class BottomFusion_bb;
@@ -133,16 +130,6 @@ public:
     void generateEvents(vector<double>& randoms);
 
 private:
-
-    static double bb2Hg(const double& z, const double& lambda)
-    {
-        return 2.*QCD::CF*(1.+z*z)/((1.-z)*lambda*(1.-lambda));
-    }
-
-    static double bb2H()
-    {
-        return 1.;
-    }
 
     static const double _cutoff;
 

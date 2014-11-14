@@ -140,7 +140,8 @@ private:
     {
         if (accuracy != 0) {
             if (mySize < accuracy) {
-                throw "Not enough terms";
+                cerr << "Not enough terms in " << *this << endl;
+                throw;
             } else {
                 this->cut(accuracy);
             }

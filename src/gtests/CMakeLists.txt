@@ -114,6 +114,17 @@
 #                    gtest)
 
 add_executable(
+            counterforge_test
+            counterforge_test.cpp
+)
+target_link_libraries(
+                    counterforge_test
+                    chaplin
+                    bbh
+                    tools
+)
+
+add_executable(
             fourvector_test
             fourvector_test.cpp
             )

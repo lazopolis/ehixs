@@ -23,14 +23,27 @@
 namespace CounterForge
 {
 
+    static bool CDR = true;
+
     /// Type has to be double, int, complex<>, etc...
     template<Parameter Par, class Type>
     Expansion<Par,Type> geometric(const Type& a, const size_t trunc)
     {
         vector<Type> foo({1});
-        foo.resize(trunc); //check this
+        foo.reserve(trunc);
         while (foo.size()<trunc)
             foo.push_back(foo.back()*a);
+        return Expansion<Par,Type>(0,foo);
+    }
+
+    /// Type has to be double, int, complex<>, etc...
+    template<Parameter Par, class Type>
+    Expansion<Par,Type> exp(const Type& a, const size_t trunc)
+    {
+        vector<Type> foo({1});
+        foo.reserve(trunc);
+        while (foo.size()<trunc)
+            foo.push_back(foo.back()*a/foo.size());
         return Expansion<Par,Type>(0,foo);
     }
 
@@ -62,9 +75,9 @@ namespace CounterForge
             // Computing the appropriate logs and HPLs once and for all
             _computeLogs(acc, z);
             // Building f1 to the appropriate order
-            Expansion<Parameter::epsilon, double> foo(-2,-2.);
+            Expansion<Parameter::epsilon, double> foo(-2,-2.,true);
             if (acc>1) foo.setCoefficient(-1, 2.*_lz);
-            if (acc>2) foo.setCoefficient(0,-_lz*_lz+2.*(_lz*_l1mz+_li2z-consts::z3));
+            if (acc>2) foo.setCoefficient(0,-_lz*_lz-2.*_li21mz);
             if (acc>3) throw "Not enough coefficients were implemented in f1Type";
             return foo;
         }
@@ -73,16 +86,14 @@ namespace CounterForge
     private:
 
         double _lz;
-        double _l1mz;
-        double _li2z;
+        double _li21mz;
 
-        void _computeLogs(const size_t n, const double&z)
+        void _computeLogs(const size_t n, const double& z)
         {
             if (n==1) return;
             _lz = log(z);
             if (n==2) return;
-            _l1mz = log(1.-z);
-            _li2z = HPL2(0,1,z).real();
+            _li21mz = HPL2(0,1,1.-z).real();
             if (n==3) return;
             throw "f1 is not implemented at this order";
             return;

@@ -38,14 +38,14 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
     }
     // Generating main event
     _pg(randoms);
-    _eventBox->push_back(Event(w*bb2Hg(z,lambda),_p));
+    _eventBox->push_back(Event(w*bb2Hg<0,0>(z,lambda),_p));
     // Generating collinear counterterms
     lambdaR = 0.;
     _pg(randoms);
-    _eventBox->push_back(Event(-w*bb2H()*(CounterForge::Pqq<0>(z,lambda)).getCoefficient(0),_p));
+    _eventBox->push_back(Event(-w*bb2H<0,0>()*(CounterForge::Pqq<0>(z,lambda)).getCoefficient(0),_p));
     lambdaR = 1.;
     _pg(randoms);
-    _eventBox->push_back(Event(-w*bb2H()*(CounterForge::Pqq<0>(z,1.-lambda)).getCoefficient(0),_p));
+    _eventBox->push_back(Event(-w*bb2H<0,0>()*(CounterForge::Pqq<0>(z,1.-lambda)).getCoefficient(0),_p));
 //    if (lambda<minlambda) {
 //    cout << lambda << "\t"
 //        << w*bb2Hg(z,lambda)/(bb2H()*(CounterForge::Split<0>(z,lambda)).getCoefficient(0))
@@ -78,6 +78,26 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
+    Expansion<Parameter::epsilon,double>::accuracy = 3;
+    cout << CounterForge::exp<Parameter::epsilon,double>(1.,5) << endl;
+    cout << "----------------------------\n"
+    << "z = " << z << "\n"
+    << "Tree: " << bb2H<0>() << "\n"
+    << "1-loop" <<  bb2H<1>() << "\n"
+    << "----------------------------\n";
+    for (;lambdaR > 1.e-100;lambdaR*=0.5)
+        cout
+            << lambdaR << "\t"
+            << coll(z,lambdaR)/**lambdaR/pow(log(lambdaR),2)*/ << "\t"
+            << CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*(
+                CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()+
+                CounterForge::Pqq<0>(z,lambdaR)*bb2H<1>()
+                )<< "\t"
+            << (CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*(
+                CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()+
+                CounterForge::Pqq<0>(z,lambdaR)*bb2H<1>()
+                )).getCoefficient(0)/coll(z,lambdaR) << "\n";
+    exit(1);
     // Generating main event
     _pg(randoms);
     _eventBox->push_back(Event(w*full(z,lambda),_p));
@@ -141,7 +161,6 @@ double BottomFusion_bb_NNLO_RV::coll(const double& z, const double& lambda)
 {
     const double lz = log(z);
     const double l1z = log(1.-z);
-    /// \warning 1-z BUG?!?! check!!
     const double dilog = HPL2(0, 1, 1.-z).real();
     const double ll = log(lambda);
     const double z2 = z*z;
@@ -177,8 +196,6 @@ double BottomFusion_bb_NNLO_RV::softcoll(const double& z, const double& lambda)
                         - 2.*consts::pi_square
                         ) / (3.*lambda*(1.-z));
 }
-
-
 
 template<>
 const SectorInfo XSectionMaker<BottomFusion_bb_NNLO_RV>::_info(
