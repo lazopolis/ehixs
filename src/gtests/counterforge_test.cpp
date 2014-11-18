@@ -15,25 +15,59 @@ using namespace std;
 
 }*/
 
+/// \note This test is expected to break down when cGamma is activated (cGamma ≠ 1)
+
 int main(int argc, char**argv)
 {
 
-    Expansion<Parameter::epsilon, double>::accuracy = 3;
-    const size_t& acc = Expansion<Parameter::epsilon, double>::accuracy;
-    cout << CounterForge::geometric<Parameter::epsilon, double>(1.,acc) << endl
-    << CounterForge::geometric<Parameter::epsilon, double>(2.,acc) << endl
-        << Expansion<Parameter::epsilon, double>(2,0.5,true) << endl;
+    size_t& acc = Expansion<Parameter::epsilon, double>::accuracy;
 
-    cout << CounterForge::f2() << endl;
-    cout << "r3: " << CounterForge::r3(0.2345) << "\n"
-        << "r4: " << CounterForge::r4() << "\n";
+    // Testing f1_1overz to order 5
+    acc = 5;
+    Expansion<Parameter::epsilon, double> myf1_1overz = CounterForge::f1_1overz(0.123456);
+    ASSERT_TRUE(
+                (myf1_1overz.getCoefficient(-2) == -2.) &&
+                (fabs(myf1_1overz.getCoefficient(-1) - 4.18374) <= 0.00001) &&
+                (fabs(myf1_1overz.getCoefficient( 0) - 2.48360) <= 0.00001) &&
+                (fabs(myf1_1overz.getCoefficient( 1) - 2.03223) <= 0.00001) &&
+                (fabs(myf1_1overz.getCoefficient( 2) - 1.87346) <= 0.00001)
+                );
 
-    Expansion<Parameter::alphas, double>::accuracy = 2;
-    Expansion<Parameter::alphas, double> orazio (0, {1,1});
-    Expansion<Parameter::alphas, double> gaspare(0, {1,-1});
-    Expansion<Parameter::alphas, double> one(0,1.,true);
-    ASSERT_TRUE(gaspare*orazio==one);
-    
+    // Testing f1_1overz to order 5
+    acc = 5;
+    Expansion<Parameter::epsilon, double> myf1_1minus1overz = CounterForge::f1_1minus1overz(0.123456);
+    ASSERT_TRUE(
+                (myf1_1minus1overz.getCoefficient(-2) == -2.) &&
+                (fabs(myf1_1minus1overz.getCoefficient(-1) - 3.92020) <= 0.00001) &&
+                (fabs(myf1_1minus1overz.getCoefficient( 0) - 4.07877) <= 0.00001) &&
+                (fabs(myf1_1minus1overz.getCoefficient( 1) - 2.89846) <= 0.00001) &&
+                (fabs(myf1_1minus1overz.getCoefficient( 2) - 2.51292) <= 0.00001)
+                );
+
+    // Testing r4 to order 10
+    acc = 10;
+    Expansion<Parameter::epsilon, double> myr4 = CounterForge::r4();
+    bool r4passed = true;
+    for (int i = 0; i<myr4.maxTerm(); ++i)
+        r4passed = r4passed && (-2.*myr4.getCoefficient(i)/static_cast<double>(QCD::Nc+1./QCD::Nc)==pow(2.,i));
+    ASSERT_TRUE(r4passed);
+
+    // Testing r3 to order 3
+    acc = 3;
+    cout.precision(10);
+    Expansion<Parameter::epsilon, double> myr3 = CounterForge::r3(0.123456);
+    ASSERT_TRUE(
+                (myr3.getCoefficient(-2) == -3.) &&
+                (fabs(myr3.getCoefficient(-1) - 5.18302) <= 0.00001) &&
+                (fabs(myr3.getCoefficient( 0) - 7.37089) <= 0.00001)
+                );
+    myr3 = CounterForge::r3(0.987654);
+    ASSERT_TRUE(
+                (myr3.getCoefficient(-2) == -3.) &&
+                (fabs(myr3.getCoefficient(-1) + 13.1501) <= 0.0001) &&
+                (fabs(myr3.getCoefficient( 0) + 17.4714) <= 0.0001)
+                );
+
 //    ::testing::InitGoogleTest(&argc, argv);
 //    return RUN_ALL_TESTS();
 

@@ -79,7 +79,6 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
     Expansion<Parameter::epsilon,double>::accuracy = 3;
-    cout << CounterForge::exp<Parameter::epsilon,double>(1.,5) << endl;
     cout << "----------------------------\n"
     << "z = " << z << "\n"
     << "Tree: " << bb2H<0>() << "\n"
@@ -89,6 +88,8 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
         cout
             << lambdaR << "\t"
             << coll(z,lambdaR)/**lambdaR/pow(log(lambdaR),2)*/ << "\t"
+            << (coll(z,lambdaR)-(CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()).getCoefficient(0))
+                << "\t"
             << CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*(
                 CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()+
                 CounterForge::Pqq<0>(z,lambdaR)*bb2H<1>()
