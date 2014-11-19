@@ -266,6 +266,17 @@ HiggsGGFChannelQ1Q2::HiggsGGFChannelQ1Q2(const double& log_muf_mh_sq)
     
 }
 
+HiggsGGFChannelGGExactNLOReal::HiggsGGFChannelGGExactNLOReal(const double& log_muf_mh_sq)
+{
+    _name = "gg exact NLO real";
+    // g g exact NLO real
+    _terms.push_back(new SigmaTerm("gg exact NLO real",AsSeries(1,1.0),
+                                   new qg_real(&HEFT::qg_nlo_r_lz0,log_muf_mh_sq)));
+    
+}
+
+
+
 InclusiveProcess::InclusiveProcess(const UserInterface& UI)
 {
     _UI=UI;
@@ -278,7 +289,8 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
     if (UI.qcd_perturbative_order=="NNLO") _int_qcd_perturbative_order=4;
     if (UI.qcd_perturbative_order=="N3LO") _int_qcd_perturbative_order=5;
 
-    if (UI.matrix_element_approximation != "pure_eft" and UI.matrix_element_approximation != "enhanced_eft")
+    if (UI.matrix_element_approximation != "pure_eft"
+        and UI.matrix_element_approximation != "enhanced_eft")
     {
         cout<<"\n we can't do "<<UI.matrix_element_approximation<<" yet";
         cout<<endl;
@@ -321,11 +333,33 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
     
     if (UI.matrix_element_approximation == "enhanced_eft")
     {
+        //: the bottom is removed below for comparisons within the HXSWG
         _model.RemoveParticle("bottom");
         // we compute the LO exact matrix element
         GluonFusionExactCoefficients exactLO(_model);
         _exact_LO_coefficient = exactLO.LO_epsilon(0);
         _is_enhanced_eft = true;
+    }
+    
+    if (UI.matrix_element_approximation == "exact")
+    {
+        //: the bottom is removed below for comparisons within the HXSWG
+        _model.RemoveParticle("bottom");
+        // we need to compute:
+        //the LO exact matrix element in gg channel
+        GluonFusionExactCoefficients exact(_model);
+        _exact_LO_coefficient = exact.LO_epsilon(0);
+        // the NLO delta exact matrix element in gg channel
+        _exact_NLO_delta_gg = exact.NLO_epsilon(0);
+        // we need to add three extra channels
+        // the exact real gluon gluon
+        _extra_channels.push_back(new HiggsGGFChannelGGExactNLOReal(_log_muf_mh_sq));
+        // the exact real quark gluon
+        _extra_channels.push_back(new HiggsGGFChannelGQExactNLOReal(_log_muf_mh_sq));
+        // the exact real quark antiquark
+        _extra_channels.push_back(new HiggsGGFChannelQQBARExactNLOReal(_log_muf_mh_sq));
+        // we set the _is_exact flag to true
+        _is_exact = true;
     }
 }
 

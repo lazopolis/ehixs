@@ -59,6 +59,25 @@ public:
     HiggsGGFChannelQ1Q2(const double& L);
 };
 
+// exact channels
+class HiggsGGFChannelGGExactNLOReal: public Channel
+{
+public:
+    HiggsGGFChannelGGExactNLOReal(const double& L);
+};
+
+class HiggsGGFChannelGQExactNLOReal: public Channel
+{
+public:
+    HiggsGGFChannelGQExactNLOReal(const double& L);
+};
+
+class HiggsGGFChannelQQBARExactNLOReal: public Channel
+{
+public:
+    HiggsGGFChannelQQBARExactNLOReal(const double& L);
+};
+
 class InclusiveProcess
 {
 public:
