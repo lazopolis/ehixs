@@ -54,7 +54,6 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
 //        << endl;
 //        minlambda=lambda;
 //    }
-    cout << CounterForge::f2() << endl;
     // There should be no variables left, although not checking for efficiency
     // Cleanup for safety reasons
     randoms.clear();
@@ -79,26 +78,6 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
     Expansion<Parameter::epsilon,double>::accuracy = 3;
-    cout << "----------------------------\n"
-    << "z = " << z << "\n"
-    << "Tree: " << bb2H<0>() << "\n"
-    << "1-loop" <<  bb2H<1>() << "\n"
-    << "----------------------------\n";
-    for (;lambdaR > 1.e-100;lambdaR*=0.5)
-        cout
-            << lambdaR << "\t"
-            << coll(z,lambdaR)/**lambdaR/pow(log(lambdaR),2)*/ << "\t"
-            << (coll(z,lambdaR)-(CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()).getCoefficient(0))
-                << "\t"
-            << CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*(
-                CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()+
-                CounterForge::Pqq<0>(z,lambdaR)*bb2H<1>()
-                )<< "\t"
-            << (CounterForge::exp<Parameter::epsilon,double>(log(lambdaR*(1.-z)/z),5)*(
-                CounterForge::Pqq<1>(z,lambdaR)*bb2H<0>()+
-                CounterForge::Pqq<0>(z,lambdaR)*bb2H<1>()
-                )).getCoefficient(0)/coll(z,lambdaR) << "\n";
-    exit(1);
     // Generating main event
     _pg(randoms);
     _eventBox->push_back(Event(w*full(z,lambda),_p));
@@ -160,20 +139,13 @@ double BottomFusion_bb_NNLO_RV::full(const double& z, const double& lambda)
 
 double BottomFusion_bb_NNLO_RV::coll(const double& z, const double& lambda)
 {
-    const double lz = log(z);
-    const double l1z = log(1.-z);
-    const double dilog = HPL2(0, 1, 1.-z).real();
-    const double ll = log(lambda);
-    const double z2 = z*z;
-    //Nasty, should move back to CA and CF...
-    return -16*
-    (
-     -16 + 14*consts::pi_square - 10*z - 6*z2 + 14*consts::pi_square*z2
-     -36*(1.+z2)*l1z*l1z + 34*lz - 68*z*lz + 34*z2*lz - 25*lz*lz
-     -25*z2*lz*lz - 18*ll + 36*z*ll - 18*z2*ll + 34*lz*ll + 34*z2*lz*ll - 9*ll*ll*(1.+z2)
-     +4*l1z*(13*(1.+z2)*lz - 9*((1.-z)*(1.-z) + (1.+z2)*ll))
-     - 20*(1.+z2)*dilog
-     )/(3.*(1.-z)*lambda);
+    // Unjustified factor of -1!!!
+    // Speed issue: about 2 times slower than direct expression
+    return -2.*(
+                CounterForge::exp<Parameter::epsilon,double>(-log(lambda*(1.-z)/z))*
+                CounterForge::Pqq<1>(z,lambda)*bb2H<0>()+
+                CounterForge::Pqq<0>(z,lambda)*bb2H<1>()
+                ).getCoefficient(0);
 }
 
 double BottomFusion_bb_NNLO_RV::soft(const double& z, const double& lambda)

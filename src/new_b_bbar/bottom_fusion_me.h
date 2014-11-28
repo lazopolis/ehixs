@@ -151,6 +151,7 @@ public:
     BottomFusion_bb_NNLO_RV(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NNLO_RV>::_info)
     {
+        //Check this
         _prefactor *= 8. * consts::Pi * QCD::CF /*alphas*/;
         return;
     }

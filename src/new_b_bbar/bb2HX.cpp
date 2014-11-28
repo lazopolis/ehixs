@@ -15,7 +15,7 @@
 template<>
 double bb2H<0,0>()
 {
-    return /*2.*QCD::Nc**/yukawa_bottom*yukawa_bottom;
+    return 2.*QCD::Nc*yukawa_bottom*yukawa_bottom;
 }
 
 /// End of tree
@@ -25,7 +25,7 @@ double bb2H<0,0>()
 template<>
 double bb2H<1,-2>()
 {
-    return -4.*QCD::CF * alphastrong/*/consts::Pi*/ * bb2H<0,0>() *
+    return -2.*QCD::CF * alphastrong * bb2H<0,0>() *
         1.;
 }
 
@@ -38,8 +38,8 @@ double bb2H<1,-1>()
 template<>
 double bb2H<1,0>()
 {
-    return -4.*QCD::CF * alphastrong/*/consts::Pi*/ * bb2H<0,0>() *
-        (1.-0.5*consts::pi_square);
+    return 2.*QCD::CF * alphastrong * bb2H<0,0>() *
+        (0.5*consts::pi_square-1.);
 }
 
 /// \brief Matrix elements for bb->Hg
@@ -49,15 +49,15 @@ double bb2H<1,0>()
 template<>
 double bb2Hg<0,0>(const double& z, const double& lambda)
 {
-    return alphastrong * bb2H<0,0>() *
-        2.*QCD::CF*(1.+z*z)/((1.-z)*lambda*(1.-lambda));
+    return 2.*static_cast<double>(QCD::CF) * alphastrong * bb2H<0,0>() *
+        (1.+z*z)/((1.-z)*lambda*(1.-lambda));
 }
 
 template<>
 double bb2Hg<0,1>(const double& z, const double& lambda)
 {
-    return alphastrong * bb2H<0,0>() *
-        (-2.)*QCD::CF*(1.-z)/(lambda*(1.-lambda));
+    return -2.*static_cast<double>(QCD::CF) * alphastrong * bb2H<0,0>() *
+        (1.-z)/(lambda*(1.-lambda));
 }
 
 /// End of tree
@@ -110,7 +110,7 @@ Expansion<Parameter::epsilon, double> bb2H<1>()
     });
 }
 
-/// \brief Shorthand for full epsilon expansion of bb->H
+/// \brief Shorthand for full epsilon expansion of bb->Hg
 
 template<>
 Expansion<Parameter::epsilon, double> bb2Hg<0>(const double& lambda, const double& z)

@@ -76,7 +76,7 @@ namespace CounterForge
     template<>
     Expansion<Parameter::epsilon, double> Pqq<1>(const double& z, const double& lambda)
     {
-        return (r3(z)*_Pqq<0>(z)+r4()*_Pqq<1>(z))/lambda;
+        return 2.*static_cast<double>(QCD::CF)*(r3(z)*_Pqq<0>(z)+r4()*_Pqq<1>(z))/lambda;
     }
 
 }

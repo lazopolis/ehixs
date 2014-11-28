@@ -34,7 +34,7 @@ namespace CounterForge
     /// Expansion in Par of the function 1/(1 - a Par)
     /// Type has to be double, int, complex<>, etc...
     template<Parameter Par, class Type>
-    Expansion<Par,Type> geometric(const Type& a, const size_t trunc)
+    Expansion<Par,Type> geometric(const Type& a, const size_t trunc = Expansion<Par,Type>::accuracy)
     {
         vector<Type> foo({1});
         foo.reserve(trunc);
@@ -49,7 +49,7 @@ namespace CounterForge
     /// Expansion in Par of the function a^Par
     /// Type has to be double, int, complex<>, etc...
     template<Parameter Par, class Type>
-    Expansion<Par,Type> exp(const Type& a, const size_t trunc)
+    Expansion<Par,Type> exp(const Type& a, const size_t trunc = Expansion<Par,Type>::accuracy)
     {
         vector<Type> foo({1});
         foo.reserve(trunc);
