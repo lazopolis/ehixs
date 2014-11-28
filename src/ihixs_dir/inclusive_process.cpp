@@ -350,16 +350,16 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
         GluonFusionExactCoefficients exact(_model);
         _exact_LO_coefficient = exact.LO_epsilon(0);
         // the NLO delta exact matrix element in gg channel
-        _exact_NLO_delta_gg = exact.NLO_epsilon(0);
+//        _exact_NLO_delta_gg = exact.NLO_epsilon(0);
         // we need to add three extra channels
         // the exact real gluon gluon
-        _extra_channels.push_back(new HiggsGGFChannelGGExactNLOReal(_log_muf_mh_sq));
+//        _extra_channels.push_back(new HiggsGGFChannelGGExactNLOReal(_log_muf_mh_sq));
         // the exact real quark gluon
-        _extra_channels.push_back(new HiggsGGFChannelGQExactNLOReal(_log_muf_mh_sq));
+//        _extra_channels.push_back(new HiggsGGFChannelGQExactNLOReal(_log_muf_mh_sq));
         // the exact real quark antiquark
-        _extra_channels.push_back(new HiggsGGFChannelQQBARExactNLOReal(_log_muf_mh_sq));
+//        _extra_channels.push_back(new HiggsGGFChannelQQBARExactNLOReal(_log_muf_mh_sq));
         // we set the _is_exact flag to true
-        _is_exact = true;
+//        _is_exact = true;
     }
 }
 

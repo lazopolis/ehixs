@@ -21,8 +21,6 @@ const SectorInfo XSectionMaker<BottomFusion_bb_LO>::_info(
 
 // BottomFusion_bb_NLO_hard
 
-const double BottomFusion_bb_NLO_hard::_cutoff = 100*DBL_EPSILON;
-
 void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
 {
     // Setting up convenient variable names
@@ -30,12 +28,6 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
-    // Technical cutoff
-    if ( lambda < _cutoff || 1.-lambda < _cutoff || 1.-z < _cutoff )
-    {
-        _eventBox->push_back(Event());
-        return;
-    }
     // Generating main event
     _pg(randoms);
     _eventBox->push_back(Event(w*bb2Hg<0,0>(z,lambda),_p));
@@ -46,14 +38,6 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
     lambdaR = 1.;
     _pg(randoms);
     _eventBox->push_back(Event(-w*bb2H<0,0>()*(CounterForge::Pqq<0>(z,1.-lambda)).getCoefficient(0),_p));
-//    if (lambda<minlambda) {
-//    cout << lambda << "\t"
-//        << w*bb2Hg(z,lambda)/(bb2H()*(CounterForge::Split<0>(z,lambda)).getCoefficient(0))
-//        << "\t"
-//        << -w*bb2H()*(CounterForge::Split<0>(z,1.-lambda)).getCoefficient(0)
-//        << endl;
-//        minlambda=lambda;
-//    }
     // There should be no variables left, although not checking for efficiency
     // Cleanup for safety reasons
     randoms.clear();
@@ -77,10 +61,9 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
-    Expansion<Parameter::epsilon,double>::accuracy = 3;
     // Generating main event
     _pg(randoms);
-    _eventBox->push_back(Event(w*full(z,lambda),_p));
+    _eventBox->push_back(Event(w*bb2Hg<1,0>(z,lambda),_p));
     // Subtracting collinear counterterms
     lambdaR = 0.;
     _pg(randoms);
@@ -110,40 +93,13 @@ void BottomFusion_bb_NNLO_RV::generateEvents(vector<double>& randoms)
     return;
 }
 
-double BottomFusion_bb_NNLO_RV::full(const double& z, const double& lambda)
-{
-    const double pl1 = HPL2(0,1, 1./(1. + (z*pow(1.-z,-2))/((1.-lambda)*lambda)) ).real();
-    const double pl2 = HPL2(0,1,1.-lambda).real();
-    const double pl3 = HPL2(0,1,(1.-lambda)*(1.-z)).real();
-    const double pl4 = HPL2(0,1,lambda).real();
-    const double pl5 = HPL2(0,1,lambda*(1.-z)).real();
-    const double pl6 = HPL2(0,1,lambda/(z + lambda*(1.-z))).real();
-    const double pl7 = HPL2(0,1,(1.-lambda)/(1. - lambda*(1.-z))).real();
-    const double l1 = log(1.-z);
-    const double l2 = log(z);
-    const double l3 = log(1.-lambda);
-    const double l4 = log(lambda);
-    const double l5 = log(1.- lambda*(1.-z));
-    const double l6 = log(z + lambda*(1.-z));
-    const double compr = 18.*l3 + 18.*l4 + 18.*l3*l4 - 2.*l2*(17. + 9.*l3 + 9.*l4) - 16.*l3*l5 + 2.*l4*l5
-    + 2.*l3*l6 - 16.*l4*l6 + 18.*l5*l6
-    - 4.*l1*(-9. + 9.*l2 - 9.*l3 - 9.*l4 + 4.*l5 + 4.*l6)
-    + 18.*pl1 + 2.*pl2 + 20.*pl3 + 2.*pl4 + 20.*pl5 - 2.*pl6 - 2.*pl7
-    + 36.*l1*l1 + 17.*l2*l2 + 9.*l3*l3 + 9.*l4*l4 + 8.*l5*l5 + 8.*l6*l6 - 14.*consts::pi_square;
-    return 16. * (
-                  (16.+compr)
-                  - 2. * (-5. + 36.*l1 - 34.*l2 + 18.*l3 + 18.*l4)*z
-                  + (6.+compr)*z*z
-                  ) / (3.*(1.-lambda)*lambda*(1.-z));
-}
-
 double BottomFusion_bb_NNLO_RV::coll(const double& z, const double& lambda)
 {
     // Unjustified factor of -1!!!
     // Speed issue: about 2 times slower than direct expression
     return -2.*(
-                CounterForge::exp<Parameter::epsilon,double>(-log(lambda*(1.-z)/z))*
-                CounterForge::Pqq<1>(z,lambda)*bb2H<0>()+
+                Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z))*
+                CounterTerm->fastPqq<1>(z,lambda)*bb2H<0>()+
                 CounterForge::Pqq<0>(z,lambda)*bb2H<1>()
                 ).getCoefficient(0);
 }

@@ -129,10 +129,6 @@ public:
 
     void generateEvents(vector<double>& randoms);
 
-private:
-
-    static const double _cutoff;
-
 };
 
 /**
@@ -149,20 +145,28 @@ public:
 
 
     BottomFusion_bb_NNLO_RV(const UserInterface& UI) :
-    BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NNLO_RV>::_info)
+    BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NNLO_RV>::_info),
+    CounterTerm()
     {
+        Expansion<Parameter::epsilon,double>::accuracy = 3;
+        CounterTerm = new CounterForge(CounterForge::Scheme::CDR);
         //Check this
         _prefactor *= 8. * consts::Pi * QCD::CF /*alphas*/;
         return;
     }
 
+    ~BottomFusion_bb_NNLO_RV()
+    {
+        delete CounterTerm;
+    }
+
     void generateEvents(vector<double>& randoms);
+
+    CounterForge* CounterTerm;
 
 private:
 
-    static double full(const double& z, const double& lambda);
-
-    static double coll(const double& z, const double& lambda);
+    double coll(const double& z, const double& lambda);
 
     static double soft(const double& z, const double& lambda);
 

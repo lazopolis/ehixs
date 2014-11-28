@@ -26,7 +26,7 @@ int main(int argc, char**argv)
     acc = 5;
     Expansion<Parameter::epsilon, double> myf1_1overz = CounterForge::f1_1overz(0.123456);
     ASSERT_TRUE(
-                (myf1_1overz.getCoefficient(-2) == -2.) &&
+                (myf1_1overz.getCoefficient(-2) == 0.) &&
                 (fabs(myf1_1overz.getCoefficient(-1) - 4.18374) <= 0.00001) &&
                 (fabs(myf1_1overz.getCoefficient( 0) - 2.48360) <= 0.00001) &&
                 (fabs(myf1_1overz.getCoefficient( 1) - 2.03223) <= 0.00001) &&
@@ -67,6 +67,12 @@ int main(int argc, char**argv)
                 (fabs(myr3.getCoefficient(-1) + 13.1501) <= 0.0001) &&
                 (fabs(myr3.getCoefficient( 0) + 17.4714) <= 0.0001)
                 );
+    CounterForge myforge(CounterForge::Scheme::CDR);
+    ASSERT_TRUE(
+                myr3==myforge.fastr3(0.987654)
+                );
+    cout << myforge.fastPqq<1>(0.123456, 0.2) <<  endl;
+    cout << myforge.Pqq<1>(0.123456, 0.2) <<  endl;
 
 //    ::testing::InitGoogleTest(&argc, argv);
 //    return RUN_ALL_TESTS();

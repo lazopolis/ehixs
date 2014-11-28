@@ -127,6 +127,30 @@ public:
 
     /// @}
 
+    /// \brief Geometric series expansion
+    /// Expansion in Par of the function 1/(1 - a Par)
+    /// Type has to be double, int, complex<>, etc...
+    static Expansion<Par,Type> geometric(const Type& a, const size_t trunc = accuracy)
+    {
+        vector<Type> foo({1});
+        foo.reserve(trunc);
+        while (foo.size()<trunc)
+            foo.push_back(foo.back()*a);
+        return Expansion<Par,Type>(0,foo);
+    }
+
+    /// \brief Exponential series expansion
+    /// Expansion in Par of the function a^Par
+    /// Type has to be double, int, complex<>, etc...
+    static Expansion<Par,Type> exp(const Type& a, const size_t trunc = accuracy)
+    {
+        vector<Type> foo({1});
+        foo.reserve(trunc);
+        while (foo.size()<trunc)
+            foo.push_back(foo.back()*a/foo.size());
+        return Expansion<Par,Type>(0,foo);
+    }
+
     /// \name Data members
     /// @{
 

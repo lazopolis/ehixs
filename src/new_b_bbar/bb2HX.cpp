@@ -113,7 +113,7 @@ Expansion<Parameter::epsilon, double> bb2H<1>()
 /// \brief Shorthand for full epsilon expansion of bb->Hg
 
 template<>
-Expansion<Parameter::epsilon, double> bb2Hg<0>(const double& lambda, const double& z)
+Expansion<Parameter::epsilon, double> bb2Hg<0>(const double& z, const double& lambda)
 {
-    return Expansion<Parameter::epsilon, double>(0,{bb2Hg<0,0>(lambda,z),bb2Hg<0,1>(lambda,z)},true);
+    return Expansion<Parameter::epsilon, double>(0,{bb2Hg<0,0>(z,lambda),bb2Hg<0,1>(z,lambda)},true);
 }

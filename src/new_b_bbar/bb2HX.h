@@ -24,7 +24,7 @@ double bb2H();
 /// \brief Matrix elements for bb->Hg
 /// \note  These matrix elements are already multiplied by the (1-z) in the phase space
 template<size_t loop, int eps>
-double bb2Hg(const double& lambda, const double& z);
+double bb2Hg(const double& z, const double& lambda);
 
 /// \brief Shorthand for full epsilon expansion of bb->H
 template<size_t loop>
@@ -32,6 +32,6 @@ Expansion<Parameter::epsilon, double> bb2H();
 
 /// \brief Shorthand for full epsilon expansion of bb->Hg
 template<size_t loop>
-Expansion<Parameter::epsilon, double> bb2Hg(const double& lambda, const double& z);
+Expansion<Parameter::epsilon, double> bb2Hg(const double& z, const double& lambda);
 
 #endif
