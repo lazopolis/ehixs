@@ -91,6 +91,7 @@ int main(int argc, char** argv)
             cout<<"Total cross section"<<endl
             <<setw(6)<<"Total"<<cur_process->TotalCentral()<<endl
             <<endl<<endl;
+            cout<<cur_process->ScaleVariation()<<endl<<endl;
             
         }
         

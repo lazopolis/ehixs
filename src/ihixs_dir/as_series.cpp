@@ -53,7 +53,7 @@ AsSeries AsSeries::operator*(const ResultPair& that) const
 
 void AsSeries::MultiplyAs(const double& as_pi)
 {
-    cout<<__func__<<endl;
+    //cout<<__func__<<endl;
     for (int k=_starting_exponent;k<ending_exponent()+1;k++)
     {
         _terms[k-_starting_exponent] = _terms[k-_starting_exponent]*pow(as_pi,double(k));

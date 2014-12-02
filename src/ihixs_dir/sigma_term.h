@@ -30,17 +30,29 @@ class SigmaTerm{
 public:
     SigmaTerm(const string& thetype, const AsSeries& val,
               LuminosityIntegral* lumi_int)
-    :_type(thetype),_result(val),_lumi_int(lumi_int),_evaluated(false)
+    :_type(thetype),_result(val),_lumi_int(lumi_int),_evaluated(false),_excluded(false)
+    {};
+    SigmaTerm(const string& thetype, const AsSeries& val,
+              LuminosityIntegral* lumi_int,const string& str):SigmaTerm(thetype,val,lumi_int)
     {
+        if (str=="excluded")
+            _excluded = true;
+        else
+        {
+            cout<<"\n Sigma Term constructor with extra string that is not equal to <excluded>."
+            <<endl<<"I have to exit!"<<endl;
+            exit(0);
+        }
     }
+    
     
     void ConfigureLumi(NewLuminosity* lumi,const double& tau,const UserInterface& UI);
     void CallVegas();
     AsSeries ResultCentral(){return _result_central;}
+    AsSeries Result(const double & mur);
 
     void Truncate(int);
     ResultPair give(int i,const double& mur);
-    
     bool IsZero(int porder);
     
     void multiply(const double& c);
@@ -58,6 +70,7 @@ public:
     string type();
     bool Evaluated(){return _evaluated;}
     bool IsZero();
+    bool IsIncluded(){return not(_excluded);}
 private:
     string _type;//delta, plus, reg
     AsSeries _result;
@@ -66,6 +79,7 @@ private:
     vector<SavedResult> _saved_results;
     LuminosityIntegral* _lumi_int;
     bool _evaluated;
+    bool _excluded;
     double err_in_quadrature(const vector<double>& v);
 };
 

@@ -13,70 +13,8 @@ using namespace std;
 
 #include "higgs_eft.h"
 #include "luminosity_integrals.h"
-class Channel
-{
-public:
-    int size() const {return _terms.size();}
-    SigmaTerm* Term(int i) const {return _terms[i];}
-    void Truncate(int i);
-    AsSeries Sum();
-    ResultPair Result();
-    ResultPair CoeffAs(int m){return Sum().term_of_order(m);}
-    string Name(){return _name;}
-    friend ostream& operator<<(ostream& stream, const Channel& ch);
-protected:
-    vector<SigmaTerm*> _terms;
-    string _name;
-};
+#include "channel.h"
 
-class HiggsGGFChannelGG: public Channel
-{
-public:
-    HiggsGGFChannelGG(const double& L);
-};
-
-class HiggsGGFChannelQG: public Channel
-{
-public:
-    HiggsGGFChannelQG(const double& L);
-};
-
-class HiggsGGFChannelQQBAR: public Channel
-{
-public:
-    HiggsGGFChannelQQBAR(const double& L);
-};
-
-class HiggsGGFChannelQQ: public Channel
-{
-public:
-    HiggsGGFChannelQQ(const double& L);
-};
-
-class HiggsGGFChannelQ1Q2: public Channel
-{
-public:
-    HiggsGGFChannelQ1Q2(const double& L);
-};
-
-// exact channels
-class HiggsGGFChannelGGExactNLOReal: public Channel
-{
-public:
-    HiggsGGFChannelGGExactNLOReal(const double& L);
-};
-
-class HiggsGGFChannelGQExactNLOReal: public Channel
-{
-public:
-    HiggsGGFChannelGQExactNLOReal(const double& L);
-};
-
-class HiggsGGFChannelQQBARExactNLOReal: public Channel
-{
-public:
-    HiggsGGFChannelQQBARExactNLOReal(const double& L);
-};
 
 class InclusiveProcess
 {
@@ -89,6 +27,7 @@ public:
     double CoefficientAlphaSError(int i);
     ResultPair CoefficientAlphaSResult(int as_order);
     string ChannelBreakdown();
+    string ScaleVariation();
     ResultPair TotalCentral();
     friend ostream& operator<<(ostream&, const InclusiveProcess&);
 
@@ -111,6 +50,7 @@ private:
     double _log_mur_over_muf_sq;
     
     vector<Channel*> _channels;
+    vector<Channel*> _extra_channels;
    // vector<SigmaTerm*> _sigma;
 
     int _int_qcd_perturbative_order;
@@ -122,6 +62,8 @@ private:
     
     bool _is_enhanced_eft;
     double _exact_LO_coefficient;
+    double _exact_NLO_delta_gg;
+    bool _is_exact;
 
 };
 

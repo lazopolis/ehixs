@@ -76,7 +76,14 @@ void SigmaTerm::evolve_from_muf_to_mur(const double& L)
 
 ostream& operator<<(ostream& stream, const SigmaTerm& st)
 {
-    stream<<setw(22)<<st._type<<st._result_central<<endl;
+    
+    
+    stream<<setw(28)<<left<<st._type
+    <<"\t"<<st._result_central.term_of_order(2)
+    <<"\t"<<st._result_central.term_of_order(3)
+    <<"\t"<<st._result_central.term_of_order(4)
+    <<"\t"<<st._result_central.term_of_order(5)
+    <<endl;
     return stream;
 }
 
@@ -108,6 +115,19 @@ ResultPair SigmaTerm::give(int porder,const double& mur)
         if (_saved_results[i].IsMur(mur))
         {
             return _saved_results[i].Result().term_of_order(porder);
+        }
+    }
+    cout<<"Result pair corresponding to mur="<<mur<<" was not found"<<endl;
+    exit(0);
+}
+
+AsSeries SigmaTerm::Result(const double& mur)
+{
+    for (int i=0;i<_saved_results.size();i++)
+    {
+        if (_saved_results[i].IsMur(mur))
+        {
+            return _saved_results[i].Result();
         }
     }
     cout<<"Result pair corresponding to mur="<<mur<<" was not found"<<endl;

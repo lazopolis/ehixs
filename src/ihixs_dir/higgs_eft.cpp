@@ -465,6 +465,124 @@ namespace HEFT {
         
         return real(res)*pow(log(1.-z),3.);
     }
+// ------ n3LO gg regular: next-to-soft truncated implementation
+    double gg_n3lo_r_lz0_NS(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double z2 = consts::z2;
+        const double z3 = consts::z3;
+        const double z4 = consts::z4;
+        const double z5 = consts::z5;
+        const double nf = consts::nf;
+        double res = (834419*pow(Nc,3))/23328. + (51575*L*pow(Nc,3))/1296. + (3509*pow(L,2)*pow(Nc,3))/216. + (517*pow(L,3)*pow(Nc,3))/216. + (5065*nf)/1728. + (75*L*nf)/32. + (5*pow(L,2)*nf)/16. - (527831*pow(Nc,2)*nf)/46656. - (33335*L*pow(Nc,2)*nf)/2592. - (1889*pow(L,2)*pow(Nc,2)*nf)/432. - (29*pow(L,3)*pow(Nc,2)*nf)/54. + (49*Nc*pow(nf,2))/729. + (23*L*Nc*pow(nf,2))/81. + (4*pow(L,2)*Nc*pow(nf,2))/27. + (pow(L,3)*Nc*pow(nf,2))/54. - (11183*pow(Nc,3)*z2)/162. - (169*L*pow(Nc,3)*z2)/3. - (341*pow(L,2)*pow(Nc,3)*z2)/12. - 4*pow(L,3)*pow(Nc,3)*z2 - (5*nf*z2)/24. + (4579*pow(Nc,2)*nf*z2)/324. + (193*L*pow(Nc,2)*nf*z2)/18. + (7*pow(L,2)*pow(Nc,2)*nf*z2)/6. - (19*Nc*pow(nf,2)*z2)/36. - (2*L*Nc*pow(nf,2)*z2)/9. - (32849*pow(Nc,3)*z3)/216. - (1033*L*pow(Nc,3)*z3)/6. - 35*pow(L,2)*pow(Nc,3)*z3 - (149*nf*z3)/72. - (3*L*nf*z3)/2. + (1789*pow(Nc,2)*nf*z3)/72. + (55*L*pow(Nc,2)*nf*z3)/6. - (5*Nc*pow(nf,2)*z3)/27. + (725*pow(Nc,3)*z2*z3)/6. - (821*pow(Nc,3)*z4)/12. - (77*L*pow(Nc,3)*z4)/2. - (nf*z4)/4. + (19*pow(Nc,2)*nf*z4)/8. - 186*pow(Nc,3)*z5;
+        return res;
+    }
+
+    double gg_n3lo_r_lz1_NS(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double z2 = consts::z2;
+        const double z3 = consts::z3;
+        const double z4 = consts::z4;
+        const double nf = consts::nf;
+        double res = (-9547*pow(Nc,3))/108. - (2239*L*pow(Nc,3))/24. - (439*pow(L,2)*pow(Nc,3))/12. - (23*pow(L,3)*pow(Nc,3))/3. - (17*nf)/4. - (3*L*nf)/4. + (8071*pow(Nc,2)*nf)/324. + (4295*L*pow(Nc,2)*nf)/216. + (61*pow(L,2)*pow(Nc,2)*nf)/9. + (2*pow(L,3)*pow(Nc,2)*nf)/3. - (163*Nc*pow(nf,2))/324. - (61*L*Nc*pow(nf,2))/108. - (pow(L,2)*Nc*pow(nf,2))/9. + (2375*pow(Nc,3)*z2)/18. + (479*L*pow(Nc,3)*z2)/3. + 36*pow(L,2)*pow(Nc,3)*z2 + (nf*z2)/24. - (1813*pow(Nc,2)*nf*z2)/72. - (26*L*pow(Nc,2)*nf*z2)/3. + (4*Nc*pow(nf,2)*z2)/9. + 362*pow(Nc,3)*z3 + 180*L*pow(Nc,3)*z3 + 3*nf*z3 - (223*pow(Nc,2)*nf*z3)/12. + 77*pow(Nc,3)*z4;
+        return res*log(1.-z);
+    }
+    
+    double gg_n3lo_r_lz2_NS(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double z2 = consts::z2;
+        const double z3 = consts::z3;
+        const double nf = consts::nf;
+        double res = (2711*pow(Nc,3))/27. + (3395*L*pow(Nc,3))/36. + (89*pow(L,2)*pow(Nc,3))/2. + 4*pow(L,3)*pow(Nc,3) + nf/4. - (4139*pow(Nc,2)*nf)/216. - (151*L*pow(Nc,2)*nf)/9. - 3*pow(L,2)*pow(Nc,2)*nf + (59*Nc*pow(nf,2))/108. + (2*L*Nc*pow(nf,2))/9. - (2147*pow(Nc,3)*z2)/12. - 84*L*pow(Nc,3)*z2 + (545*pow(Nc,2)*nf*z2)/48. - 181*pow(Nc,3)*z3;
+        return res*pow(log(1.-z),2);
+    }
+    
+    double gg_n3lo_r_lz3_NS(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double nf = consts::nf;
+        const double z2 = consts::z2;
+        double res = (-3469*pow(Nc,3))/54. - (679*L*pow(Nc,3))/9. - 16*pow(L,2)*pow(Nc,3) + (205*pow(Nc,2)*nf)/18. + (40*L*pow(Nc,2)*nf)/9. - (4*Nc*pow(nf,2))/27. + 56*pow(Nc,3)*z2;
+        return res*pow(log(1.-z),3);
+    }
+    
+    double gg_n3lo_r_lz4_NS(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double nf = consts::nf;
+        double res = (353*pow(Nc,3))/9. + 20*L*pow(Nc,3) - (20*pow(Nc,2)*nf)/9.;
+        return res*pow(log(1.-z),4);
+    }
+    
+    double gg_n3lo_r_lz5_NS(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        double res = -8*pow(Nc,3);
+        return res*pow(log(1.-z),5);
+    }
+    
+// ------
+    // only up to next to soft coefficient
+    // calling the NS trucated version
+    double gg_n3lo_r_lz0(const double& z, const double& L)
+    {
+        return gg_n3lo_r_lz0_NS(z,L);
+    }
+    // only up to next to soft coefficient
+    // calling the NS trucated version
+    double gg_n3lo_r_lz1(const double& z, const double& L)
+    {
+        return gg_n3lo_r_lz1_NS(z,L);
+    }
+
+    // only up to next to soft coefficient
+    // calling the NS trucated version
+    double gg_n3lo_r_lz2(const double& z, const double& L)
+    {
+
+        return gg_n3lo_r_lz2_NS(z,L);
+    }
+    
+    
+    // the full log(1-z)^3 implemented
+    double gg_n3lo_r_lz3(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double nf = consts::nf;
+        const double z2 = consts::z2;
+        complex<double> res=(Nc*pow(nf,2)*(292 - 309*z + 117*pow(z,2) - 292*pow(z,3)))/(1296.*z) + (25*pow(nf,2)*(-4 - 3*z + 3*pow(z,2) + 4*pow(z,3)))/(1296.*Nc*z) - (pow(Nc,3)*(-19980 + 1120*z + 1841*pow(z,2) + 721*pow(z,3) + 19980*pow(z,4) + 2808*z2 + 3456*z*z2 + 10152*pow(z,2)*z2 + 6480*pow(z,3)*z2 - 3240*pow(z,4)*z2 - 432*pow(1 + z + pow(z,2),2)*HPL(-1,z)*HPL(0,z) + 6912*z*pow(1 + z,2)*HPL(0,z)*HPL(1,z) + 432*HPL(0,-1,z) + 864*z*HPL(0,-1,z) + 1296*pow(z,2)*HPL(0,-1,z) + 864*pow(z,3)*HPL(0,-1,z) + 432*pow(z,4)*HPL(0,-1,z) - 6912*z*HPL(0,1,z) - 13824*pow(z,2)*HPL(0,1,z) - 6912*pow(z,3)*HPL(0,1,z)))/(54.*z*(1 + z)) + nf*((-5865 + 14900/z + 8457*z - 17492*pow(z,2) - 10368*(1 + z)*z2)/1296. - 8*(1 + z)*HPL(0,z)*HPL(1,z) + 8*(1 + z)*HPL(0,1,z)) + (pow(Nc,2)*nf*(-160268 + 172203*z - 149895*pow(z,2) + 168584*pow(z,3) + 35352*z*z2 + 35352*pow(z,2)*z2 + 35352*z*(1 + z)*HPL(0,z)*HPL(1,z) - 35352*z*(1 + z)*HPL(0,1,z)))/(5184.*z) + (nf*(-1644 - 2861*z + 2177*pow(z,2) + 2328*pow(z,3) + 2040*z*z2 + 2040*pow(z,2)*z2 + 2040*z*(1 + z)*HPL(0,z)*HPL(1,z) - 2040*z*(1 + z)*HPL(0,1,z)))/(1728.*pow(Nc,2)*z) + ((-25*pow(nf,2)*(1 + z))/(216.*Nc) + (25*Nc*pow(nf,2)*(1 + z))/216. + (nf*(-1.28125 - 23/(72.*z) - (8*z)/9. + (85*pow(z,2))/108.))/pow(Nc,2) + (nf*(1820 + 2903*z + 1229*pow(z,2) - 1564*pow(z,3)))/(432.*z) + (pow(Nc,3)*(4477 - 7514*z + 11190*pow(z,2) - 13598*pow(z,3) + 6259*pow(z,4)))/(27*z - 27*pow(z,2)) + (pow(Nc,2)*nf*(8100 - 2377*z + 11199*pow(z,2) - 19370*pow(z,3) + 7184*pow(z,4)))/(864.*(-1 + z)*z))*log(z) + ((pow(Nc,2)*nf*(-31 - 211*z))/36. - (37*nf*(1 + z))/(72.*pow(Nc,2)) + (nf*(11 + 51*z))/8. + (pow(Nc,3)*(28 + 6*z + 98*pow(z,2) - 6*pow(z,3) - 98*pow(z,4) + 32*pow(z,5)))/(z - pow(z,3)))*pow(log(z),2);
+        
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        
+        return real(res)*pow(log(1.-z),3.);
+    }
+    
+    // the full log(1-z)^4 implemented
+    double gg_n3lo_r_lz4(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        const double nf = consts::nf;
+
+        complex<double> res=nf*(-1 - 4/(3.*z) + z + (4*pow(z,2))/3.) + (pow(Nc,2)*nf*(5804 - 6207*z + 2367*pow(z,2) - 5804*pow(z,3)))/(1728.*z) - (85*nf*(-4 - 3*z + 3*pow(z,2) + 4*pow(z,3)))/(1728.*pow(Nc,2)*z) + (pow(Nc,3)*(-671 + 751*z - 641*pow(z,2) + 671*pow(z,3)))/(9.*z) + (-2*nf*(1 + z) + (85*nf*(1 + z))/(288.*pow(Nc,2)) + (491*pow(Nc,2)*nf*(1 + z))/288. + (pow(Nc,3)*(27 - 22*z + 81*pow(z,2) - 86*pow(z,3) + 27*pow(z,4)))/((-1 + z)*z))*log(z);
+        
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        
+        return real(res)*pow(log(1.-z),4.);
+    }
+    
+    // the full log(1-z)^5 term implemented
+    double gg_n3lo_r_lz5(const double& z, const double& L)
+    {
+        const double Nc=3.;
+        complex<double> res=8*pow(Nc,3)*(-2 + 1/z + z - pow(z,2));
+        
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        
+        return real(res)*pow(log(1.-z),5.);
+    }
+    
 
     
     double qg_nnlo_r_lz0(const double& z, const double& L)
@@ -556,6 +674,129 @@ namespace HEFT {
     
     double qg_n3lo_r_lz0(const double& z, const double& L)
     {
+        // NS approximation only
+        return qg_n3lo_r_lz0_NS(z,L);
+    }
+    
+    double qg_n3lo_r_lz1(const double& z, const double& L)
+    {
+        // NS approximation only
+        return qg_n3lo_r_lz1_NS(z,L);
+    }
+    
+    double qg_n3lo_r_lz2(const double& z, const double& L)
+    {
+        // NS approximation only
+        return qg_n3lo_r_lz2_NS(z,L);
+    }
+    
+    double qg_n3lo_r_lz3(const double& z, const double& L)
+    {
+        const double nf = consts::nf;
+        const double Nc = QCD::Nc;
+        const double z2 = consts::z2;
+        complex<double> res =
+        (nf*(15506 - 22755*z + 10707*pow(z,2) - 1292*pow(z,3)))/(2592.*z) + (nf*(-8414 + 16391*z - 9403*pow(z,2) + 768*pow(z,3)))/(5184.*pow(Nc,2)*z) + (pow(Nc,2)*nf*(-22598 + 29119*z - 12011*pow(z,2) + 1816*pow(z,3)))/(5184.*z) - (pow(Nc,3)*(-3958688 + 3718820*z - 321247*pow(z,2) + 394212*pow(z,3) + 702000*z2 + 930456*z*z2 + 826308*pow(z,2)*z2 - 36000*(2 + 2*z + pow(z,2))*HPL(-1,z)*HPL(0,z) + 108*(3112 + 12670*z + 5957*pow(z,2))*HPL(0,z)*HPL(1,z) + 72000*HPL(0,-1,z) + 72000*z*HPL(0,-1,z) + 36000*pow(z,2)*HPL(0,-1,z) - 336096*HPL(0,1,z) - 1368360*z*HPL(0,1,z) - 643356*pow(z,2)*HPL(0,1,z)))/(41472.*z) + (-10424 + 21360*z - 10401*pow(z,2) + 1364*pow(z,3) + 4272*z2 - 10056*z*z2 + 5028*pow(z,2)*z2 + 12*(-416 - 66*z + 33*pow(z,2))*HPL(0,z)*HPL(1,z) + (4992 + 792*z - 396*pow(z,2))*HPL(0,1,z))/(13824.*pow(Nc,3)*z) + Nc*((7*pow(nf,2)*(2 - 2*z + pow(z,2)))/(864.*z) + (-4654168 + 4354944*z - 360957*pow(z,2) + 487108*pow(z,3) + 858096*z2 + 901080*z*z2 + 1000980*pow(z,2)*z2 - 41472*(2 + 2*z + pow(z,2))*HPL(-1,z)*HPL(0,z) + 36*(9632 + 41538*z + 20703*pow(z,2))*HPL(0,z)*HPL(1,z) + 82944*HPL(0,-1,z) + 82944*z*HPL(0,-1,z) + 41472*pow(z,2)*HPL(0,-1,z) - 346752*HPL(0,1,z) - 1495368*z*HPL(0,1,z) - 745308*pow(z,2)*HPL(0,1,z))/(41472.*z)) + ((-7*pow(nf,2)*(2 - 2*z + pow(z,2)))/(864.*z) - (-726752 + 700204*z - 70913*pow(z,2) + 96988*pow(z,3) + 168912*z2 - 59544*z*z2 + 189756*pow(z,2)*z2 - 5472*(2 + 2*z + pow(z,2))*HPL(-1,z)*HPL(0,z) + 108*(-40 + 1154*z + 955*pow(z,2))*HPL(0,z)*HPL(1,z) + 10944*HPL(0,-1,z) + 10944*z*HPL(0,-1,z) + 5472*pow(z,2)*HPL(0,-1,z) + 4320*HPL(0,1,z) - 124632*z*HPL(0,1,z) - 103140*pow(z,2)*HPL(0,1,z))/(41472.*z))/Nc + ((nf*(-42 + 901/z - 18*z))/432. - (pow(Nc,2)*nf*(2536 + 230*z + 593*pow(z,2)))/(1728.*z) + (nf*(-1068 + 398*z + 665*pow(z,2)))/(1728.*pow(Nc,2)*z) + (pow(Nc,3)*(315012 - 131476*z + 17807*pow(z,2) - 42712*pow(z,3)))/(6912.*z) + (56220 - 49556*z + 55561*pow(z,2) - 3528*pow(z,3))/(6912.*Nc*z) - (972 - 2876*z + 1813*pow(z,2) + 88*pow(z,3))/(2304.*pow(Nc,3)*z) + (Nc*(-368316 + 172404*z - 67929*pow(z,2) + 46504*pow(z,3)))/(6912.*z))*log(z) + ((Nc*(-1390 - 7512/z - 10009*z))/768. + (nf*(2 - z))/(6.*pow(Nc,2)) + (pow(Nc,2)*nf*(2 - z))/6. + (nf*(-2 + z))/3. - (24 - 74*z + 37*pow(z,2))/(256.*pow(Nc,3)*z) + (3144 - 1298*z + 4337*pow(z,2))/(2304.*Nc*z) + (pow(Nc,3)*(19608 + 4802*z + 26023*pow(z,2)))/(2304.*z))*pow(log(z),2)
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),3.);
+    }
+    
+    double qg_n3lo_r_lz4(const double& z, const double& L)
+    {
+        const double nf = consts::nf;
+        const double Nc = QCD::Nc;
+        
+        complex<double> res =
+        (Nc*(-168484 + 186548/z + 8459*z - 18432*pow(z,2)))/9216. - (11*nf*(2 - 2*z + pow(z,2)))/(72.*z) + (253*nf*(2 - 2*z + pow(z,2)))/(6912.*pow(Nc,2)*z) + (803*pow(Nc,2)*nf*(2 - 2*z + pow(z,2)))/(6912.*z) + (2892 - 4828*z + 2165*pow(z,2))/(9216.*pow(Nc,3)*z) + (-113308 + 131936*z - 40561*pow(z,2) + 6128*pow(z,3))/(27648.*Nc*z) + (pow(Nc,3)*(-455012 + 388000*z + 8689*pow(z,2) + 49168*pow(z,3)))/(27648.*z) + ((pow(Nc,3)*(-4726 - 11056/z - 9929*z))/1536. + (1270 - 2384/z - 2167*z)/(1536.*Nc) + (-1130 + 648/z + 565*z)/(4608.*pow(Nc,3)) + (Nc*(11498 + 39672/z + 35723*z))/4608.)*log(z)
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),4.);
+    }
+    
+    
+    // the full log(1-z)^5 term implemented
+    double qg_n3lo_r_lz5(const double& z, const double& L)
+    {
+        const double Nc = QCD::Nc;
+
+        complex<double> res =
+    (-9*(2 - 2*z + pow(z,2)))/(256.*pow(Nc,3)*z) + (181*(2 - 2*z + pow(z,2)))/(768.*Nc*z) - (247*Nc*(2 - 2*z + pow(z,2)))/(256.*z) + (587*pow(Nc,3)*(2 - 2*z + pow(z,2)))/(768.*z)
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),5.);
+    }
+    
+    
+    
+    
+    //---- Next to soft approximation (i.e. constants only in front of logs)
+    double qg_n3lo_r_lz5_NS(const double& z, const double& L)
+    {
+        const double Nc = QCD::Nc;
+        
+        complex<double> res =
+        (-27 + 181*pow(Nc,2) - 741*pow(Nc,4) + 587*pow(Nc,6))/(768.*pow(Nc,3))
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),5.);
+    }
+    
+    double qg_n3lo_r_lz4_NS(const double& z, const double& L)
+    {
+        const double nf = consts::nf;
+        const double Nc = QCD::Nc;
+        
+        complex<double> res =
+        -((-1 + pow(Nc,2))*(687 - 15118*pow(Nc,2) + 9155*pow(Nc,4) + 72*L*(27 - 194*pow(Nc,2) + 739*pow(Nc,4)) + 1012*Nc*nf - 3212*pow(Nc,3)*nf))/(27648.*pow(Nc,3))
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),4.);
+    }
+    
+    double qg_n3lo_r_lz3_NS(const double& z, const double& L)
+    {
+        const double nf = consts::nf;
+        const double Nc = QCD::Nc;
+        const double Z2 = consts::z2;
+        complex<double> res =
+        ((-1 + pow(Nc,2))*(648*pow(L,2)*(3 - 26*pow(Nc,2) + 99*pow(Nc,4)) + 5264*Nc*nf - 29392*pow(Nc,3)*nf + 72*L*Nc*(-473*Nc + 639*pow(Nc,3) + 50*nf - 198*pow(Nc,2)*nf) + pow(Nc,4)*(166903 - 200952*Z2) - 3*(1899 + 4632*Z2) + 2*pow(Nc,2)*(-3085 + 168*pow(nf,2) + 37728*Z2)))/(41472.*pow(Nc,3))
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),3.);
+    }
+    
+    double qg_n3lo_r_lz2_NS(const double& z, const double& L)
+    {
+        const double nf = consts::nf;
+        const double Nc = QCD::Nc;
+        const double Z2 = consts::z2;
+        const double Z3 = consts::z3;
+        complex<double> res =
+        ((-1 + pow(Nc,2))*(-432*pow(L,3)*(1 - 10*pow(Nc,2) + 37*pow(Nc,4)) - 54*pow(L,2)*(-27 - 214*pow(Nc,2) + 1045*pow(Nc,4) + 52*Nc*nf - 268*pow(Nc,3)*nf) + 4*pow(Nc,3)*nf*(6427 - 6660*Z2) + 4*Nc*nf*(-1313 + 1836*Z2) + 36*L*(243 - 198*Nc*nf + 1382*pow(Nc,3)*nf + 504*Z2 - 3*pow(Nc,2)*(57 + 8*pow(nf,2) + 1056*Z2) + 2*pow(Nc,4)*(-3733 + 4212*Z2)) + 9*(435 + 1392*Z2 + 2472*Z3) - 2*pow(Nc,2)*(-9001 + 528*pow(nf,2) + 52164*Z2 + 93636*Z3) + pow(Nc,4)*(-120073 + 124488*Z2 + 728784*Z3)))/(41472.*pow(Nc,3))
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*pow(log(1.-z),2.);
+    }
+    
+    double qg_n3lo_r_lz1_NS(const double& z, const double& L)
+    {
+        const double nf = consts::nf;
+        const double Nc = QCD::Nc;
+        const double Z2 = consts::z2;
+        const double Z3 = consts::z3;
+        const double Z4 = consts::z4;
+        complex<double> res =
+        -((-1 + pow(Nc,2))*(-2160*pow(L,3)*(-9 - pow(Nc,2) + 296*pow(Nc,4) + 10*Nc*nf - 62*pow(Nc,3)*nf) + 3240*pow(L,2)*(27 - 14*Nc*nf + 206*pow(Nc,3)*nf + 60*Z2 - pow(Nc,2)*(103 + 8*pow(nf,2) + 432*Z2) + pow(Nc,4)*(-954 + 1236*Z2)) + 20*Nc*nf*(-20051 + 34632*Z2 + 41040*Z3) - 20*pow(Nc,3)*nf*(-157411 + 33480*Z2 + 54000*Z3) + 360*L*(-8*pow(Nc,3)*nf*(-571 + 180*Z2) + 4*Nc*nf*(-19 + 234*Z2) + 27*(6*Z2 + 72*Z3) - pow(Nc,2)*(2144 + 240*pow(nf,2) + 8658*Z2 + 15228*Z3) + 2*pow(Nc,4)*(-6874 + 2826*Z2 + 30294*Z3)) - 9*(19395 + 89640*Z2 - 93600*Z3 + 32760*Z4) - 4*pow(Nc,2)*(469775 + 20880*pow(nf,2) + 835200*Z2 + 1258200*Z3 + 245430*Z4) + pow(Nc,4)*(-8205065 + 4055400*Z2 + 4890240*Z3 + 11288160*Z4)))/(1.24416e6*pow(Nc,3))
+        ;
+        check_imaginary_part(res,__PRETTY_FUNCTION__);
+        return real(res)*log(1.-z);
+    }
+    
+   
+    
+    double qg_n3lo_r_lz0_NS(const double& z, const double& L)
+    {
         const double nf = consts::nf;
         const double Nc = QCD::Nc;
         const double Z2 = consts::z2;
@@ -570,67 +811,7 @@ namespace HEFT {
         return real(res);
     }
     
-    double qg_n3lo_r_lz1(const double& z, const double& L)
-    {
-        const double nf = consts::nf;
-        const double Nc = QCD::Nc;
-        const double Z2 = consts::z2;
-        const double Z3 = consts::z3;
-        const double Z4 = consts::z4;
-        complex<double> res =
-        -((-1 + pow(Nc,2))*(-2160*pow(L,3)*(-9 - pow(Nc,2) + 296*pow(Nc,4) + 10*Nc*nf - 62*pow(Nc,3)*nf) + 3240*pow(L,2)*(27 - 14*Nc*nf + 206*pow(Nc,3)*nf + 60*Z2 - pow(Nc,2)*(103 + 8*pow(nf,2) + 432*Z2) + pow(Nc,4)*(-954 + 1236*Z2)) + 20*Nc*nf*(-20051 + 34632*Z2 + 41040*Z3) - 20*pow(Nc,3)*nf*(-157411 + 33480*Z2 + 54000*Z3) + 360*L*(-8*pow(Nc,3)*nf*(-571 + 180*Z2) + 4*Nc*nf*(-19 + 234*Z2) + 27*(6*Z2 + 72*Z3) - pow(Nc,2)*(2144 + 240*pow(nf,2) + 8658*Z2 + 15228*Z3) + 2*pow(Nc,4)*(-6874 + 2826*Z2 + 30294*Z3)) - 9*(19395 + 89640*Z2 - 93600*Z3 + 32760*Z4) - 4*pow(Nc,2)*(469775 + 20880*pow(nf,2) + 835200*Z2 + 1258200*Z3 + 245430*Z4) + pow(Nc,4)*(-8205065 + 4055400*Z2 + 4890240*Z3 + 11288160*Z4)))/(1.24416e6*pow(Nc,3))
-        ;
-        check_imaginary_part(res,__PRETTY_FUNCTION__);
-        return real(res)*log(1.-z);
-    }
     
-    double qg_n3lo_r_lz2(const double& z, const double& L)
-    {
-        const double nf = consts::nf;
-        const double Nc = QCD::Nc;
-        const double Z2 = consts::z2;
-        const double Z3 = consts::z3;
-        complex<double> res =
-        ((-1 + pow(Nc,2))*(-432*pow(L,3)*(1 - 10*pow(Nc,2) + 37*pow(Nc,4)) - 54*pow(L,2)*(-27 - 214*pow(Nc,2) + 1045*pow(Nc,4) + 52*Nc*nf - 268*pow(Nc,3)*nf) + 4*pow(Nc,3)*nf*(6427 - 6660*Z2) + 4*Nc*nf*(-1313 + 1836*Z2) + 36*L*(243 - 198*Nc*nf + 1382*pow(Nc,3)*nf + 504*Z2 - 3*pow(Nc,2)*(57 + 8*pow(nf,2) + 1056*Z2) + 2*pow(Nc,4)*(-3733 + 4212*Z2)) + 9*(435 + 1392*Z2 + 2472*Z3) - 2*pow(Nc,2)*(-9001 + 528*pow(nf,2) + 52164*Z2 + 93636*Z3) + pow(Nc,4)*(-120073 + 124488*Z2 + 728784*Z3)))/(41472.*pow(Nc,3))
-        ;
-        check_imaginary_part(res,__PRETTY_FUNCTION__);
-        return real(res)*pow(log(1.-z),2.);
-    }
-    
-    double qg_n3lo_r_lz3(const double& z, const double& L)
-    {
-        const double nf = consts::nf;
-        const double Nc = QCD::Nc;
-        const double Z2 = consts::z2;
-        complex<double> res =
-        ((-1 + pow(Nc,2))*(648*pow(L,2)*(3 - 26*pow(Nc,2) + 99*pow(Nc,4)) + 5264*Nc*nf - 29392*pow(Nc,3)*nf + 72*L*Nc*(-473*Nc + 639*pow(Nc,3) + 50*nf - 198*pow(Nc,2)*nf) + pow(Nc,4)*(166903 - 200952*Z2) - 3*(1899 + 4632*Z2) + 2*pow(Nc,2)*(-3085 + 168*pow(nf,2) + 37728*Z2)))/(41472.*pow(Nc,3))
-        ;
-        check_imaginary_part(res,__PRETTY_FUNCTION__);
-        return real(res)*pow(log(1.-z),3.);
-    }
-    
-    double qg_n3lo_r_lz4(const double& z, const double& L)
-    {
-        const double nf = consts::nf;
-        const double Nc = QCD::Nc;
-        
-        complex<double> res =
-        -((-1 + pow(Nc,2))*(687 - 15118*pow(Nc,2) + 9155*pow(Nc,4) + 72*L*(27 - 194*pow(Nc,2) + 739*pow(Nc,4)) + 1012*Nc*nf - 3212*pow(Nc,3)*nf))/(27648.*pow(Nc,3))
-        ;
-        check_imaginary_part(res,__PRETTY_FUNCTION__);
-        return real(res)*pow(log(1.-z),4.);
-    }
-    
-    double qg_n3lo_r_lz5(const double& z, const double& L)
-    {
-        const double Nc = QCD::Nc;
-        
-        complex<double> res =
-        (-27 + 181*pow(Nc,2) - 741*pow(Nc,4) + 587*pow(Nc,6))/(768.*pow(Nc,3))
-        ;
-        check_imaginary_part(res,__PRETTY_FUNCTION__);
-        return real(res)*pow(log(1.-z),5.);
-    }
     
     
     double qqb_nnlo_r_lz0(const double& z, const double& L)

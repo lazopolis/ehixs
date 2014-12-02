@@ -6,7 +6,7 @@ using namespace std;
 
 ostream& operator<<(ostream& stream, const ResultPair& rs)
 {
-    stream<<setw(11)<<setprecision(6)<<right<<rs.val()
+    stream<<setw(11)<<setprecision(3)<<right<<fixed<<rs.val()
     <<scientific<<setprecision(0)<<left<<"["<<rs.err()<<"] "
     <<setprecision(16)<<fixed;
     return stream;

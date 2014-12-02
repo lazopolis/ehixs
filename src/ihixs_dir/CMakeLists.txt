@@ -6,6 +6,7 @@ add_library(ihixs_lib
                 sigma_term.cpp
                 as_series.cpp
                 result_pair.cpp
+                channel.cpp
                 )
                 
 
