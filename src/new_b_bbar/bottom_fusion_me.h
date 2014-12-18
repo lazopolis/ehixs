@@ -119,15 +119,17 @@ class BottomFusion_bb_NLO_hard : public BottomFusion_bb<1>
 
 public:
 
-
     BottomFusion_bb_NLO_hard(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_hard>::_info)
     {
         _prefactor *= 4. * consts::Pi /*alphas*/;
+        test();
         return;
     }
 
     void generateEvents(vector<double>& randoms);
+
+    static bool test();
 
 };
 
@@ -142,7 +144,6 @@ class BottomFusion_bb_NNLO_RV : public BottomFusion_bb<1>
 {
 
 public:
-
 
     BottomFusion_bb_NNLO_RV(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NNLO_RV>::_info),
@@ -164,13 +165,19 @@ public:
 
     CounterForge* CounterTerm;
 
+    static bool test(void);
+
 private:
 
-    double coll(const double& z, const double& lambda);
+    double fastcoll(const double& z, const double& lambda);
+
+    static double coll(const double& z, const double& lambda);
 
     static double soft(const double& z, const double& lambda);
 
     static double softcoll(const double& z, const double& lambda);
+
+    static double explicitcoll(const double& z, const double& lambda);
 
 };
 

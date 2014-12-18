@@ -62,7 +62,7 @@ public:
 
     /// Quark-quark splitting function, already multiplied by 1-z
     template <size_t loop>
-    static Expansion<Parameter::epsilon, double> Pqq(const double& z, const double& lambda);
+    static Expansion<Parameter::epsilon, double> Pqq(const double& z);
 
     /// Kosower's auxiliary factor r3
     static Expansion<Parameter::epsilon, double> r3(const double& z, const size_t trunc = acc);
@@ -81,7 +81,7 @@ public:
 
     /// Quark-quark splitting function, already multiplied by 1-z, faster member implementation
     template <size_t loop>
-    Expansion<Parameter::epsilon, double> fastPqq(const double& z, const double& lambda);
+    Expansion<Parameter::epsilon, double> fastPqq(const double& z);
 
     /// Kosower's auxiliary factor r3
     Expansion<Parameter::epsilon, double> fastr3(const double& z);
@@ -89,6 +89,10 @@ public:
     /// Epsilon series of the soft current
     template <size_t loop>
     static Expansion<Parameter::epsilon, double> soft(const double&z, const double& lambda, const size_t trunc = acc);
+
+    /// Epsilon series of the soft-collinear limit
+    template <size_t loop>
+    static Expansion<Parameter::epsilon, double> softcoll(const double&z, const double& lambda, const size_t trunc = acc);
 
     /// @}
 

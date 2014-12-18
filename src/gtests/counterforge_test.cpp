@@ -71,8 +71,8 @@ int main(int argc, char**argv)
     ASSERT_TRUE(
                 myr3==myforge.fastr3(0.987654)
                 );
-    cout << myforge.fastPqq<1>(0.123456, 0.2) <<  endl;
-    cout << myforge.Pqq<1>(0.123456, 0.2) <<  endl;
+    cout << myforge.fastPqq<1>(0.123456) <<  endl;
+    cout << myforge.Pqq<1>(0.123456) <<  endl;
 
 //    ::testing::InitGoogleTest(&argc, argv);
 //    return RUN_ALL_TESTS();

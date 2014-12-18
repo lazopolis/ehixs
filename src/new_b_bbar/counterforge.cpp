@@ -52,28 +52,27 @@ const Expansion<Parameter::epsilon, double> CounterForge::cotan = Expansion<Para
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::_Pqq<0>(const double& z)
 {
-    return Expansion<Parameter::epsilon, double>(0,{(1.+z*z)/(1.-z),z-1.},true);
+    return _2CF*Expansion<Parameter::epsilon, double>(0,{(1.+z*z)/(1.-z),z-1.},true);
 }
 
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::_Pqq<1>(const double& z)
 {
-    return Expansion<Parameter::epsilon, double>(0,{(1.+z)/(1.-z)},true);
+    return _2CF*Expansion<Parameter::epsilon, double>(0,{(1.+z)/(1.-z)},true);
 }
 
 /// \fn Pqq
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z, const double& lambda)
+Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z)
 {
-    const double foo = _2CF/lambda;
-    return foo*_Pqq<0>(z);
+    return _Pqq<0>(z);
 }
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z, const double& lambda)
+Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z)
 {
-    return _2CF*(r3(z)*_Pqq<0>(z)+r4()*_Pqq<1>(z))/lambda;
+    return r3(z)*_Pqq<0>(z)+r4()*_Pqq<1>(z);
 }
 
 /// \fn    _2F1
@@ -111,20 +110,34 @@ Expansion<Parameter::epsilon, double> CounterForge::r4(const Scheme& s, const si
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::soft<0>(const double& z, const double& lambda, const size_t trunc)
 {
-    return Expansion<Parameter::epsilon, double>(0,2.*QCD::CF/((1.-z)*lambda*(1.-lambda)),true);
+    return Expansion<Parameter::epsilon, double>(0,4.*QCD::CF/((1.-z)*lambda*(1.-lambda)),true);
 }
 
 /// Soft current at one loop
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::soft<1>(const double& z, const double& lambda, const size_t trunc)
 {
-    return cGamma*Expansion<Parameter::epsilon, double>(-2,QCD::CA*QCD::CF,true)*cotan*
+    return cGamma*Expansion<Parameter::epsilon, double>(-2,8.*QCD::CA*QCD::CF,true)*cotan/((1.-z)*lambda*(1.-lambda))*
     Expansion<Parameter::epsilon, double>::exp(-log(lambda))*
     Expansion<Parameter::epsilon, double>::exp(-log(1.-lambda))*
     Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z));
 }
 
+/// Soft-collinear current at tree level
+template<>
+Expansion<Parameter::epsilon, double> CounterForge::softcoll<0>(const double& z, const double& lambda, const size_t trunc)
+{
+    return Expansion<Parameter::epsilon, double>(0,4.*QCD::CF/((1.-z)*lambda),true);
+}
 
+/// Soft-collinear current at one loop
+template<>
+Expansion<Parameter::epsilon, double> CounterForge::softcoll<1>(const double& z, const double& lambda, const size_t trunc)
+{
+    return cGamma*Expansion<Parameter::epsilon, double>(-2,8.*QCD::CA*QCD::CF,true)*cotan/((1.-z)*lambda)*
+    Expansion<Parameter::epsilon, double>::exp(-log(lambda))*
+    Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z));
+}
 
 /// \fn    f1_1overz
 Expansion<Parameter::epsilon, double> CounterForge::f1_1overz(const double& z, const size_t trunc)
@@ -150,15 +163,15 @@ Expansion<Parameter::epsilon, double> CounterForge::f2()
 /// \fn fastPqq
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::fastPqq<0>(const double& z, const double& lambda)
+Expansion<Parameter::epsilon, double> CounterForge::fastPqq<0>(const double& z)
 {
-    return Pqq<0>(z, lambda);
+    return Pqq<0>(z);
 }
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::fastPqq<1>(const double& z, const double& lambda)
+Expansion<Parameter::epsilon, double> CounterForge::fastPqq<1>(const double& z)
 {
-    return _2CF*(fastr3(z)*_Pqq<0>(z)+_r4*_Pqq<1>(z))/lambda;
+    return fastr3(z)*_Pqq<0>(z)+_r4*_Pqq<1>(z);
 }
 
 Expansion<Parameter::epsilon, double> CounterForge::fastr3(const double& z)

@@ -15,7 +15,7 @@
 template<>
 double bb2H<0,0>()
 {
-    return 2.*QCD::Nc*yukawa_bottom*yukawa_bottom;
+    return 2.*QCD::Nc*yukawa_bottom*yukawa_bottom/* *MH */;
 }
 
 /// End of tree
@@ -25,8 +25,7 @@ double bb2H<0,0>()
 template<>
 double bb2H<1,-2>()
 {
-    return -2.*QCD::CF * alphastrong * bb2H<0,0>() *
-        1.;
+    return -QCD::CF * alphas_pi * bb2H<0,0>(); //Was *2
 }
 
 template<>
@@ -38,8 +37,7 @@ double bb2H<1,-1>()
 template<>
 double bb2H<1,0>()
 {
-    return 2.*QCD::CF * alphastrong * bb2H<0,0>() *
-        (0.5*consts::pi_square-1.);
+    return QCD::CF * alphas_pi * bb2H<0,0>() * (0.5*consts::pi_square-1.); //Was *2
 }
 
 /// \brief Matrix elements for bb->Hg
@@ -49,14 +47,14 @@ double bb2H<1,0>()
 template<>
 double bb2Hg<0,0>(const double& z, const double& lambda)
 {
-    return 2.*static_cast<double>(QCD::CF) * alphastrong * bb2H<0,0>() *
+    return 2.*static_cast<double>(QCD::CF) * alphas_pi * bb2H<0,0>() *
         (1.+z*z)/((1.-z)*lambda*(1.-lambda));
 }
 
 template<>
 double bb2Hg<0,1>(const double& z, const double& lambda)
 {
-    return -2.*static_cast<double>(QCD::CF) * alphastrong * bb2H<0,0>() *
+    return -2.*static_cast<double>(QCD::CF) * alphas_pi * bb2H<0,0>() *
         (1.-z)/(lambda*(1.-lambda));
 }
 
