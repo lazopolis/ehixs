@@ -114,6 +114,7 @@ add_subdirectory(gluon_fusion)
 #add_subdirectory(bottom_fusion)
 add_subdirectory(new_b_bbar)
 #add_subdirectory(gamma_star_gamma_star)
+add_subdirectory(gamma_gamma)
 add_subdirectory(ihixs_dir)
 #
 #   decay modes

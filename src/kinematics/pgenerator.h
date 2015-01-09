@@ -47,7 +47,7 @@ public:
 
     /// Generates the first two momenta that are common for all processes,
     /// then passes the job on to generateFSMomenta, returns jacobian
-    virtual double operator()(vector<double>& randoms) const;
+    virtual double operator()(const vector<double>& randoms) const;
 
     /// @}
 
@@ -58,7 +58,7 @@ public:
     virtual void computeConstants() = 0;
 
     /// Generates the momenta of particles in the final state, returns the jacobian
-    virtual double generateFSMomenta(vector<double>& randoms) const = 0;
+    virtual double generateFSMomenta(const vector<double>& randoms) const = 0;
 
     /// @}
 
