@@ -23,7 +23,7 @@ public:
 
     GammaGamma()
     {
-        //sectors.push_back(new XSectionMaker<BottomFusion_bb_LO>());
+        sectors.push_back(new XSectionMaker<GammaGamma_qq_LO>());
         return;
     }
 

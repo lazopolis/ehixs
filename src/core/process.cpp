@@ -1,5 +1,6 @@
 #include "process.h"
 #include "gluon_fusion.h"
+#include "gammagamma.h"
 #include "gamma_star_gamma_star.h"
 #include "bottom_fusion.h"
 
@@ -95,6 +96,10 @@ void Process::choose_production(const UserInterface & UI)
     {
         my_production = new BottomFusion;
         decay_particle_id_ = 3;
+    }
+    else if (UI.production=="gammagamma")
+    {
+        my_production = new GammaGamma;
     }
     else
     {

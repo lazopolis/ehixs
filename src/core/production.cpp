@@ -25,7 +25,7 @@ const CModel& Production::model()
 
 void Production::Configure(const UserInterface& UI)
 {
-    if (sectors.empty()) cerr << "\n[Production] Warining: sectors is empty!" << endl;
+    if (sectors.empty()) cerr << "\n[Production] Warning: sectors is empty!" << endl;
     if (UI.info)
     {
         info();
@@ -67,7 +67,7 @@ void Production::find_the_xs(const UserInterface& UI)
             cout<<"\n[find_sector] The sector id number you asked for, "
             <<sector_id
             <<", was outside the bounds [0,"
-            << sectors.size() << "]";
+            << sectors.size() << ")";
             cout<<"\n[find_sector] Please run with UI.info=true"
             <<" or --info to get the list of sector names"<<endl;
             throw "\n[find_sector] Can't proceed!\n";

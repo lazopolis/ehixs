@@ -1,3 +1,13 @@
+/**
+ *
+ * \file    bottom_fusion.h
+ * \ingroup new_b_bbar
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    August 2014
+ *
+ */
+
 #ifndef BOTTOM_FUSION_H
 #define BOTTOM_FUSION_H
 

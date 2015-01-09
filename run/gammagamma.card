@@ -1,0 +1,54 @@
+# example runcard for ehixs
+#
+#
+production = gammagamma
+#
+Etot = 13000
+#
+muf = 125.4
+mur = 125.4
+qcd_perturbative_order = NLO #LO, NLO, NNLO, N3LO, ALL
+pdf_provider = MSTW
+#---------- selecting initial state channels
+# the flavor of the parton from the left
+# if not declared all flavors are considered
+#Fleft = gluon
+#the flavor of the parton from the right
+# if not declared all flavors are considered
+#Fright = gluon
+#
+#---------- ggf specific options
+#qcd_perturbative_order = LO
+perturbative_order = 1
+#alpha_s_power = 3
+#alpha_ew_power = 1
+#
+#---------- histograms
+#
+#histogram = [HistogramHiggsPt,20,0,100.0]
+#histogram = [HistogramHiggsY,20,-5.0,5.0]
+#bin_by_bin_integration = true
+#
+#---------- cuts
+#
+cut = [GammaGamma_Q2,  20.0]
+cut = [GammaGamma_pT1, 20.0]
+cut = [GammaGamma_pT2, 20.0]
+#
+#---------- vegas variables
+#
+#
+#no_grid_adaptation = true
+epsrel_therm = 0.03
+epsabs_therm = 0.1
+nstart_therm = 10000
+mineval_therm = 100000
+maxeval_therm = 10000000
+nincrease_therm = 1000
+#
+epsrel = 0.01
+epsabs = 0.01
+nstart = 100000
+mineval = 100000
+nincrease = 0
+maxeval = 50000000

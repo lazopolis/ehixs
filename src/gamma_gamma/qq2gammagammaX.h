@@ -16,8 +16,7 @@
 #include "expansion.h" // Expansion<>
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
-constexpr double yukawa_bottom = 1.0;
-constexpr double alphas_pi = 1.0;
+constexpr double alpha = 1.0;
 
 /// \brief Matrix elements for bb->H
 template<size_t loop, int eps>

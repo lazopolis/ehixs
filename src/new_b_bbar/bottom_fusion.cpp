@@ -1,3 +1,13 @@
+/**
+ *
+ * \file    bottom_fusion.cpp
+ * \ingroup new_b_bbar
+ * \author  Achilleas Lazopoulos
+ * \author  Simone Lionetti
+ * \date    August 2014
+ *
+ */
+
 #include <iostream>
 using namespace std;
 #include "bottom_fusion.h"

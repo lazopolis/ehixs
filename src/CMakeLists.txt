@@ -61,6 +61,7 @@ include_directories(${EHIXS_SRC_DIR}
                     ${CUBA_DIR}
                     ${EHIXS_SRC_DIR}/new_b_bbar
                     ${EHIXS_SRC_DIR}/gluon_fusion
+                    ${EHIXS_SRC_DIR}/gamma_gamma
                     ${EHIXS_SRC_DIR}/gamma_star_gamma_star
                     ${EHIXS_SRC_DIR}/gluon_fusion_inclusive
                     ${EHIXS_SRC_DIR}/decay_z_gamma
@@ -153,6 +154,7 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
             kinematics
             models
             tools
+            gammagamma
             #
             #gamma_star_gamma_star 
             #

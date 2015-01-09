@@ -37,7 +37,7 @@ public:
     XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
     {
         _p.resize(3);
-        _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
+        _prefactor *= consts::Pi * pow(alpha,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
         _xg.setParameters(_tau);
         _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
         return;
@@ -75,7 +75,7 @@ public:
     {
         _p.resize(4);
         cout << "\nmH:\t" << UI.m_higgs << "\nEtot:\t" << UI.Etot << "\ntau:\t" << _tau << endl;
-        _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
+        _prefactor *= consts::Pi * pow(alpha,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
         _xg.setParameters(_tau);
         _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
         return;

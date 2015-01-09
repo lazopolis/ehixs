@@ -1,5 +1,5 @@
-#ifndef GAMMAGAMMA_CUT_H
-#define GAMMAGAMMA_CUT_H
+#ifndef GAMMAGAMMA_CUTS_H
+#define GAMMAGAMMA_CUTS_H
 
 #include "cut.h"
 
