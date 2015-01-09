@@ -1,30 +1,39 @@
-#ifndef BOTTOM_FUSION_ME_H
-#define BOTTOM_FUSION_ME_H
+/**
+ *
+ * \file    gammagamma_me.h
+ * \ingroup gamma_gamma
+ * \author  Simone Lionetti
+ * \date    January 2015
+ *
+ */
+
+#ifndef GAMMAGAMMA_ME_H
+#define GAMMAGAMMA_ME_H
 
 #include <stdlib.h>
-#include "bb2HX.h"
+#include "qq2gammagammaX.h"
 #include "xsectionmaker.h"
 #include "parametrizations.h"
 #include "xgenerator.h"
 #include "counterforge.h"
 
 template<size_t N>
-class BottomFusion_bb;
+class GammaGamma_qq;
 
 /**
  *
- * \class BottomFusion_bb<0>
- * \brief Mother class for subprocesses with bbar initial state and delta-like kinematics
+ * \class GammaGamma_qq<0>
+ * \brief Mother class for subprocesses with qqbar initial state and delta-like kinematics
  *
  */
 
 template<>
-class BottomFusion_bb<0> : public XSection
+class GammaGamma_qq<0> : public XSection
 {
 
 public:
 
-    BottomFusion_bb<0>(const UserInterface& UI, const SectorInfo& info) :
+    GammaGamma_qq<0>(const UserInterface& UI, const SectorInfo& info) :
     XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
     {
         _p.resize(3);
@@ -50,18 +59,18 @@ protected:
 
 /**
  *
- * \class BottomFusion_bb<1>
- * \brief Mother class for subprocesses with bbar initial state and one extra particle in the final state
+ * \class GammaGamma_qq<1>
+ * \brief Mother class for subprocesses with qqbar initial state and one extra particle in the final state
  *
  */
 
 template<>
-class BottomFusion_bb<1> : public XSection
+class GammaGamma_qq<1> : public XSection
 {
 
 public:
 
-    BottomFusion_bb<1>(const UserInterface& UI, const SectorInfo& info) :
+    GammaGamma_qq<1>(const UserInterface& UI, const SectorInfo& info) :
     XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
     {
         _p.resize(4);
@@ -88,96 +97,22 @@ protected:
 
 /**
  *
- * \class BottomFusion_bb_LO
- * \brief LO sector for bbar->H
+ * \class GammaGamma_qq_LO
+ * \brief LO sector for qqbar->gammagamma
  *
  */
 
-class BottomFusion_bb_LO : public BottomFusion_bb<0>
+class GammaGamma_qq_LO : public GammaGamma_qq<0>
 {
 
 public:
 
 
-    BottomFusion_bb_LO(const UserInterface& UI) :
-    BottomFusion_bb<0>(UI, XSectionMaker<BottomFusion_bb_LO>::_info)
+    GammaGamma_qq_LO(const UserInterface& UI) :
+    GammaGamma_qq<0>(UI, XSectionMaker<GammaGamma_qq_LO>::_info)
     {}
 
     void generateEvents(vector<double>& randoms);
-
-};
-
-/**
- *
- * \class BottomFusion_bb_NLO_hard
- * \brief LO sector for bbar->H
- *
- */
-
-class BottomFusion_bb_NLO_hard : public BottomFusion_bb<1>
-{
-
-public:
-
-    BottomFusion_bb_NLO_hard(const UserInterface& UI) :
-    BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_hard>::_info)
-    {
-        _prefactor *= 4. * consts::Pi /*alphas*/;
-        test();
-        return;
-    }
-
-    void generateEvents(vector<double>& randoms);
-
-    static bool test();
-
-};
-
-/**
- *
- * \class BottomFusion_bb_NNLO_RV
- * \brief LO sector for bbar->H
- *
- */
-
-class BottomFusion_bb_NNLO_RV : public BottomFusion_bb<1>
-{
-
-public:
-
-    BottomFusion_bb_NNLO_RV(const UserInterface& UI) :
-    BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NNLO_RV>::_info),
-    CounterTerm()
-    {
-        Expansion<Parameter::epsilon,double>::accuracy = 3;
-        CounterTerm = new CounterForge(CounterForge::Scheme::CDR);
-        //Check this
-        _prefactor *= 8. * consts::Pi * QCD::CF /*alphas*/;
-        return;
-    }
-
-    ~BottomFusion_bb_NNLO_RV()
-    {
-        delete CounterTerm;
-    }
-
-    void generateEvents(vector<double>& randoms);
-
-    CounterForge* CounterTerm;
-
-    static bool test(void);
-
-private:
-
-    double fastcoll(const double& z, const double& lambda);
-
-    static double coll(const double& z, const double& lambda);
-
-    static double soft(const double& z, const double& lambda);
-
-    static double softcoll(const double& z, const double& lambda);
-
-    static double explicitcoll(const double& z, const double& lambda);
 
 };
 

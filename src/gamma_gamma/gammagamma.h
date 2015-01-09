@@ -1,22 +1,29 @@
-#ifndef BOTTOM_FUSION_H
-#define BOTTOM_FUSION_H
+/**
+ *
+ * \file    gammagamma.h
+ * \ingroup gamma_gamma
+ * \author  Simone Lionetti
+ * \date    January 2015
+ *
+ */
 
-// Implementing the process P P -> Higgs + X via bottom fusion
+#ifndef GAMMAGAMMA_H
+#define GAMMAGAMMA_H
+
+// Implementing the process P P -> gamma gamma + X
 
 #include "production.h"
 #include "xsection.h"
-#include "bottom_fusion_me.h"
+#include "gammagamma_me.h"
 
-class BottomFusion : public Production
+class GammaGamma : public Production
 {
 
 public:
 
-    BottomFusion()
+    GammaGamma()
     {
-        sectors.push_back(new XSectionMaker<BottomFusion_bb_LO>());
-        sectors.push_back(new XSectionMaker<BottomFusion_bb_NLO_hard>());
-        sectors.push_back(new XSectionMaker<BottomFusion_bb_NNLO_RV>());
+        //sectors.push_back(new XSectionMaker<BottomFusion_bb_LO>());
         return;
     }
 
