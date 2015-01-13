@@ -23,15 +23,6 @@ void GammaGamma_qq_LO::generateEvents(vector<double>& randoms)
 {
     _pg(randoms);
     const double w = _prefactor * _factor;
-//    cout << "----------------------------------------------\n";
-//    std::cout << "I have " << randoms.size() << " random numbers." << std::endl;
-//    std::cout << "x1 = " << _x.x1 << "; x2 = " << _x.x2 << std::endl;
-//    std::cout << "p1 = "
-//        << _p[1] << "\np2 = "
-//        << _p[2] << "\np3 = "
-//        << _p[3] << "\np4 = "
-//        << _p[4] << endl;
-//    std::cout << qq2gammagamma<0,0>(square(_p[1]+_p[3])/square(_p[1]+_p[4])) << std::endl;
     _eventBox->push_back(
                          Event(
                                w*qq2gammagamma<0,0>(square(_p[1]-_p[3])/square(_p[1]-_p[4])),
@@ -44,8 +35,7 @@ void GammaGamma_qq_LO::generateEvents(vector<double>& randoms)
 template<>
 const SectorInfo XSectionMaker<GammaGamma_qq_LO>::_info(
                                                    "Born",
-                                                    // This IS a problem...
-                                                    InitialStateFlavors(QCD::b, QCD::bbar),
+                                                    InitialStateFlavors::quarks,
                                                     0,
                                                     4
                                                         );
@@ -100,8 +90,7 @@ void GammaGamma_qq_NLO_real::generateEvents(vector<double>& randoms)
 template<>
 const SectorInfo XSectionMaker<GammaGamma_qq_NLO_real>::_info(
                                                         "NLO real",
-                                                        // This IS a problem...
-                                                        InitialStateFlavors(QCD::b, QCD::bbar),
+                                                        InitialStateFlavors::quarks,
                                                         1,
                                                         7
                                                         );

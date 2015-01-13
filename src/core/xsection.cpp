@@ -25,9 +25,12 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
     // Configuring the luminosity
     /// \warning Luminosity allocation assumes left-right symmetry right now
     _lumi = new NewLuminosity(UI);
-    _lumi->add_pair(info->isf.left, info->isf.right);
-    if (info->isf.left != info->isf.right)
-        _lumi->add_pair(info->isf.right, info->isf.left);
+    for (vector<InitialStateFlavors>::const_iterator it = info->isf.begin(); it < info->isf.end(); ++it)
+    {
+        _lumi->add_pair(it->left, it->right, it->weight);
+        if (it->left != it->right)
+            _lumi->add_pair(it->right, it->left, it->weight);
+    }
     // Starting to run
     /// \note Model does not seem to be particularly generic...
     _model.Configure(

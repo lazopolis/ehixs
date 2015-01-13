@@ -11,6 +11,8 @@
 #include "constants.h"
 using namespace std;
 
+/// \todo This file is a mess, really ought to be reorganized.
+
 /**
  *
  * \struct InitialStateFlavors
@@ -26,6 +28,7 @@ struct InitialStateFlavors
 
     QCD::Flavor left;   ///< Left parton flavor
     QCD::Flavor right;  ///< Right parton flavor
+    double weight;      ///< Constant weight of this PDF combination
 
     /// @}
 
@@ -34,17 +37,17 @@ struct InitialStateFlavors
 
     /// Default constructor
     InitialStateFlavors() :
-    left(), right()
+    left(), right(), weight()
     {}
 
     /// Copy constructor
     InitialStateFlavors(const InitialStateFlavors& that) :
-    left(that.left), right(that.right)
+    left(that.left), right(that.right), weight(that.weight)
     {}
 
     /// Constructor with data
-    InitialStateFlavors(const QCD::Flavor lef, const QCD::Flavor rig) :
-    left(lef), right(rig)
+    InitialStateFlavors(const QCD::Flavor lef, const QCD::Flavor rig, const double w = 1.) :
+    left(lef), right(rig), weight(w)
     {}
 
     /// Destructor
@@ -56,6 +59,13 @@ struct InitialStateFlavors
     {
         return stream << "(" << isf.left << "," << isf.right << ")";
     }
+
+    /// @}
+
+    /// \name Default objects
+    /// @{
+
+    static const vector<InitialStateFlavors> quarks;
 
     /// @}
 

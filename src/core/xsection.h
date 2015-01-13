@@ -11,7 +11,6 @@
 #ifndef XSECTION_H
 #define XSECTION_H
 
-#include <map>
 #include <string>
 #include "convolutions.h" // InitialStateFlavors, Event, NewLuminosity
 #include "model.h"        // Model
@@ -31,10 +30,10 @@ struct SectorInfo
     /// \name Data Members
     /// @{
 
-    string name;                ///< The name of the sector
-    InitialStateFlavors isf;    ///< Initial state flavors for this sector
-    int alpha_power;            ///< Power of the strong coupling
-    size_t dim;                 ///< Dimension of integration for this sector
+    string name;                        ///< The name of the sector
+    vector<InitialStateFlavors> isf;    ///< Initial state flavors for this sector
+    int alpha_power;                    ///< Power of the strong coupling
+    size_t dim;                         ///< Dimension of integration for this sector
 
     /// @}
 
@@ -48,6 +47,11 @@ struct SectorInfo
 
     /// Constructor with data
     SectorInfo(const string& iName, const InitialStateFlavors& iIsf, const int iAlphaPow, const size_t iDim) :
+    name(iName), isf({iIsf}), alpha_power(iAlphaPow), dim(iDim)
+    {}
+
+    /// Constructor with data
+    SectorInfo(const string& iName, const vector<InitialStateFlavors>& iIsf, const int iAlphaPow, const size_t iDim) :
     name(iName), isf(iIsf), alpha_power(iAlphaPow), dim(iDim)
     {}
 
@@ -68,11 +72,15 @@ struct SectorInfo
     /// Print out the information about a sector
     friend ostream& operator<<(ostream& stream, const SectorInfo& info)
     {
+        stream << info.name << " ";
+        for (vector<InitialStateFlavors>::const_iterator it = info.isf.begin(); it < info.isf.end(); ++it)
+        {
+            stream << *it;
+            if (it!=info.isf.end()-1) stream << "&";
+        }
         return stream
-        << info.name << " "
-        << info.isf << ": "
-        << "a^" << info.alpha_power << ", "
-        << "dim=" << info.dim;
+            << ": a^" << info.alpha_power << ", "
+            << "dim=" << info.dim;
     }
 
     /// @}
