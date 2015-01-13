@@ -55,4 +55,20 @@ public:
     }
 };
 
+// Cut on the transverse momentum of the jet
+class GammaGammaCut_pT1jet : public CCut
+{
+public:
+    GammaGammaCut_pT1jet(const double& cutvalue) :
+    CCut("GammaGamma_pT1jet",cutvalue)
+    {};
+
+    bool operator()(Event* the_event)
+    {
+        if (the_event->p[5].T()>min) return true;
+        return false;
+    }
+};
+
+
 #endif

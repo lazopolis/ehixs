@@ -24,6 +24,7 @@ public:
     GammaGamma()
     {
         sectors.push_back(new XSectionMaker<GammaGamma_qq_LO>());
+        sectors.push_back(new XSectionMaker<GammaGamma_qq_NLO_real>());
         return;
     }
 

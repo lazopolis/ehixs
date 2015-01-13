@@ -22,6 +22,80 @@ class GammaGamma_qq;
 
 /**
  *
+ * \fn    Rdist
+ * \brief Distance in eta-phi plane of two particles
+ *
+ */
+
+double Rdist(const FourVector& p1, const FourVector& p2);
+
+/**
+ *
+ * \class SmoothPhotonIsolation
+ * \brief This class implements an smooth isolation cone as in arXiv:9801442
+ *
+ */
+
+class SmoothPhotonIsolation
+{
+
+public:
+
+    /// \name Constructors and destructor
+    /// @{
+
+    /// Default constructor
+    SmoothPhotonIsolation(const double& delta0 = 0.5, const double& n = 1., const double& epsilongamma = 1.) :
+    _delta0(delta0), _n(n), _epsilongamma(epsilongamma)
+    {}
+
+    /// Destructor
+    ~SmoothPhotonIsolation()
+    {}
+
+    /// @}
+
+    /// \name Member functions
+    /// @{
+
+    /// Criterion
+    /// \note 1 parton only, needs to be rewritten for more (overload const Momenta& as 2nd arg?)
+    bool inside(const FourVector& pgamma, const FourVector& pparton) const
+    {
+        const double Rig = Rdist(pgamma,pparton);
+        return Rig<_delta0 && pparton[0]<Chi(pgamma[0],Rig);
+    }
+
+    /// @}
+    
+private:
+
+    /// \name Data members
+    /// @{
+
+    const double _delta0;       ///< Cone angle
+    const double _n;            ///< Exponent
+    const double _epsilongamma; ///< Energy fraction
+
+    /// @}
+
+    /// \name Auxiliary functions
+    /// @{
+
+    /// This is Frixione's Chi function eq. (3.4)
+    /// Modified to contain the minimum in eq. (3.10)
+    double Chi(const double& Egamma, const double& delta) const
+    {
+        if (delta<_delta0) return Egamma*_epsilongamma;
+        return Egamma*_epsilongamma*pow((1.-cos(delta))/(1.-cos(_delta0)),_n);
+    }
+
+    /// @}
+
+};
+
+/**
+ *
  * \class GammaGamma_qq<0>
  * \brief Mother class for subprocesses with qqbar initial state and delta-like kinematics
  *
@@ -34,12 +108,12 @@ class GammaGamma_qq<0> : public XSection
 public:
 
     GammaGamma_qq<0>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x)
     {
-        _p.resize(3);
-        _prefactor *= consts::Pi * pow(alpha,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
-        _xg.setParameters(_tau);
-        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
+        _p.resize(4);
+        _prefactor *= 2. * pow(alpha,2) / static_cast<double>(QCD::Nc);
+        _xg.setParameters(0.);
+        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({0./*,0.*/}));
         return;
     }
 
@@ -51,9 +125,8 @@ public:
 protected:
 
     Momenta _p;
-    OneXGenerator _xg;
-    DeltaPG _pg;
-    double _tau;
+    TwoXGenerator _xg;
+    ZlambdaPG _pg;
 
 };
 
@@ -71,13 +144,12 @@ class GammaGamma_qq<1> : public XSection
 public:
 
     GammaGamma_qq<1>(const UserInterface& UI, const SectorInfo& info) :
-    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
+    XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _cone(1.), _lambda(0.5)
     {
-        _p.resize(4);
-        cout << "\nmH:\t" << UI.m_higgs << "\nEtot:\t" << UI.Etot << "\ntau:\t" << _tau << endl;
-        _prefactor *= consts::Pi * pow(alpha,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
-        _xg.setParameters(_tau);
-        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
+        _p.resize(5);
+        _prefactor *= 2. * pow(alpha,2) /** alphas_pi*/ / static_cast<double>(QCD::Nc);
+        _xg.setParameters(0.);
+        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({0.,0.}));
         return;
     }
 
@@ -90,8 +162,9 @@ protected:
 
     Momenta _p;
     FlatXGenerator _xg;
-    ZlambdaPG _pg;
-    double _tau;
+    Zlambda3PG _pg;
+    SmoothPhotonIsolation _cone;
+    double _lambda;
 
 };
 
@@ -114,6 +187,27 @@ public:
 
     void generateEvents(vector<double>& randoms);
 
+};
+
+/**
+ *
+ * \class GammaGamma_qq_NLO_real
+ * \brief NLO hard real emission sector for qqbar->gammagammag
+ *
+ */
+
+class GammaGamma_qq_NLO_real : public GammaGamma_qq<1>
+{
+
+public:
+
+
+    GammaGamma_qq_NLO_real(const UserInterface& UI) :
+    GammaGamma_qq<1>(UI, XSectionMaker<GammaGamma_qq_NLO_real>::_info)
+    {}
+
+    void generateEvents(vector<double>& randoms);
+    
 };
 
 #endif

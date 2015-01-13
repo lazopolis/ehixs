@@ -18,12 +18,32 @@
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double alpha = 1.0;
 
-/// \brief Matrix elements for bb->H
+/// \brief Matrix elements for qq->gammagamma
 template<size_t loop, int eps>
-double qq2gammagamma();
+double qq2gammagamma(const double& s13_s14);
 
-/// \brief Shorthand for full epsilon expansion of bb->H
+/// \brief Matrix elements for qq->gammagamma+g
+template<size_t loop, int eps>
+double qq2gammagammag(
+                      const double& s12,
+                      const double& s13,
+                      const double& s14,
+                      const double& s23,
+                      const double& s24
+                      );
+
+/// \brief Shorthand for full epsilon expansion of qq->gammagamma
 template<size_t loop>
-Expansion<Parameter::epsilon, double> qq2gammagamma();
+Expansion<Parameter::epsilon, double> qq2gammagamma(const double& s13_s14);
+
+/// \brief Shorthand for full epsilon expansion of qq->gammagamma+g
+template<size_t loop>
+Expansion<Parameter::epsilon, double> qq2gammagammag(
+                                                     const double& s12,
+                                                     const double& s13,
+                                                     const double& s14,
+                                                     const double& s23,
+                                                     const double& s24
+                                                     );
 
 #endif

@@ -170,9 +170,9 @@ public:
     void computeConstants();
 
     /// Implements the parametrization
-    /// The last element of the "randoms" vector is interpreted as phi
-    /// The next-to-last element of the "randoms" vector is interpreted as lambda
-    /// Then comes the fraction of s12 that goes into s34
+    /// The last element of the "randoms" vector is interpreted as lambda
+    /// The next-to-last element of the "randoms" vector is interpreted as the fraction z of s12 that goes into s34
+    /// Then comes phi
     /// Finally come the two angles that define the direction of the decay
     double generateFSMomenta(const vector<double>& randoms) const;
 

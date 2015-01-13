@@ -67,12 +67,12 @@ double ZlambdaPG::generateFSMomenta(const vector<double>& randoms) const
 void Zlambda3PG::computeConstants()
 {
     // Check number of masses passed to PGenerator::setParameters
-    if (_m.size() != 2 || _m.at(0) != 0. || _m.at(1) != 0.)
+    if (_m.size() != 2)
     {
         cerr << "[ZlambdaPG] Error: wrong masses arrived at the momenta generator.\n";
         exit(1);
     }
-    _tau = _m[0]*_m[0]/(4.*_E*_E);
+    _tau = (_m[0]*_m[0]+_m[1]*_m[1])/(4.*_E*_E);
     return;
 }
 
@@ -81,11 +81,11 @@ double Zlambda3PG::generateFSMomenta(const vector<double>& randoms) const
 {
     // Generating fraction of energy going into pseudo-particle 34
     // This could be optimized to not-reject by inserting a jacobian
-    const double z = randoms[2];
+    const double z = randoms[3];
     if (z < _tau) return 0.;
     // Generating gluon momentum
-    const double phi = 2.*consts::Pi*randoms[4];
-    const double lambda = randoms[3];
+    const double phi = 2.*consts::Pi*randoms[2];
+    const double lambda = randoms[4];
     const double sllbar = sqrt(lambda*(1.-lambda)*x1*x2)*2.*_E;
     _p[5] = (1.-z)*(
                     (1.-lambda) * _p[1] +
@@ -93,7 +93,7 @@ double Zlambda3PG::generateFSMomenta(const vector<double>& randoms) const
                     sllbar * LightCone::eperp(phi)
                     );
     // Generating p4 in the 34 rest frame
-    const double Q2 = z*4.*_E*_E;
+    const double Q2 = z*4.*_E*_E*x1*x2;
     const double absp = KaellenLambda(Q2,_m[0]*_m[0],_m[1]*_m[1])/(2.*sqrt(Q2));
     const double theta_gamma = consts::Pi*randoms[1];
     const double phi_gamma = 2.*consts::Pi*randoms[0];

@@ -66,7 +66,6 @@ protected:
     /// @{
 
     Bjorken& _x;       ///< Reference to target Bjorken variables to be generated
-
     double _x1x2min;   ///< Auxiliary variable that specifies the minimum value of the product x1*x2
 
     /// @}
