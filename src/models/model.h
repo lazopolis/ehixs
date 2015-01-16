@@ -33,6 +33,7 @@ public:
     VectorBoson Z;
     
     Particle bottom;
+    Particle charm;
     
     void RemoveParticle(const string& particle_name);
 private:

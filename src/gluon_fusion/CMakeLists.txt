@@ -9,6 +9,11 @@ add_library(exact_gluon_fusion
                          exact_nlo_matrix_elements/masters.F
 )
 
+add_library(electroweak_coeffs
+                        gluon_fusion_ew_coefficients.cpp
+                        electroweak_h_plus_jet.f
+)
+
 
 add_library(gluon_fusion 
                          gluon_fusion.cpp

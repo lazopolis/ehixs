@@ -25,18 +25,23 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
     //       alphas_Mz = 0.118.0
     //       Mtop =  170.9
     
-    
+    // note that we are *not* using the msbar top mass
+    // that the rest of the program might use, here, to make sure that the eff_mh
+    // is indeed mh * 170.9/current_pole_mass_of_top
+    // This induces a per mille difference with ihixs (for low mh)
+    // ehixs = ihixs - 0.1%
     model_=model;
     
     cout<<"\nCalcualting ew correction factor";
     const double mtop_pass = 170.9;
-    
-	const double eff_mh =model.higgs.m()*mtop_pass/model.top.m();
+    const double current_mt_mass_os = 172.5;
+	const double eff_mh =model.higgs.m()*mtop_pass/current_mt_mass_os;
     
     if (eff_mh<100.0 or eff_mh>500.0)
     {
         cout<<"\nSoft ew corrections not available (mh<100 or mh>500). They are set to zero since mh = "<<eff_mh
-        <<" mtop_pass/ mtop = "<< mtop_pass/model.top.m();
+        <<" mtop_pass/ mtop = "<< mtop_pass/current_mt_mass_os<<endl;
+        cout<<" mh from model = "<<model.higgs.m();
         NLO_ew_coeff_ = 0.0;
     }
     else
@@ -65,7 +70,7 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
             ihere = position;
             iafter = position+1;
         }
-        cout<<"\n position = ["<<ibefore<<","<<ihere<<","<<iafter<<"] / "<<N<<endl;
+        //cout<<"\n position = ["<<ibefore<<","<<ihere<<","<<iafter<<"] / "<<N<<endl;
         double x[3]={ew_data[ibefore]->mass,
             ew_data[ihere]->mass,
             ew_data[iafter]->mass};
@@ -78,7 +83,7 @@ GluonFusionEWCoefficients::GluonFusionEWCoefficients(const CModel& model)
         // which was the choice of the authors of 0809.3667
         complex<double> Wt(4.0*170.9*170.9/pow(eff_mh,2.0),0.0);
         complex<double> xt = -Wt/pow(sqrt(1.0-Wt)+1.0,2.0);
-        complex<double> born_special = born(xt);
+        complex<double> born_special = h_exact::born(xt);
         NLO_ew_coeff_ = (sqrt(1.0+res)-1.0 ) * born_special;
         cout<<"NLO ew coeff = "<<NLO_ew_coeff_<<endl;
     }
@@ -126,7 +131,7 @@ double GluonFusionEWCoefficients::EwkUUbar(const double& s,const double& z, cons
     double u = -s * (1.0-z)*(1.0-lambda);
     
     double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
-    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mqcd = 4.0/3.0 * h_exact::sum_of_Aqqgh(z,&model_) / s;
     complex<double> Mewk(0.0);
     
     
@@ -162,7 +167,7 @@ double GluonFusionEWCoefficients::EwkDDbar(const double& s,const double& z, cons
     double u = -s * (1.0-z)*(1.0-lambda);
     
     double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z;
-    complex<double> Mqcd = 4.0/3.0 *sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mqcd = 4.0/3.0 * h_exact:: sum_of_Aqqgh(z,&model_) / s;
     complex<double> Mewk(0.0);
     
     double mhsq = model_.higgs.m()*model_.higgs.m();
@@ -190,7 +195,7 @@ double GluonFusionEWCoefficients::EwkUG(const double& s,const double& z, const d
     
     double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
     * 9.0/64.0*u/s;
-    complex<double> Mqcd = 4.0/3.0 *sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mqcd = 4.0/3.0 * h_exact::sum_of_Aqqgh(z,&model_) / s;
     complex<double> Mewk(0.0);
     
     double mhsq = model_.higgs.m()*model_.higgs.m();
@@ -217,7 +222,7 @@ double GluonFusionEWCoefficients::EwkDG(const double& s,const double& z, const d
     
     double prefactor = 1.0/4.0/consts::pi_square * (1.0-z)/z
     *9.0/64.0*u/s;
-    complex<double> Mqcd = 4.0/3.0 * sum_of_Aqqgh(z,&model_) / s;
+    complex<double> Mqcd = 4.0/3.0 * h_exact::sum_of_Aqqgh(z,&model_) / s;
     complex<double> Mewk(0.0);
     
     double mhsq = model_.higgs.m()*model_.higgs.m();

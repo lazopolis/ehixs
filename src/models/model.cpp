@@ -9,8 +9,8 @@ using namespace::std;
 CModel::CModel()
 {
     top=Particle("top");
-    top.set_pole_mass(172.5);
-    //top.set_msbar_mass(163.7,163.7);
+    //top.set_pole_mass(172.5);
+    top.set_msbar_mass(163.7,163.7);
     top.set_charge(2.0/3.0);
     top.set_Y(1.0);
     top.set_width(0.0);
@@ -21,6 +21,13 @@ CModel::CModel()
     bottom.set_charge(-1.0/3.0);
     bottom.set_Y(1.0);
     bottom.set_width(0.0);
+    //
+    charm=Particle("charm");
+    //charm.set_onshell_mass(1.67);
+    charm.set_msbar_mass(1.275,1.275);
+    charm.set_charge(2.0/3.0);
+    charm.set_Y(1.0);
+    charm.set_width(0.0);
     //
     W=VectorBoson("W");
     W.set_pole_mass(80.403);
@@ -44,6 +51,7 @@ CModel::CModel()
     //
     quarks.push_back(&top);
     quarks.push_back(&bottom);
+    quarks.push_back(&charm);
     vector_bosons.push_back(&W);
     vector_bosons.push_back(&Z);
 

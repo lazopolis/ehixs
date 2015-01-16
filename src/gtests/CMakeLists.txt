@@ -68,18 +68,6 @@
 #            tools pdf gtest avh_olo LHAPDF ${LHAPDF})
             
 
-#add_executable(nlo_exact_virtual
-#            exact_virtual_test.cpp)
-#target_link_libraries(nlo_exact_virtual
-#                    gluon_fusion fortran_ggf
-#                    fortran_ggf_RR_gg2gg
-#            fortran_ggf_RR_gg2qqbar
-#            fortran_ggf_RR_qg2qg
-#            fortran_ggf_RR_gq2qg
-#            fortran_ggf_RR_qqbar
-#            fortran_ggf_RR_qq
-#                    models avh_olo chaplin tools
-#                    mincuba gtest)
 
 #add_executable(live_convolution_test
 #            live_convolution_test.cpp)
@@ -142,7 +130,21 @@ target_link_libraries(
                     gtest
                     tools
                     )
-                
+
+
+
+add_executable(ihixs_nlo_exact_test
+            ihixs_nlo_exact_test.cpp)
+target_link_libraries(ihixs_nlo_exact_test
+                        exact_gluon_fusion
+                        models
+                        chaplin
+                        #tools
+                        gtest)
+
+
+
+
 add_executable(
             ihixs_tests
             ihixs_tests.cpp
@@ -151,6 +153,7 @@ target_link_libraries(
                     ihixs_tests
                     ihixs_lib
                     exact_gluon_fusion
+                    electroweak_coeffs
                     avh_olo
                     chaplin
                     pdf
@@ -183,6 +186,8 @@ target_link_libraries(
             ihixs_lib
             mincuba
             chaplin
+            models
+            exact_gluon_fusion
             tools
             gtest
 )

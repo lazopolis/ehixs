@@ -220,6 +220,233 @@ TEST(QuarkQuarkPrimeMe,NNLO_real)
     
 }
 
+TEST(LogMufOverMh,N3LO_gg)
+{
+    const double z=   2.1448782891849743E-002 ;
+    const double L=  -2.4079456086518722      ;
+    const double falko = HEFT::LEggN3LOregFalko(z, L);
+    const double ste = HEFT::LEggNNNLOregSte(z, L);
+    cout<<"\nfalko="<<falko;
+    cout<<"\nste  ="<<ste<<endl;
+    const double err=1e-5;
+    EXPECT_LT(abs(falko-ste)/abs(ste),err)
+        <<" falko="<<falko
+        <<" ste="<<ste
+        <<"\t % diff = "<<abs(falko-ste)/abs(ste)
+        <<endl;
+    
+}
+
+TEST(LogMufOverMh,N3LO_gg2)
+{
+    const double z=   .591448782891849743 ;
+    const double L=  2.9324079456086518722      ;
+    for (int i=1;i<20;i++)
+    {
+        double zz=(i)/20.0;
+        const double falko = HEFT::LEggN3LOregFalko(zz, L);
+        const double ste = HEFT::LEggNNNLOregSte(zz, L);
+        cout<<"\nz="<<setw(6)<<zz<<" L="<<setw(8)<<L
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    for (int i=1;i<20;i++)
+    {
+        double LL=-10.2 + 10.0 * (i)/20.0;
+        const double falko = HEFT::LEggN3LOregFalko(z, LL);
+        const double ste = HEFT::LEggNNNLOregSte(z, LL);
+        cout<<"\nz="<<setw(6)<<fixed<<setprecision(3)<<z<<" L="<<setw(8)<<LL
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<scientific<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    const double falko = HEFT::LEggN3LOregFalko(z, L);
+    const double ste = HEFT::LEggNNNLOregSte(z, L);
+    cout<<"\nfalko="<<falko;
+    cout<<"\nste  ="<<ste<<endl;
+    const double err=1e-5;
+    EXPECT_LT(abs(falko-ste)/abs(ste),err)
+    <<" falko="<<falko
+    <<" ste="<<ste
+    <<"\t % diff = "<<abs(falko-ste)/abs(ste)
+    <<endl;
+    
+}
+
+TEST(LogMufOverMh,N3LO_qg)
+{
+    const double z=   .591448782891849743 ;
+    const double L=  -1.3456      ;
+    for (int i=1;i<20;i++)
+    {
+        double zz=(i)/20.0;
+        const double falko = HEFT::LEqgN3LOregFalko(zz, L);
+        const double ste = HEFT::LEqgNNNLOregSte(zz, L);
+        cout<<"\nz="<<setw(6)<<zz<<" L="<<setw(8)<<L
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    for (int i=1;i<20;i++)
+    {
+        double LL=-10.+1e-3 + 20.0 * (i)/20.0;
+        const double falko = HEFT::LEqgN3LOregFalko(z, LL);
+        const double ste = HEFT::LEqgNNNLOregSte(z, LL);
+        cout<<"\nz="<<setw(6)<<fixed<<setprecision(3)<<z<<" L="<<setw(8)<<LL
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<scientific<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    const double falko = HEFT::LEqgN3LOregFalko(z, L);
+    const double ste = HEFT::LEqgNNNLOregSte(z, L);
+    cout<<"\nfalko="<<falko;
+    cout<<"\nste  ="<<ste<<endl;
+    const double err=1e-5;
+    EXPECT_LT(abs(falko-ste)/abs(ste),err)
+    <<" falko="<<falko
+    <<" ste="<<ste
+    <<"\t % diff = "<<abs(falko-ste)/abs(ste)
+    <<endl;
+    
+}
+
+
+TEST(LogMufOverMh,N3LO_qqbar)
+{
+    const double z=   .591448782891849743 ;
+    const double L=  -1.3456      ;
+    for (int i=1;i<20;i++)
+    {
+        double zz=(i)/20.0;
+        const double falko = HEFT::LEqqbN3LOregFalko(zz, L);
+        const double ste = HEFT::LEqqbNNNLOregSte(zz, L);
+        cout<<"\nz="<<setw(6)<<zz<<" L="<<setw(8)<<L
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    for (int i=1;i<20;i++)
+    {
+        double LL=-10.+1e-3 + 20.0 * (i)/20.0;
+        const double falko = HEFT::LEqqbN3LOregFalko(z, LL);
+        const double ste = HEFT::LEqqbNNNLOregSte(z, LL);
+        cout<<"\nz="<<setw(6)<<fixed<<setprecision(3)<<z<<" L="<<setw(8)<<LL
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<scientific<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    const double falko = HEFT::LEqqbN3LOregFalko(z, L);
+    const double ste = HEFT::LEqqbNNNLOregSte(z, L);
+    cout<<"\nfalko="<<falko;
+    cout<<"\nste  ="<<ste<<endl;
+    const double err=1e-5;
+    EXPECT_LT(abs(falko-ste)/abs(ste),err)
+    <<" falko="<<falko
+    <<" ste="<<ste
+    <<"\t % diff = "<<abs(falko-ste)/abs(ste)
+    <<endl;
+    
+}
+
+
+TEST(LogMufOverMh,N3LO_qq)
+{
+    const double z=   .591448782891849743 ;
+    const double L=  -1.3456      ;
+    for (int i=1;i<20;i++)
+    {
+        double zz=(i)/20.0;
+        const double falko = HEFT::LEqqN3LOregFalko(zz, L);
+        const double ste = HEFT::LEqqNNNLOregSte(zz, L);
+        cout<<"\nz="<<setw(6)<<zz<<" L="<<setw(8)<<L
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    for (int i=1;i<20;i++)
+    {
+        double LL=-10.+1e-3 + 20.0 * (i)/20.0;
+        const double falko = HEFT::LEqqN3LOregFalko(z, LL);
+        const double ste = HEFT::LEqqNNNLOregSte(z, LL);
+        cout<<"\nz="<<setw(6)<<fixed<<setprecision(3)<<z<<" L="<<setw(8)<<LL
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<scientific<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    const double falko = HEFT::LEqqN3LOregFalko(z, L);
+    const double ste = HEFT::LEqqNNNLOregSte(z, L);
+    cout<<"\nfalko="<<falko;
+    cout<<"\nste  ="<<ste<<endl;
+    const double err=1e-5;
+    EXPECT_LT(abs(falko-ste)/abs(ste),err)
+    <<" falko="<<falko
+    <<" ste="<<ste
+    <<"\t % diff = "<<abs(falko-ste)/abs(ste)
+    <<endl;
+    
+}
+
+
+TEST(LogMufOverMh,N3LO_q1q2)
+{
+    const double z=   .591448782891849743 ;
+    const double L=  -1.3456      ;
+    for (int i=1;i<20;i++)
+    {
+        double zz=(i)/20.0;
+        const double falko = HEFT::LEq1q2N3LOregFalko(zz, L);
+        const double ste = HEFT::LEq1q2NNNLOregSte(zz, L);
+        cout<<"\nz="<<setw(6)<<zz<<" L="<<setw(8)<<L
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    for (int i=1;i<20;i++)
+    {
+        double LL=-10.+1e-3+sqrt(2.)/2. + 20.0 * (i)/20.0;
+        const double falko = HEFT::LEq1q2N3LOregFalko(z, LL);
+        const double ste = HEFT::LEq1q2NNNLOregSte(z, LL);
+        cout<<"\nz="<<setw(6)<<fixed<<setprecision(3)<<z<<" L="<<setw(8)<<LL
+        <<"\tfalko="<<setw(9)<<falko
+        <<"\tste  ="<<setw(9)<<ste
+        <<"\t % diff = "<<setw(12)<<scientific<<abs(falko-ste)/abs(ste);
+        
+    }
+    
+    const double falko = HEFT::LEq1q2N3LOregFalko(z, L);
+    const double ste = HEFT::LEq1q2NNNLOregSte(z, L);
+    cout<<"\nfalko="<<falko;
+    cout<<"\nste  ="<<ste<<endl;
+    const double err=1e-5;
+    EXPECT_LT(abs(falko-ste)/abs(ste),err)
+    <<" falko="<<falko
+    <<" ste="<<ste
+    <<"\t % diff = "<<abs(falko-ste)/abs(ste)
+    <<endl;
+    
+}
+
+
+
 
 int main(int argc, char**argv)
 {

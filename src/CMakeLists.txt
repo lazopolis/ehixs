@@ -181,6 +181,7 @@ add_executable(ihixs
             ${EHIXS_SRC_DIR}/ihixs.cpp)
 target_link_libraries(ihixs
             exact_gluon_fusion
+            electroweak_coeffs
             ihixs_lib
             models
             tools

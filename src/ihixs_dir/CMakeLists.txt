@@ -7,7 +7,8 @@ add_library(ihixs_lib
                 as_series.cpp
                 result_pair.cpp
                 channel.cpp
+                n3lo_reg_L_pieces_from_ste.F
                 )
-                
+
 
                 

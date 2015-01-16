@@ -34,7 +34,7 @@ double GluonFusionExactCoefficients::LO_exact_e0()
     
     cout<<"\n LO exact : "<<pow(abs(ME),2.0);
     cout<<"\n Born exact:"<<
-    pow(abs(born_exact_summed_over_quarks(&Model)),2.0);
+    pow(abs(h_exact::born_exact_summed_over_quarks(&Model)),2.0);
     
     return(pow(abs(ME),2.0));
 }
@@ -137,7 +137,7 @@ double GluonFusionExactCoefficients::NLO_soft_exact_e0()
             scheme_dependent_coeff = 2.0 * log(Model.quarks[i]->m()
                                                / Model.mu_r());
         }
-        V = V + Model.quarks[i]->Y() * ggf_exact_virtual_ep0(Model.quarks[i]->X(),scheme_dependent_coeff);
+        V = V + Model.quarks[i]->Y() * h_exact::ggf_exact_virtual_ep0(Model.quarks[i]->X(),scheme_dependent_coeff);
         Born = Born+Model.quarks[i]->Y() * born(Model.quarks[i]->X());
         //cout<<"\t\t ME="<<ME;
         

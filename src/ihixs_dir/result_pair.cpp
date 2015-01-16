@@ -6,8 +6,17 @@ using namespace std;
 
 ostream& operator<<(ostream& stream, const ResultPair& rs)
 {
-    stream<<setw(11)<<setprecision(3)<<right<<fixed<<rs.val()
-    <<scientific<<setprecision(0)<<left<<"["<<rs.err()<<"] "
-    <<setprecision(16)<<fixed;
+    if (fabs(rs.val())>1e-3)
+    {
+        stream<<setw(11)<<setprecision(3)<<right<<fixed<<rs.val()
+            <<scientific<<setprecision(0)<<left<<"["<<rs.err()<<"] "
+            <<setprecision(16)<<fixed;
+    }
+    else
+    {
+        stream<<setw(11)<<setprecision(3)<<right<<scientific<<rs.val()
+        <<scientific<<setprecision(0)<<left<<"["<<rs.err()<<"] "
+        <<setprecision(16)<<fixed;
+    }
     return stream;
 }

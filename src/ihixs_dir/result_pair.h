@@ -75,10 +75,25 @@ public:
                           );
     }
     
+    /// Divide this ResultPair by another Resultpair
+    ResultPair operator/(const ResultPair& that) const
+    {
+        return ResultPair(_val / that.val(),
+                          fabs(_val / that.val()) *
+                          sqrt(pow(that.err()/that.val(),2.)+pow(_err/_val,2.))
+                          );
+    }
+    
     /// Add this ResultPair to another one
     ResultPair operator+(const ResultPair& that) const
     {
         return ResultPair(_val+that.val(),sqrt(pow(_err,2.)+pow(that.err(),2.)));
+    }
+    
+    /// Subtract from this ResultPair  another one
+    ResultPair operator-(const ResultPair& that) const
+    {
+        return ResultPair(_val-that.val(),sqrt(pow(_err,2.)+pow(that.err(),2.)));
     }
     
     friend ostream& operator<<(ostream& stream, const ResultPair& );

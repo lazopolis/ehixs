@@ -8,13 +8,25 @@ using namespace std;
 
 
 namespace HEFT {
-    AsSeries n_delta_at_muf(const double& L);
-    AsSeries n_D0_at_muf(const double& L);
-    AsSeries n_D1_at_muf(const double& L);
-    AsSeries n_D2_at_muf(const double& L);
-    AsSeries n_D3_at_muf(const double& L);
-    AsSeries n_D4_at_muf(const double& L);
-    AsSeries n_D5_at_muf(const double& L);
+    
+    double one_minus_z(const double& z, const double& L);
+    double one(const double& z, const double& L);
+    
+    AsSeries n_delta_at_mh();
+    AsSeries n_D0_at_mh();
+    AsSeries n_D1_at_mh();
+    AsSeries n_D2_at_mh();
+    AsSeries n_D3_at_mh();
+    AsSeries n_D4_at_mh();
+    AsSeries n_D5_at_mh();
+    
+    AsSeries n_delta_log_muf(const double& L);
+    AsSeries n_D0_log_muf(const double& L);
+    AsSeries n_D1_log_muf(const double& L);
+    AsSeries n_D2_log_muf(const double& L);
+    AsSeries n_D3_log_muf(const double& L);
+    AsSeries n_D4_log_muf(const double& L);
+
     double nlo_r_lz0(const double& z, const double& L);
     double nlo_r_lz1(const double& z, const double& L);
     double nnlo_r_lz0(const double& z, const double& L);
@@ -40,7 +52,37 @@ namespace HEFT {
     double gg_n3lo_r_lz4_NS(const double& z, const double& L);
     double gg_n3lo_r_lz5_NS(const double& z, const double& L);
     
+    double nFull_minus_nS(const double& z, const double& L);
+    double qg_nFull_minus_nS(const double& z, const double& L);
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+        double leggnnnloreg_(double* z, double* L);
+        double leqgnnnloreg_(double* z, double* L);
+        double leqqbnnnlo_(double* z, double* L);
+        double leqqnnnlo_(double* z, double* L);
+        double leq1q2nnnlo_(double* z, double* L);
+
+#ifdef __cplusplus
+    }
+#endif
     
+
+    double LEggNNNLOregSte(const double& z, const double& L);
+    double LEggN3LOregFalko(const double& z, const double& L);
+
+    double LEqgNNNLOregSte(const double& z, const double& L);
+    double LEqgN3LOregFalko(const double& z, const double& L);
+
+    double LEqqbNNNLOregSte(const double& z, const double& L);
+    double LEqqbN3LOregFalko(const double& z, const double& L);
+    
+    double LEqqNNNLOregSte(const double& z, const double& L);
+    double LEqqN3LOregFalko(const double& z, const double& L);
+    
+    double LEq1q2NNNLOregSte(const double& z, const double& L);
+    double LEq1q2N3LOregFalko(const double& z, const double& L);
     
     double qg_nnlo_r_lz0(const double& z, const double& L);
     double qg_nnlo_r_lz1(const double& z, const double& L);
@@ -154,17 +196,6 @@ namespace HEFT {
     double n_N3LO_D5();
 }
 
-class HiggsEFT
-{
-public:
-    
-    
-    //---------- plus terms
-    
-    
-    
-    
-    
-};
+
 
 #endif

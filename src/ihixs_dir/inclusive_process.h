@@ -5,6 +5,7 @@
 //#include "vegas_adaptor.h"
 #include "luminosity.h"
 #include "wilson_coefficients.h"
+#include "gluon_fusion_ew_coefficients.h"
 #include "sigma_term.h"
 //#include "constants.h"
 #include "model.h"
@@ -27,18 +28,42 @@ public:
     double CoefficientAlphaSError(int i);
     ResultPair CoefficientAlphaSResult(int as_order);
     string ChannelBreakdown();
-    string ScaleVariation();
+    string DetailedResults();
+    string OneLineResults();
+    string OneLineResultsTopOnly();
     ResultPair TotalCentral();
     friend ostream& operator<<(ostream&, const InclusiveProcess&);
 
+    ResultPair EffectiveRescaledLO();
+    ResultPair EffectiveRescaledNLO();
+    ResultPair EffectiveRescaledNNLO();
+    ResultPair EffectiveRescaledN3LOLowerAndScale();
+
+    ResultPair NextToSoftLog345_at_L_0();
+    ResultPair NextToSoftLog012_at_L_0();
+    ResultPair FullLog345_at_L_0();
+    ResultPair BeyondSoft();
+    ResultPair DeltaSoft();
+    ResultPair DeltaQCDExact();
+    ResultPair DeltaQCDTopOnly();
+    AsSeries EwCorrections();
+    ResultPair ExactQCDEffectsLO();
+    ResultPair ExactQCDEffectsNLO();
+    ResultPair ExactQCDEffectsLO_toponly();
+    ResultPair ExactQCDEffectsNLO_toponly();
+    double RescalingCoeff(){return _top_only_LO_coefficient;}
+    
+    SigmaTerm* find_term(const string& type);
 private:
     UserInterface _UI;
-    bool _scale_variation;
     CModel _model;
     double _as_pi;
     NewLuminosity* _lumi;
     
     WilsonCoefficient _wc;
+    GluonFusionEWCoefficients* _ew;
+    AsSeries _ew_lambda_series;
+    
     double _prefactor;
     double _tau;
     vector<double> _mur_vector;
@@ -50,19 +75,36 @@ private:
     double _log_mur_over_muf_sq;
     
     vector<Channel*> _channels;
-    vector<Channel*> _extra_channels;
+   // vector<Channel*> _extra_channels;
    // vector<SigmaTerm*> _sigma;
 
+    void AddTerm(const string&,
+                 const string&,
+                 const AsSeries&,
+                 LuminosityIntegral*,
+                 const string&,
+                 const string&);
+    
+    void AddTerm(const string&,
+                 const string&,
+                 const AsSeries&,
+                 LuminosityIntegral*,
+                 const string&);
+    
+    void AddTerm(const string&,
+                 const string&,
+                 const AsSeries&,
+                 LuminosityIntegral*);
+    
     int _int_qcd_perturbative_order;
     
-    SigmaTerm* find_term(const string& type);
     
+    Channel* find_channel(const string& type);
     void SetMurDependentParameters(const double& mur);
     void Truncate();
     
     bool _is_enhanced_eft;
-    double _exact_LO_coefficient;
-    double _exact_NLO_delta_gg;
+    double _top_only_LO_coefficient;
     bool _is_exact;
 
 };
