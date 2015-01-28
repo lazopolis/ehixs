@@ -8,9 +8,9 @@ using namespace std;
 
 /// \todo Check PDF weight (= charge^2?)
 const vector<InitialStateFlavors> InitialStateFlavors::quarks({
-    InitialStateFlavors(QCD::d,QCD::dbar,-1./9.),
-    InitialStateFlavors(QCD::s,QCD::sbar,-1./9.),
-    InitialStateFlavors(QCD::b,QCD::bbar,-1./9.),
+    InitialStateFlavors(QCD::d,QCD::dbar,+1./9.),
+    InitialStateFlavors(QCD::s,QCD::sbar,+1./9.),
+    InitialStateFlavors(QCD::b,QCD::bbar,+1./9.),
     InitialStateFlavors(QCD::u,QCD::ubar,+4./9.),
     InitialStateFlavors(QCD::c,QCD::cbar,+4./9.),
     InitialStateFlavors(QCD::t,QCD::tbar,+4./9.)

@@ -500,9 +500,10 @@ bool CHistogram::the_event_is_in_ith_bin(int bin_id,const CombinedEvent& X)
         }
         else
         {
-            cout<<"\n in CHistogram "<<_name<<", val out of bounds and a nan :"<<val;
+            cerr<<"\n in CHistogram "<<_name<<", val out of bounds and a nan :"<<val;
         }
     }
+    return false;
 }
 
 

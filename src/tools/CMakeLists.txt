@@ -10,4 +10,5 @@ add_library(tools
                     epsilon_series.cpp
                     constants.cpp
                     formalsum.cpp
+		    boxmaster.cpp
                     )

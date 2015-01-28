@@ -74,7 +74,7 @@ private://data
     TheHatch the_hatch;
     HistogramBox* _histograms;
     
-    Decay *my_decay;
+    Decay* my_decay;
     Production* my_production;
     fstream my_event_stream;
     bool events_writing_;

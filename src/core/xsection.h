@@ -91,7 +91,7 @@ struct SectorInfo
  *
  * \class XSection
  * \brief Base object for cross section evaluation
- * \todo   Meditate on membership of EventBox
+ * \todo  Meditate on membership of EventBox
  *
  */
 
