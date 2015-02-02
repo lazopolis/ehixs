@@ -210,4 +210,30 @@ public:
     
 };
 
+/**
+ *
+ * \class GammaGamma_qq_NNLO_RV
+ * \brief NLO hard real emission sector for qqbar->gammagammag
+ *
+ */
+
+class GammaGamma_qq_NNLO_RV : public GammaGamma_qq<1>
+{
+
+public:
+
+
+    GammaGamma_qq_NNLO_RV(const UserInterface& UI) :
+    GammaGamma_qq<1>(UI, XSectionMaker<GammaGamma_qq_NLO_real>::_info), _hackIsFirstEvent(true)
+    {}
+
+    void generateEvents(vector<double>& randoms);
+    void test(vector<double>& randoms);
+
+private:
+
+    bool _hackIsFirstEvent;
+    
+};
+
 #endif

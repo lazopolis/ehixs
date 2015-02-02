@@ -140,7 +140,7 @@ public:
     }
 
     /// \brief Exponential series expansion
-    /// Expansion in Par of the function a^Par
+    /// Expansion in Par of the function e^(a*Par)
     /// Type has to be double, int, complex<>, etc...
     static Expansion<Par,Type> exp(const Type& a, const size_t trunc = accuracy)
     {
@@ -184,6 +184,10 @@ template <Parameter Par, typename Type>
 Expansion<Par,Type> operator*(const Type first, const Expansion<Par,Type>& second);
 template <Parameter Par, typename Type>
 Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom);
+
+/// Get the coefficient of a product
+template<Parameter Par, typename Type>
+Type productCoeff(const Expansion<Par,Type>& in1, const Expansion<Par,Type>& in2, const int term);
 
 /// Output function
 template <Parameter Par,typename Type>
@@ -283,6 +287,16 @@ Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom
     return numer * (1./denom);
 }
 
+/// Get the coefficient of a product
+template <Parameter Par, typename Type>
+Type productCoeff(const Expansion<Par,Type>& in1, const Expansion<Par,Type>& in2, const int term)
+{
+    Type foo;
+    for (int i = in1.minTerm(); i<=in1.maxTerm() && (term-i)>=in2.minTerm();  ++i)
+        foo += in1.getCoefficient(i) * in2.getCoefficient(term-i);
+    return foo;
+}
+    
 /// Standard output function
 template <Parameter Par, typename Type>
 std::ostream& operator<<(std::ostream& myOut, const Expansion<Par,Type>& myExpansion)

@@ -57,6 +57,9 @@ public:
     /// Series espansion of (pi epsilon) cot(pi epsilon)
     static const Expansion<Parameter::epsilon, double> cotan;
 
+    /// Series espansion of (pi epsilon) / sin(pi epsilon)
+    static const Expansion<Parameter::epsilon, double> cosec;
+
     /// Quick alias to current accuracy
     static size_t& acc;
 

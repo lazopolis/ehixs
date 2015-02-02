@@ -47,6 +47,15 @@ const Expansion<Parameter::epsilon, double> CounterForge::cotan = Expansion<Para
     -2.008154712395889, 0.,
     -2.001989150255636, 0.});
 
+/// Series espansion of (pi epsilon) / sin(pi epsilon)
+const Expansion<Parameter::epsilon, double> CounterForge::cosec = Expansion<Parameter::epsilon, double>(0,{
+    1.000000000000000, 0.,
+    1.644934066848226, 0.,
+    1.894065658994492, 0.,
+    1.971102182594870, 0.,
+    1.992466003705296, 0.,
+    1.998079015196543, 0.});
+
 /// \fn _Pqq
 
 template<>

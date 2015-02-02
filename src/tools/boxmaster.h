@@ -12,7 +12,7 @@
 
 #include "expansion.h"     // Expansion
 #include "chaplin.h"       // HPL
-#include "counterforge.h"  // cotan
+#include "counterforge.h"  // cGamma, cotan, cosec
 #include <cmath>           // NAN
 
 /**
@@ -21,6 +21,7 @@
  * \brief Shorthand for (-1)^n
  *
  */
+
 template <typename intype, typename outtype>
 outtype m1n(const intype& n)
 {
@@ -41,11 +42,41 @@ double polyLog(const size_t n, const double& z);
 
 /**
  *
+ * \fn    continuedExp
+ * \brief Expansion of Re(z^(a*epsilon)), automatised for z<0
+ *
+ */
+
+Expansion<Parameter::epsilon, double> continuedExp(const double& z, const double& a,
+                                                   const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+
+/**
+ *
+ * \fn    bubble
+ * \brief Returns the ordinary bubble master as an expansion in epsilon for given invariants
+ *
+ */
+
+Expansion<Parameter::epsilon, double> bubble(const double& s,
+                                             const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+
+/**
+ *
  * \fn    twoFone
  * \brief Hypergeometric function 2F1(1,-e;1-e,z) with automatic analytic continuation
  *
  */
 
 Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+
+/**
+ *
+ * \fn    boxF
+ * \brief Returns the Babis box master (eq. 4.33 of his PhD thesis) as an expansion in epsilon for given invariants
+ *
+ */
+
+Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const double& M2,
+                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
 
 #endif
