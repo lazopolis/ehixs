@@ -1,6 +1,6 @@
 /*This file was produced by Simone Lionetti using a Mathematica script*/
 
-// Master n. 7: bubble((-s12-s23-s24))
+// Master n. 7: bubble(-s12-s23-s24)
 
 // Coefficient order epsilon^-1 of master 7
 template<>

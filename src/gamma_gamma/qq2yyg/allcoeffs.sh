@@ -13,47 +13,37 @@ for i in $(ls coeff*.h); do echo '#include "'$i'"' >> allcoeffs.cpp; done
 
 echo -e "\ndouble qq2yyg(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24)\n{" >> allcoeffs.cpp
 echo "    const double CAm2CF = QCD::CA-2.*QCD::CF;" >> allcoeffs.cpp
-#echo "    const double (-s12-s13-s14) = -s12-s13-s14;" >> allcoeffs.cpp
-#echo "    const double (-s12-s23-s24) = -s12-s23-s24;" >> allcoeffs.cpp
-#echo "    const double (s12+s14+s24) = s12+s14+s24;" >> allcoeffs.cpp
-#echo "    const double (s12+s13+s23) = s12+s13+s23;" >> allcoeffs.cpp
-#echo "    const double (-s12-s13-s14-s23-s24) = -s12-s13-s14-s23-s24;" >> allcoeffs.cpp
 echo "    double foo = 0.;" >> allcoeffs.cpp
 
 # CA terms
-counter=0
-for i in $(ls coeffCA*.h | grep -v "CAm2CF")
+for ((i=1; i<=$(ls coeffCA*.h | grep -v "CAm2CF" | wc -w); i++))
 do 
-    counter=$[counter+1]
     echo -n "    foo += QCD::CA*productCoeff(qq2yygCA<" >> allcoeffs.cpp
-    echo -n $counter >> allcoeffs.cpp
+    echo -n $i >> allcoeffs.cpp
     echo -n ">(s12,s13,s14,s23,s24)," >> allcoeffs.cpp
-    cat $i | grep Master | awk {'printf $5;'} >> allcoeffs.cpp
+    cat coeffCA${i}.h | grep 'Master' | awk {'printf substr($5, 1, length($5)-1); printf ",3)";'} >> allcoeffs.cpp
     echo ",0);" >> allcoeffs.cpp
 done
 
 # CF terms
-counter=0
-for i in $(ls coeffCF*.h)
-do 
-    counter=$[counter+1]
-    echo -n "    foo += QCD::CF*productCoeff(qq2yygCF<" >> allcoeffs.cpp
-    echo -n $counter >> allcoeffs.cpp
-    echo -n ">(s12,s13,s14,s23,s24)," >> allcoeffs.cpp
-    cat $i | grep Master | awk {'printf $5;'} >> allcoeffs.cpp
-    echo ",0);" >> allcoeffs.cpp
+for ((i=1; i<=$(ls coeffCF*.h | wc -w); i++))
+do
+echo -n "    foo += QCD::CF*productCoeff(qq2yygCF<" >> allcoeffs.cpp
+echo -n $i >> allcoeffs.cpp
+echo -n ">(s12,s13,s14,s23,s24)," >> allcoeffs.cpp
+cat coeffCF${i}.h | grep 'Master' | awk {'printf substr($5, 1, length($5)-1); printf ",3)";'} >> allcoeffs.cpp
+echo ",0);" >> allcoeffs.cpp
 done
 
+
 # CAm2CF terms
-counter=0
-for i in $(ls coeffCAm2CF*.h)
-do 
-    counter=$[counter+1]
-    echo -n "    foo += CAm2CF*productCoeff(qq2yygCAm2CF<" >> allcoeffs.cpp
-    echo -n $counter >> allcoeffs.cpp
-    echo -n ">(s12,s13,s14,s23,s24)," >> allcoeffs.cpp
-    cat $i | grep Master | awk {'printf $5;'} >> allcoeffs.cpp
-    echo ",0);" >> allcoeffs.cpp
+for ((i=1; i<=$(ls coeffCAm2CF*.h | wc -w); i++))
+do
+echo -n "    foo += CAm2CF*productCoeff(qq2yygCAm2CF<" >> allcoeffs.cpp
+echo -n $i >> allcoeffs.cpp
+echo -n ">(s12,s13,s14,s23,s24)," >> allcoeffs.cpp
+cat coeffCAm2CF${i}.h | grep 'Master' | awk {'printf substr($5, 1, length($5)-1); printf ",3)";'} >> allcoeffs.cpp
+echo ",0);" >> allcoeffs.cpp
 done
 
 # Closing function

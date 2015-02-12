@@ -1,6 +1,6 @@
 /*This file was produced by Simone Lionetti using a Mathematica script*/
 
-// Master n. 10: box(s23,(-s12-s13-s14-s23-s24),(-s12-s13-s14))
+// Master n. 10: box(s23,-s12-s13-s14-s23-s24,-s12-s13-s14)
 
 // Coefficient order epsilon^0 of master 10
 template<>

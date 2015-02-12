@@ -1,6 +1,6 @@
 /*This file was produced by Simone Lionetti using a Mathematica script*/
 
-// Master n. 4: bubble((-s12-s13-s14))
+// Master n. 4: bubble(-s12-s13-s14)
 
 // Coefficient order epsilon^-1 of master 4
 template<>
