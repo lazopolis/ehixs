@@ -27,6 +27,7 @@ void BottomFusion_bb_NLO_hard::generateEvents(vector<double>& randoms)
     const double lambda = lambdaR;
     const double z = _tau/(_x.x1*_x.x2);
     const double w = _prefactor * _factor;
+    test();
     // Generating main event
     _pg(randoms);
     _eventBox->push_back(Event(w*bb2Hg<0,0>(z,lambda),_p));
@@ -200,6 +201,14 @@ bool BottomFusion_bb_NNLO_RV::test()
     // Auxiliary variables
     double z, zbar, lambda;
 
+    // Testing coefficients of masters expression
+    z=0.4;
+    zbar = 1.-z;
+    for (lambda=0.50139485723094857;lambda>1e-1;lambda*=0.5)
+        cout << lambda << "\t"
+        << zbar*16.*bb2Hgbis(1./z,-zbar*lambda/z,-zbar*(1.-lambda)/z)/bb2Hg<1,0>(z,lambda) << "\n";
+    cout<<endl;
+
     // Testing collinear limit
     z=0.3;
     for (lambda=0.5;lambda>1e-30;lambda*=0.5)
@@ -220,17 +229,51 @@ bool BottomFusion_bb_NNLO_RV::test()
         << bb2Hg<1,0>(z,lambda)/coll(z,lambda) << "\n";
     cout<<endl;
     
-    lambda = 0.2;
     // Testing soft limit
+    lambda = 0.002;
     for (double zbar = 0.5; zbar>1.e-16; zbar/=2.)
     {
         cout << bb2Hg<1,0>(1.-zbar,lambda) << "\t"
         << soft(1.-zbar,lambda) << "\t"
         << (CounterForge::soft<0>(1.-zbar, lambda)*bb2H<1>()).getCoefficient(0) << "\t"
         << (CounterForge::soft<1>(1.-zbar, lambda)*bb2H<0>()).getCoefficient(0) << "\t"
-        << (bb2Hg<1,0>(1.-zbar,lambda)-(CounterForge::soft<1>(1.-zbar, lambda)*bb2H<0>()).getCoefficient(0)) / (CounterForge::soft<0>(1.-zbar, lambda)*bb2H<1>()).getCoefficient(0)
+        << (bb2Hg<1,0>(1.-zbar,lambda)-(CounterForge::soft<1>(1.-zbar, lambda)*bb2H<0>()).getCoefficient(0)) /
+            (CounterForge::soft<0>(1.-zbar, lambda)*bb2H<1>()).getCoefficient(0)
         << "\n";
     }
+    cout << endl;
+
+    // Testing soft&collinear limit
+    zbar = 0.002;
+    for (double lambda = 0.5; lambda>1.e-16; lambda/=2.)
+    {
+        cout << soft(1.-zbar,lambda) << "\t"
+        << softcoll(1.-zbar,lambda)+softcoll(1.-zbar,1.-lambda)
+        << "\n";
+    }
+    cout << endl;
+
+    // Testing all together
+    zbar = 0.002;
+    for (double lambda = 0.5; lambda>1.e-16; lambda/=2.)
+    {
+        cout
+        << bb2Hg<1,0>(1.-zbar,lambda)-coll(1.-zbar,lambda)-coll(1.-zbar,1.-lambda) << "\t"
+        << -soft(1.-zbar,lambda)+softcoll(1.-zbar,lambda)+softcoll(1.-zbar,1.-lambda)
+        << "\n";
+    }
+    lambda = 0.002;
+    for (double zbar = 0.5; zbar>1.e-16; zbar/=2.)
+    {
+        cout
+        << bb2Hg<1,0>(1.-zbar,lambda)-coll(1.-zbar,lambda)-coll(1.-zbar,1.-lambda) << "\t"
+        << -soft(1.-zbar,lambda)+softcoll(1.-zbar,lambda)+softcoll(1.-zbar,1.-lambda) << "\t"
+        << (CounterForge::soft<0>(1.-zbar, lambda)*bb2H<1>()).getCoefficient(0)/(
+            (CounterForge::softcoll<0>(1.-zbar, lambda)*bb2H<1>()).getCoefficient(0)+
+            (CounterForge::softcoll<0>(1.-zbar, 1.-lambda)*bb2H<1>()).getCoefficient(0))
+        << "\n";
+    }
+
     exit(0);
     return true;
 }

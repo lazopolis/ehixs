@@ -108,6 +108,24 @@ Expansion<Parameter::epsilon, double> bb2H<1>()
     });
 }
 
+/// \brief Full epsilon expansion of bb->H, implementation with Bubble
+
+template<>
+Expansion<Parameter::epsilon, double> bb2Hbis<0>()
+{
+    return Expansion<Parameter::epsilon, double>(0,{bb2H<0,0>()},true);
+}
+
+template<>
+Expansion<Parameter::epsilon, double> bb2Hbis<1>()
+{
+    return static_cast<double>(QCD::CF)*times(
+                                              Expansion<Parameter::epsilon, double>(-1,{-1.,2.,-1.},true),
+                                              bubble(-1.,3),
+                                              3
+                                              )*bb2H<0,0>();
+}
+
 /// \brief Shorthand for full epsilon expansion of bb->Hg
 
 template<>

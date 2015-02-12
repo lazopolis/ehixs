@@ -7,6 +7,7 @@
 #include "parametrizations.h"
 #include "xgenerator.h"
 #include "counterforge.h"
+#include "bb2Hg/bb2HRVcoeffs.h"
 
 template<size_t N>
 class BottomFusion_bb;

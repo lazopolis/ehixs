@@ -3,5 +3,6 @@ add_library(bbh
             bottom_fusion.cpp
             bottom_fusion_me.cpp
             counterforge.cpp
+            bb2Hg/bb2HRVcoeffs.cpp
             )
             
