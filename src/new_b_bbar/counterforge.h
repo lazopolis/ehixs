@@ -60,6 +60,9 @@ public:
     /// Series espansion of (pi epsilon) / sin(pi epsilon)
     static const Expansion<Parameter::epsilon, double> cosec;
 
+    /// Series espansion of cos(pi epsilon)
+    static const Expansion<Parameter::epsilon, double> cos;
+
     /// Quick alias to current accuracy
     static size_t& acc;
 

@@ -185,6 +185,10 @@ Expansion<Par,Type> operator*(const Type first, const Expansion<Par,Type>& secon
 template <Parameter Par, typename Type>
 Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom);
 
+/// Multiply an expansion by another one, with finite size
+template <Parameter Par, typename Type>
+Expansion<Par,Type> times(const Expansion<Par,Type>& first, const Expansion<Par,Type>& second);
+
 /// Get the coefficient of a product
 template<Parameter Par, typename Type>
 Type productCoeff(const Expansion<Par,Type>& in1, const Expansion<Par,Type>& in2, const int term);
@@ -287,12 +291,33 @@ Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom
     return numer * (1./denom);
 }
 
+/// Multiply an expansion by another one, with finite size
+template <Parameter Par, typename Type>
+    Expansion<Par,Type> times(const Expansion<Par,Type>& first, const Expansion<Par,Type>& second,
+                              const size_t accuracy = Expansion<Par,Type>::accuracy)
+{
+    // This is maybe slightly heavy from the point of view of resizing, but nicer than everything else I can think about
+    Expansion<Par,Type> foo; /// \todo Make a function to reserve space
+    const int aMin = first.minTerm();
+    const int aMax = first.maxTerm();
+    const int bMin = second.minTerm();
+    const int bMax = second.maxTerm();
+    const int cMin = aMin+bMin;
+    int cMax = aMax+bMax;
+    if (accuracy!=0) cMax = min(aMax+bMax,cMin+static_cast<int>(accuracy)-1);
+    for (int c = cMin; c <= cMax; ++c)
+        for (int a = max(c-bMax,aMin); a <= min(c-bMin,aMax); ++a)
+            foo.addCoefficient(c, first.getCoefficient(a) * second.getCoefficient(c-a));
+    return foo;
+}
+
+    
 /// Get the coefficient of a product
 template <Parameter Par, typename Type>
 Type productCoeff(const Expansion<Par,Type>& in1, const Expansion<Par,Type>& in2, const int term)
 {
-    Type foo;
-    for (int i = in1.minTerm(); i<=in1.maxTerm() && (term-i)>=in2.minTerm();  ++i)
+    Type foo(0);
+    for (int i = in1.minTerm(); i<=in1.maxTerm() && (term-i)>=in2.minTerm(); ++i)
         foo += in1.getCoefficient(i) * in2.getCoefficient(term-i);
     return foo;
 }

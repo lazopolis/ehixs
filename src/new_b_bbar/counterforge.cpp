@@ -38,7 +38,7 @@ const Expansion<Parameter::epsilon, double> CounterForge::cGamma = Expansion<Par
                                 -25.2367509972286645
                                 });*/
 
-/// Series espansion of (pi epsilon) cot(pi epsilon)
+/// Series expansion of (pi epsilon) cot(pi epsilon)
 const Expansion<Parameter::epsilon, double> CounterForge::cotan = Expansion<Parameter::epsilon, double>(0,{
     1.000000000000000, 0.,
     -3.289868133696453, 0.,
@@ -47,7 +47,7 @@ const Expansion<Parameter::epsilon, double> CounterForge::cotan = Expansion<Para
     -2.008154712395889, 0.,
     -2.001989150255636, 0.});
 
-/// Series espansion of (pi epsilon) / sin(pi epsilon)
+/// Series expansion of (pi epsilon) / sin(pi epsilon)
 const Expansion<Parameter::epsilon, double> CounterForge::cosec = Expansion<Parameter::epsilon, double>(0,{
     1.000000000000000, 0.,
     1.644934066848226, 0.,
@@ -55,6 +55,16 @@ const Expansion<Parameter::epsilon, double> CounterForge::cosec = Expansion<Para
     1.971102182594870, 0.,
     1.992466003705296, 0.,
     1.998079015196543, 0.});
+
+/// Series expansion of cos(pi epsilon)
+const Expansion<Parameter::epsilon, double> CounterForge::cos = Expansion<Parameter::epsilon, double>(0,{
+     1.0000000000000000,   0.,
+    -4.934802200544679,    0.,
+     4.058712126416768,    0.,
+    -1.335262768854589,    0.,
+     0.2353306303588932,   0.,
+    -0.02580689139001406,  0.,
+     0.001929574309403923, 0.});
 
 /// \fn _Pqq
 
