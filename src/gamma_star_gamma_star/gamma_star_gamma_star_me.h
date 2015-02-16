@@ -16,7 +16,7 @@ protected:
     void JF(const double&,const GStar2Kinematics& kv);
     void JF();
 protected:
-    NewLuminosity* lumi;
+    Luminosity* lumi;
     double m3,m4;
     Gstar2Amplitude amplitude_;
 };

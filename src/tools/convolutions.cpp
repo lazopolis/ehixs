@@ -213,6 +213,8 @@ void FSingle::set_name(string& pname,vector<string>& name_descriptor,int pid)
         }
 }
 */
+
+/*
 void LuminosityBox::AllocateLuminosity(Luminosity* lumi)
 {
     for (int i=0;i<luminosities_.size();i++)
@@ -348,7 +350,7 @@ double LuminosityBox::give(const double& x1,const double& x2)
     return res;
 }
 
-
+*/
 
 // legacy for gluon fusion below
 

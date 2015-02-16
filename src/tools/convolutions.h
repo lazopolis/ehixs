@@ -81,6 +81,8 @@ public:
     double flavor_dependent_prefactor;
 };
 
+
+/*
 class LuminosityBox
 {
 public:
@@ -95,7 +97,7 @@ private:
     vector<double> flavor_dependent_prefactor_;
 };
 
-
+*/
 
 
 // gluon fusion legacy code below

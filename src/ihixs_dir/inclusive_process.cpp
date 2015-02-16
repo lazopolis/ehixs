@@ -22,9 +22,9 @@ ostream& operator<<(ostream& stream, const InclusiveProcess& ip)
 InclusiveProcess::InclusiveProcess(const UserInterface& UI)
 {
     _UI=UI;
-    _is_central_scale = true;
-    _is_enhanced_eft = false;
-    _is_exact = false;
+    //_is_central_scale = true;
+    //_is_enhanced_eft = false;
+    //_is_exact = false;
     _int_qcd_perturbative_order = 0;
     
     cout<<endl<<"[ehixs] scales mur="<<UI.mur<<" muf="<<UI.muf<<endl;
@@ -34,14 +34,15 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
     if (UI.qcd_perturbative_order=="NNLO") _int_qcd_perturbative_order=4;
     if (UI.qcd_perturbative_order=="N3LO") _int_qcd_perturbative_order=5;
 
-    if (UI.matrix_element_approximation != "pure_eft"
+    /*if (UI.matrix_element_approximation != "pure_eft"
         and UI.matrix_element_approximation != "enhanced_eft")
     {
         cout<<"\n we can't do "<<UI.matrix_element_approximation<<" yet";
         cout<<endl;
         exit(0);
     }
-    _lumi = new NewLuminosity(UI);
+     */
+    _lumi = new Luminosity(UI.pdf_set);
     
     _tau = pow(UI.m_higgs,2.)/pow(UI.Etot,2.);
     
@@ -310,7 +311,7 @@ InclusiveProcess::InclusiveProcess(const UserInterface& UI)
     // setting bottom and charm's Y back to 1.
     _model.bottom.set_Y(1.0);
     _model.charm.set_Y(1.0);
-    _is_enhanced_eft = true;
+    //_is_enhanced_eft = true;
     
     // computing the exact LO
     GluonFusionExactCoefficients exact(_model);

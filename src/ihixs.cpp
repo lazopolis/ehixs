@@ -26,12 +26,9 @@ using namespace std;
 
 void print_logo()
 {
-    int vmajor = 0;
+    int vmajor = 2;
     int vminor = 0;
-#ifdef EHIXS_VERSION_MAJOR
-    vmajor = EHIXS_VERSION_MAJOR;
-    vminor = EHIXS_VERSION_MINOR;
-#endif
+
     cout<<"\n* * * * * * * * * * * * * * * * * * * * * * * * *";
     cout<<"\n*                                               *";
     cout<<"\n*                                               *";

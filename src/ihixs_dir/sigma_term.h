@@ -52,7 +52,7 @@ public:
             exit(0);
         }
     }
-    void ConfigureLumi(NewLuminosity* lumi,const double& tau,const UserInterface& UI);
+    void ConfigureLumi(Luminosity* lumi,const double& tau,const UserInterface& UI);
     void CallVegas();
     void Truncate(int);
     bool IsZero(int porder);

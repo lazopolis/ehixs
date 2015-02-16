@@ -58,7 +58,7 @@ private:
     UserInterface _UI;
     CModel _model;
     double _as_pi;
-    NewLuminosity* _lumi;
+    Luminosity* _lumi;
     
     WilsonCoefficient _wc;
     GluonFusionEWCoefficients* _ew;
@@ -66,17 +66,13 @@ private:
     
     double _prefactor;
     double _tau;
-    vector<double> _mur_vector;
     double _current_mur;
-    bool _is_central_scale;
     
     double _log_muf_over_mt_sq;
     double _log_muf_mh_sq;
     double _log_mur_over_muf_sq;
     
     vector<Channel*> _channels;
-   // vector<Channel*> _extra_channels;
-   // vector<SigmaTerm*> _sigma;
 
     void AddTerm(const string&,
                  const string&,
@@ -103,9 +99,7 @@ private:
     void SetMurDependentParameters(const double& mur);
     void Truncate();
     
-    bool _is_enhanced_eft;
     double _top_only_LO_coefficient;
-    bool _is_exact;
 
 };
 

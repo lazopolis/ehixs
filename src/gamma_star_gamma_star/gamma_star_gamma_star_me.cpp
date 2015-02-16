@@ -46,7 +46,7 @@ Gstar2CrossSection_qqbar::Gstar2CrossSection_qqbar()
 
 void Gstar2CrossSection_qqbar::AllocateLuminosity(const UserInterface& UI)
 {
-    lumi = new NewLuminosity(UI);
+    lumi = new Luminosity(UI);
     // in Gstar2 we have to multiply the luminosity of each quark flavor with
     // its charge to the fourth. The overloaded add_pair function does this.
     lumi->add_pair(-5,5,pow(-1./3.,4));

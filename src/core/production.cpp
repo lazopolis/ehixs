@@ -90,7 +90,6 @@ size_t Production::dimension_of_integration()
 
 void Production::evaluate_sector()
 {
-    event_box.clear();
     the_xs_->evaluate(xx_vegas);
     return;
 }
