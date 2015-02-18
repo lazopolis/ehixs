@@ -8,7 +8,7 @@ Etot = 13000
 muf = 125.4
 mur = 125.4
 qcd_perturbative_order = NLO #LO, NLO, NNLO, N3LO, ALL
-pdf_provider = MSTW
+pdf_set = MSTW2008nnlo68cl #use this for a specific pdf set to be used in the entire computation independent of perturbative order
 #---------- selecting initial state channels
 # the flavor of the parton from the left
 # if not declared all flavors are considered

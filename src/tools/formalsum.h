@@ -217,7 +217,7 @@ _lowestTerm(lowestTerm), _coefficients(0)
             _coefficients.push_back(*it);
         }
     }
-    while (_coefficients.back() == Type())
+    while (!_coefficients.empty() && _coefficients.back() == Type())
     {
         _coefficients.pop_back();
     }

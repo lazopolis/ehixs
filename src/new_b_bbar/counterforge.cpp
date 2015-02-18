@@ -83,15 +83,15 @@ Expansion<Parameter::epsilon, double> CounterForge::_Pqq<1>(const double& z)
 /// \fn Pqq
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z)
+Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z, const size_t trunc)
 {
     return _Pqq<0>(z);
 }
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z)
+Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z, const size_t trunc)
 {
-    return r3(z)*_Pqq<0>(z)+r4()*_Pqq<1>(z);
+    return r3(z,trunc)*_Pqq<0>(z)+r4(Scheme::CDR,trunc)*_Pqq<1>(z);
 }
 
 /// \fn    _2F1
@@ -137,9 +137,9 @@ template<>
 Expansion<Parameter::epsilon, double> CounterForge::soft<1>(const double& z, const double& lambda, const size_t trunc)
 {
     return cGamma*Expansion<Parameter::epsilon, double>(-2,8.*QCD::CA*QCD::CF,true)*cotan/((1.-z)*lambda*(1.-lambda))*
-    Expansion<Parameter::epsilon, double>::exp(-log(lambda))*
-    Expansion<Parameter::epsilon, double>::exp(-log(1.-lambda))*
-    Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z));
+    Expansion<Parameter::epsilon, double>::exp(-log(lambda),trunc)*
+    Expansion<Parameter::epsilon, double>::exp(-log(1.-lambda),trunc)*
+    Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z),trunc);
 }
 
 /// Soft-collinear current at tree level

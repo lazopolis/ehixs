@@ -68,7 +68,7 @@ public:
 
     /// Quark-quark splitting function, already multiplied by 1-z
     template <size_t loop>
-    static Expansion<Parameter::epsilon, double> Pqq(const double& z);
+    static Expansion<Parameter::epsilon, double> Pqq(const double& z, const size_t trunc = acc);
 
     /// Kosower's auxiliary factor r3
     static Expansion<Parameter::epsilon, double> r3(const double& z, const size_t trunc = acc);
