@@ -62,13 +62,14 @@ Expansion<Parameter::epsilon, double> bubble(const double& s, const size_t n)
 
 Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n)
 {
-//    cout << "Called twoFone(" << z << ", " << n << ")" << endl;
+    //cout << "Called twoFone(" << z << ", " << n << ")";
     if (z==0.) return Expansion<Parameter::epsilon, double>(0,{1.},true);
     else if (z < 1.) {
         vector<double> coeffs;
         coeffs.push_back(1.);
         for (size_t i = 1; i<n; ++i)
             coeffs.push_back(-polyLog(i,z));
+        //cout << " with result " << Expansion<Parameter::epsilon, double>(0,coeffs) << endl;
         return Expansion<Parameter::epsilon, double>(0,coeffs);
     }
     else if (z > 1.) {
@@ -77,13 +78,14 @@ Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n)
         //cout << "tmp = " << tmp << endl;
         for (size_t i = 1; i<n; ++i)
             tmp.addCoefficient(static_cast<int>(i),m1n<size_t,double>(i)*polyLog(i,1./z));
+        //cout << " with result " << tmp << endl;
         return tmp; //check
     }
     cerr << "Invalid argument " << z << " for twoFone" << endl;
     return Expansion<Parameter::epsilon, double>(0,{NAN},true);
 }
 
-/// \fn    boxF
+/// \fn    box
 
 Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const double& M2,
                                            const size_t n)
@@ -102,6 +104,28 @@ Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const
                   times(continuedExp(-t,-1.,n),twoFone(-u/s,n),n)-
                   times(continuedExp(-M2,-1.,n),twoFone(-(M2*u)/(s*t),n),n)
                   ),
+                 n
+                 );
+}
+
+/// \fn    box6
+
+Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, const double& M2,
+                                          const size_t n)
+{
+    const double u = M2-s-t;
+    return times(
+                 CounterForge::cGamma*
+                 times(
+                       Expansion<Parameter::epsilon, double>(-1,1.,true),
+                       Expansion<Parameter::epsilon, double>::geometric(2.,n),
+                       n
+                       ),
+                 (
+                  times(continuedExp(-s,-1.,n),twoFone(-u/t,n+2).setCoefficient(0,0.),n)+
+                  times(continuedExp(-t,-1.,n),twoFone(-u/s,n+2).setCoefficient(0,0.),n)-
+                  times(continuedExp(-M2,-1.,n),twoFone(-(M2*u)/(s*t),n+2).setCoefficient(0,0.),n)
+                  ).setCoefficient(1,0.),
                  n
                  );
 }

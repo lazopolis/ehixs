@@ -113,6 +113,17 @@ target_link_libraries(
 )
 
 add_executable(
+            boxmaster_test
+            boxmaster_test.cpp
+)
+target_link_libraries(
+                    boxmaster_test
+		    bbh
+                    chaplin
+                    tools
+)
+
+add_executable(
             fourvector_test
             fourvector_test.cpp
             )

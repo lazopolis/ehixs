@@ -71,12 +71,23 @@ Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n = 
 
 /**
  *
- * \fn    boxF
+ * \fn    box
  * \brief Returns the Babis box master (eq. 4.33 of his PhD thesis) as an expansion in epsilon for given invariants
  *
  */
 
 Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const double& M2,
                                            const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+
+/**
+ *
+ * \fn    box6
+ * \brief Returns the box master in 6 dimensions as an expansion in epsilon for given invariants
+ *        Beware: this is already multiplied by -epsilon/u in order to avoid *u/u
+ *
+ */
+
+Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, const double& M2,
+                                          const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
 
 #endif
