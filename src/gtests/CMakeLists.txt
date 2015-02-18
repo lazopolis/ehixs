@@ -118,7 +118,7 @@ add_executable(
 )
 target_link_libraries(
                     boxmaster_test
-		    bbh
+                    bbh
                     chaplin
                     tools
 )

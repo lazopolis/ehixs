@@ -117,7 +117,7 @@ Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, cons
     return times(
                  CounterForge::cGamma*
                  times(
-                       Expansion<Parameter::epsilon, double>(-1,1.,true),
+                       Expansion<Parameter::epsilon, double>(-2,-1./u,true),
                        Expansion<Parameter::epsilon, double>::geometric(2.,n),
                        n
                        ),
