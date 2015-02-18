@@ -9,6 +9,7 @@
 
 #include "gammagamma_me.h"
 #include <iostream>
+#include <cfloat> // DBL_EPSILON
 
 /// \fn    Rdist
 
@@ -136,7 +137,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
 {
     std::cout.width(12);
     std::cout.precision(10);
-    for (double reflam = 0.5123419384701234; reflam > 1.e-10; reflam*=0.9) {
+    for (double reflam = 0.5123419384701234; reflam > 1.e-10; reflam*=0.001) {
         // Defining auxiliary names
         randoms.back() = reflam;
         const double& z = randoms[3];
@@ -147,13 +148,17 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double s14 = square(_p[1]-_p[4]);
         const double s23 = square(_p[2]-_p[3]);
         const double s24 = square(_p[2]-_p[4]);
-        // Output
-        if (false) {
+
+        // RV full
+
+        // Printing general information
+        if (true) {
             cout << "\n ----- lambda = " << reflam << " ----- \n";
             cout << s12 << "\t" << s13 << "\t" << s14 << "\t" << s23 << "\t" << s24 << endl;
             cout << square(_p[1]-_p[5]) << "\t" << reflam*(1.-z)*s12 << "\t" << -s12-s13-s14 << endl;
         }
-        if (false) {
+        // Printing 6 components to check 1<-->2 symmetry
+        if (true) {
             double res12;
             double res21;
             res12 = qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23);
@@ -185,7 +190,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << "Total      " << "\t"
             << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
         }
-        if (true) {
+        // Printing 6 components for plotting against lambda
+        if (false) {
             cout << reflam << "\t";
             cout << qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygCFbub(s12,s13,s14,s23,s24)+qq2yygCFbub(s12,s14,s13,s24,s23) << "\t";
@@ -194,6 +200,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << qq2yygCFbox(s12,s13,s14,s23,s24)+qq2yygCFbox(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygAFbox(s12,s13,s14,s23,s24)+qq2yygAFbox(s12,s14,s13,s24,s23) << endl;
         }
+        // Printing coefficients, masters and their product
         if (false) {
             cout << " (" << qq2yygCAm2CF<1>(s12,s13,s14,s23,s24) << ") * (";
             cout << bubble(s12,3) << ") == ";
@@ -226,9 +233,37 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << bubble(s12+s14+s24,3) << ") == ";
             cout << productCoeff(qq2yygCAm2CF<10>(s12,s13,s14,s23,s24),bubble(s12+s13+s23,3),0) << endl;
         }
+
+        cout << polyLog(2,0.5) << endl;
+        cout << polyLog(3,0.5) << endl;
+        cout << polyLog(2,10.) << endl;
+        cout << polyLog(3,10.) << endl;
+        cout << HPL(0,0,1,std::complex<double>(10.,DBL_MIN)) << endl;
+        cout << HPL(0,0,1,std::complex<double>(10.,-DBL_MIN)) << endl;
+        cout << HPL(0,0,1,std::complex<double>(10.,0.)) << endl;
+        cout << HPL(0,0,1,std::complex<double>(1.,0.)) << endl;
+        // Counterterms
+        //Expansion<Parameter::epsilon,double>::accuracy=3;
+        //cout << _coll(z,reflam,s13/s14)/s12/(qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23)) << endl;
+
     }
     exit(1);
     return;
+}
+
+double GammaGamma_qq_NNLO_RV::_coll(const double& z, const double& lambda, const double& ratio)
+{
+    // Unjustified factor of -1!!!
+    // Speed issue: about 3 times slower than direct expression
+    //    cout << "Coll\n" << -2.*Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z/*muR*/))*
+    //    CounterForge::Pqq<1>(z)*bb2H<0>()/lambda << ",\t" <<
+    //    -2.*CounterForge::Pqq<0>(z)*bb2H<1>()/lambda << endl;
+    return -2.*productCoeff(
+                            Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z/*muR*/)),
+                            CounterForge::Pqq<1>(z)*qq2gammagamma<0>(ratio)/lambda+
+                            2.*CounterForge::Pqq<0>(z)*qq2gammagamma<1>(ratio)/lambda,
+                            0
+                            );
 }
 
 template<>

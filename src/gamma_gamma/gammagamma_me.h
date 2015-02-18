@@ -233,6 +233,7 @@ public:
 private:
 
     bool _hackIsFirstEvent;
+    double _coll(const double& z, const double& lambda, const double& ratio);
     
 };
 

@@ -37,21 +37,35 @@ double qq2gammagamma<0,2>(const double& s13_s14)
 /// One loop (to be multiplied by c_Gamma)
 
 template<>
-double qq2gammagamma<1,-2>(const double& s13_s14)
+double qq2gammagamma<1,-2>(const double& s13os14)
 {
-    return 0.;
+    return QCD::CF * (8 + 11*(s13os14+1./s13os14)/2.);
 }
 
 template<>
-double qq2gammagamma<1,-1>(const double& s13_s14)
+double qq2gammagamma<1,-1>(const double& s13os14)
 {
-    return 0.;
+    const double s14os13 = 1./s13os14;
+    return QCD::CF * (
+                      - 7 - 31*(s13os14+s14os13)/4.
+                      + (2 + s13os14 + 2*s14os13)*log(1+s13os14)
+                      + (2 + 2*s13os14 + s14os13)*log(1+s14os13)
+                      );
 }
 
 template<>
-double qq2gammagamma<1,0>(const double& s13_s14)
+double qq2gammagamma<1,0>(const double& s13os14)
 {
-    return 0.;
+    const double s14os13 = 1./s13os14;
+    const double log34 = log(1.+s13os14);
+    const double log43 = log(1.+s14os13);
+    return QCD::CF * (
+            50 - (8+5*(s13os14+s14os13))*consts::pi_square + 29*(s13os14+s14os13)
+            - (10 + 11*s13os14 + 8*s14os13)*log34
+            - (10 + 8*s13os14 + 11*s14os13)*log43
+            + (2 + s13os14 + 2*s14os13)*log34*log34
+            + (2 + 2*s13os14 + s14os13)*log43*log43
+            )*0.25;
 }
 
 /// \brief Matrix elements for qq->gammagamma
@@ -85,6 +99,28 @@ double qq2gammagammag<0,0>(
 /// End of tree
 
 /// \brief Shorthand for full epsilon expansion of qq->gammagamma
+
+template<>
+Expansion<Parameter::epsilon, double> qq2gammagamma<0>(const double& s13os14)
+{
+    return Expansion<Parameter::epsilon, double>(0,{
+        qq2gammagamma<0,0>(s13os14),
+        qq2gammagamma<0,1>(s13os14),
+        qq2gammagamma<0,2>(s13os14)
+    },true);
+}
+
+template<>
+Expansion<Parameter::epsilon, double> qq2gammagamma<1>(const double& s13os14)
+{
+    return Expansion<Parameter::epsilon, double>(0,{
+        qq2gammagamma<1,-2>(s13os14),
+        qq2gammagamma<1,-1>(s13os14),
+        qq2gammagamma<1,0>(s13os14)
+    });
+}
+
+/// \brief Shorthand for full epsilon expansion of qq->gammagammag
 
 template<>
 Expansion<Parameter::epsilon, double> qq2gammagammag<0>(
