@@ -12,9 +12,10 @@
 #define XSECTION_H
 
 #include <string>
-#include "convolutions.h" // InitialStateFlavors, Event, NewLuminosity
+#include "convolutions.h" // InitialStateFlavors, Event
 #include "model.h"        // Model
 #include "bjorken.h"      // Bjorken
+#include "user_interface.h" // UI
 using namespace std;
 
 /**
@@ -157,7 +158,7 @@ protected:
 
     CModel _model;             ///< Model for the running of this cross section
     EventBox* _eventBox;       ///< Pointer to the box where generated events are stored
-    NewLuminosity* _lumi;      ///< Pointer to the luminosity
+    Luminosity* _lumi;      ///< Pointer to the luminosity
     Bjorken _x;                ///< Storage box for Bjorken xs
 
     double _as_pi;             ///< Strong coupling constants over Pi

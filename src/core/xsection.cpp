@@ -24,12 +24,12 @@ XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
 {
     // Configuring the luminosity
     /// \warning Luminosity allocation assumes left-right symmetry right now
-    _lumi = new NewLuminosity(UI);
+    _lumi = new Luminosity(UI.pdf_set);
     for (vector<InitialStateFlavors>::const_iterator it = info->isf.begin(); it < info->isf.end(); ++it)
     {
-        _lumi->add_pair(it->left, it->right, it->weight);
+        _lumi->addPair(it->left, it->right, it->weight);
         if (it->left != it->right)
-            _lumi->add_pair(it->right, it->left, it->weight);
+            _lumi->addPair(it->right, it->left, it->weight);
     }
     // Starting to run
     /// \note Model does not seem to be particularly generic...
@@ -50,7 +50,7 @@ void XSection::evaluate(vector<double>& randoms)
 {
     _eventBox->clear();
     _factor = generateXs(randoms);
-    _factor *= _lumi->give(_x.x1,_x.x2);
+    _factor *= _lumi->give(_x.x1,_x.x2,_muF);
     if ( _factor != 0. ) generateEvents(randoms);
     else _eventBox->push_back(Event());
     return;

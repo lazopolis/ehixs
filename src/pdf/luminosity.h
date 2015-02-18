@@ -1,52 +1,91 @@
 #ifndef LUMINOSITY_H
 #define LUMINOSITY_H
 
-#include "pdf.h"
-#include "pdf_hub.h"
-#include "constants.h"
-#include <utility>
+/**
+ *
+ * \file    luminosity.h
+ * \ingroup tools
+ * \author  Achilleas Lazopoulos
+ * \date    February 2015
+ *
+ */
+
 #include <string>
-#include "one_d_interpolator.h"
-#include "user_interface.h"
 using namespace std;
 
 #include "LHAPDF/LHAPDF.h"
 
-class NewLuminosity{
-public:
-    NewLuminosity(const UserInterface& UI);
-    ~NewLuminosity(){delete pdf_;}
-    
-    void add_pair(int left,int right)
-    {
-        pairs.push_back(pair<int,int>(left,right));
-        coeff_.push_back(1.);
-    }
-    void add_pair(int left,int right,const double& c)
-    {
-        pairs.push_back(pair<int,int>(left,right));
-        coeff_.push_back(c);
-    }
-    
-    void clear_pairs(){pairs.clear();coeff_.clear();}
-    double give(const double& x1,const double& x2);
 
-    double alpha_s_at_mz(){return pdf_->alphasQ(91.1876);}
+/**
+ *
+ * \class   Luminosity
+ * \ingroup tools
+ * \brief   Interface with LHAPDFs. It initializes a PDF member (one of the many of a specific PDF grid). Then the user can add luminosity pairs (initial states) with a potential constant factor that depends on the pair. Once configured, the class provides L(x1,x2,muf) = Sum_i {x1*f1_i(x1,muf) * x2*f2_i(x2,muf) * c_i}
+ * \todo
+ *
+ */
+
+class Luminosity{
 private:
-    LHAPDF::PDF* pdf_;
-    double muf_;
-    vector<pair<int,int> > pairs;
-    vector<double> coeff_;
-    // if any of x1, x2 are closer to 0 or 1 than _almost_zero we will return 0.0
+    /// \name Private data members
+    /// @{
+    /// \brief pointer to a whole PDF member (includes all flavors)
+    LHAPDF::PDF* _pdf;///<
+    
+    /// \brief each pair is a different initial state
+    vector<pair<int,int> > _pairs;
+
+    /// \brief potential coefficient that is different for every initial state pair
+    vector<double> _coeff;
+    
+    /// \brief technical cutoff: we don't allow bjorken xs to go closer to the edges than this cutoff.
     static const double _almost_zero;
-private:
-    string determine_gridname(const string& provider, int order,const string&);
+    /// @}
+public:
+    /// \name Constructors and destructors
+    /// @{
+    Luminosity(const string& gridname);
+    
+    ~Luminosity(){delete _pdf;}///< we are responsible for deleting the LHAPDF pointer
+    
+    ///@}
+    
+    /// \name Input/Output
+    /// @{
+    
+    /// \brief adds a pair of initial states by number id
+    void addPair(int left,int right);
+    /// \brief adds a pair of initial states by number id, *and* a constant. The constant multiplies the luminosity contribution from this pair of initial states. (Constant coeff defaults to 1.0)
+    
+    void addPair(int left,int right,const double& c);
+    /// \brief clears the class data
+    /// \todo where is this used? Is it really useful?
+
+    void clear_pairs(){_pairs.clear();_coeff.clear();}
+    /// \brief returns the full luminosity Sum_i {x1*f1_i(x1,muf) * x2*f2_i(x2,muf) * c_i}
+    
+    double give(const double& x1,const double& x2,const double& muf);
+    /// \brief alpha_s_at_mz
+    /// \warning mz is at its nominal pdg value here - might not be in sync with model
+    
+    double alpha_s_at_mz(){return _pdf->alphasQ(91.1876);}
+    ///@}
 };
 
 
+//---------------- legacy code below
 
 
 
+//#include "pdf.h"
+//#include "pdf_hub.h"
+//#include "constants.h" // for QCD namespace
+//#include <utility>
+//#include "one_d_interpolator.h"
+//#include "user_interface.h"
+
+
+/*
 class LuminositySinglePair
 {
 public:
@@ -128,6 +167,8 @@ public:
 private:
      vector<pdf_pair> mylist;
 };
+ 
+ */
 #endif
 
 

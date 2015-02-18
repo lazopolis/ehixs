@@ -16,7 +16,7 @@
 #include "cut.h"
 #include "interface_to_amplitudes.h"
 #include "user_interface.h"
-#include "luminosity.h"
+//#include "luminosity.h"
 #include "thehatch.h"
 #include "event.h"
 #include "xsectionmaker.h"

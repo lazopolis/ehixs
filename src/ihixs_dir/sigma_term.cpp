@@ -4,7 +4,7 @@ using namespace std;
 
 
 
-void SigmaTerm::ConfigureLumi(NewLuminosity* lumi,const double& tau,const UserInterface& UI)
+void SigmaTerm::ConfigureLumi(Luminosity* lumi,const double& tau,const UserInterface& UI)
 {
     _lumi_int->Configure(lumi,tau,UI);
 }

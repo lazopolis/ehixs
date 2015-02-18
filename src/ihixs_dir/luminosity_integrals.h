@@ -6,13 +6,14 @@
 #include "vegas_adaptor.h"
 #include "luminosity.h"
 #include "user_interface.h"
+#include "constants.h" // for QCD namespace
 
 class LuminosityIntegral: public CoolInt
 {
 public:
     virtual double evaluateIntegral(const double* xx)=0;
     virtual void set_initial_flavors()=0;
-    void Configure(NewLuminosity* lumi, const double& tau,const UserInterface UI)
+    void Configure(Luminosity* lumi, const double& tau,const UserInterface UI)
     {lumi_=lumi; tau_ = tau;set_initial_flavors();
         _epsrel = UI.epsrel;
         _epsabs = UI.epsabs;
@@ -20,11 +21,13 @@ public:
         _maxeval = UI.maxeval;
         _nstart = UI.nstart;
         _nincrease = UI.nincrease;
+        _muF = UI.muf;
     }
     double tau(){return tau_;}
 protected:
-    NewLuminosity* lumi_;
+    Luminosity* lumi_;
     double tau_;
+    double _muF;
 };
 
 class LuminosityIntegralDelta: public LuminosityIntegral
@@ -69,9 +72,9 @@ public:
             if (i!=0)
             {
                 //:  q g + qbar g
-                lumi_->add_pair(i, QCD::g);
+                lumi_->addPair(i, QCD::g);
                 //:  g q + g qbar
-                lumi_->add_pair(QCD::g, i);
+                lumi_->addPair(QCD::g, i);
             }
         }
         
@@ -91,7 +94,7 @@ public:
             if (i!=0)
             {
                 //:  q qbar + qbar q
-                lumi_->add_pair(i, -i);
+                lumi_->addPair(i, -i);
             }
         }
         
@@ -111,7 +114,7 @@ public:
             if (i!=0)
             {
                 //:  q q
-                lumi_->add_pair(i, i);
+                lumi_->addPair(i, i);
             }
         }
         
@@ -133,7 +136,7 @@ public:
                 if (i!=0 and j!=0 and i!=j and i!=-j)
                 {
                 //:  q1 q2
-                lumi_->add_pair(i, j);
+                lumi_->addPair(i, j);
                 }
             }
         }
@@ -147,7 +150,7 @@ class gg_real : public LuminosityIntegralReal
 public:
     gg_real(f_ptr f,const double& L):LuminosityIntegralReal(f,L){};
     
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
 };
 
 
@@ -155,48 +158,48 @@ public:
 class gg_delta : public LuminosityIntegralDelta
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
 };
 
 class gg_plus_0 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
     double log_power(){return 0.0;}
 };
 
 class gg_plus_1 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
     double log_power(){return 1.0;}
 };
 
 class gg_plus_2 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
     double log_power(){return 2.0;}
 };
 
 class gg_plus_3 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
     double log_power(){return 3.0;}
 };
 
 class gg_plus_4 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
     double log_power(){return 4.0;}
 };
 
 class gg_plus_5 : public LuminosityIntegralPlus
 {
 public:
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
     double log_power(){return 5.0;}
 };
 
@@ -226,7 +229,7 @@ class gg_real_exact : public LuminosityIntegralRealExact
 public:
     gg_real_exact(f_ptr2 f,const double& L,CModel* model_ptr):LuminosityIntegralRealExact(f,L,model_ptr){};
     
-    void set_initial_flavors(){lumi_->clear_pairs();lumi_->add_pair(QCD::g, QCD::g);}
+    void set_initial_flavors(){lumi_->clear_pairs();lumi_->addPair(QCD::g, QCD::g);}
 };
 
 
@@ -243,9 +246,9 @@ public:
             if (i!=0)
             {
                 //:  q g + qbar g
-                lumi_->add_pair(i, QCD::g);
+                lumi_->addPair(i, QCD::g);
                 //:  g q + g qbar
-                lumi_->add_pair(QCD::g, i);
+                lumi_->addPair(QCD::g, i);
             }
         }
         
@@ -265,7 +268,7 @@ public:
             if (i!=0)
             {
                 //:  q qbar + qbar q
-                lumi_->add_pair(i, -i);
+                lumi_->addPair(i, -i);
             }
         }
         
