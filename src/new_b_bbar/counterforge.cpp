@@ -93,7 +93,7 @@ Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z, cons
 {
     // This generates mayhem if trunc < 3 .
     return times(r3(z,Scheme::CDR,trunc),_Pqq<0>(z),trunc)
-        + times(r4(Scheme::CDR,trunc-2),_Pqq<1>(z),trunc-2);
+        + times(r4(Scheme::CDR,trunc),_Pqq<1>(z),trunc).cut(trunc-2);
 }
 
 /// \fn    _2F1
@@ -114,7 +114,7 @@ Expansion<Parameter::epsilon, double> CounterForge::_2F1(const double& a, const 
 Expansion<Parameter::epsilon, double> CounterForge::r3(const double& z, const Scheme& s, const size_t trunc)
 {
     // This generates mayhem if trunc < 3 .
-    return 0.5*(static_cast<double>(QCD::Nc)*f1_1minus1overz(z,trunc)-1./QCD::Nc*f1_1overz(z,trunc))-r4(s,trunc-2);
+    return 0.5*(static_cast<double>(QCD::Nc)*f1_1minus1overz(z,trunc)-1./QCD::Nc*f1_1overz(z,trunc))-r4(s,trunc)/*.cut(trunc-2)*/;
 }
 
 /// Kosower's auxiliary factor r4

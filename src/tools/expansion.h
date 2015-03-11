@@ -35,7 +35,7 @@ public:
     /// \name Constructors etc.
     /// @{
 
-    // Default constructor
+    /// Default constructor
     Expansion() :
     FormalSum<Type>()
     {}
@@ -124,6 +124,9 @@ public:
 
     /// Multiply two expansions
     Expansion<Par,Type> operator*(const Expansion<Par,Type>& that) const;
+
+    /// Cut this expression after the first n terms
+    const Expansion<Par,Type>& cut(const size_t n);
 
     /// @}
 
@@ -266,6 +269,16 @@ Expansion<Par,Type> Expansion<Par,Type>::operator*(const Expansion<Par,Type>& th
             foo.addCoefficient(c, this->getCoefficient(a) * that.getCoefficient(c-a));
     return foo;
 }
+
+/// Cut this expression after the first n terms
+template <Parameter Par, typename Type>
+const Expansion<Par,Type>& Expansion<Par,Type>::cut(const size_t n)
+{
+    // Assuming the user knows what he's doing
+    this->FormalSum<Type>::cut(n);
+    return *this;
+}
+
 
 /// \name Non-member operations
 

@@ -55,13 +55,13 @@ int main(int argc, char**argv)
     // Testing r3 to order 3
     acc = 3;
     cout.precision(10);
-    Expansion<Parameter::epsilon, double> myr3 = CounterForge::r3(0.123456);
+    Expansion<Parameter::epsilon, double> myr3 = CounterForge::r3(0.123456,CounterForge::Scheme::CDR,acc);
     ASSERT_TRUE(
                 (myr3.getCoefficient(-2) == -3.) &&
                 (fabs(myr3.getCoefficient(-1) - 5.18302) <= 0.00001) &&
                 (fabs(myr3.getCoefficient( 0) - 7.37089) <= 0.00001)
                 );
-    myr3 = CounterForge::r3(0.987654);
+    myr3 = CounterForge::r3(0.987654,CounterForge::Scheme::CDR,acc);
     ASSERT_TRUE(
                 (myr3.getCoefficient(-2) == -3.) &&
                 (fabs(myr3.getCoefficient(-1) + 13.1501) <= 0.0001) &&
@@ -71,8 +71,7 @@ int main(int argc, char**argv)
     ASSERT_TRUE(
                 myr3==myforge.fastr3(0.987654)
                 );
-    cout << myforge.fastPqq<1>(0.123456) <<  endl;
-    cout << myforge.Pqq<1>(0.123456) <<  endl;
+    ASSERT_EQUAL(myforge.fastPqq<1>(0.123456),myforge.Pqq<1>(0.123456));
 
 //    ::testing::InitGoogleTest(&argc, argv);
 //    return RUN_ALL_TESTS();

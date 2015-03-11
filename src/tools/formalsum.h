@@ -144,10 +144,10 @@ public:
     const FormalSum<Type>& operator/=(const double that);
 
     /// Truncate the sum after the n-th term
-    void truncate(const int n);
+    virtual const FormalSum<Type>& truncate(const int n);
 
     /// Cut the sum after the first n elements (n=0 does not truncate)
-    void cut(const size_t n);
+    virtual const FormalSum<Type>& cut(const size_t n);
 
     /// @}
 
@@ -438,18 +438,18 @@ const FormalSum<Type>& FormalSum<Type>::operator-=(const FormalSum<Type>& that)
 
 /// Truncate the sum after the n-th term
 template <class Type>
-void FormalSum<Type>::truncate(const int n)
+const FormalSum<Type>& FormalSum<Type>::truncate(const int n)
 {
     while (maxTerm()>n) _coefficients.pop_back();
-    return;
+    return *this;
 }
 
 /// Cut the sum after the first n elements
 template <class Type>
-void FormalSum<Type>::cut(const size_t n)
+const FormalSum<Type>& FormalSum<Type>::cut(const size_t n)
 {
     if (n!=0) while (size()>n) _coefficients.pop_back();
-    return;
+    return *this;
 }
 
 
