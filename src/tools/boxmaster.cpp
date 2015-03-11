@@ -117,15 +117,15 @@ Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, cons
     return times(
                  CounterForge::cGamma*
                  times(
-                       Expansion<Parameter::epsilon, double>(-2,-1./u,true),
+                       Expansion<Parameter::epsilon, double>(-1,1.,true),
                        Expansion<Parameter::epsilon, double>::geometric(2.,n),
                        n
                        ),
-                 (
+                 ( // The setCoefficient(0,0.) represents 2F1(...)-1
                   times(continuedExp(-s,-1.,n),twoFone(-u/t,n+2).setCoefficient(0,0.),n)+
                   times(continuedExp(-t,-1.,n),twoFone(-u/s,n+2).setCoefficient(0,0.),n)-
                   times(continuedExp(-M2,-1.,n),twoFone(-(M2*u)/(s*t),n+2).setCoefficient(0,0.),n)
-                  ).setCoefficient(1,0.),
+                  ).setCoefficient(1,0.), // This is analitically zero, num just small
                  n
                  );
 }

@@ -83,7 +83,7 @@ Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const
  *
  * \fn    box6
  * \brief Returns the box master in 6 dimensions as an expansion in epsilon for given invariants
- *        Beware: this is __NOT__ already multiplied by -epsilon/u in order to avoid *u/u
+ *        Beware: this is already multiplied by -epsilon/u in order to avoid *u/u
  *
  */
 

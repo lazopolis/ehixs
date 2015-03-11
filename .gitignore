@@ -1,5 +1,5 @@
-
 *.o
+*bk
 
 cmake_builds/CMakeCache.txt
 cmake_builds/*
