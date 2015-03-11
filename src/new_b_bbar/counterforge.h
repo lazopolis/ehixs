@@ -71,7 +71,7 @@ public:
     static Expansion<Parameter::epsilon, double> Pqq(const double& z, const size_t trunc = acc);
 
     /// Kosower's auxiliary factor r3
-    static Expansion<Parameter::epsilon, double> r3(const double& z, const size_t trunc = acc);
+    static Expansion<Parameter::epsilon, double> r3(const double& z, const Scheme& s = Scheme::CDR, const size_t trunc = acc);
 
     /// Kosower's auxiliary factor r4
     static Expansion<Parameter::epsilon, double> r4(const Scheme& s = Scheme::CDR, const size_t trunc = acc);
@@ -83,7 +83,7 @@ public:
     static Expansion<Parameter::epsilon, double> f1_1minus1overz(const double& z, const size_t trunc = acc);
 
     /// Epsilon series of Kosower's auxiliary 'function' f2
-    static Expansion<Parameter::epsilon, double> f2();
+    static Expansion<Parameter::epsilon, double> f2(const size_t trunc = acc);
 
     /// Quark-quark splitting function, already multiplied by 1-z, faster member implementation
     template <size_t loop>

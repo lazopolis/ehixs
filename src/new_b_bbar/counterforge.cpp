@@ -91,7 +91,9 @@ Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z, cons
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z, const size_t trunc)
 {
-    return r3(z,trunc)*_Pqq<0>(z)+r4(Scheme::CDR,trunc)*_Pqq<1>(z);
+    // This generates mayhem if trunc < 3 .
+    return times(r3(z,Scheme::CDR,trunc),_Pqq<0>(z),trunc)
+        + times(r4(Scheme::CDR,trunc-2),_Pqq<1>(z),trunc-2);
 }
 
 /// \fn    _2F1
@@ -109,9 +111,10 @@ Expansion<Parameter::epsilon, double> CounterForge::_2F1(const double& a, const 
 }
 
 /// Kosower's auxiliary factor r3
-Expansion<Parameter::epsilon, double> CounterForge::r3(const double& z, const size_t trunc)
+Expansion<Parameter::epsilon, double> CounterForge::r3(const double& z, const Scheme& s, const size_t trunc)
 {
-    return 0.5*(static_cast<double>(QCD::Nc)*f1_1minus1overz(z,trunc)-1./QCD::Nc*f1_1overz(z,trunc))-r4();
+    // This generates mayhem if trunc < 3 .
+    return 0.5*(static_cast<double>(QCD::Nc)*f1_1minus1overz(z,trunc)-1./QCD::Nc*f1_1overz(z,trunc))-r4(s,trunc-2);
 }
 
 /// Kosower's auxiliary factor r4
@@ -161,22 +164,32 @@ Expansion<Parameter::epsilon, double> CounterForge::softcoll<1>(const double& z,
 /// \fn    f1_1overz
 Expansion<Parameter::epsilon, double> CounterForge::f1_1overz(const double& z, const size_t trunc)
 {
-    return cGamma*Expansion<Parameter::epsilon, double>(-2,{-2.},true)*_2F1(1.,1.-z,trunc);
+    return times(
+                 cGamma,
+                 times(
+                       Expansion<Parameter::epsilon, double>(-2,-2.,true),
+                       _2F1(1.,1.-z,trunc),
+                       trunc
+                       ),
+                 trunc
+                 );
 }
 
 /// \fn    f1_1minus1overz
 Expansion<Parameter::epsilon, double> CounterForge::f1_1minus1overz(const double& z, const size_t trunc)
 {
-    return cGamma*Expansion<Parameter::epsilon, double>(-2,{2.},true)*(
-                _2F1(-1.,1.-z,trunc)
-                -Expansion<Parameter::epsilon, double>::exp(-log(1.-z),trunc)*cotan
-                );
+    return times(
+                 times(cGamma,Expansion<Parameter::epsilon, double>(-2,2.,true),trunc),
+                 _2F1(-1.,1.-z,trunc)
+                 -times(Expansion<Parameter::epsilon, double>::exp(-log(1.-z),trunc),cotan,trunc),
+                 trunc
+                 );
 }
 
 /// \fn    f2
-Expansion<Parameter::epsilon, double> CounterForge::f2()
+Expansion<Parameter::epsilon, double> CounterForge::f2(const size_t trunc)
 {
-    return cGamma*Expansion<Parameter::epsilon, double>(-2,-1.,true);
+    return times(cGamma,Expansion<Parameter::epsilon, double>(-2,-1.,true),trunc);
 }
 
 /// \fn fastPqq
