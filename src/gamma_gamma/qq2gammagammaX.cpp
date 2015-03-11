@@ -39,33 +39,30 @@ double qq2gammagamma<0,2>(const double& s13_s14)
 template<>
 double qq2gammagamma<1,-2>(const double& s13os14)
 {
-    return QCD::CF * (8 + 11*(s13os14+1./s13os14)/2.);
+    const double s14os13 = 1./s13os14;
+    // Check factors of 2
+    return -2. * QCD::CF * (s13os14+s14os13);
 }
 
 template<>
 double qq2gammagamma<1,-1>(const double& s13os14)
 {
     const double s14os13 = 1./s13os14;
-    return QCD::CF * (
-                      - 7 - 31*(s13os14+s14os13)/4.
-                      + (2 + s13os14 + 2*s14os13)*log(1+s13os14)
-                      + (2 + 2*s13os14 + s14os13)*log(1+s14os13)
-                      );
+    return QCD::CF * (4.+s13os14+s14os13);
 }
 
 template<>
 double qq2gammagamma<1,0>(const double& s13os14)
 {
     const double s14os13 = 1./s13os14;
-    const double log34 = log(1.+s13os14);
-    const double log43 = log(1.+s14os13);
+    const double log3 = -log(1.+s14os13);
+    const double log4 = -log(1.+s13os14);
     return QCD::CF * (
-            50 - (8+5*(s13os14+s14os13))*consts::pi_square + 29*(s13os14+s14os13)
-            - (10 + 11*s13os14 + 8*s14os13)*log34
-            - (10 + 8*s13os14 + 11*s14os13)*log43
-            + (2 + s13os14 + 2*s14os13)*log34*log34
-            + (2 + 2*s13os14 + s14os13)*log43*log43
-            )*0.25;
+                      2 + (consts::pi_square-3)*(s13os14+s14os13)
+                      + log4*(2 + 3*s13os14) + log3*(2 + 3*s14os13)
+                      + (2 + 2*s13os14 + s14os13)*log3*log3
+                      + (2 + 2*s14os13 + s13os14)*log4*log4
+                      )/* *0.25 */;
 }
 
 /// \brief Matrix elements for qq->gammagamma
