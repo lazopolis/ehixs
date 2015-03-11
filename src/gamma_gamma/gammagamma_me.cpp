@@ -191,17 +191,24 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
         }
         // Printing 6 components for plotting against lambda
-        if (false) {
+        if (true) {
             cout << reflam << "\t";
             cout << qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygCFbub(s12,s13,s14,s23,s24)+qq2yygCFbub(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygAFbub(s12,s13,s14,s23,s24)+qq2yygAFbub(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygCAbox(s12,s13,s14,s23,s24)+qq2yygCAbox(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygCFbox(s12,s13,s14,s23,s24)+qq2yygCFbox(s12,s14,s13,s24,s23) << "\t";
-            cout << qq2yygAFbox(s12,s13,s14,s23,s24)+qq2yygAFbox(s12,s14,s13,s24,s23) << endl;
+            cout << qq2yygAFbox(s12,s13,s14,s23,s24)+qq2yygAFbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CAbub(s12,s13,s14,s23,s24)+qq2yyg6CAbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CFbub(s12,s13,s14,s23,s24)+qq2yyg6CFbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6AFbub(s12,s13,s14,s23,s24)+qq2yyg6AFbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CAbox(s12,s13,s14,s23,s24)+qq2yyg6CAbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CFbox(s12,s13,s14,s23,s24)+qq2yyg6CFbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6AFbox(s12,s13,s14,s23,s24)+qq2yyg6AFbox(s12,s14,s13,s24,s23) << endl;
         }
         // Printing coefficients, masters and their product
         if (false) {
+            cout << endl << "==" << endl;
             cout << " (" << qq2yygCAm2CF<1>(s12,s13,s14,s23,s24) << ") * (";
             cout << bubble(s12,3) << ") == ";
             cout << productCoeff(qq2yygCAm2CF<1>(s12,s13,s14,s23,s24),bubble(s12,3),0) << endl;
@@ -233,6 +240,19 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << bubble(s12+s14+s24,3) << ") == ";
             cout << productCoeff(qq2yygCAm2CF<10>(s12,s13,s14,s23,s24),bubble(s12+s13+s23,3),0) << endl;
         }
+        if (false) {
+            cout << reflam << "\t"
+            << qq2yygCAm2CF<1>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<2>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<3>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<4>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<5>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<7>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<8>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<9>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
+            << qq2yygCAm2CF<10>(s12,s13,s14,s23,s24).getCoefficient(-1) << "\n";
+        }
 
 //        cout << polyLog(2,0.5) << endl;
 //        cout << polyLog(3,0.5) << endl;
@@ -244,7 +264,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
 //        cout << HPL(0,0,1,std::complex<double>(1.,0.)) << endl;
         // Counterterms
         //Expansion<Parameter::epsilon,double>::accuracy=4;
-        cout << _coll(z,reflam,s13/s14)/s12/(qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23)) << endl;
+        //cout << _coll(z,reflam,s13/s14)/s12/(qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23)) << endl;
 
     }
     exit(1);
