@@ -8,7 +8,7 @@
 #include <stdlib.h> 
 #include <string.h>
 #include <fstream>
-#include<vector>
+#include <vector>
 #include <iostream>
 #include <iomanip>
 #include <map>
@@ -32,7 +32,7 @@ void print_logo()
     vmajor = EHIXS_VERSION_MAJOR;
     vminor = EHIXS_VERSION_MINOR;
 #endif
-  cout<<"[ehixs]"<<endl;  
+    cout<<"[ehixs]"<<endl;
     cout<<"[ehixs]"<<endl;
     cout<<"[ehixs]"<<endl;
     cout<<"[ehixs]"<<endl;
