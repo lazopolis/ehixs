@@ -11,9 +11,6 @@
 #define BOXMASTER_H
 
 #include "expansion.h"     // Expansion
-#include "chaplin.h"       // HPL
-#include "counterforge.h"  // cGamma, cotan, cosec
-#include <cmath>           // NAN
 
 /**
  *
@@ -43,7 +40,7 @@ double polyLog(const size_t n, const double& z);
 /**
  *
  * \fn    continuedExp
- * \brief Expansion of Re(z^(a*epsilon)), automatised for z<0
+ * \brief Expansion of Re(z^(a*epsilon)), automated for z<0
  *
  */
 

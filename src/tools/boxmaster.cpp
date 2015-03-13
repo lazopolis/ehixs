@@ -8,6 +8,9 @@
  */
 
 #include "boxmaster.h"
+#include "chaplin.h"       // HPL
+#include "counterforge.h"  // cGamma, cotan, cosec
+#include <cmath>           // NAN
 
 /// \fn    polyLog
 
