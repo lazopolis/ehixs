@@ -14,7 +14,8 @@
 #include "chaplin.h"   // HPL
 #include "constants.h" // QCD::CF, etc...
 #include "expansion.h" // Expansion<>
-#include "qq2yyg/allcoeffs.h"
+#include "qq2yyg/coeffs4D.h"
+#include "qq2yyg/coeffs6D.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double alpha = 1.0;
