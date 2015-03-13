@@ -98,13 +98,6 @@ Expansion<Parameter::epsilon, double> qq2yyg6CAm2CF(
                                                    );
 
 /**
- * \fn    qq2yyg6
- * \brief Order epsilon^0 part of the qq->gammagamma+g matrix element
- */
-
-double qq2yyg6(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
-
-/**
  * \fn    qq2yyg6CAbub
  */
 
@@ -139,5 +132,12 @@ double qq2yyg6AFbub(const double& s12, const double& s13, const double& s14, con
  */
 
 double qq2yyg6AFbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+
+/**
+ * \fn    qq2yyg6
+ * \brief Order epsilon^0 part of the qq->gammagamma+g matrix element
+ */
+
+double qq2yyg6(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 #endif
