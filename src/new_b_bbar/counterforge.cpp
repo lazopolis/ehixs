@@ -16,6 +16,9 @@ size_t& CounterForge::acc = Expansion<Parameter::epsilon, double>::accuracy;
 /// Shorthand for double 2.*QCD::CF
 const double CounterForge::_2CF = 2.*QCD::CF;
 
+/// Shorthand for double 4.*consts::Pi
+const double CounterForge::_4pi = 4.*consts::Pi;
+
 /// One-loop conventional prefactor (4pi)^e Gamma(1+e) Gamma^2(1-e) / Gamma(1-2e)
 /// Numerically implemented: only combinations of EulerGamma,
 /// zeta(n) and log(4pi), not particularly meaningful
@@ -85,19 +88,22 @@ Expansion<Parameter::epsilon, double> CounterForge::_Pqq<1>(const double& z)
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z, const size_t trunc)
 {
-    return _Pqq<0>(z);
+    return _4pi*_Pqq<0>(z);
 }
 
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z, const size_t trunc)
 {
     // This generates mayhem if trunc < 3 .
-    return times(r3(z,Scheme::CDR,trunc),_Pqq<0>(z),trunc)
-        + times(r4(Scheme::CDR,trunc),_Pqq<1>(z),trunc).cut(trunc-2);
+    return 2.*(
+               times(r3(z,Scheme::CDR,trunc),_Pqq<0>(z),trunc) +
+               times(r4(Scheme::CDR,trunc),_Pqq<1>(z),trunc).cut(trunc-2)
+               );
 }
 
 /// \fn    _2F1
 /// \brief Series expansion of 2F1(1, -a*eps; 1-a*eps; z)-1
+/// \todo  Eliminate this implementation in favor of the one in boxmaster?!?
 Expansion<Parameter::epsilon, double> CounterForge::_2F1(const double& a, const double& z, const size_t trunc)
 {
     vector<double> foo({0.});
@@ -122,7 +128,7 @@ Expansion<Parameter::epsilon, double> CounterForge::r4(const Scheme& s, const si
 {
     Expansion<Parameter::epsilon, double> foo(0,1.,true);
     if (s == Scheme::HV) foo = Expansion<Parameter::epsilon, double>::geometric(1.,trunc);
-    return (QCD::Nc+1./QCD::Nc) * f2()
+    return (static_cast<double>(QCD::Nc)+1./QCD::Nc) * f2()
         * foo
         * Expansion<Parameter::epsilon, double>::geometric(2.,trunc)
         * Expansion<Parameter::epsilon, double>(2,0.5,true);
@@ -132,14 +138,15 @@ Expansion<Parameter::epsilon, double> CounterForge::r4(const Scheme& s, const si
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::soft<0>(const double& z, const double& lambda, const size_t trunc)
 {
-    return Expansion<Parameter::epsilon, double>(0,4.*QCD::CF/((1.-z)*lambda*(1.-lambda)),true);
+    return Expansion<Parameter::epsilon, double>(0,4.*QCD::CF*_4pi/((1.-z)*lambda*(1.-lambda)),true);
 }
 
 /// Soft current at one loop
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::soft<1>(const double& z, const double& lambda, const size_t trunc)
 {
-    return cGamma*Expansion<Parameter::epsilon, double>(-2,8.*QCD::CA*QCD::CF,true)*cotan/((1.-z)*lambda*(1.-lambda))*
+    return cGamma*cotan*
+    Expansion<Parameter::epsilon, double>(-2,-8.*QCD::CA*QCD::CF,true)/((1.-z)*lambda*(1.-lambda))*
     Expansion<Parameter::epsilon, double>::exp(-log(lambda),trunc)*
     Expansion<Parameter::epsilon, double>::exp(-log(1.-lambda),trunc)*
     Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z),trunc);
@@ -149,14 +156,15 @@ Expansion<Parameter::epsilon, double> CounterForge::soft<1>(const double& z, con
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::softcoll<0>(const double& z, const double& lambda, const size_t trunc)
 {
-    return Expansion<Parameter::epsilon, double>(0,4.*QCD::CF/((1.-z)*lambda),true);
+    return Expansion<Parameter::epsilon, double>(0,4.*_4pi*QCD::CF/((1.-z)*lambda),true);
 }
 
 /// Soft-collinear current at one loop
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::softcoll<1>(const double& z, const double& lambda, const size_t trunc)
 {
-    return cGamma*Expansion<Parameter::epsilon, double>(-2,8.*QCD::CA*QCD::CF,true)*cotan/((1.-z)*lambda)*
+    return cGamma*cotan*
+    Expansion<Parameter::epsilon, double>(-2,-8.*QCD::CA*QCD::CF,true)/((1.-z)*lambda)*
     Expansion<Parameter::epsilon, double>::exp(-log(lambda))*
     Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z));
 }

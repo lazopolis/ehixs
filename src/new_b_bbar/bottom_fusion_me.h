@@ -29,7 +29,8 @@ public:
     XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _tau(pow(2.*UI.m_higgs/UI.Etot,2))
     {
         _p.resize(3);
-        _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
+        // _prefactor contains flux, phase space and dimensionful ME normalization
+        _prefactor *= consts::Pi / pow(UI.Etot,2);
         _xg.setParameters(_tau);
         _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
         return;
@@ -67,7 +68,8 @@ public:
     {
         _p.resize(4);
         cout << "\nmH:\t" << UI.m_higgs << "\nEtot:\t" << UI.Etot << "\ntau:\t" << _tau << endl;
-        _prefactor *= consts::Pi * pow(yukawa_bottom,2) / (2. * QCD::Nc * pow(UI.m_higgs,2));
+        // _prefactor contains flux, without the corresponding x1*x2 at the denominator
+        _prefactor *= 0.5/pow(UI.Etot,2);
         _xg.setParameters(_tau);
         _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({UI.m_higgs}));
         return;
@@ -111,7 +113,7 @@ public:
 /**
  *
  * \class BottomFusion_bb_NLO_hard
- * \brief LO sector for bbar->H
+ * \brief LO sector for bbar->Hg
  *
  */
 
@@ -122,11 +124,7 @@ public:
 
     BottomFusion_bb_NLO_hard(const UserInterface& UI) :
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NLO_hard>::_info)
-    {
-        _prefactor *= 4. * consts::Pi /*alphas*/;
-        test();
-        return;
-    }
+    {}
 
     void generateEvents(vector<double>& randoms);
 
@@ -152,8 +150,6 @@ public:
     {
         Expansion<Parameter::epsilon,double>::accuracy = 3;
         CounterTerm = new CounterForge(CounterForge::Scheme::CDR);
-        //Check this
-        _prefactor *= 8. * consts::Pi * QCD::CF /*alphas*/;
         return;
     }
 

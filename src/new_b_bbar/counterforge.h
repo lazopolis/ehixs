@@ -66,7 +66,8 @@ public:
     /// Quick alias to current accuracy
     static size_t& acc;
 
-    /// Quark-quark splitting function, already multiplied by 1-z
+    /// Quark-quark splitting function
+    /// Already multiplied by 1-z, still needs to be multiplied by alpha_s
     template <size_t loop>
     static Expansion<Parameter::epsilon, double> Pqq(const double& z, const size_t trunc = acc);
 
@@ -111,7 +112,8 @@ private:
     const Scheme _scheme;                       ///< Dim reg scheme
     Expansion<Parameter::epsilon,double> _r4;   ///< Storage location for precomputed r4
     Expansion<Parameter::epsilon,double> _f2;   ///< Storage location for precomputed f2
-    static const double _2CF;
+    static const double _2CF;                   ///< Shorthand for double 2.*QCD::CF
+    static const double _4pi;                   ///< Shorthand for double 4.*consts::Pi
 
     /// @}
 
