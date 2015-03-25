@@ -13,15 +13,15 @@ double bb2Hgbis(const double& s12, const double& s14, const double& s24)
 {
     //cout << "Your invariants are: " << s12 << " " << s14 << " " << s24 << " " << s12+s14+s24 << endl;
     //cout << "Expansion of first coeff:  " << bb2Hgbis<1>(s12,s14,s24) << endl;
-    //cout << "Expansion of first master: " << bubble(s12) << endl;
-    //cout << "Expansion of product:      " << times(bb2Hgbis<1>(s12,s14,s24),bubble(s12),3) << endl;
+    //cout << "Expansion of first master: " << bubble(s12,3) << endl;
+    //cout << "Expansion of product:      " << productCoeff(bb2Hgbis<1>(s12,s14,s24),bubble(s12,3),3) << endl;
     double foo = 0.;
-    foo += productCoeff(bb2Hgbis<1>(s12,s14,s24),bubble(s12),0);
-    foo += productCoeff(bb2Hgbis<2>(s12,s14,s24),bubble(s14),0);
-    foo += productCoeff(bb2Hgbis<3>(s12,s14,s24),bubble(s24),0);
-    foo += productCoeff(bb2Hgbis<4>(s12,s14,s24),bubble(s12+s14+s24),0);
-    foo += productCoeff(bb2Hgbis<5>(s12,s14,s24),box(s12,s14,s12+s14+s24),0);
-    foo += productCoeff(bb2Hgbis<6>(s12,s14,s24),box(s12,s24,s12+s14+s24),0);
-    foo += productCoeff(bb2Hgbis<7>(s12,s14,s24),box(s14,s24,s12+s14+s24),0);
+    foo += productCoeff(bb2Hgbis<1>(s12,s14,s24),bubble(s12,3),0);
+    foo += productCoeff(bb2Hgbis<2>(s12,s14,s24),bubble(s14,3),0);
+    foo += productCoeff(bb2Hgbis<3>(s12,s14,s24),bubble(s24,3),0);
+    foo += productCoeff(bb2Hgbis<4>(s12,s14,s24),bubble(s12+s14+s24,3),0);
+    foo += productCoeff(bb2Hgbis<5>(s12,s14,s24),box(s12,s14,s12+s14+s24,3),0);
+    foo += productCoeff(bb2Hgbis<6>(s12,s14,s24),box(s12,s24,s12+s14+s24,3),0);
+    foo += productCoeff(bb2Hgbis<7>(s12,s14,s24),box(s14,s24,s12+s14+s24,3),0);
     return foo;
 }
