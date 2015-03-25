@@ -50,7 +50,6 @@ bool BottomFusion_bb_NLO_hard::test()
     // Auxiliary variables
     double z, zbar, lambda;
     cout.precision(10);
-    const double _4pi = 4.*consts::Pi;
 
     // Testing collinear limit
     cout << "Testing collinear limit\n\n";
@@ -154,13 +153,17 @@ double BottomFusion_bb_NNLO_RV::fastcoll(const double& z, const double& lambda)
             ).getCoefficient(0)*alphas/lambda;
 }
 
-double BottomFusion_bb_NNLO_RV::coll(const double& z, const double& lambda)
+double BottomFusion_bb_NNLO_RV::coll(const double& z, const double& lambda,
+                                     const bool LCf, const bool SCf)
 {
     // Speed issue: about 3 times slower than direct expression
     return (
-            Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z/*muR*/),3)*
-            alphas*CounterForge::Pqq<1>(z)*bb2H<0>()+
-            CounterForge::Pqq<0>(z)*bb2H<1>()
+            alphas*times(
+                         Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z/*muR*/),3),
+                         times(CounterForge::Pqq<1>(z,LCf,SCf,3),bb2H<0>(),3),
+                         3
+                         )+
+            times(CounterForge::Pqq<0>(z,LCf,SCf,3),bb2H<1>(),3)
             ).getCoefficient(0)*alphas/lambda;
 }
 
@@ -209,13 +212,23 @@ bool BottomFusion_bb_NNLO_RV::test()
         zbar = 1.-z;
         for (lambda=0.50139485723094857;lambda>1e-1;lambda*=0.5)
             cout << lambda << "\t"
-                 << zbar*16.*bb2Hgbis(1./z,-zbar*lambda/z,-zbar*(1.-lambda)/z)/bb2Hg<1,0>(z,lambda) << "\n";
+                 << bb2Hg<1,0>(z,lambda) << "\t"
+                 << -zbar*4./9.*bb2Hgbis(1./z,-zbar*lambda/z,-zbar*(1.-lambda)/z)/bb2Hg<1,0>(z,lambda) << "\t"
+                 << -zbar*4./9.*bb2Hgcol(1./z,-zbar*lambda/z,-zbar*(1.-lambda)/z)/bb2Hg<1,0>(z,lambda) << "\n";
         cout << endl;
     }
 
     // Testing collinear limit
     if (true) {
         cout << "Testing collinear limit" << endl;
+        z=0.03;
+        zbar = 1.-z;
+        for (lambda=0.5;lambda>1e-30;lambda*=0.5)
+            cout
+            << lambda << "\t"
+            << -zbar*4./9.*bb2HgScol(1./z,-zbar*lambda/z,-zbar*(1.-lambda)/z)/coll(z,lambda,false,true) << "\t"
+            << -zbar*4./9.*bb2HgLcol(1./z,-zbar*lambda/z,-zbar*(1.-lambda)/z)/coll(z,lambda,true,false) << "\n";
+        cout << endl;
         z=0.03;
         for (lambda=0.5;lambda>1e-30;lambda*=0.5)
             cout
@@ -238,7 +251,7 @@ bool BottomFusion_bb_NNLO_RV::test()
 //    cout<<endl;
 
     // Testing soft limit
-    if (true) {
+    if (false) {
         cout << "Testing soft limit" << endl;
         lambda = 0.002;
         for (double zbar = 0.5; zbar>1.e-16; zbar/=2.)

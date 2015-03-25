@@ -4,5 +4,6 @@ add_library(bbh
             bottom_fusion_me.cpp
             counterforge.cpp
             bb2Hg/bb2HRVcoeffs.cpp
+            bb2Hgcolor/coeffscolor.cpp
             )
             

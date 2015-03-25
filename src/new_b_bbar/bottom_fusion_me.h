@@ -8,6 +8,7 @@
 #include "xgenerator.h"
 #include "counterforge.h"
 #include "bb2Hg/bb2HRVcoeffs.h"
+#include "bb2Hgcolor/coeffscolor.h"
 
 template<size_t N>
 class BottomFusion_bb;
@@ -148,7 +149,7 @@ public:
     BottomFusion_bb<1>(UI, XSectionMaker<BottomFusion_bb_NNLO_RV>::_info),
     CounterTerm()
     {
-        Expansion<Parameter::epsilon,double>::accuracy = 3;
+        Expansion<Parameter::epsilon,double>::accuracy = 0;
         CounterTerm = new CounterForge(CounterForge::Scheme::CDR);
         return;
     }
@@ -168,7 +169,8 @@ private:
 
     double fastcoll(const double& z, const double& lambda);
 
-    static double coll(const double& z, const double& lambda);
+    static double coll(const double& z, const double& lambda,
+                       const bool LCf = true, const bool SCf = true);
 
     static double soft(const double& z, const double& lambda);
 
