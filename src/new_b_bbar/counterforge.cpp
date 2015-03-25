@@ -74,30 +74,40 @@ const Expansion<Parameter::epsilon, double> CounterForge::cos = Expansion<Parame
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::_Pqq<0>(const double& z)
 {
-    return _2CF*Expansion<Parameter::epsilon, double>(0,{(1.+z*z)/(1.-z),z-1.},true);
+    return Expansion<Parameter::epsilon, double>(0,{(1.+z*z)/(1.-z),z-1.},true);
 }
 
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::_Pqq<1>(const double& z)
 {
-    return _2CF*Expansion<Parameter::epsilon, double>(0,{(1.+z)/(1.-z)},true);
+    return Expansion<Parameter::epsilon, double>(0,{(1.+z)/(1.-z)},true);
 }
 
 /// \fn Pqq
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(const double& z, const size_t trunc)
+Expansion<Parameter::epsilon, double> CounterForge::Pqq<0>(
+                                                           const double& z,
+                                                           const bool LCf,
+                                                           const bool SCf,
+                                                           const size_t trunc
+                                                           )
 {
-    return _4pi*_Pqq<0>(z);
+    return _4pi*(LCf*QCD::CA-SCf/QCD::CA)*_Pqq<0>(z);
 }
 
 template<>
-Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(const double& z, const size_t trunc)
+Expansion<Parameter::epsilon, double> CounterForge::Pqq<1>(
+                                                           const double& z,
+                                                           const bool LCf,
+                                                           const bool SCf,
+                                                           const size_t trunc
+                                                           )
 {
     // This generates mayhem if trunc < 3 .
-    return 2.*(
-               times(r3(z,Scheme::CDR,trunc),_Pqq<0>(z),trunc) +
-               times(r4(Scheme::CDR,trunc),_Pqq<1>(z),trunc).cut(trunc-2)
+    return 2.*_2CF*(
+               times(r3(z,LCf,SCf,Scheme::CDR,trunc),_Pqq<0>(z),trunc) +
+               times(r4(LCf,SCf,Scheme::CDR,trunc),_Pqq<1>(z),trunc).cut(trunc-2)
                );
 }
 
@@ -117,18 +127,29 @@ Expansion<Parameter::epsilon, double> CounterForge::_2F1(const double& a, const 
 }
 
 /// Kosower's auxiliary factor r3
-Expansion<Parameter::epsilon, double> CounterForge::r3(const double& z, const Scheme& s, const size_t trunc)
+Expansion<Parameter::epsilon, double> CounterForge::r3(
+                                                       const double& z,
+                                                       const bool LCf,
+                                                       const bool SCf,
+                                                       const Scheme& s,
+                                                       const size_t trunc
+                                                       )
 {
     // This generates mayhem if trunc < 3 .
-    return 0.5*(static_cast<double>(QCD::Nc)*f1_1minus1overz(z,trunc)-1./QCD::Nc*f1_1overz(z,trunc))-r4(s,trunc)/*.cut(trunc-2)*/;
+    return 0.5*(LCf*QCD::CA*f1_1minus1overz(z,trunc)-SCf/QCD::CA*f1_1overz(z,trunc))-r4(LCf,SCf,s,trunc)/*.cut(trunc-2)*/;
 }
 
 /// Kosower's auxiliary factor r4
-Expansion<Parameter::epsilon, double> CounterForge::r4(const Scheme& s, const size_t trunc)
+Expansion<Parameter::epsilon, double> CounterForge::r4(
+                                                       const bool LCt,
+                                                       const bool SCt,
+                                                       const Scheme& s,
+                                                       const size_t trunc
+                                                       )
 {
     Expansion<Parameter::epsilon, double> foo(0,1.,true);
     if (s == Scheme::HV) foo = Expansion<Parameter::epsilon, double>::geometric(1.,trunc);
-    return (static_cast<double>(QCD::Nc)+1./QCD::Nc) * f2()
+    return (LCt*QCD::CA+SCt/QCD::CA) * f2()
         * foo
         * Expansion<Parameter::epsilon, double>::geometric(2.,trunc)
         * Expansion<Parameter::epsilon, double>(2,0.5,true);

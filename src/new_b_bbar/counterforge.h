@@ -36,7 +36,7 @@ public:
         HV = 1
     };
 
-    /// \name Static functions
+    /// \name Constructors and destructor
     /// @{
 
     CounterForge(const Scheme inScheme = Scheme::CDR) :
@@ -69,13 +69,29 @@ public:
     /// Quark-quark splitting function
     /// Already multiplied by 1-z, still needs to be multiplied by alpha_s
     template <size_t loop>
-    static Expansion<Parameter::epsilon, double> Pqq(const double& z, const size_t trunc = acc);
+    static Expansion<Parameter::epsilon, double> Pqq(
+                                                     const double& z,
+                                                     const bool LCf = true,
+                                                     const bool SCf = true,
+                                                     const size_t trunc = acc
+                                                     );
 
     /// Kosower's auxiliary factor r3
-    static Expansion<Parameter::epsilon, double> r3(const double& z, const Scheme& s = Scheme::CDR, const size_t trunc = acc);
+    static Expansion<Parameter::epsilon, double> r3(
+                                                    const double& z,
+                                                    const bool LCf = true,
+                                                    const bool SCf = true,
+                                                    const Scheme& s = Scheme::CDR,
+                                                    const size_t trunc = acc
+                                                    );
 
     /// Kosower's auxiliary factor r4
-    static Expansion<Parameter::epsilon, double> r4(const Scheme& s = Scheme::CDR, const size_t trunc = acc);
+    static Expansion<Parameter::epsilon, double> r4(
+                                                    const bool LCf = true,
+                                                    const bool SCf = true,
+                                                    const Scheme& s = Scheme::CDR,
+                                                    const size_t trunc = acc
+                                                    );
 
     /// Epsilon series of Kosower's auxiliary function 1/z f1(1/z)
     static Expansion<Parameter::epsilon, double> f1_1overz(const double& z, const size_t trunc = acc);
