@@ -147,7 +147,7 @@ public:
     XSection(UI, info), _p(), _xg(_x), _pg(_p, _x), _cone(1.), _lambda(0.5)
     {
         _p.resize(5);
-        _prefactor *= 2. * pow(alpha,2) /** alphas_pi*/ / static_cast<double>(QCD::Nc);
+        _prefactor *= 2. * pow(alpha,2) / static_cast<double>(QCD::Nc);
         _xg.setParameters(0.);
         _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({0.,0.}));
         return;

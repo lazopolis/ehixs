@@ -18,7 +18,7 @@
 #include "qq2yyg/coeffs6D.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
-constexpr double alpha = 1.0;
+constexpr double alpha = 1.;
 
 /// \brief Matrix elements for qq->gammagamma
 template<size_t loop, int eps>

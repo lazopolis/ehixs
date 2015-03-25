@@ -10,6 +10,8 @@
 
 #include "qq2gammagammaX.h"
 
+const double alphas = 1.;
+
 /// \brief Matrix elements for qq->gammagamma
 
 /// Tree
@@ -40,15 +42,14 @@ template<>
 double qq2gammagamma<1,-2>(const double& s13os14)
 {
     const double s14os13 = 1./s13os14;
-    // Check factors of 2
-    return -2. * QCD::CF * (s13os14+s14os13);
+    return -2. * (s13os14+s14os13);
 }
 
 template<>
 double qq2gammagamma<1,-1>(const double& s13os14)
 {
     const double s14os13 = 1./s13os14;
-    return QCD::CF * (4.+s13os14+s14os13);
+    return 4.+s13os14+s14os13;
 }
 
 template<>
@@ -57,12 +58,12 @@ double qq2gammagamma<1,0>(const double& s13os14)
     const double s14os13 = 1./s13os14;
     const double log3 = -log(1.+s14os13);
     const double log4 = -log(1.+s13os14);
-    return QCD::CF * (
-                      2 + (consts::pi_square-3)*(s13os14+s14os13)
-                      + log4*(2 + 3*s13os14) + log3*(2 + 3*s14os13)
-                      + (2 + 2*s13os14 + s14os13)*log3*log3
-                      + (2 + 2*s14os13 + s13os14)*log4*log4
-                      )/* *0.25 */;
+    return (
+            2 + (consts::pi_square-3)*(s13os14+s14os13) +
+            log4*(2 + 3*s13os14) + log3*(2 + 3*s14os13) +
+            (2 + 2*s13os14 + s14os13)*log3*log3 +
+            (2 + 2*s14os13 + s13os14)*log4*log4
+            );
 }
 
 /// \brief Matrix elements for qq->gammagamma
@@ -78,7 +79,7 @@ double qq2gammagammag<0,0>(
                            const double& s24
                            )
 {
-    return 2.*QCD::CF*s12*(
+    return -8.*consts::Pi*QCD::CF*alphas*s12*(
              (
               3*s14*(s23+s24)*(s13*s13) +
               s14*(s23+2*s24)*
@@ -110,11 +111,12 @@ Expansion<Parameter::epsilon, double> qq2gammagamma<0>(const double& s13os14)
 template<>
 Expansion<Parameter::epsilon, double> qq2gammagamma<1>(const double& s13os14)
 {
-    return Expansion<Parameter::epsilon, double>(0,{
-        qq2gammagamma<1,-2>(s13os14),
-        qq2gammagamma<1,-1>(s13os14),
-        qq2gammagamma<1,0>(s13os14)
-    });
+    return static_cast<double>(QCD::CF) * alphas/(2.*consts::Pi)*
+        Expansion<Parameter::epsilon, double>(-2,{
+            qq2gammagamma<1,-2>(s13os14),
+            qq2gammagamma<1,-1>(s13os14),
+            qq2gammagamma<1,0>(s13os14)
+        });
 }
 
 /// \brief Shorthand for full epsilon expansion of qq->gammagammag
