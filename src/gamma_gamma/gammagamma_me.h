@@ -207,7 +207,8 @@ public:
     {}
 
     void generateEvents(vector<double>& randoms);
-    
+    void test(vector<double>& randoms);
+
 };
 
 /**

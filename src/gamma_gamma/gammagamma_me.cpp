@@ -45,6 +45,7 @@ const SectorInfo XSectionMaker<GammaGamma_qq_LO>::_info(
 
 void GammaGamma_qq_NLO_real::generateEvents(vector<double>& randoms)
 {
+    test(randoms);
     // Defining auxiliary names
     double& lambdaR = randoms.back();
     const double lambda = randoms.back();
@@ -87,6 +88,41 @@ void GammaGamma_qq_NLO_real::generateEvents(vector<double>& randoms)
     return;
     }
 }
+
+void GammaGamma_qq_NLO_real::test(vector<double>& randoms)
+{
+    std::cout.width(12);
+    std::cout.precision(10);
+    double& z = randoms[3];
+    z/=4.52984766;
+    cout << "Testing collinear limit\n\n";
+    cout << "z = " << z << endl << endl;
+    for (double reflam = 0.05123419384701234; reflam > 5.e-17; reflam*=0.7) {
+        // Defining auxiliary names
+        randoms.back() = reflam;
+        const double& z = randoms[3];
+        // Generating momenta
+        const double w = _prefactor * _factor * (1.-z) * _pg(randoms); // 1-z from phase space
+        double s12 = square(_p[1]+_p[2]);
+        const double s13 = square(_p[1]-_p[3])/s12;
+        const double s14 = square(_p[1]-_p[4])/s12;
+        const double s23 = square(_p[2]-_p[3])/s12;
+        const double s24 = square(_p[2]-_p[4])/s12;
+        s12 = 1.;
+
+        // Testing collinear limit
+        cout << reflam << "\t"
+        << qq2gammagammag<0,0>(s12,s13,s14,s23,s24) << "\t"
+        << qq2gammagamma<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-reflam*z*(1-z)) << "\t"
+        << qq2gammagammag<0,0>(s12,s13,s14,s23,s24)/
+            (qq2gammagamma<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-reflam*z*(1-z))) << "\n";
+
+    }
+
+    exit(0);
+    return;
+}
+
 
 template<>
 const SectorInfo XSectionMaker<GammaGamma_qq_NLO_real>::_info(
