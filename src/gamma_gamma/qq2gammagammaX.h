@@ -16,6 +16,7 @@
 #include "expansion.h" // Expansion<>
 #include "qq2yyg/coeffs4D.h"
 #include "qq2yyg/coeffs6D.h"
+#include "qq2yyg/coeffscolor.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double alpha = 1.;

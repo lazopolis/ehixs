@@ -173,17 +173,20 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
 {
     std::cout.width(12);
     std::cout.precision(10);
-    for (double reflam = 0.5123419384701234; reflam > 1.e-10; reflam*=0.9) {
+    randoms[3]=0.52984766;
+    cout << "z = " << randoms[3] << endl << endl;
+    for (double reflam = 0.05123419384701234; reflam > 5.e-7; reflam*=0.99) {
         // Defining auxiliary names
         randoms.back() = reflam;
         const double& z = randoms[3];
         // Generating momenta
         const double w = _prefactor * _factor * (1.-z) * _pg(randoms); // 1-z from phase space
-        const double s12 = square(_p[1]+_p[2]);
-        const double s13 = square(_p[1]-_p[3]);
-        const double s14 = square(_p[1]-_p[4]);
-        const double s23 = square(_p[2]-_p[3]);
-        const double s24 = square(_p[2]-_p[4]);
+        double s12 = square(_p[1]+_p[2]);
+        const double s13 = square(_p[1]-_p[3])/s12;
+        const double s14 = square(_p[1]-_p[4])/s12;
+        const double s23 = square(_p[2]-_p[3])/s12;
+        const double s24 = square(_p[2]-_p[4])/s12;
+        s12 = 1.;
 
         // RV full
 
@@ -227,7 +230,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
         }
         // Printing 6 components for plotting against lambda
-        if (true) {
+        if (false) {
             cout << reflam << "\t";
             cout << qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yygCFbub(s12,s13,s14,s23,s24)+qq2yygCFbub(s12,s14,s13,s24,s23) << "\t";
@@ -276,6 +279,34 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << bubble(s12+s14+s24,3) << ") == ";
             cout << productCoeff(qq2yygCAm2CF<10>(s12,s13,s14,s23,s24),bubble(s12+s13+s23,3),0) << endl;
         }
+        // Checking 4D against 6D
+        if (false) {
+            cout << reflam << "\t";
+            cout << (
+                     qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23)+
+                     qq2yygCAbox(s12,s13,s14,s23,s24)+qq2yygCAbox(s12,s14,s13,s24,s23)
+                     )/(
+                     qq2yyg6CAbub(s12,s13,s14,s23,s24)+qq2yyg6CAbub(s12,s14,s13,s24,s23)+
+                     qq2yyg6CAbox(s12,s13,s14,s23,s24)+qq2yyg6CAbox(s12,s14,s13,s24,s23)
+                     )
+                     << "\t";
+            cout << (
+                     qq2yygCFbub(s12,s13,s14,s23,s24)+qq2yygCFbub(s12,s14,s13,s24,s23)+
+                     qq2yygCFbox(s12,s13,s14,s23,s24)+qq2yygCFbox(s12,s14,s13,s24,s23)
+                     )/(
+                     qq2yyg6CFbub(s12,s13,s14,s23,s24)+qq2yyg6CFbub(s12,s14,s13,s24,s23)+
+                     qq2yyg6CFbox(s12,s13,s14,s23,s24)+qq2yyg6CFbox(s12,s14,s13,s24,s23)
+                     )
+                     << "\t";
+            cout << (
+                     qq2yygAFbub(s12,s13,s14,s23,s24)+qq2yygAFbub(s12,s14,s13,s24,s23)+
+                     qq2yygAFbox(s12,s13,s14,s23,s24)+qq2yygAFbox(s12,s14,s13,s24,s23)
+                     )/(
+                     qq2yyg6AFbub(s12,s13,s14,s23,s24)+qq2yyg6AFbub(s12,s14,s13,s24,s23)+
+                     qq2yyg6AFbox(s12,s13,s14,s23,s24)+qq2yyg6AFbox(s12,s14,s13,s24,s23)
+                     )
+                     << endl;
+        }
         if (false) {
             cout << reflam << "\t"
             << qq2yygCAm2CF<1>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
@@ -289,37 +320,89 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             << qq2yygCAm2CF<9>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
             << qq2yygCAm2CF<10>(s12,s13,s14,s23,s24).getCoefficient(-1) << "\n";
         }
+        if (false) {
+            cout << (qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23))/
+            (qq2yyg6(s12,s13,s14,s23,s24)+qq2yyg6(s12,s14,s13,s24,s23)) << endl;
+        }
+        // Checking color-decomposed matrix elements
+        if (false) {
+            cout << (qq2yygCAbox(s12,s13,s14,s23,s24)+qq2yygCAbox(s12,s14,s13,s24,s23)) << "\t"
+                 << 0.5*QCD::CA/QCD::CF*(qq2yygCFbox(s12,s13,s14,s23,s24)+qq2yygCFbox(s12,s14,s13,s24,s23)) << "\t"
+                 << (qq2yygLCbox(s12,s13,s14,s23,s24)+qq2yygLCbox(s12,s14,s13,s24,s23)) << "\t";
+            cout << (qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23)) << "\t"
+                 << 0.5*QCD::CA/QCD::CF*(qq2yygCFbub(s12,s13,s14,s23,s24)+qq2yygCFbub(s12,s14,s13,s24,s23)) << "\t"
+                 << (qq2yygLCbub(s12,s13,s14,s23,s24)+qq2yygLCbub(s12,s14,s13,s24,s23)) << "\t\t";
+            cout << (qq2yyg6AFbox(s12,s13,s14,s23,s24)+qq2yyg6AFbox(s12,s14,s13,s24,s23)) << "\t"
+                 << -0.5/(QCD::Nc*QCD::CF)*(qq2yyg6CFbox(s12,s13,s14,s23,s24)+qq2yyg6CFbox(s12,s14,s13,s24,s23)) << "\t"
+                 << (qq2yygSCbox(s12,s13,s14,s23,s24)+qq2yygSCbox(s12,s14,s13,s24,s23)) << "\t";
+            cout << (qq2yyg6AFbub(s12,s13,s14,s23,s24)+qq2yyg6AFbub(s12,s14,s13,s24,s23)) << "\t"
+                 << -0.5/(QCD::Nc*QCD::CF)*(qq2yyg6CFbub(s12,s13,s14,s23,s24)+qq2yyg6CFbub(s12,s14,s13,s24,s23)) << "\t"
+                 << (qq2yygSCbub(s12,s13,s14,s23,s24)+qq2yygSCbub(s12,s14,s13,s24,s23)) << "\n";
+        }
 
-//        cout << polyLog(2,0.5) << endl;
-//        cout << polyLog(3,0.5) << endl;
-//        cout << polyLog(2,10.) << endl;
-//        cout << polyLog(3,10.) << endl;
-//        cout << HPL(0,0,1,std::complex<double>(10.,DBL_MIN)) << endl;
-//        cout << HPL(0,0,1,std::complex<double>(10.,-DBL_MIN)) << endl;
-//        cout << HPL(0,0,1,std::complex<double>(10.,0.)) << endl;
-//        cout << HPL(0,0,1,std::complex<double>(1.,0.)) << endl;
         // Counterterms
-        //Expansion<Parameter::epsilon,double>::accuracy=4;
-        //cout << _coll(z,reflam,s13/s14)/s12/(qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23)) << endl;
+        if (false)
+        {
+            const double TC = qq2yygcol(s12,s13,s14,s23,s24)+qq2yygcol(s12,s14,s13,s24,s23);
+            const double LC = qq2yygLCbub(s12,s13,s14,s23,s24)+qq2yygLCbub(s12,s14,s13,s24,s23)+
+                              qq2yygLCbox(s12,s13,s14,s23,s24)+qq2yygLCbox(s12,s14,s13,s24,s23);
+            const double SC = qq2yygSCbub(s12,s13,s14,s23,s24)+qq2yygSCbub(s12,s14,s13,s24,s23)+
+                              qq2yygSCbox(s12,s13,s14,s23,s24)+qq2yygSCbox(s12,s14,s13,s24,s23);
+            const double f = -16./3.; // this is 4*alphas^2*CF
+            cout << reflam << "\t\t"
+                 << _coll(z,reflam,s13/s14,true,false)/(f*LC) << "\t"
+                 << (f*LC-_coll(z,reflam,s13/s14,true,false))/_coll2(z,reflam,s13/s14,true,false) << "\t"
+                 << 2*(f*LC-_coll(z,reflam,s13/s14,true,false)-_coll2(z,reflam,s13/s14,true,false))/
+                    (f*LC+_coll(z,reflam,s13/s14,true,false)+_coll2(z,reflam,s13/s14,true,false)) << "\t"
+                 << _coll(z,reflam,s13/s14,false,true)/(f*SC) << "\t"
+                 << (f*SC-_coll(z,reflam,s13/s14,false,true))/_coll2(z,reflam,s13/s14,false,true) << "\t"
+                 << 2*(f*SC-_coll(z,reflam,s13/s14,false,true)-_coll2(z,reflam,s13/s14,false,true))/
+                    (f*SC+_coll(z,reflam,s13/s14,false,true)+_coll2(z,reflam,s13/s14,false,true)) << "\t\t"
+                 << _coll(z,reflam,s13/s14)/f/(SC+LC) << "\t"
+                 << (_coll(z,reflam,s13/s14)+_coll2(z,reflam,s13/s14))/f/(LC+SC) << endl;
+        }
+
+        if (true) {
+            cout << reflam << "\t"
+            << _coll(z,reflam,s13/s14)+_coll2(z,reflam,s13/s14) << "\t"
+            //<< (qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23)) << "\t"
+            //<< (qq2yyg6(s12,s13,s14,s23,s24)+qq2yyg6(s12,s14,s13,s24,s23)) << "\t"
+            << -16/3.*(qq2yygcol(s12,s13,s14,s23,s24)+qq2yygcol(s12,s14,s13,s24,s23)) << endl;
+        }
 
     }
     exit(1);
     return;
 }
 
-double GammaGamma_qq_NNLO_RV::_coll(const double& z, const double& lambda, const double& ratio)
+double GammaGamma_qq_NNLO_RV::_coll(
+                                    const double& z,
+                                    const double& lambda,
+                                    const double& ratio,
+                                    const bool LCf,
+                                    const bool SCf
+                                    )
 {
-    // Unjustified factor of -1!!!
-    // Speed issue: about 3 times slower than direct expression
-    //    cout << "Coll\n" << -2.*Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z/*muR*/))*
-    //    CounterForge::Pqq<1>(z)*bb2H<0>()/lambda << ",\t" <<
-    //    -2.*CounterForge::Pqq<0>(z)*bb2H<1>()/lambda << endl;
-    return -2.*productCoeff(
-                            Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/z/*muR*/),3),
-                            CounterForge::Pqq<1>(z,3)*qq2gammagamma<0>(ratio)/lambda+
-                            2.*CounterForge::Pqq<0>(z,3)*qq2gammagamma<1>(ratio)/lambda,
-                            0
-                            );
+    return productCoeff(
+                        Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/*muR*/),3),
+                        CounterForge::Pqq<1>(z,LCf,SCf,3)*qq2gammagamma<0>(ratio),
+                        0
+                        )/(-lambda*z*(1-z));
+}
+
+double GammaGamma_qq_NNLO_RV::_coll2(
+                                     const double& z,
+                                     const double& lambda,
+                                     const double& ratio,
+                                     const bool LCf,
+                                     const bool SCf
+                                     )
+{
+    return productCoeff(
+                        Expansion<Parameter::epsilon,double>::exp(-log(z/*muR*/),3),
+                        CounterForge::Pqq<0>(z,LCf,SCf,3)*qq2gammagamma<1>(ratio),
+                        0
+                        )/(-lambda*z*(1-z));
 }
 
 template<>

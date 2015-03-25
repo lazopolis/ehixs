@@ -4,5 +4,6 @@ add_library(gammagamma
             gammagamma_me.cpp
             qq2yyg/coeffs4D.cpp
             qq2yyg/coeffs6D.cpp
+            qq2yyg/coeffscolor
             )
             
