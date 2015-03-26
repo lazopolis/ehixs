@@ -175,7 +175,9 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     std::cout.precision(10);
     randoms[3]=0.52984766;
     cout << "z = " << randoms[3] << endl << endl;
-    for (double reflam = 0.05123419384701234; reflam > 5.e-7; reflam*=0.99) {
+
+    // Loop on lambda
+    for (double reflam = 0.05123419384701234; true && reflam > 5.e-7; reflam*=0.95) {
         // Defining auxiliary names
         randoms.back() = reflam;
         const double& z = randoms[3];
@@ -203,32 +205,33 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             res12 = qq2yygCAbub(s12,s13,s14,s23,s24)+qq2yygCAbub(s12,s14,s13,s24,s23);
             res21 = qq2yygCAbub(s12,s23,s24,s13,s14)+qq2yygCAbub(s12,s24,s23,s14,s13);
             cout << "CA bubbles " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
             res12 = qq2yygCAbox(s12,s13,s14,s23,s24)+qq2yygCAbox(s12,s14,s13,s24,s23);
             res21 = qq2yygCAbox(s12,s23,s24,s13,s14)+qq2yygCAbox(s12,s24,s23,s14,s13);
             cout << "CA boxes   " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
             res12 = qq2yygCFbub(s12,s13,s14,s23,s24)+qq2yygCFbub(s12,s14,s13,s24,s23);
             res21 = qq2yygCFbub(s12,s23,s24,s13,s14)+qq2yygCFbub(s12,s24,s23,s14,s13);
             cout << "CF bubbles " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
             res12 = qq2yygCFbox(s12,s13,s14,s23,s24)+qq2yygCFbox(s12,s14,s13,s24,s23);
             res21 = qq2yygCFbox(s12,s23,s24,s13,s14)+qq2yygCFbox(s12,s24,s23,s14,s13);
             cout << "CF boxes   " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
             res12 = qq2yygAFbub(s12,s13,s14,s23,s24)+qq2yygAFbub(s12,s14,s13,s24,s23);
             res21 = qq2yygAFbub(s12,s23,s24,s13,s14)+qq2yygAFbub(s12,s24,s23,s14,s13);
             cout << "AF bubbles " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
             res12 = qq2yygAFbox(s12,s13,s14,s23,s24)+qq2yygAFbox(s12,s14,s13,s24,s23);
             res21 = qq2yygAFbox(s12,s23,s24,s13,s14)+qq2yygAFbox(s12,s24,s23,s14,s13);
             cout << "AF boxes   " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
             res12 = qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23);
             res21 = qq2yyg(s12,s23,s24,s13,s14)+qq2yyg(s12,s24,s23,s14,s13);
             cout << "Total      " << "\t"
-            << res12 << "\t" << res21 << "\t" << (res12-res21)/(res12+res21) << "\n";
+            << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
         }
+
         // Printing 6 components for plotting against lambda
         if (false) {
             cout << reflam << "\t";
@@ -245,40 +248,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << qq2yyg6CFbox(s12,s13,s14,s23,s24)+qq2yyg6CFbox(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yyg6AFbox(s12,s13,s14,s23,s24)+qq2yyg6AFbox(s12,s14,s13,s24,s23) << endl;
         }
-        // Printing coefficients, masters and their product
-        if (false) {
-            cout << endl << "==" << endl;
-            cout << " (" << qq2yygCAm2CF<1>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s12,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<1>(s12,s13,s14,s23,s24),bubble(s12,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<2>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s13,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<2>(s12,s13,s14,s23,s24),bubble(s13,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<3>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s14,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<3>(s12,s13,s14,s23,s24),bubble(s14,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<4>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(-s12-s13-s14,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<4>(s12,s13,s14,s23,s24),bubble(-s12-s13-s14,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<5>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s23,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<5>(s12,s13,s14,s23,s24),bubble(s23,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<6>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s24,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<6>(s12,s13,s14,s23,s24),bubble(s24,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<7>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(-s12-s23-s24,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<7>(s12,s13,s14,s23,s24),bubble(-s12-s23-s24,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<8>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(-s12-s13-s14-s23-s24,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<8>(s12,s13,s14,s23,s24),bubble(-s12-s13-s14-s23-s24,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<9>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s12+s13+s23,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<9>(s12,s13,s14,s23,s24),bubble(s12+s14+s24,3),0) << endl;
-            cout << " (" << qq2yygCAm2CF<10>(s12,s13,s14,s23,s24) << ") * (";
-            cout << bubble(s12+s14+s24,3) << ") == ";
-            cout << productCoeff(qq2yygCAm2CF<10>(s12,s13,s14,s23,s24),bubble(s12+s13+s23,3),0) << endl;
-        }
+
         // Checking 4D against 6D
         if (false) {
             cout << reflam << "\t";
@@ -307,23 +277,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
                      )
                      << endl;
         }
-        if (false) {
-            cout << reflam << "\t"
-            << qq2yygCAm2CF<1>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<2>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<3>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<4>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<5>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<7>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<8>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<9>(s12,s13,s14,s23,s24).getCoefficient(-1) << " "
-            << qq2yygCAm2CF<10>(s12,s13,s14,s23,s24).getCoefficient(-1) << "\n";
-        }
-        if (false) {
-            cout << (qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23))/
-            (qq2yyg6(s12,s13,s14,s23,s24)+qq2yyg6(s12,s14,s13,s24,s23)) << endl;
-        }
+
         // Checking color-decomposed matrix elements
         if (false) {
             cout << (qq2yygCAbox(s12,s13,s14,s23,s24)+qq2yygCAbox(s12,s14,s13,s24,s23)) << "\t"
@@ -341,32 +295,38 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Counterterms
-        if (false)
+
+        // Testing collinear counterterm, color decomposition
+        if (true)
         {
-            const double TC = qq2yygcol(s12,s13,s14,s23,s24)+qq2yygcol(s12,s14,s13,s24,s23);
+            // Fudge factor
+            /// \todo Figure out where this fudge belongs
+            const double f = -16./3.; // this is 4*alphas^2*CF
+            // Switches
+            const bool LCon = true;
+            const bool SCon = true;
+            // Intermediate variables
             const double LC = qq2yygLCbub(s12,s13,s14,s23,s24)+qq2yygLCbub(s12,s14,s13,s24,s23)+
                               qq2yygLCbox(s12,s13,s14,s23,s24)+qq2yygLCbox(s12,s14,s13,s24,s23);
             const double SC = qq2yygSCbub(s12,s13,s14,s23,s24)+qq2yygSCbub(s12,s14,s13,s24,s23)+
                               qq2yygSCbox(s12,s13,s14,s23,s24)+qq2yygSCbox(s12,s14,s13,s24,s23);
-            const double f = -16./3.; // this is 4*alphas^2*CF
+            const double mycoll1 = _coll1(z,reflam,s13/s14,LCon,SCon);
+            const double mycoll2 = _coll2(z,reflam,s13/s14,LCon,SCon);
+            const double myfull  = f*(LCon*LC+SCon*SC);
+            // Printing
             cout << reflam << "\t\t"
-                 << _coll(z,reflam,s13/s14,true,false)/(f*LC) << "\t"
-                 << (f*LC-_coll(z,reflam,s13/s14,true,false))/_coll2(z,reflam,s13/s14,true,false) << "\t"
-                 << 2*(f*LC-_coll(z,reflam,s13/s14,true,false)-_coll2(z,reflam,s13/s14,true,false))/
-                    (f*LC+_coll(z,reflam,s13/s14,true,false)+_coll2(z,reflam,s13/s14,true,false)) << "\t"
-                 << _coll(z,reflam,s13/s14,false,true)/(f*SC) << "\t"
-                 << (f*SC-_coll(z,reflam,s13/s14,false,true))/_coll2(z,reflam,s13/s14,false,true) << "\t"
-                 << 2*(f*SC-_coll(z,reflam,s13/s14,false,true)-_coll2(z,reflam,s13/s14,false,true))/
-                    (f*SC+_coll(z,reflam,s13/s14,false,true)+_coll2(z,reflam,s13/s14,false,true)) << "\t\t"
-                 << _coll(z,reflam,s13/s14)/f/(SC+LC) << "\t"
-                 << (_coll(z,reflam,s13/s14)+_coll2(z,reflam,s13/s14))/f/(LC+SC) << endl;
+                 // log(lambda)/lambda piece
+                 << mycoll1/myfull << "\t"
+                 // residual
+                 << (myfull-mycoll1)/mycoll2 << "\t"
+                 // percent difference counterterm-full ME
+                 << 2*(myfull-mycoll1-mycoll2)/(myfull+mycoll1+mycoll2) <<"\n";
         }
 
-        if (true) {
+        // Plotting counterterm vs. full ME
+        if (false) {
             cout << reflam << "\t"
             << _coll(z,reflam,s13/s14)+_coll2(z,reflam,s13/s14) << "\t"
-            //<< (qq2yyg(s12,s13,s14,s23,s24)+qq2yyg(s12,s14,s13,s24,s23)) << "\t"
-            //<< (qq2yyg6(s12,s13,s14,s23,s24)+qq2yyg6(s12,s14,s13,s24,s23)) << "\t"
             << -16/3.*(qq2yygcol(s12,s13,s14,s23,s24)+qq2yygcol(s12,s14,s13,s24,s23)) << endl;
         }
 
@@ -376,6 +336,17 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
 }
 
 double GammaGamma_qq_NNLO_RV::_coll(
+                                     const double& z,
+                                     const double& lambda,
+                                     const double& ratio,
+                                     const bool LCf,
+                                     const bool SCf
+                                     )
+{
+    return _coll1(z,lambda,ratio,LCf,SCf) + _coll2(z,lambda,ratio,LCf,SCf);
+}
+
+double GammaGamma_qq_NNLO_RV::_coll1(
                                     const double& z,
                                     const double& lambda,
                                     const double& ratio,

@@ -241,6 +241,13 @@ private:
                  const bool LCf = true,
                  const bool SCf = true
                  );
+    double _coll1(
+                 const double& z,
+                 const double& lambda,
+                 const double& ratio,
+                 const bool LCf = true,
+                 const bool SCf = true
+                 );
     double _coll2(
                   const double& z,
                   const double& lambda,
