@@ -11,12 +11,12 @@
 #define COEFFS4D_H
 
 /**
- * \fn    qq2yygCA
- * \brief Master coefficients for qq->gammagamma+g at one loop, power by power in epsilon, CA piece
+ * \fn    qq2yyg4CA
+ * \brief Master coefficients for qq->yyg at one loop, power by power in epsilon, CA piece
  */
 
 template<size_t master, int eps>
-double qq2yygCA(
+double qq2yyg4CA(
               const double& s12,
               const double& s13,
               const double& s14,
@@ -25,12 +25,12 @@ double qq2yygCA(
               );
 
 /**
- * \fn    qq2yygCA
- * \brief Master coefficients for qq->gammagamma+g at one loop, series in epsilon, CA piece
+ * \fn    qq2yyg4CA
+ * \brief Master coefficients for qq->yyg at one loop, series in epsilon, CA piece
  */
 
 template<size_t master>
-Expansion<Parameter::epsilon, double> qq2yygCA(
+Expansion<Parameter::epsilon, double> qq2yyg4CA(
                 const double& s12,
                 const double& s13,
                 const double& s14,
@@ -39,12 +39,12 @@ Expansion<Parameter::epsilon, double> qq2yygCA(
                 );
 
 /**
- * \fn    qq2yygCF
- * \brief Master coefficients for qq->gammagamma+g at one loop, power by power in epsilon, CF piece
+ * \fn    qq2yyg4CF
+ * \brief Master coefficients for qq->yyg at one loop, power by power in epsilon, CF piece
  */
 
 template<size_t master, int eps>
-double qq2yygCF(
+double qq2yyg4CF(
                 const double& s12,
                 const double& s13,
                 const double& s14,
@@ -53,12 +53,12 @@ double qq2yygCF(
                 );
 
 /**
- * \fn    qq2yygCF
- * \brief Master coefficients for qq->gammagamma+g at one loop, series in epsilon, CF piece
+ * \fn    qq2yyg4CF
+ * \brief Master coefficients for qq->yyg at one loop, series in epsilon, CF piece
  */
 
 template<size_t master>
-Expansion<Parameter::epsilon, double> qq2yygCF(
+Expansion<Parameter::epsilon, double> qq2yyg4CF(
                 const double& s12,
                 const double& s13,
                 const double& s14,
@@ -67,12 +67,12 @@ Expansion<Parameter::epsilon, double> qq2yygCF(
                 );
 
 /**
- * \fn    qq2yygCAm2CF
- * \brief Master coefficients for qq->gammagamma+g at one loop, power by power in epsilon, CA-2CF piece
+ * \fn    qq2yyg4CAm2CF
+ * \brief Master coefficients for qq->yyg at one loop, power by power in epsilon, CA-2CF piece
  */
 
 template<size_t master, int eps>
-double qq2yygCAm2CF(
+double qq2yyg4CAm2CF(
                 const double& s12,
                 const double& s13,
                 const double& s14,
@@ -81,12 +81,12 @@ double qq2yygCAm2CF(
                 );
 
 /**
- * \fn    qq2yygCAm2CF
- * \brief Master coefficients for qq->gammagamma+g at one loop, series in epsilon, CA-2CF piece
+ * \fn    qq2yyg4CAm2CF
+ * \brief Master coefficients for qq->yyg at one loop, series in epsilon, CA-2CF piece
  */
 
 template<size_t master>
-Expansion<Parameter::epsilon, double> qq2yygCAm2CF(
+Expansion<Parameter::epsilon, double> qq2yyg4CAm2CF(
                 const double& s12,
                 const double& s13,
                 const double& s14,
@@ -95,46 +95,46 @@ Expansion<Parameter::epsilon, double> qq2yygCAm2CF(
                 );
 
 /**
- * \fn    qq2yygCAbub
+ * \fn    qq2yyg4CAbub
  */
 
-double qq2yygCAbub(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4CAbub(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 /**
- * \fn    qq2yygCAbox
+ * \fn    qq2yyg4CAbox
  */
 
-double qq2yygCAbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4CAbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 /**
- * \fn    qq2yygCFbub
+ * \fn    qq2yyg4CFbub
  */
 
-double qq2yygCFbub(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4CFbub(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 /**
- * \fn    qq2yygCFbox
+ * \fn    qq2yyg4CFbox
  */
 
-double qq2yygCFbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4CFbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 /**
- * \fn    qq2yygAFbub
+ * \fn    qq2yyg4AFbub
  */
 
-double qq2yygAFbub(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4AFbub(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 /**
- * \fn    qq2yygAFbox
+ * \fn    qq2yyg4AFbox
  */
 
-double qq2yygAFbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4AFbox(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 /**
- * \fn    qq2yyg
- * \brief Order epsilon^0 part of the qq->gammagamma+g matrix element
+ * \fn    qq2yyg4
+ * \brief Order epsilon^0 part of the qq->yyg matrix element
  */
 
-double qq2yyg(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
+double qq2yyg4(const double& s12, const double& s13, const double& s14, const double& s23, const double& s24);
 
 #endif

@@ -203,6 +203,14 @@ target_link_libraries(
             gtest
 )
 
+add_executable(
+            mypow_test
+            mypow_test.cpp
+)
+target_link_libraries(
+            mypow_test
+            ${CLN_LIBRARIES}
+)
 
 
 
@@ -210,13 +218,9 @@ target_link_libraries(
 
 
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
                     
                     
                     

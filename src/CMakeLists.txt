@@ -51,9 +51,12 @@ endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
 set (CMAKE_CXX_FLAGS " -std=c++11 -DGTEST_HAS_PTHREAD=0 -pthread")
 
-SET(EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
+set (EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
-SET(CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
+set (CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
+
+set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
+find_package(cln REQUIRED)
 
 include_directories(${EHIXS_SRC_DIR}
                     ${CHAPLIN_SOURCES}
@@ -83,10 +86,12 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/../user_src/
                     ${EHIXS_SRC_DIR}/mincuba
                     ${EHIXS_SRC_DIR}/gtest-1.7.0/include
+                    ${CLN_INCLUDE_DIR}
                     )
 
 link_directories(
                 ${LHAPDF_DIR}/lib/
+                ${CLN_LIBRARY_DIRS}
                )
 
 
@@ -134,7 +139,7 @@ add_subdirectory(ihixs_dir)
 #target_link_libraries(ehixs ${LHAPDF})
 #If it does not, it can be set through the CMake GUI.
 
-SET(GGF_LIBS gluon_fusion
+set (GGF_LIBS gluon_fusion
             fortran_ggf 
             fortran_ggf_RR_gg2gg
             fortran_ggf_RR_gg2qqbar
@@ -144,7 +149,7 @@ SET(GGF_LIBS gluon_fusion
             fortran_ggf_RR_qq)
 
 
-SET(LIBRARIES_FOR_GLOBAL_TESTS 
+set (LIBRARIES_FOR_GLOBAL_TESTS
             #test_utils 
             core  
             #decay_zzww
@@ -174,7 +179,9 @@ SET(LIBRARIES_FOR_GLOBAL_TESTS
 add_executable(ehixs  
             ${EHIXS_SRC_DIR}/ehixs.cpp)
 target_link_libraries(ehixs 
-            ${LIBRARIES_FOR_GLOBAL_TESTS})
+            ${LIBRARIES_FOR_GLOBAL_TESTS}
+            ${CLN_LIBRARIES}
+)
             
             
 add_executable(ihixs

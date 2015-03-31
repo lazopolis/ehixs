@@ -255,6 +255,10 @@ private:
                   const bool LCf = true,
                   const bool SCf = true
                   );
+    double _fullsoft(const double& z, const double& lambda, const double& ratio);
+    double _fullsoftcoll(const double& z, const double& lambda, const double& ratio);
+    double _soft(const double& z, const double& lambda, const double& ratio);
+    double _softcoll(const double& z, const double& lambda, const double& ratio);
 
 };
 
