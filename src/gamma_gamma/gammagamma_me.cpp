@@ -210,7 +210,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     cout << "Testing collinear limit\n\n";
     z=0.52984766/2.;
     cout << "z = " << z << endl << endl;
-    for (lambda = 0.05123419384701234; true && lambda > 5.e-7; lambda*=0.95) {
+    for (lambda = 0.05123419384701234; false && lambda > 5.e-7; lambda*=0.95) {
 
         // Generating momenta
         const double w = _prefactor * _factor * (1.-z) * _pg(randoms); // 1-z from phase space
@@ -224,10 +224,10 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         // RV full
 
         // Printing general information
-        if (false) {
+        if (true) {
             cout << "\n ----- lambda = " << lambda << " ----- \n";
             cout << s12 << "\t" << s13 << "\t" << s14 << "\t" << s23 << "\t" << s24 << endl;
-            cout << square(_p[1]-_p[5]) << "\t" << lambda*(1.-z)*s12 << "\t" << -s12-s13-s14 << endl;
+            //cout << square(_p[1]-_p[5]) << "\t" << lambda*(1.-z)*s12 << "\t" << -s12-s13-s14 << endl;
         }
         // Printing 6 components to check 1<-->2 symmetry
         if (false) {
@@ -374,7 +374,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Plotting counterterm vs. full ME
-        if (true) {
+        if (false) {
             cout << lambda << "\t"
             << _coll(z,lambda,s13/s14) << "\t"
             << -16/3.*(qq2yyg6col(s12,s13,s14,s23,s24)+qq2yyg6col(s12,s14,s13,s24,s23)) << endl;
@@ -386,7 +386,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     cout << "Testing soft limit" << endl;
     lambda=0.52984766/2.;
     cout << "lambda = " << lambda << endl << endl;
-    for (double zbar = 0.8123419384701234; false && zbar > 5.e-3; zbar*=0.97) {
+    for (double zbar = 0.8123419384701234; true && zbar > 5.e-6; zbar*=0.9) {
 
         z=1.-zbar;
         if (z==1.) exit(1234);
@@ -398,14 +398,16 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double s14 = square(_p[1]-_p[4])/s12;
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
+        const double s15 = square(_p[1]-_p[5])/s12;
+        const double s25 = square(_p[2]-_p[5])/s12;
+        const double s34 = square(_p[3]+_p[4])/s12;
         s12 = 1.;
 
         // Printing general information
         if (false) {
             cout << "\n ----- z = " << z << " ----- \n";
             cout << s12/s12 << "\t" << s13/s12 << "\t" << s14/s12 << "\t" << s23/s12 << "\t" << s24/s12 << endl;
-            cout << (-s12-s13-s14)/s12 << "\t" << (-s12-s23-s24)/s12 << "\t" << (-s12-s13-s14-s23-s24)/s12 << endl;
-            //cout << square(_p[1]-_p[5]) << "\t" << lambda*(1.-z)*s12 << "\t" << -s12-s13-s14 << endl;
+            //cout << (-s12-s13-s14)/s12 << "\t" << (-s12-s23-s24)/s12 << "\t" << (-s12-s13-s14-s23-s24)/s12 << endl;
         }
         //cout << zbar << "\t\t" << qq2yyg4CA<4>(s12,s13,s14,s23,s24) << "\t\t" << bubble(s23,3) << endl;
         //cout << productCoeff(qq2yyg4CA<4>(s12,s13,s14,s23,s24),bubble(s23,3),0) << "\n";
@@ -455,7 +457,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Printing LC bubble masters
-        if (true) {
+        if (false) {
             cout << zbar << "\t\t"
             << productCoeff(qq2yyg6LC<1>(s12,s13,s14,s23,s24),bubble(s13,3),0) << "\t"
             << productCoeff(qq2yyg6LC<2>(s12,s13,s14,s23,s24),bubble(s14,3),0) << "\t"
@@ -463,18 +465,32 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             << productCoeff(qq2yyg6LC<4>(s12,s13,s14,s23,s24),bubble(s23,3),0) << "\t"
             << productCoeff(qq2yyg6LC<5>(s12,s13,s14,s23,s24),bubble(s24,3),0) << "\t"
             << productCoeff(qq2yyg6LC<6>(s12,s13,s14,s23,s24),bubble(-s12-s23-s24,3),0) << "\t"
-            << productCoeff(qq2yyg6LC<7>(s12,s13,s14,s23,s24),bubble(-s12-s13-s14-s23-s24,3),0) << endl;
+            << productCoeff(qq2yyg6LC<7>(s12,s13,s14,s23,s24),bubble(-s12-s13-s14-s23-s24,3),0) << "\t\t"
+            << productCoeff(qq2yyg6ELC<1>(s12,s13,s14,s23,s24),bubble(s13,3),0) << "\t"
+            << productCoeff(qq2yyg6ELC<2>(s12,s13,s14,s23,s24),bubble(s14,3),0) << "\t"
+            << productCoeff(qq2yyg6ELC<3>(s12,s13,s14,s23,s24),bubble(-s12-s13-s14,3),0) << "\t"
+            << productCoeff(qq2yyg6ELC<4>(s12,s13,s14,s23,s24),bubble(s23,3),0) << "\t"
+            << productCoeff(qq2yyg6ELC<5>(s12,s13,s14,s23,s24),bubble(s24,3),0) << "\t"
+            << productCoeff(qq2yyg6ELC<6>(s12,s13,s14,s23,s24),bubble(-s12-s23-s24,3),0) << "\t"
+            << productCoeff(qq2yyg6ELC<7>(s12,s13,s14,s23,s24),bubble(-s12-s13-s14-s23-s24,3),0) << endl;
+        }
+
+        // Printing a sample badly-behaved coefficient
+        if (false) {
+            cout << zbar << "\t\t"
+            << qq2yyg6LC<4,1>(s12,s13,s14,s23,s24) << "\t"
+            << qq2yyg6ELC<4,1>(s12,s13,s14,s23,s24) << endl;
         }
 
         // Plotting counterterm vs. full ME
-        if (false) {
+        if (true) {
             cout << 1.-z << "\t"
             << _fullsoft(z,lambda,s13/s14) << "\t"
-            << (qq2yyg6LCbub(s12,s13,s14,s23,s24)+qq2yyg6LCbub(s12,s14,s13,s24,s23)) << "\t"
-            << (qq2yyg6LCbox(s12,s13,s14,s23,s24)+qq2yyg6LCbox(s12,s14,s13,s24,s23)) << "\t"
-            << (qq2yyg6SCbub(s12,s13,s14,s23,s24)+qq2yyg6SCbub(s12,s14,s13,s24,s23)) << "\t"
-            << (qq2yyg6SCbox(s12,s13,s14,s23,s24)+qq2yyg6SCbox(s12,s14,s13,s24,s23)) << "\t"
-            << (qq2yyg6col(s12,s13,s14,s23,s24)+qq2yyg6col(s12,s14,s13,s24,s23)) << endl;
+            << qq2yyg6ELCbub(s12,s13,s14,s23,s24) << "\t"
+            << qq2yyg6ELCbox(s12,s13,s14,s23,s24) << endl;//"\t"
+//            << (qq2yyg6SCbub(s12,s13,s14,s23,s24)+qq2yyg6SCbub(s12,s14,s13,s24,s23)) << "\t"
+//            << (qq2yyg6SCbox(s12,s13,s14,s23,s24)+qq2yyg6SCbox(s12,s14,s13,s24,s23)) << "\t"
+//            << (qq2yyg6col(s12,s13,s14,s23,s24)+qq2yyg6col(s12,s14,s13,s24,s23)) << endl;
         }
 
     }

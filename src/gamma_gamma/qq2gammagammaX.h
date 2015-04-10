@@ -18,6 +18,7 @@
 #include "qq2yyg/coeffs6D.h"
 #include "qq2yyg/coeffscol4D.h"
 #include "qq2yyg/coeffscol6D.h"
+#include "qq2yyg/coeffscol6DE.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double alpha = 1.;
