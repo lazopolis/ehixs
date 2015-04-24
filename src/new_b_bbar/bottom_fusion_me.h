@@ -129,7 +129,7 @@ public:
 
     void generateEvents(vector<double>& randoms);
 
-    static bool test();
+    bool test();
 
 };
 

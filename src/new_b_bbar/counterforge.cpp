@@ -166,11 +166,14 @@ Expansion<Parameter::epsilon, double> CounterForge::soft<0>(const double& z, con
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::soft<1>(const double& z, const double& lambda, const size_t trunc)
 {
-    return cGamma*cotan*
-    Expansion<Parameter::epsilon, double>(-2,-8.*QCD::CA*QCD::CF,true)/((1.-z)*lambda*(1.-lambda))*
-    Expansion<Parameter::epsilon, double>::exp(-log(lambda),trunc)*
-    Expansion<Parameter::epsilon, double>::exp(-log(1.-lambda),trunc)*
-    Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z),trunc);
+    const double zbar = 1.-z;
+    const double zll = zbar*lambda*(1.-lambda);
+    return times(
+                 times(cGamma,cotan,trunc),
+                 Expansion<Parameter::epsilon, double>(-2,-4.*QCD::CA*QCD::CF,true)*
+                 Expansion<Parameter::epsilon, double>::exp(-log(zll*zbar),trunc),
+                 trunc
+                 )/zll;
 }
 
 /// Soft-collinear current at tree level
