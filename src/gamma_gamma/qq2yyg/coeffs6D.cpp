@@ -1,6 +1,6 @@
 /**
  *
- * \file    coeffs6D.h
+ * \file    coeffs6D.cpp
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
  * \date    February 2015

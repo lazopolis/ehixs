@@ -201,7 +201,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     cout << "Testing collinear limit\n\n";
     z=0.52984766/2.;
     cout << "z = " << z << endl << endl;
-    for (lambda = 0.05123419384701234; false && lambda > 5.e-14; lambda*=0.7) {
+    for (lambda = 0.05123419384701234; true && lambda > 5.e-16; lambda*=0.7) {
 
         // Generating momenta
         const double w = _prefactor * _factor * (1.-z) * _pg(randoms); // 1-z from phase space
@@ -211,6 +211,12 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
         s12 = 1.;
+        const double s15 = -s12-s13-s14;
+        const double s25 = -s12-s23-s24;
+        const double zb = -(s15+s25)/s12;
+        const double s15n = s15/zb;
+        const double s25n = s25/zb;
+        const double s35n = (s12+s14+s24)/zb;
 
         // RV full
 
@@ -254,6 +260,35 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             << res12 << "\t" << res21 << "\t" << 2*(res12-res21)/(res12+res21) << "\n";
         }
 
+        // Printing coefficients only
+        if (false) {
+            const int k = -1;
+            cout << lambda << "\t\t"
+            << qq2yyg6CAm2CF<1>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<2>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<3>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<4>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<5>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<7>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<8>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<9>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<10>(s12,s13,s14,s23,s24).getCoefficient(k) << "\t"
+            << qq2yyg6CAm2CF<11>(s12,s13,s14,s23,s24).getCoefficient(k) << endl;
+        }
+
+        // Printing coefficients only
+        if (false) {
+            const int k = -1;
+            cout << lambda << "\t\t"
+            << (1-z)*qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(-1) << "\t"
+            << qq2yygz6CAm2CF<6>(s12,s13,s15n,s25n,s35n,zb).getCoefficient(-1) << "\t"
+            << (1-z)*qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(0) << "\t"
+            << qq2yygz6CAm2CF<6>(s12,s13,s15n,s25n,s35n,zb).getCoefficient(0) << "\t"
+            << (1-z)*qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(1) << "\t"
+            << qq2yygz6CAm2CF<6>(s12,s13,s15n,s25n,s35n,zb).getCoefficient(1) << "\n";
+        }
+
         // Printing 6 components for plotting against lambda
         if (false) {
             cout << lambda << "\t";
@@ -272,30 +307,45 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Checking 4D against 6D
+        if (true) {
+            cout << lambda << "\t";
+            cout << (1-z)*qq2yyg6CAbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CAbub(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6CAbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CAbox(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6CFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6CFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6AFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6AFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6AFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6AFbox(s12,s13,s14,s23,s24) << "\n";
+        }
         if (false) {
             cout << lambda << "\t";
             cout << (
                      qq2yyg4CAbub(s12,s13,s14,s23,s24)+qq2yyg4CAbub(s12,s14,s13,s24,s23)+
                      qq2yyg4CAbox(s12,s13,s14,s23,s24)+qq2yyg4CAbox(s12,s14,s13,s24,s23)
                      )/(
-                     qq2yyg6CAbub(s12,s13,s14,s23,s24)+qq2yyg6CAbub(s12,s14,s13,s24,s23)+
-                     qq2yyg6CAbox(s12,s13,s14,s23,s24)+qq2yyg6CAbox(s12,s14,s13,s24,s23)
+                     qq2yygz6CAbub(s12,s13,s14,s23,s24)+
+                     qq2yygz6CAbox(s12,s13,s14,s23,s24)
                      )
                      << "\t";
             cout << (
                      qq2yyg4CFbub(s12,s13,s14,s23,s24)+qq2yyg4CFbub(s12,s14,s13,s24,s23)+
                      qq2yyg4CFbox(s12,s13,s14,s23,s24)+qq2yyg4CFbox(s12,s14,s13,s24,s23)
                      )/(
-                     qq2yyg6CFbub(s12,s13,s14,s23,s24)+qq2yyg6CFbub(s12,s14,s13,s24,s23)+
-                     qq2yyg6CFbox(s12,s13,s14,s23,s24)+qq2yyg6CFbox(s12,s14,s13,s24,s23)
+                     qq2yygz6CFbub(s12,s13,s14,s23,s24)+
+                     qq2yygz6CFbox(s12,s13,s14,s23,s24)
                      )
                      << "\t";
             cout << (
                      qq2yyg4AFbub(s12,s13,s14,s23,s24)+qq2yyg4AFbub(s12,s14,s13,s24,s23)+
                      qq2yyg4AFbox(s12,s13,s14,s23,s24)+qq2yyg4AFbox(s12,s14,s13,s24,s23)
                      )/(
-                     qq2yyg6AFbub(s12,s13,s14,s23,s24)+qq2yyg6AFbub(s12,s14,s13,s24,s23)+
-                     qq2yyg6AFbox(s12,s13,s14,s23,s24)+qq2yyg6AFbox(s12,s14,s13,s24,s23)
+                     qq2yygz6AFbub(s12,s13,s14,s23,s24)+
+                     qq2yygz6AFbox(s12,s13,s14,s23,s24)
                      )
                      << endl;
         }
@@ -389,7 +439,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Plotting counterterm vs. full ME
-        if (true)
+        if (false)
         {
             // Fudge factor
             /// \todo Figure out where this fudge belongs
@@ -413,7 +463,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     cout << "Testing soft limit" << endl;
     lambda=0.52984766/2.;
     cout << "lambda = " << lambda << endl << endl;
-    for (double zbar = 0.8123419384701234; true && zbar > 5.e-14; zbar*=0.7) {
+    for (double zbar = 0.8123419384701234; true && zbar > 5.e-16; zbar*=0.7) {
 
         z=1.-zbar;
         if (z==1.) exit(1234);
@@ -425,10 +475,13 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double s14 = square(_p[1]-_p[4])/s12;
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
-        const double s15 = square(_p[1]-_p[5])/s12;
-        const double s25 = square(_p[2]-_p[5])/s12;
-        const double s34 = square(_p[3]+_p[4])/s12;
         s12 = 1.;
+        const double s15 = -s12-s13-s14;
+        const double s25 = -s12-s23-s24;
+        const double zb = -(s15+s25)/s12;
+        const double s15n = s15/zb;
+        const double s25n = s25/zb;
+        const double s35n = (s12+s14+s24)/zb;
 
         // Printing general information
         if (false) {
@@ -454,6 +507,23 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << qq2yyg6CAbox(s12,s13,s14,s23,s24)+qq2yyg6CAbox(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yyg6CFbox(s12,s13,s14,s23,s24)+qq2yyg6CFbox(s12,s14,s13,s24,s23) << "\t";
             cout << qq2yyg6AFbox(s12,s13,s14,s23,s24)+qq2yyg6AFbox(s12,s14,s13,s24,s23) << endl;
+        }
+
+        // Z version vs normal
+        if (true) {
+            cout << zbar << "\t";
+            cout << (1-z)*qq2yyg6CAbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CAbub(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6CAbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CAbox(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6CFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6CFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6AFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6AFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << (1-z)*qq2yyg6AFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6AFbox(s12,s13,s14,s23,s24) << "\n";
         }
 
         // Printing CA bubble masters
@@ -509,8 +579,20 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             << qq2yyg6ELC<4,1>(s12,s13,s14,s23,s24) << endl;
         }
 
+        // Printing coefficients only
+        if (false) {
+            const int k = -1;
+            cout << zbar << "\t\t"
+            << (1-z)*qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(-1) << "\t"
+            << qq2yygz6CAm2CF<6>(s12,s13,s15n,s25n,s35n,zb).getCoefficient(-1) << "\t"
+            << (1-z)*qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(0) << "\t"
+            << qq2yygz6CAm2CF<6>(s12,s13,s15n,s25n,s35n,zb).getCoefficient(0) << "\t"
+            << (1-z)*qq2yyg6CAm2CF<6>(s12,s13,s14,s23,s24).getCoefficient(1) << "\t"
+            << qq2yygz6CAm2CF<6>(s12,s13,s15n,s25n,s35n,zb).getCoefficient(1) << "\n";
+        }
+
         // Plotting counterterm vs. full ME
-        if (true)
+        if (false)
         {
             // Fudge factor
             /// \todo Figure out where this fudge belongs

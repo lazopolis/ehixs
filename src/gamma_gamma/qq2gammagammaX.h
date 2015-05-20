@@ -16,6 +16,7 @@
 #include "expansion.h" // Expansion<>
 #include "qq2yyg/coeffs4D.h"
 #include "qq2yyg/coeffs6D.h"
+#include "qq2yyg/coeffsz6D.h"
 #include "qq2yyg/coeffscol4D.h"
 #include "qq2yyg/coeffscol6D.h"
 #include "qq2yyg/coeffscol6DE.h"
