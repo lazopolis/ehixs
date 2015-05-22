@@ -307,7 +307,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Checking 4D against 6D
-        if (true) {
+        if (false) {
             cout << lambda << "\t";
             cout << (1-z)*qq2yyg6CAbub(s12,s13,s14,s23,s24) << "\t";
             cout << qq2yygz6CAbub(s12,s13,s14,s23,s24) << "\t";
@@ -396,6 +396,34 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << qq2yyg6ESCbox(s12,s13,s14,s23,s24) << "\t";
             cout << qq2yyg6ESCbox(s12,s14,s13,s24,s23) << "\n";
         }
+        if (false) {
+            cout << qq2yygz6CAbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CAbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yygz6CAbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CAbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yygz6AFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6AFbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yygz6AFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6AFbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yygz6CFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CFbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yygz6CFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yygz6CFbox(s12,s14,s13,s24,s23) << "\n";
+        }
+        if (false) {
+            cout << qq2yyg6CAbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yyg6CAbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CAbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yyg6CAbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6AFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yyg6AFbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6AFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yyg6AFbox(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CFbub(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yyg6CFbub(s12,s14,s13,s24,s23) << "\t";
+            cout << qq2yyg6CFbox(s12,s13,s14,s23,s24) << "\t";
+            cout << qq2yyg6CFbox(s12,s14,s13,s24,s23) << "\n";
+        }
 
         // Checking exact matrix elements
         if (false) {
@@ -421,8 +449,22 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = false;
             const bool SCon = true;
             // Intermediate variables
-            const double LC = qq2yyg6ELCbub(s12,s13,s14,s23,s24)+qq2yyg6ELCbox(s12,s13,s14,s23,s24);
-            const double SC = qq2yyg6ESCbub(s12,s13,s14,s23,s24)+qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+            //const double LC = qq2yyg6ELCbub(s12,s13,s14,s23,s24)+qq2yyg6ELCbox(s12,s13,s14,s23,s24);
+            const double LC = (
+                               qq2yygz6CAbub(s12,s13,s14,s23,s24)+
+                               qq2yygz6CAbox(s12,s13,s14,s23,s24)
+                               )+0.5*(
+                                      qq2yygz6CFbub(s12,s13,s14,s23,s24)+
+                                      qq2yygz6CFbox(s12,s13,s14,s23,s24)
+                                      );
+            //const double SC = qq2yyg6ESCbub(s12,s13,s14,s23,s24)+qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+            const double SC = (
+                               qq2yygz6AFbub(s12,s13,s14,s23,s24)+
+                               qq2yygz6AFbox(s12,s13,s14,s23,s24)
+                               )-0.5*(
+                                      qq2yygz6CFbub(s12,s13,s14,s23,s24)+
+                                      qq2yygz6CFbox(s12,s13,s14,s23,s24)
+                                      );
             const double mycoll1 = _coll1(z,lambda,s13/s14,LCon,SCon);
             const double mycoll2 = _coll2(z,lambda,s13/s14,LCon,SCon);
             const double myfull  = f*(LCon*LC+SCon*SC);
@@ -438,6 +480,41 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
                  << 2*(myfull-mycoll1-mycoll2)/(myfull+mycoll1+mycoll2) <<"\n";
         }
 
+        // True exact vs. Z
+        if (false)
+        {
+            // Intermediate variables
+            const double LCbubE = qq2yyg6ELCbub(s12,s13,s14,s23,s24);
+            const double LCzbub = qq2yygz6LCbub(s13,s14,s23,s24);
+            //const double LCboxE = qq2yyg6ELCbox(s12,s13,s14,s23,s24);
+            //const double LCbub = qq2yyg6CAbub(s12,s13,s14,s23,s24)+qq2yyg6CAbub(s12,s14,s13,s24,s23)+
+            //                   +(qq2yyg6CFbub(s12,s13,s14,s23,s24)+qq2yyg6CFbub(s12,s14,s13,s24,s23))/QCD::CF*0.5*QCD::CA;
+            //const double LCbox = qq2yyg6CAbox(s12,s13,s14,s23,s24)
+            //                    +qq2yyg6CFbox(s12,s13,s14,s23,s24)/QCD::CF*0.5*QCD::CA;
+            //const double LCzbub = qq2yygz6CAbub(s12,s13,s14,s23,s24)+qq2yygz6CAbub(s12,s14,s13,s24,s23)+
+            //                    +(qq2yygz6CFbub(s12,s13,s14,s23,s24)+qq2yygz6CFbub(s12,s14,s13,s24,s23))/QCD::CF*0.5*QCD::CA;
+            //const double LCzbox = qq2yygz6CAbox(s12,s13,s14,s23,s24)
+            //                     +qq2yygz6CFbox(s12,s13,s14,s23,s24)/QCD::CF*0.5*QCD::CA;
+//            const double SCbubE = qq2yyg6ESCbub(s12,s13,s14,s23,s24);
+//            const double SCboxE = qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+//            const double SCbub = qq2yyg6AFbub(s12,s13,s14,s23,s24)
+//                                -qq2yyg6CFbub(s12,s13,s14,s23,s24)/QCD::CF*0.5*(QCD::CA-2.*QCD::CF);
+//            const double SCbox = qq2yyg6AFbox(s12,s13,s14,s23,s24)
+//                                -qq2yyg6CFbox(s12,s13,s14,s23,s24)/QCD::CF*0.5*(QCD::CA-2.*QCD::CF);
+//            const double SCzbub = qq2yygz6AFbub(s12,s13,s14,s23,s24)
+//                                 -qq2yygz6CFbub(s12,s13,s14,s23,s24)/QCD::CF*0.5*(QCD::CA-2.*QCD::CF);
+//            const double SCzbox = qq2yygz6AFbox(s12,s13,s14,s23,s24)
+//                                 -qq2yygz6CFbox(s12,s13,s14,s23,s24)/QCD::CF*0.5*(QCD::CA-2.*QCD::CF);
+            // Printing
+            cout << lambda << "\t\t";
+            cout << LCbubE << "\t" << LCzbub/(1.-z) << "\n";
+            cout << endl;
+            //cout << LCboxE << "\t" << qq2yyg6LCbox(s12,s13,s14,s23,s24) << "\t" << LCbox << "\t" << LCzbox/(1.-z) << "\t";
+            //cout << SCbubE << "\t" << qq2yyg6SCbub(s12,s13,s14,s23,s24) << "\t" << SCbub << "\t" << SCzbub/(1.-z) << "\t";
+            //cout << SCboxE << "\t" << qq2yyg6SCbox(s12,s13,s14,s23,s24) << "\t" << SCbox << "\t" << SCzbox/(1.-z) << "\n";
+
+        }
+
         // Plotting counterterm vs. full ME
         if (false)
         {
@@ -445,11 +522,42 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             /// \todo Figure out where this fudge belongs
             const double f = -16./3.; // this is 4*alphas^2*CF
             // Switches
-            const bool LCon = false;
+            const bool LCon = true;
+            const bool SCon = false;
+            // Intermediate variables
+            //const double LC = qq2yyg6ELCbub(s12,s13,s14,s23,s24)+qq2yyg6ELCbox(s12,s13,s14,s23,s24);
+            const double LC = (
+                                  qq2yygz6CAbub(s12,s13,s14,s23,s24)+qq2yygz6CAbub(s12,s14,s13,s24,s23)+
+                                  qq2yygz6CAbox(s12,s13,s14,s23,s24)+qq2yygz6CAbox(s12,s14,s13,s24,s23)
+                                  )+(
+                                     qq2yygz6CFbub(s12,s13,s14,s23,s24)+qq2yygz6CFbub(s12,s14,s13,s24,s23)+
+                                     qq2yygz6CFbox(s12,s13,s14,s23,s24)+qq2yygz6CFbox(s12,s14,s13,s24,s23)
+                                     )/QCD::CF*0.5*QCD::CA;
+            //const double SC = qq2yyg6ESCbub(s12,s13,s14,s23,s24)+qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+            const double SC = (
+                               qq2yygz6AFbub(s12,s13,s14,s23,s24)+qq2yygz6AFbub(s12,s14,s13,s24,s23)+
+                               qq2yygz6AFbox(s12,s13,s14,s23,s24)+qq2yygz6AFbox(s12,s14,s13,s24,s23)
+                               )-(
+                                  qq2yygz6CFbub(s12,s13,s14,s23,s24)+qq2yygz6CFbub(s12,s14,s13,s24,s23)+
+                                  qq2yygz6CFbox(s12,s13,s14,s23,s24)+qq2yygz6CFbox(s12,s14,s13,s24,s23)
+                                  )/QCD::CF*0.5*(QCD::CA-2.*QCD::CF);
+            const double mycoll1 = _coll1(z,lambda,s13/s14,LCon,SCon);
+            const double mycoll2 = _coll2(z,lambda,s13/s14,LCon,SCon);
+            const double myfull  = f*(LCon*LC+SCon*SC);
+            // Printing
+            cout << lambda << "\t\t" << myfull << "\t" << mycoll1 << "\t" << mycoll2 << endl;
+        }
+        if (true)
+        {
+            // Fudge factor
+            /// \todo Figure out where this fudge belongs
+            const double f = -16./3.; // this is 4*alphas^2*CF
+            // Switches
+            const bool LCon =false;
             const bool SCon = true;
             // Intermediate variables
-            const double LC = qq2yyg6ELCbub(s12,s13,s14,s23,s24)+qq2yyg6ELCbox(s12,s13,s14,s23,s24);
-            const double SC = qq2yyg6ESCbub(s12,s13,s14,s23,s24)+qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+            const double LC = qq2yygz6LCbub(s13,s14,s23,s24)+qq2yygz6LCbox(s13,s14,s23,s24);
+            const double SC = qq2yygz6SCbub(s13,s14,s23,s24)+qq2yygz6SCbox(s13,s14,s23,s24);
             const double mycoll1 = _coll1(z,lambda,s13/s14,LCon,SCon);
             const double mycoll2 = _coll2(z,lambda,s13/s14,LCon,SCon);
             const double myfull  = f*(LCon*LC+SCon*SC);
@@ -510,7 +618,7 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         }
 
         // Z version vs normal
-        if (true) {
+        if (false) {
             cout << zbar << "\t";
             cout << (1-z)*qq2yyg6CAbub(s12,s13,s14,s23,s24) << "\t";
             cout << qq2yygz6CAbub(s12,s13,s14,s23,s24) << "\t";
@@ -598,14 +706,45 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             /// \todo Figure out where this fudge belongs
             const double f = -16./3.; // this is 4*alphas^2*CF
             // Switches
-            const bool LCon = true;
-            const bool SCon = false;
+            const bool LCon = false;
+            const bool SCon = true;
             // Intermediate variables
-            const double LC = qq2yyg6ELCbub(s12,s13,s14,s23,s24)+qq2yyg6ELCbox(s12,s13,s14,s23,s24);
-            const double SC = qq2yyg6ESCbub(s12,s13,s14,s23,s24)+qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+            //const double LC = qq2yyg6ELCbub(s12,s13,s14,s23,s24)+qq2yyg6ELCbox(s12,s13,s14,s23,s24);
+            const double LC = (
+                               qq2yygz6CAbub(s12,s13,s14,s23,s24)+qq2yygz6CAbub(s12,s14,s13,s24,s23)+
+                               qq2yygz6CAbox(s12,s13,s14,s23,s24)+qq2yygz6CAbox(s12,s14,s13,s24,s23)
+                               )+(
+                                  qq2yygz6CFbub(s12,s13,s14,s23,s24)+qq2yygz6CFbub(s12,s14,s13,s24,s23)+
+                                  qq2yygz6CFbox(s12,s13,s14,s23,s24)+qq2yygz6CFbox(s12,s14,s13,s24,s23)
+                                  )/QCD::CF*0.5*QCD::CA;
+            //const double SC = qq2yyg6ESCbub(s12,s13,s14,s23,s24)+qq2yyg6ESCbox(s12,s13,s14,s23,s24);
+            const double SC = (
+                               qq2yygz6AFbub(s12,s13,s14,s23,s24)+qq2yygz6AFbub(s12,s14,s13,s24,s23)+
+                               qq2yygz6AFbox(s12,s13,s14,s23,s24)+qq2yygz6AFbox(s12,s14,s13,s24,s23)
+                               )-(
+                                  qq2yygz6CFbub(s12,s13,s14,s23,s24)+qq2yygz6CFbub(s12,s14,s13,s24,s23)+
+                                  qq2yygz6CFbox(s12,s13,s14,s23,s24)+qq2yygz6CFbox(s12,s14,s13,s24,s23)
+                                  )/QCD::CF*0.5*(QCD::CA-2.*QCD::CF);
             const double mysoft1 = _fullsoft1(z,lambda,s13/s14,LCon,SCon);
             const double mysoft2 = _fullsoft2(z,lambda,s13/s14,LCon,SCon);
-            const double myfull  = f*zbar*(LCon*LC+SCon*SC);
+            const double myfull  = f*(LCon*LC+SCon*SC);
+            // Printing
+            cout << zbar << "\t\t" << myfull << "\t" << mysoft1 << "\t" << mysoft2 << endl;
+        }
+        if (true)
+        {
+            // Fudge factor
+            /// \todo Figure out where this fudge belongs
+            const double f = -16./3.; // this is 4*alphas^2*CF
+            // Switches
+            const bool LCon = false;
+            const bool SCon = true;
+            // Intermediate variables
+            const double LC = qq2yygz6LCbub(s13,s14,s23,s24)+qq2yygz6LCbox(s13,s14,s23,s24);
+            const double SC = qq2yygz6SCbub(s13,s14,s23,s24)+qq2yygz6SCbox(s13,s14,s23,s24);
+            const double mysoft1 = _fullsoft1(z,lambda,s13/s14,LCon,SCon);
+            const double mysoft2 = _fullsoft2(z,lambda,s13/s14,LCon,SCon);
+            const double myfull  = f*(LCon*LC+SCon*SC);
             // Printing
             cout << zbar << "\t\t" << myfull << "\t" << mysoft1 << "\t" << mysoft2 << endl;
         }
@@ -639,7 +778,7 @@ double GammaGamma_qq_NNLO_RV::_coll1(
                         Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/*muR*/),3),
                         CounterForge::Pqq<1>(z,LCf,SCf,3)*qq2gammagamma<0>(ratio),
                         0
-                        )/(-lambda*z*(1-z));
+                        )/(-lambda*z);
 }
 
 double GammaGamma_qq_NNLO_RV::_coll2(
@@ -654,7 +793,7 @@ double GammaGamma_qq_NNLO_RV::_coll2(
                         Expansion<Parameter::epsilon,double>::exp(-log(z/*muR*/),3),
                         CounterForge::Pqq<0>(z,LCf,SCf,3)*qq2gammagamma<1>(ratio),
                         0
-                        )/(-lambda*z*(1-z));
+                        )/(-lambda*z);
 }
 
 double GammaGamma_qq_NNLO_RV::_fullsoft(
