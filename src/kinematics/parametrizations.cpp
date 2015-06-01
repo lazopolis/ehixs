@@ -14,7 +14,7 @@
 FourVector ThetaPhi(const double& theta, const double& phi, const double& absp, const double& m)
 {
     return FourVector(
-                      sqrt(absp*absp-m*m),
+                      sqrt(absp*absp+m*m),
                       absp*sin(theta)*cos(phi),
                       absp*sin(theta)*sin(phi),
                       absp*cos(theta)
@@ -83,26 +83,33 @@ double Zlambda3PG::generateFSMomenta(const vector<double>& randoms) const
     // This could be optimized to not-reject by inserting a jacobian
     const double z = randoms[3];
     if (z < _tau) return 0.;
-    // Generating gluon momentum
+    // Generating gluon momentum in the partonic com
+    const double s12 = 4.*_E*_E*x1*x2;
+    const double sqrts12_2 = _E*sqrt(x1*x2);
     const double phi = 2.*consts::Pi*randoms[2];
     const double lambda = randoms[4];
-    const double sllbar = sqrt(lambda*(1.-lambda)*x1*x2)*2.*_E;
+    const double sllbar = sqrt(lambda*(1.-lambda)*s12);
     _p[5] = (1.-z)*(
-                    (1.-lambda) * _p[1] +
-                    lambda * _p[2] +
+                    (1.-lambda) * sqrts12_2 * LightCone::n +
+                    lambda * sqrts12_2 * LightCone::nbar +
                     sllbar * LightCone::eperp(phi)
                     );
     // Generating p4 in the 34 rest frame
-    const double Q2 = z*4.*_E*_E*x1*x2;
+    const double Q2 = z*s12;
     const double absp = KaellenLambda(Q2,_m[0]*_m[0],_m[1]*_m[1])/(2.*sqrt(Q2));
     const double theta_gamma = consts::Pi*randoms[1];
     const double phi_gamma = 2.*consts::Pi*randoms[0];
     _p[3] = ThetaPhi(theta_gamma,phi_gamma,absp,_m[0]);
-    // Boosting p3 to the lab (boost by velocity of p34)
-    FourVector p34 = _p[1] + _p[2] - _p[5];
-    _p[3].boost(p34[1]/p34[0],p34[2]/p34[0],p34[3]/p34[0]);
+    // Boosting p3 to the partonic com (boost by velocity of p34)
+    const double p34_0 = 2.*sqrts12_2-_p[5][0];
+    _p[3].boost(-_p[5][1]/p34_0,-_p[5][2]/p34_0,-_p[5][3]/p34_0);
+    // Boosting p3 and p5 to the lab
+    const double Y = 0.5*log(x1/x2);
+    _p[5].rapBoost(Y);
+    _p[3].rapBoost(Y);
     // Recovering p4 by momentum conservation
     _p[4] = _p[1]+_p[2]-_p[3]-_p[5];
+    // cout << _p[4]*_p[4] << endl;
     //jacobian = sin(theta_gamma)
     return sin(theta_gamma);
 }

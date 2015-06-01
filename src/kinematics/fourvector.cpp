@@ -156,12 +156,12 @@ FourVector& FourVector::boost(const double& bx,const double& by,const double& bz
    const double bsq = bx*bx+by*by+bz*bz;
    const double g = gamma(bsq);
    // Compute matrix elements
-   const double bxx = 1+(g-1)*bx*bx/bsq;
-   const double byy = 1+(g-1)*by*by/bsq;
-   const double bzz = 1+(g-1)*bz*bz/bsq;
-   const double bxy = (g-1)*bx*by/bsq;
-   const double byz = (g-1)*by*bz/bsq;
-   const double bzx = (g-1)*bz*bx/bsq;
+   const double bxx = 1.+(g-1.)*bx*bx/bsq;
+   const double byy = 1.+(g-1.)*by*by/bsq;
+   const double bzz = 1.+(g-1.)*bz*bz/bsq;
+   const double bxy = (g-1.)*bx*by/bsq;
+   const double byz = (g-1.)*by*bz/bsq;
+   const double bzx = (g-1.)*bz*bx/bsq;
    // Set this vector to its boosted value and return its reference
    return operator=({
       g*operator[](0)    + g*bx*operator[](1) + g*by*operator[](2) + g*bz*operator[](3),
