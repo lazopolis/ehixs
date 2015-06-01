@@ -26,54 +26,61 @@
  */
 
 template <int n>
-BaseT pow(BaseT base)
+BaseT pow(const BaseT base)
 {
-    BaseT result(1);
+    BaseT result(1), bas(base);
     size_t exp = abs(n);
     while (exp)
     {
-        if (exp&1) result*=base;
+        if (exp&1) result*=bas;
         exp>>=1;
-        base *= base;
+        bas *= bas;
     }
     if (n>0) return result;
     else return BaseT(1)/result;
 }
 
 template <>
-inline BaseT pow<-2>(BaseT base)
+inline BaseT pow<-2>(const BaseT base)
 {
     return BaseT(1)/(base*base);
 }
 
 template <>
-inline BaseT pow<-1>(BaseT base)
+inline BaseT pow<-1>(const BaseT base)
 {
     return BaseT(1)/base;
 }
 
 template <>
-inline BaseT pow<0>(BaseT base)
+inline BaseT pow<0>(const BaseT base)
 {
     return BaseT(1);
 }
 
 template <>
-inline BaseT pow<1>(BaseT base)
+inline BaseT pow<1>(const BaseT base)
 {
     return base;
 }
 
 template <>
-inline BaseT pow<2>(BaseT base)
+inline BaseT pow<2>(const BaseT base)
 {
     return base*base;
 }
 
 template <>
-inline BaseT pow<3>(BaseT base)
+inline BaseT pow<3>(const BaseT base)
 {
     return base*base*base;
+}
+
+template <>
+inline BaseT pow<4>(const BaseT base)
+{
+    const BaseT pow2=base*base;
+    return pow2*pow2;
 }
 
 #endif
