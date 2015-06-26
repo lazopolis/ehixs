@@ -97,7 +97,7 @@ private:
 /**
  *
  * \class GammaGamma_qq<0>
- * \brief Mother class for subprocesses with qqbar initial state and delta-like kinematics
+ * \brief Mother class for subprocesses with qqbar initial state and 2->2 kinematics
  *
  */
 
@@ -113,7 +113,7 @@ public:
         _p.resize(4);
         _prefactor *= 2. * pow(alpha,2) / static_cast<double>(QCD::Nc);
         _xg.setParameters(0.);
-        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({0./*,0.*/}));
+        _pg.setParameters(UI.Etot*UI.Etot*0.25, vector<double>({0.,0.}));
         return;
     }
 
@@ -226,7 +226,9 @@ public:
 
     GammaGamma_qq_NNLO_RV(const UserInterface& UI) :
     GammaGamma_qq<1>(UI, XSectionMaker<GammaGamma_qq_NLO_real>::_info), _hackIsFirstEvent(true)
-    {}
+    {
+        cout << "\nThe technical cutoff for lambda is " << _lambda_tech_cutoff << endl;
+    }
 
     void generateEvents(vector<double>& randoms);
     void test(vector<double>& randoms);
@@ -279,6 +281,10 @@ private:
     double _fullsoftcoll(const double& z, const double& lambda, const double& ratio);
     double _soft(const double& z, const double& lambda, const double& ratio);
     double _softcoll(const double& z, const double& lambda, const double& ratio);
+
+    const double _lambda_tech_cutoff = 1.e-3;
+    const double _delta = 2.5e-3;
+    size_t _i = 0;
 
 };
 

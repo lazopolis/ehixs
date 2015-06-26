@@ -121,6 +121,7 @@ target_link_libraries(
                     bbh
                     chaplin
                     tools
+                    ${CLN_LIBRARIES}
 )
 
 add_executable(

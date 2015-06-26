@@ -46,6 +46,45 @@ int main(int argc, char**argv)
         std::cout << true << " = " << res << std::endl;
     }
 
+    for (std::size_t i = 0; i<100; ++i){
+        const double s = distribution(generator);
+        const double t = distribution(generator);
+        //cout << "s = " << s << "\tt = " << t << "\tM2 = " << M2 << "\t";
+        Expansion<Parameter::epsilon, double> diff;
+        diff = times(
+                     bubble(s,4)-bubble(t,4),
+                     Expansion<Parameter::epsilon, double>(-1,{1.,-2.},true),
+                     3
+                     )/(s-t) - tri2(s,t,3);
+        bool res = true;
+        //cout << "diff = " << diff << "\t";
+        for (int i = diff.minTerm(); i<diff.maxTerm(); ++i)
+            if (diff.getCoefficient(i)>1000.*DBL_EPSILON) res = false;
+        std::cout << true << " = " << res << std::endl;
+    }
+
+    // Testing triangle series expansion
+//    for (double sr = 1.; sr>1.e-16; sr/=2){
+//        const double s = 1.+sr;
+//        const Expansion<Parameter::epsilon, double> full = times(
+//                                                                 bubble(s,4)-bubble(1.,4),
+//                                                                 Expansion<Parameter::epsilon, double>(-1,{1.,-2.},true),
+//                                                                 3
+//                                                                 )/(s-1.);
+//        const Expansion<Parameter::epsilon, double> b1 = times(
+//                                                                 bubble(s,4),
+//                                                                 Expansion<Parameter::epsilon, double>(-1,{1.,-2.},true),
+//                                                                 4
+//                                                                 )/(s-1.);
+//        const Expansion<Parameter::epsilon, double> b2 = -times(
+//                                                               bubble(1.,4),
+//                                                               Expansion<Parameter::epsilon, double>(-1,{1.,-2.},true),
+//                                                               4
+//                                                               )/(s-1.);
+//        const Expansion<Parameter::epsilon, double> taylor = tri2(s,1.,3);
+//        std::cout << sr << "\t\t" << full  << "\t\t" << b2 << "\t\t" << taylor << std::endl;
+//    }
+
 //    ::testing::InitGoogleTest(&argc, argv);
 //    return RUN_ALL_TESTS();
 

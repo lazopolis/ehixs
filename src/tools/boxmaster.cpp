@@ -61,6 +61,27 @@ Expansion<Parameter::epsilon, double> bubble(const double& s, const size_t n)
                  n);
 }
 
+/// \fn    tri2
+
+Expansion<Parameter::epsilon, double> tri2(const double& p12, const double& p22, const size_t n)
+{
+//    if (abs(p12-p22)>tri2delta*abs(p12+p22)) {
+        return times(
+                     CounterForge::cGamma*Expansion<Parameter::epsilon, double>(-2,1.,true),
+                     (continuedExp(-p12,-1.,n+1)-continuedExp(-p22,-1.,n+1))/(p12-p22),
+                     n);
+//    } else {
+//        const double x = (p22-p12)/(p22+p12);
+//        return times(
+//                     CounterForge::cGamma*Expansion<Parameter::epsilon, double>(-1,1.,true),
+//                     times(
+//                           continuedExp(-p12,-1.,n)/(-p12),
+//                           Expansion<Parameter::epsilon, double>(0,{1.-x,-x},true),
+//                           n),
+//                     n);
+//    }
+}
+
 /// \fn    twoFone
 
 Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n)
@@ -125,7 +146,7 @@ Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, cons
                        n
                        ),
                  ( // The setCoefficient(0,0.) represents 2F1(...)-1
-                  times(continuedExp(-s,-1.,n),twoFone(-u/t,n+2).setCoefficient(0,0.),n)+
+                  times(continuedExp(-s,-1.,n),twoFone(-u/t,n+2).setCoefficient(0,0.),n/*+1*/)+
                   times(continuedExp(-t,-1.,n),twoFone(-u/s,n+2).setCoefficient(0,0.),n)-
                   times(continuedExp(-M2,-1.,n),twoFone(-(M2*u)/(s*t),n+2).setCoefficient(0,0.),n)
                   ).setCoefficient(1,0.), // This is analitically zero, num just small

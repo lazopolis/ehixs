@@ -11,6 +11,7 @@
 #define BOXMASTER_H
 
 #include "expansion.h"     // Expansion
+#include "floatconversions.h"
 
 /**
  *
@@ -56,6 +57,26 @@ Expansion<Parameter::epsilon, double> continuedExp(const double& z, const double
 
 Expansion<Parameter::epsilon, double> bubble(const double& s,
                                              const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+template<class T>
+Expansion<Parameter::epsilon, double> bubble(const T& s,
+                                             const size_t n = Expansion<Parameter::epsilon, double>::accuracy)
+{
+    return bubble(todouble<T>(s),n);
+}
+
+/**
+ *
+ * \fn    tri2
+ * \brief Returns the triangle with 2 external masses as an expansion in epsilon for given invariants
+ * \note  The series representation for very close masses is disabled (commented) in the .cpp
+ *
+ */
+
+//const double tri2delta = 1.e-4; ///< Value beyond which the Taylor expansion is used
+
+Expansion<Parameter::epsilon, double> tri2(const double& p12,
+                                           const double& p22,
+                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
 
 /**
  *
@@ -86,5 +107,11 @@ Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const
 
 Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, const double& M2,
                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+template<class T>
+Expansion<Parameter::epsilon, double> box6(const T& s, const T&t, const T& M2,
+                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy)
+{
+    return box6(todouble<T>(s),todouble<T>(t),todouble<T>(M2),n);
+}
 
 #endif
