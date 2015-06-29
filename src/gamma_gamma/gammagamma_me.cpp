@@ -160,14 +160,14 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
     ++_i;
     std::cout.width(12);
     std::cout.precision(10);
-    randoms[0]=0.623847728931;
-    randoms[1]=0.346123429920;
-    randoms[2]=0.123098470796;
-    randoms[3]=0.645725573737;
-//    randoms[0] = 0.1623847728931;
-//    randoms[1] = 0.73461234920;
-//    randoms[2] = 0.012309847096;
-//    randoms[3] = 0.645725573737;
+//    randoms[0]=0.623847728931;
+//    randoms[1]=0.346123429920;
+//    randoms[2]=0.123098470796;
+//    randoms[3]=0.645725573737;
+    randoms[0] = 0.1623847728931;
+    randoms[1] = 0.73461234920;
+    randoms[2] = 0.012309847096;
+    randoms[3] = 0.645725573737;
     //randoms[4]=0.809993;
     if (_hackIsFirstEvent) {
         _hackIsFirstEvent = false;
@@ -315,6 +315,16 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
         }
 
+        // Printing cut information
+        if (false) {
+            if (_cone.inside(_p[3],_p[5])) cout << "Gluon is inside cone of photon 3." << endl;
+            if (_cone.inside(_p[4],_p[5])) cout << "Gluon is inside cone of photon 4." << endl;
+            if (z*square(_p[1]+_p[2])<20.) cout << "The diphoton system is too soft." << endl;
+            if (_p[3].T()<20.) cout << "Photon 3 does not have enough pT." << endl;
+            if (_p[4].T()<20.) cout << "Photon 4 does not have enough pT." << endl;
+            if (lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff) cout << "Technical cutoff hit." << endl;
+        }
+
         // Counterterms
 
         // Testing collinear counterterm, color decomposition
@@ -354,38 +364,48 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = true;
             const bool SCon = true;
             // Intermediate variables
-            const __float128 s13q = s13;
-            const __float128 s14q = s14;
-            const __float128 s23q = s23;
-            const __float128 s24q = s24;
-            const cln::cl_RA s13r = cln::rational(s13);
-            const cln::cl_RA s14r = cln::rational(s14);
-            const cln::cl_RA s23r = cln::rational(s23);
-            const cln::cl_RA s24r = cln::rational(s24);
-            const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-            const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
-            const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
-            const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
-            const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
-            const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
-            const double myfulld = f*(LCon*LCd+SCon*SCd);
-            const double myfullq = f*(LCon*LCq+SCon*SCq);
-            const double myfullr = f*(LCon*LCr+SCon*SCr);
-            const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
-            const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
-            // Printing
-            cout << zeta << "\t\t" << myfulld << "\t" << myfullq << "\t" << myfullr << "\t";
-            cout << mycoll1 << "\t" << mycoll2 << endl;
+            if (
+                _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
+                ||z*square(_p[1]+_p[2])<20.||_p[3].T()<20.||_p[4].T()<20.
+                ||lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff
+                )
+            {
+                cout << zeta <<  "\t\t" << 0 << "\t" << 0 << "\t" << 0 << "\t";
+                cout << 0 << "\t" << 0 << endl;
+            } else {
+                const __float128 s13q = s13;
+                const __float128 s14q = s14;
+                const __float128 s23q = s23;
+                const __float128 s24q = s24;
+                const cln::cl_RA s13r = cln::rational(s13);
+                const cln::cl_RA s14r = cln::rational(s14);
+                const cln::cl_RA s23r = cln::rational(s23);
+                const cln::cl_RA s24r = cln::rational(s24);
+                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
+                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+                const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
+                const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
+                const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
+                const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
+                const double myfulld = f*(LCon*LCd+SCon*SCd);
+                const double myfullq = f*(LCon*LCq+SCon*SCq);
+                const double myfullr = f*(LCon*LCr+SCon*SCr);
+                const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
+                const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
+                // Printing
+                cout << zeta << "\t\t" << myfulld << "\t" << myfullq << "\t" << myfullr << "\t";
+                cout << mycoll1 << "\t" << mycoll2 << endl;
+            }
         }
 
     }
 
     // Loop on z
     cout << "Testing soft limit" << endl;
-    lambda=0.52984766/2.;
+    lambda=0.52984766;///2.;
     cout << "lambda = " << lambda << endl << endl;
 //    for (double zbar = 0.8123419384701234; true && zbar > 5.e-8; zbar*=0.9) {
-    for (double zeta = -12; false && zeta <= 12; zeta+=0.1) {
+    for (double zeta = -12; true && zeta <= 12; zeta+=0.1) {
         double zbar = 1.-1./(1+exp(zeta*log(10)));
         z=1.-zbar;
         if (z==1.) exit(1234);
@@ -403,58 +423,86 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double zb = -(s15+s25)/s12;
         const double s15n = s15/zb;
         const double s25n = s25/zb;
+        const double s35 = s12+s14+s24;
+        const double s45 = s12+s13+s23;
+        const double s34 = -s12-s15-s25;
         const double s35n = (s12+s14+s24)/zb;
         const double s45n = (s12+s13+s23)/zb;
+        const double t12 = (s15-s25)/zb;
+        const double t34 = (s35-s45)/zb;
+        const double u = s13-s14-s23+s24;
+        const double z=1.-zb;
 
         // Printing general information
         if (false) {
-            cout << "\n ----- z = " << z << " ----- \n";
-            cout << s12/s12 << "\t" << s13/s12 << "\t" << s14/s12 << "\t" << s23/s12 << "\t" << s24/s12 << endl;
-            //cout << (-s12-s13-s14)/s12 << "\t" << (-s12-s23-s24)/s12 << "\t" << (-s12-s13-s14-s23-s24)/s12 << endl;
+            const double s = sqrt(square(_p[1]+_p[2]))/2.;
+            cout << "zbar = " << zbar << "\n";
+            cout << "x1 = " << _x.x1 << "\t";
+            cout << "x2 = " << _x.x2 << "\n";
+            cout << "p1 = " << _p[1]/s << "\n";
+            cout << "p2 = " << _p[2]/s << "\n";
+            cout << "p3 = " << _p[3]/s << "\n";
+            cout << "p4 = " << _p[4]/s << "\n";
+            cout << "p5 = " << _p[5]/s << "\n";
+            cout << "p4.p25 = " << _p[4]*(_p[2]-_p[5])/s << "\n";
+            cout << "p4.p4 = " << _p[4]*_p[4]/s << "\np5.p5 = " << _p[5]*_p[5]/s << endl;
+            cout << s13 << "\t" << s14 << "\t" << s23 << "\t" << s24 << "\t";
+            cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
         }
 
-        // Printing a sample badly-behaved coefficient
-        //if (false) {
-        //    cout << zbar << "\t\t"
-        //    << qq2yyg6LC<4,1>(s12,s13,s14,s23,s24) << "\t"
-        //    << qq2yyg6ELC<4,1>(s12,s13,s14,s23,s24) << endl;
-        //}
-
+        // Printing cut information
+        if (false) {
+            if (_cone.inside(_p[3],_p[5])) cout << "Gluon is inside cone of photon 3." << endl;
+            if (_cone.inside(_p[4],_p[5])) cout << "Gluon is inside cone of photon 4." << endl;
+            if (z*square(_p[1]+_p[2])<20.) cout << "The diphoton system is too soft." << endl;
+            if (_p[3].T()<20.) cout << "Photon 3 does not have enough pT." << endl;
+            if (_p[4].T()<20.) cout << "Photon 4 does not have enough pT." << endl;
+            if (lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff) cout << "Technical cutoff hit." << endl;
+        }
         // Plotting counterterm vs. full ME
-        if (false)
+        if (true)
         {
             // Fudge factor
             /// \todo Figure out where this fudge belongs
             const double f = -16./3.; // this is 4*alphas^2*CF
             // Switches
             const bool LCon = true;
-            const bool SCon = false;
+            const bool SCon = true;
             // Intermediate variables
-            // Intermediate variables
-            const double mysoft1 = _fullsoft1(z,lambda,s13/s14,LCon,SCon);
-            const double mysoft2 = _fullsoft2(z,lambda,s13/s14,LCon,SCon);
-            const __float128 s13q = s13;
-            const __float128 s14q = s14;
-            const __float128 s23q = s23;
-            const __float128 s24q = s24;
-            const cln::cl_RA s13r = cln::rational(s13);
-            const cln::cl_RA s14r = cln::rational(s14);
-            const cln::cl_RA s23r = cln::rational(s23);
-            const cln::cl_RA s24r = cln::rational(s24);
-            const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-            const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
-            const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
-            const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
-            const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
-            const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
-            const double myfulld = f*(LCon*LCd+SCon*SCd);
-            const double myfullq = f*(LCon*LCq+SCon*SCq);
-            const double myfullr = f*(LCon*LCr+SCon*SCr);
-            const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
-            const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
-            // Printing
-            cout << zeta << "\t\t" << myfulld << "\t" << myfullq << "\t" << myfullr << "\t";
-            cout << mysoft1 << "\t" << mysoft2 << endl;
+            if (
+                _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
+                ||z*square(_p[1]+_p[2])<20.||_p[3].T()<20.||_p[4].T()<20.
+                ||lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff
+                )
+            {
+                cout << zeta <<  "\t\t" << 0 << "\t" << 0 << "\t" << 0 << "\t";
+                cout << 0 << "\t" << 0 << endl;
+            } else {
+                const double mysoft1 = _fullsoft1(z,lambda,s13/s14,LCon,SCon);
+                const double mysoft2 = _fullsoft2(z,lambda,s13/s14,LCon,SCon);
+                const __float128 s13q = s13;
+                const __float128 s14q = s14;
+                const __float128 s23q = s23;
+                const __float128 s24q = s24;
+                const cln::cl_RA s13r = cln::rational(s13);
+                const cln::cl_RA s14r = cln::rational(s14);
+                const cln::cl_RA s23r = cln::rational(s23);
+                const cln::cl_RA s24r = cln::rational(s24);
+                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
+                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+                const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
+                const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
+                const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
+                const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
+                const double myfulld = f*(LCon*LCd+SCon*SCd);
+                const double myfullq = f*(LCon*LCq+SCon*SCq);
+                const double myfullr = f*(LCon*LCr+SCon*SCr);
+                const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
+                const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
+                // Printing
+                cout << zeta << "\t\t" << myfulld << "\t" << myfullq << "\t" << myfullr << "\t";
+                cout << mysoft1 << "\t" << mysoft2 << endl;
+            }
         }
 
     }

@@ -282,7 +282,7 @@ private:
     double _soft(const double& z, const double& lambda, const double& ratio);
     double _softcoll(const double& z, const double& lambda, const double& ratio);
 
-    const double _lambda_tech_cutoff = 1.e-3;
+    const double _lambda_tech_cutoff = 1.e-16;
     const double _delta = 2.5e-3;
     size_t _i = 0;
 
