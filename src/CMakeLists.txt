@@ -56,7 +56,15 @@ set (EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 set (CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
 
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
-find_package(cln REQUIRED)
+
+#find_package(cln)
+if (CLN_FOUND)
+    add_definitions(-DWITH_CLN)
+endif (CLN_FOUND)
+
+if (NOT CMAKE_COMPILER_IS_GNUCC)
+    message (SEND_ERROR "Compiler must be gcc for quadruple precision (__float128) support.")
+endif (NOT CMAKE_COMPILER_IS_GNUCC)
 
 include_directories(${EHIXS_SRC_DIR}
                     ${CHAPLIN_SOURCES}
