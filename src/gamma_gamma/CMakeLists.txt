@@ -5,7 +5,6 @@ add_library(gammagamma
             qq2gammagammaX
             gammagamma
             gammagamma_me
-            qq2yyg/coeffscol6D
             qq2yyg/coeffsstucol6Ddouble
             qq2yyg/coeffsstucol6Dquad
             qq2yyg/coeffsstucol6Drat
