@@ -97,7 +97,7 @@ double Zlambda3PG::generateFSMomenta(const vector<double>& randoms) const
     // Generating p4 in the 34 rest frame
     const double Q2 = z*s12;
     const double absp = KaellenLambda(Q2,_m[0]*_m[0],_m[1]*_m[1])/(2.*sqrt(Q2));
-    const double theta_gamma = consts::Pi*randoms[1];
+    const double theta_gamma = acos(2.*randoms[1]-1.);
     const double phi_gamma = 2.*consts::Pi*randoms[0];
     _p[3] = ThetaPhi(theta_gamma,phi_gamma,absp,_m[0]);
     // Boosting p3 to the partonic com (boost by velocity of p34)
@@ -110,6 +110,6 @@ double Zlambda3PG::generateFSMomenta(const vector<double>& randoms) const
     // Recovering p4 by momentum conservation
     _p[4] = _p[1]+_p[2]-_p[3]-_p[5];
     // cout << _p[4]*_p[4] << endl;
-    //jacobian = sin(theta_gamma)
-    return sin(theta_gamma);
+    //jacobian = 1
+    return 1.;
 }
