@@ -236,51 +236,53 @@ public:
 private:
 
     bool _hackIsFirstEvent;
+    bool _cut(const bool verbose = false) const;
+    double _lambda_quad = 0.;
     double _coll(
                  const double& z,
                  const double& lambda,
                  const double& ratio,
                  const bool LCf = true,
                  const bool SCf = true
-                 );
+                 ) const;
     double _coll1(
                  const double& z,
                  const double& lambda,
                  const double& ratio,
                  const bool LCf = true,
                  const bool SCf = true
-                 );
+                 ) const;
     double _coll2(
                   const double& z,
                   const double& lambda,
                   const double& ratio,
                   const bool LCf = true,
                   const bool SCf = true
-                  );
+                  ) const;
     double _fullsoft(
                      const double& z,
                      const double& lambda,
                      const double& ratio,
                      const bool LCf = true,
                      const bool SCf = true
-                     );
+                     ) const;
     double _fullsoft1(
                       const double& z,
                       const double& lambda,
                       const double& ratio,
                       const bool LCf = true,
                       const bool SCf = true
-                      );
+                      ) const;
     double _fullsoft2(
                       const double& z,
                       const double& lambda,
                       const double& ratio,
                       const bool LCf = true,
                       const bool SCf = true
-                      );
-    double _fullsoftcoll(const double& z, const double& lambda, const double& ratio);
-    double _soft(const double& z, const double& lambda, const double& ratio);
-    double _softcoll(const double& z, const double& lambda, const double& ratio);
+                      ) const;
+    double _fullsoftcoll(const double& z, const double& lambda, const double& ratio) const;
+    double _soft(const double& z, const double& lambda, const double& ratio) const;
+    double _softcoll(const double& z, const double& lambda, const double& ratio) const;
 
     const double _lambda_tech_cutoff = 1.e-16;
     const double _delta = 2.5e-3;

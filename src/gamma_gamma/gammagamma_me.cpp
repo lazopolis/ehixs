@@ -184,12 +184,7 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
     const double s12 = square(_p[1]+_p[2]);
     w /= s12;
     // Photon isolation criterion: measurement function
-    if (
-        _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
-        ||z*s12<20.||_p[3].T()<20.||_p[4].T()<20.
-        ||lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff
-        )
-    {
+    if (_cut()) {
         _eventBox->push_back(Event(0.,_p));
         return;
     } else {
@@ -203,11 +198,6 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
         double qq2yyg = 0.;
         if (z>0.5) qq2yyg = qq2yygstu6col(s13,s14,s23,s24);
             else qq2yyg = qq2yygstu6colnobar(s13,s14,s23,s24);
-//        if (lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff)
-//        {
-//            cout << "Point " << _i << " is a.p., lambda = " << lambda << endl;
-//            qq2yyg = qq2yyg6Ecol(s12,s13,s14,s23,s24);
-//        }
         qq2yyg *= 16./3.;
         // Pushing back main event
         _eventBox->push_back( Event(w*qq2yyg,_p) );
@@ -315,16 +305,6 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
         }
 
-        // Printing cut information
-        if (false) {
-            if (_cone.inside(_p[3],_p[5])) cout << "Gluon is inside cone of photon 3." << endl;
-            if (_cone.inside(_p[4],_p[5])) cout << "Gluon is inside cone of photon 4." << endl;
-            if (z*square(_p[1]+_p[2])<20.) cout << "The diphoton system is too soft." << endl;
-            if (_p[3].T()<20.) cout << "Photon 3 does not have enough pT." << endl;
-            if (_p[4].T()<20.) cout << "Photon 4 does not have enough pT." << endl;
-            if (lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff) cout << "Technical cutoff hit." << endl;
-        }
-
         // Counterterms
 
         // Testing collinear counterterm, color decomposition
@@ -364,36 +344,39 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = true;
             const bool SCon = true;
             // Intermediate variables
-            if (
-                _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
-                ||z*square(_p[1]+_p[2])<20.||_p[3].T()<20.||_p[4].T()<20.
-                ||lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff
-                )
-            {
+            if (_cut(false)) {
                 cout << zeta <<  "\t\t" << 0 << "\t" << 0 << "\t" << 0 << "\t";
                 cout << 0 << "\t" << 0 << endl;
             } else {
+                cout << zeta << "\t\t";
+                // double arithmetics
+                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
+                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+                const double myfulld = f*(LCon*LCd+SCon*SCd);
+                cout << myfulld << "\t";
+                // quadruple arithmetics
                 const __float128 s13q = s13;
                 const __float128 s14q = s14;
                 const __float128 s23q = s23;
                 const __float128 s24q = s24;
-                const cln::cl_RA s13r = cln::rational(s13);
-                const cln::cl_RA s14r = cln::rational(s14);
-                const cln::cl_RA s23r = cln::rational(s23);
-                const cln::cl_RA s24r = cln::rational(s24);
-                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
                 const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
                 const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
-                const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
-                const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
-                const double myfulld = f*(LCon*LCd+SCon*SCd);
                 const double myfullq = f*(LCon*LCq+SCon*SCq);
-                const double myfullr = f*(LCon*LCr+SCon*SCr);
+                cout << myfullq << "\t";
+                // rational arithmetics
+#ifdef WITH_CLN
+//                const cln::cl_RA s13r = cln::rational(s13);
+//                const cln::cl_RA s14r = cln::rational(s14);
+//                const cln::cl_RA s23r = cln::rational(s23);
+//                const cln::cl_RA s24r = cln::rational(s24);
+//                const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
+//                const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
+//                const double myfullr = f*(LCon*LCr+SCon*SCr);
+//                cout << myfullr << "\t";
+#endif
+                // limits
                 const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
                 const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
-                // Printing
-                cout << zeta << "\t\t" << myfulld << "\t" << myfullq << "\t" << myfullr << "\t";
                 cout << mycoll1 << "\t" << mycoll2 << endl;
             }
         }
@@ -450,15 +433,6 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
         }
 
-        // Printing cut information
-        if (false) {
-            if (_cone.inside(_p[3],_p[5])) cout << "Gluon is inside cone of photon 3." << endl;
-            if (_cone.inside(_p[4],_p[5])) cout << "Gluon is inside cone of photon 4." << endl;
-            if (z*square(_p[1]+_p[2])<20.) cout << "The diphoton system is too soft." << endl;
-            if (_p[3].T()<20.) cout << "Photon 3 does not have enough pT." << endl;
-            if (_p[4].T()<20.) cout << "Photon 4 does not have enough pT." << endl;
-            if (lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff) cout << "Technical cutoff hit." << endl;
-        }
         // Plotting counterterm vs. full ME
         if (true)
         {
@@ -469,40 +443,39 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = true;
             const bool SCon = true;
             // Intermediate variables
-            if (
-                _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
-                ||z*square(_p[1]+_p[2])<20.||_p[3].T()<20.||_p[4].T()<20.
-                ||lambda<_lambda_tech_cutoff||1.-lambda<_lambda_tech_cutoff
-                )
-            {
+            if (_cut(false)) {
                 cout << zeta <<  "\t\t" << 0 << "\t" << 0 << "\t" << 0 << "\t";
                 cout << 0 << "\t" << 0 << endl;
             } else {
-                const double mysoft1 = _fullsoft1(z,lambda,s13/s14,LCon,SCon);
-                const double mysoft2 = _fullsoft2(z,lambda,s13/s14,LCon,SCon);
+                cout << zeta << "\t";
+                // double arithmetics
+                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
+                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+                const double myfulld = f*(LCon*LCd+SCon*SCd);
+                cout << myfulld << "\t";
+                // quadruple arithmetics
                 const __float128 s13q = s13;
                 const __float128 s14q = s14;
                 const __float128 s23q = s23;
                 const __float128 s24q = s24;
+                const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
+                const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
+                const double myfullq = f*(LCon*LCq+SCon*SCq);
+                cout << myfullq << "\t";
+                // rational arithmetics
+#ifdef WITH_CLN
                 const cln::cl_RA s13r = cln::rational(s13);
                 const cln::cl_RA s14r = cln::rational(s14);
                 const cln::cl_RA s23r = cln::rational(s23);
                 const cln::cl_RA s24r = cln::rational(s24);
-                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
-                const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
-                const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
                 const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
                 const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
-                const double myfulld = f*(LCon*LCd+SCon*SCd);
-                const double myfullq = f*(LCon*LCq+SCon*SCq);
                 const double myfullr = f*(LCon*LCr+SCon*SCr);
-                const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
-                const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
-                // Printing
-                cout << zeta << "\t\t" << myfulld << "\t" << myfullq << "\t" << myfullr << "\t";
-                cout << mysoft1 << "\t" << mysoft2 << endl;
-            }
+                cout << myfullr << "\t";
+#endif
+                // limit
+                cout << _fullsoft(z,lambda,s13/s14,LCon,SCon) << endl;
+           }
         }
 
     }
@@ -511,13 +484,31 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     return;
 }
 
+bool GammaGamma_qq_NNLO_RV::_cut(const bool verbose) const
+{
+    if (verbose) {
+        if (_cone.inside(_p[3],_p[5])) cout << "Gluon is inside cone of photon 3." << endl;
+        if (_cone.inside(_p[4],_p[5])) cout << "Gluon is inside cone of photon 4." << endl;
+        if (z*square(_p[1]+_p[2])<20.) cout << "The diphoton system is too soft." << endl;
+        if (_p[3].T()<20.) cout << "Photon 3 does not have enough pT." << endl;
+        if (_p[4].T()<20.) cout << "Photon 4 does not have enough pT." << endl;
+    }
+    if (
+        _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
+        ||z*square(_p[1]+_p[2])<20.||_p[3].T()<20.||_p[4].T()<20.
+        )
+        return true;
+    else return false;
+
+}
+
 double GammaGamma_qq_NNLO_RV::_coll(
                                      const double& z,
                                      const double& lambda,
                                      const double& ratio,
                                      const bool LCf,
                                      const bool SCf
-                                     )
+                                     ) const
 {
     return _coll1(z,lambda,ratio,LCf,SCf) + _coll2(z,lambda,ratio,LCf,SCf);
 }
@@ -528,7 +519,7 @@ double GammaGamma_qq_NNLO_RV::_coll1(
                                     const double& ratio,
                                     const bool LCf,
                                     const bool SCf
-                                    )
+                                    ) const
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/*muR*/),3),
@@ -543,7 +534,7 @@ double GammaGamma_qq_NNLO_RV::_coll2(
                                      const double& ratio,
                                      const bool LCf,
                                      const bool SCf
-                                     )
+                                     ) const
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(z/*muR*/),3),
@@ -558,7 +549,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft(
                                         const double& ratio,
                                         const bool LCf,
                                         const bool SCf
-                                        )
+                                        ) const
 {
     return _fullsoft1(z,lambda,ratio)+_fullsoft2(z,lambda,ratio);
 }
@@ -569,7 +560,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft1(
                                          const double& ratio,
                                          const bool LCf,
                                          const bool SCf
-                                         )
+                                         ) const
 {
     return LCf*(-2.*productCoeff(CounterForge::soft<1>(z,lambda,3),qq2gammagamma<0>(ratio),0));
 }
@@ -580,26 +571,26 @@ double GammaGamma_qq_NNLO_RV::_fullsoft2(
                                          const double& ratio,
                                          const bool LCf,
                                          const bool SCf
-                                         )
+                                         ) const
 {
     return -1.*productCoeff(CounterForge::soft<0>(z,lambda,3),qq2gammagamma<1>(ratio),0)*
         (LCf*0.5*QCD::CA/QCD::CF+SCf*(1.-0.5*QCD::CA/QCD::CF));
 }
 
-double GammaGamma_qq_NNLO_RV::_fullsoftcoll(const double& z, const double& lambda, const double& ratio)
+double GammaGamma_qq_NNLO_RV::_fullsoftcoll(const double& z, const double& lambda, const double& ratio) const
 {
     return productCoeff(CounterForge::softcoll<1>(z, lambda),qq2gammagamma<0>(ratio),0) +
            productCoeff(CounterForge::softcoll<0>(z, lambda),qq2gammagamma<1>(ratio),0);
 }
 
-double GammaGamma_qq_NNLO_RV::_soft(const double& z, const double& lambda, const double& ratio)
+double GammaGamma_qq_NNLO_RV::_soft(const double& z, const double& lambda, const double& ratio) const
 {
     // This is NOT the full soft limit, only the one-loop soft current term:
     // The tree soft current always cancels between soft and soft-collinear
     return productCoeff(CounterForge::soft<1>(z, lambda),qq2gammagamma<0>(ratio),0);
 }
 
-double GammaGamma_qq_NNLO_RV::_softcoll(const double& z, const double& lambda, const double& ratio)
+double GammaGamma_qq_NNLO_RV::_softcoll(const double& z, const double& lambda, const double& ratio) const
 {
     // This is NOT the full soft-collinear limit, only the one-loop soft-collinear current term:
     // The tree soft-collinear current always cancels between soft and soft-collinear
