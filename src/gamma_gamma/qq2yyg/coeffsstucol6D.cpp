@@ -62,13 +62,13 @@ double qq2yygstu6LCbub(const my_float& s13, const my_float& s14, const my_float&
         ++nPatch;
         fooLCbub += qq2yygstu6LCbub1325(zb,-t12,-t34);
     }
-    if (todouble<my_float>(fabs<my_float>(s13-s24)/(fabs<my_float>(s13)+fabs<my_float>(s24)))<patchDelta) {
+    if (todouble<my_float>(fabs<my_float>(s13-s24)/(fabs<my_float>(s13)+fabs<my_float>(s24)))<patchDelta*todouble(zb)) {
         bubSwitch[1-1]=false;
         bubSwitch[4-1]=false;
         ++nPatch;
         fooLCbub += qq2yygstu6LCbub1324(zb,t12,u);
     }
-    if (todouble<my_float>(fabs<my_float>(s14-s23)/(fabs<my_float>(s14)+fabs<my_float>(s23)))<patchDelta) {
+    if (todouble<my_float>(fabs<my_float>(s14-s23)/(fabs<my_float>(s14)+fabs<my_float>(s23)))<patchDelta*todouble(zb)) {
         bubSwitch[2-1]=false;
         bubSwitch[3-1]=false;
         ++nPatch;
@@ -152,13 +152,13 @@ double qq2yygstu6SCbub(const my_float& s13, const my_float& s14, const my_float&
         ++nPatch;
         fooSCbub += qq2yygstu6SCbub1325(zb,-t12,-t34);
     }
-    if (todouble<my_float>(fabs<my_float>(s13-s24)/(fabs<my_float>(s13)+fabs<my_float>(s24)))<patchDelta) {
+    if (todouble<my_float>(fabs<my_float>(s13-s24)/(fabs<my_float>(s13)+fabs<my_float>(s24)))<patchDelta*todouble(zb)) {
         bubSwitch[2-2]=false;
         bubSwitch[5-2]=false;
         ++nPatch;
         fooSCbub += qq2yygstu6SCbub1324(zb,t12,u);
     }
-    if (todouble<my_float>(fabs<my_float>(s14-s23)/(fabs<my_float>(s14)+fabs<my_float>(s23)))<patchDelta) {
+    if (todouble<my_float>(fabs<my_float>(s14-s23)/(fabs<my_float>(s14)+fabs<my_float>(s23)))<patchDelta*todouble(zb)) {
         bubSwitch[3-2]=false;
         bubSwitch[4-2]=false;
         ++nPatch;
