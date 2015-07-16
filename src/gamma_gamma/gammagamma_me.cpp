@@ -26,7 +26,7 @@ void GammaGamma_qq_LO::generateEvents(vector<double>& randoms)
     const double w = _prefactor * _factor;
     _eventBox->push_back(
                          Event(
-                               w*qq2gammagamma<0,0>(square(_p[1]-_p[3])/square(_p[1]-_p[4])),
+                               w*qq2yy<0,0>(square(_p[1]-_p[3])/square(_p[1]-_p[4])),
                                _p
                                )
                          );
@@ -58,25 +58,33 @@ void GammaGamma_qq_NLO_real::generateEvents(vector<double>& randoms)
         _eventBox->push_back(Event(0.,_p));
         return;
     } else {
-    // Computing invariants
-    double s12 = square(_p[1]+_p[2]);
-    const double s13 = square(_p[1]-_p[3])/s12;
-    const double s14 = square(_p[1]-_p[4])/s12;
-    const double s23 = square(_p[2]-_p[3])/s12;
-    const double s24 = square(_p[2]-_p[4])/s12;
-    s12 = 1.;
-    // Pushing back main event, 1-z from phase space
-    _eventBox->push_back(Event(w*(1-z)*qq2gammagammag<0,0>(s12,s13,s14,s23,s24),_p));
-    // Pushing back collinear counterterms
-    const double cw = w*(CounterForge::Pqq<0>(z)).getCoefficient(0)/z*s12;
-    lambdaR = 0.;
-    _pg(randoms);
-    _eventBox->push_back(Event(-cw*qq2gammagamma<0,0>(s13/s14)/lambda,_p));
-    lambdaR = 1.;
-    _pg(randoms);
-    _eventBox->push_back(Event(-cw*qq2gammagamma<0,0>(s23/s24)/(1.-lambda),_p));
-    randoms.clear();
-    return;
+        // Computing invariants
+        double s12 = square(_p[1]+_p[2]);
+        const double s13 = square(_p[1]-_p[3])/s12;
+        const double s14 = square(_p[1]-_p[4])/s12;
+        const double s23 = square(_p[2]-_p[3])/s12;
+        const double s24 = square(_p[2]-_p[4])/s12;
+        s12 = 1.;
+        const double s15 = -1-s13-s14;
+        const double s25 = -1-s23-s24;
+        const double s35 = 1+s14+s24;
+        const double s45 = 1+s13+s23;
+        const double zb = -s15-s25;
+        const double t12 = (s15-s25)/zb;
+        const double t34 = (s35-s45)/zb;
+        const double u = s13-s14-s23+s24;
+        // Pushing back main event, 1-z from phase space
+        _eventBox->push_back(Event(w*zb*qq2yyg<0,0>(zb,t12,t34,u),_p));
+        // Pushing back collinear counterterms
+        const double cw = w*(CounterForge::Pqq<0>(z)).getCoefficient(0)/z*s12;
+        lambdaR = 0.;
+        _pg(randoms);
+        _eventBox->push_back(Event(-cw*qq2yy<0,0>(s13/s14)/lambda,_p));
+        lambdaR = 1.;
+        _pg(randoms);
+        _eventBox->push_back(Event(-cw*qq2yy<0,0>(s23/s24)/(1.-lambda),_p));
+        randoms.clear();
+        return;
     }
 }
 
@@ -104,13 +112,21 @@ void GammaGamma_qq_NLO_real::test(vector<double>& randoms)
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
         s12 = 1.;
+        const double s15 = -1-s13-s14;
+        const double s25 = -1-s23-s24;
+        const double s35 = 1+s14+s24;
+        const double s45 = 1+s13+s23;
+        const double zb = -s15-s25;
+        const double t12 = (s15-s25)/zb;
+        const double t34 = (s35-s45)/zb;
+        const double u = s13-s14-s23+s24;
 
         // Testing collinear limit
         cout << lambda << "\t"
-        << (1-z)*qq2gammagammag<0,0>(s12,s13,s14,s23,s24) << "\t"
-        << qq2gammagamma<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-lambda*z) << "\t"
-        << (1-z)*qq2gammagammag<0,0>(s12,s13,s14,s23,s24)/
-            (qq2gammagamma<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-lambda*z)) << "\n";
+        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u) << "\t"
+        << qq2yy<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-lambda*z) << "\t"
+        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u)/
+            (qq2yy<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-lambda*z)) << "\n";
 
     }
 
@@ -130,13 +146,21 @@ void GammaGamma_qq_NLO_real::test(vector<double>& randoms)
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
         s12 = 1.;
+        const double s15 = -1-s13-s14;
+        const double s25 = -1-s23-s24;
+        const double s35 = 1+s14+s24;
+        const double s45 = 1+s13+s23;
+        const double zb = -s15-s25;
+        const double t12 = (s15-s25)/zb;
+        const double t34 = (s35-s45)/zb;
+        const double u = s13-s14-s23+s24;
 
         // Testing soft limit
         cout << zbar << "\t"
-        << (1-z)*qq2gammagammag<0,0>(s12,s13,s14,s23,s24) << "\t"
-        << productCoeff(qq2gammagamma<0>(s13/s14),CounterForge::soft<0>(z,lambda),0)/(-1) << "\t"
-        << (1-z)*qq2gammagammag<0,0>(s12,s13,s14,s23,s24)/
-           productCoeff(qq2gammagamma<0>(s13/s14),CounterForge::soft<0>(z,lambda),0)*(-1) << "\n";
+        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u) << "\t"
+        << productCoeff(qq2yy<0>(s13/s14),CounterForge::soft<0>(z,lambda),0)/(-1) << "\t"
+        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u)/
+           productCoeff(qq2yy<0>(s13/s14),CounterForge::soft<0>(z,lambda),0)*(-1) << "\n";
 
     }
     
@@ -160,14 +184,14 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
     ++_i;
     std::cout.width(12);
     std::cout.precision(10);
-//    randoms[0]=0.623847728931;
-//    randoms[1]=0.346123429920;
-//    randoms[2]=0.123098470796;
-//    randoms[3]=0.645725573737;
-    randoms[0] = 0.1623847728931;
-    randoms[1] = 0.73461234920;
-    randoms[2] = 0.012309847096;
-    randoms[3] = 0.645725573737;
+    randoms[0]=0.623847728931;
+    randoms[1]=0.346123429920;
+    randoms[2]=0.123098470796;
+    randoms[3]=0.645725573737;
+//    randoms[0] = 0.1623847728931;
+//    randoms[1] = 0.73461234920;
+//    randoms[2] = 0.012309847096;
+//    randoms[3] = 0.645725573737;
     //randoms[4]=0.809993;
     if (_hackIsFirstEvent) {
         _hackIsFirstEvent = false;
@@ -419,16 +443,16 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         // Printing general information
         if (false) {
             const double s = sqrt(square(_p[1]+_p[2]))/2.;
-            cout << "zbar = " << zbar << "\n";
-            cout << "x1 = " << _x.x1 << "\t";
-            cout << "x2 = " << _x.x2 << "\n";
-            cout << "p1 = " << _p[1]/s << "\n";
-            cout << "p2 = " << _p[2]/s << "\n";
-            cout << "p3 = " << _p[3]/s << "\n";
-            cout << "p4 = " << _p[4]/s << "\n";
-            cout << "p5 = " << _p[5]/s << "\n";
-            cout << "p4.p25 = " << _p[4]*(_p[2]-_p[5])/s << "\n";
-            cout << "p4.p4 = " << _p[4]*_p[4]/s << "\np5.p5 = " << _p[5]*_p[5]/s << endl;
+//            cout << "zbar = " << zbar << "\n";
+//            cout << "x1 = " << _x.x1 << "\t";
+//            cout << "x2 = " << _x.x2 << "\n";
+//            cout << "p1 = " << _p[1]/s << "\n";
+//            cout << "p2 = " << _p[2]/s << "\n";
+//            cout << "p3 = " << _p[3]/s << "\n";
+//            cout << "p4 = " << _p[4]/s << "\n";
+//            cout << "p5 = " << _p[5]/s << "\n";
+//            cout << "p4.p25 = " << _p[4]*(_p[2]-_p[5])/s << "\n";
+//            cout << "p4.p4 = " << _p[4]*_p[4]/s << "\np5.p5 = " << _p[5]*_p[5]/s << endl;
             cout << s13 << "\t" << s14 << "\t" << s23 << "\t" << s24 << "\t";
             cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
         }
@@ -523,7 +547,7 @@ double GammaGamma_qq_NNLO_RV::_coll1(
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/*muR*/),3),
-                        CounterForge::Pqq<1>(z,LCf,SCf,3)*qq2gammagamma<0>(ratio),
+                        CounterForge::Pqq<1>(z,LCf,SCf,3)*qq2yy<0>(ratio),
                         0
                         )/(-lambda*z);
 }
@@ -538,7 +562,7 @@ double GammaGamma_qq_NNLO_RV::_coll2(
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(z/*muR*/),3),
-                        CounterForge::Pqq<0>(z,LCf,SCf,3)*qq2gammagamma<1>(ratio),
+                        CounterForge::Pqq<0>(z,LCf,SCf,3)*qq2yy<1>(ratio),
                         0
                         )/(-lambda*z);
 }
@@ -562,7 +586,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft1(
                                          const bool SCf
                                          ) const
 {
-    return LCf*(-2.*productCoeff(CounterForge::soft<1>(z,lambda,3),qq2gammagamma<0>(ratio),0));
+    return LCf*(-2.*productCoeff(CounterForge::soft<1>(z,lambda,3),qq2yy<0>(ratio),0));
 }
 
 double GammaGamma_qq_NNLO_RV::_fullsoft2(
@@ -573,28 +597,28 @@ double GammaGamma_qq_NNLO_RV::_fullsoft2(
                                          const bool SCf
                                          ) const
 {
-    return -1.*productCoeff(CounterForge::soft<0>(z,lambda,3),qq2gammagamma<1>(ratio),0)*
+    return -1.*productCoeff(CounterForge::soft<0>(z,lambda,3),qq2yy<1>(ratio),0)*
         (LCf*0.5*QCD::CA/QCD::CF+SCf*(1.-0.5*QCD::CA/QCD::CF));
 }
 
 double GammaGamma_qq_NNLO_RV::_fullsoftcoll(const double& z, const double& lambda, const double& ratio) const
 {
-    return productCoeff(CounterForge::softcoll<1>(z, lambda),qq2gammagamma<0>(ratio),0) +
-           productCoeff(CounterForge::softcoll<0>(z, lambda),qq2gammagamma<1>(ratio),0);
+    return productCoeff(CounterForge::softcoll<1>(z,lambda),qq2yy<0>(ratio),0) +
+           productCoeff(CounterForge::softcoll<0>(z,lambda),qq2yy<1>(ratio),0);
 }
 
 double GammaGamma_qq_NNLO_RV::_soft(const double& z, const double& lambda, const double& ratio) const
 {
     // This is NOT the full soft limit, only the one-loop soft current term:
     // The tree soft current always cancels between soft and soft-collinear
-    return productCoeff(CounterForge::soft<1>(z, lambda),qq2gammagamma<0>(ratio),0);
+    return productCoeff(CounterForge::soft<1>(z,lambda),qq2yy<0>(ratio),0);
 }
 
 double GammaGamma_qq_NNLO_RV::_softcoll(const double& z, const double& lambda, const double& ratio) const
 {
     // This is NOT the full soft-collinear limit, only the one-loop soft-collinear current term:
     // The tree soft-collinear current always cancels between soft and soft-collinear
-    return productCoeff(CounterForge::softcoll<1>(z, lambda),qq2gammagamma<0>(ratio),0);
+    return productCoeff(CounterForge::softcoll<1>(z,lambda),qq2yy<0>(ratio),0);
 }
 
 

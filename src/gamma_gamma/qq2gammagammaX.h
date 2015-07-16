@@ -16,38 +16,38 @@
 #include "expansion.h" // Expansion<>
 #include "qq2yyg/coeffsstucol6Ddouble.h"
 #include "qq2yyg/coeffsstucol6Dquad.h"
+#ifdef WITH_CLN
 #include "qq2yyg/coeffsstucol6Drat.h"
+#endif
 #include "qq2yyg/coeffsstucol6Dnobar.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double alpha = 1.;
 
-/// \brief Matrix elements for qq->gammagamma
+/// \brief Matrix elements for qq->yy
 template<size_t loop, int eps>
-double qq2gammagamma(const double& s13_s14);
+double qq2yy(const double& s13_s14);
 
-/// \brief Matrix elements for qq->gammagamma+g
+/// \brief Matrix elements for qq->yyg
 template<size_t loop, int eps>
-double qq2gammagammag(
-                      const double& s12,
-                      const double& s13,
-                      const double& s14,
-                      const double& s23,
-                      const double& s24
-                      );
+double qq2yyg(
+              const double& zb,
+              const double& t12,
+              const double& t34,
+              const double& u
+              );
 
-/// \brief Shorthand for full epsilon expansion of qq->gammagamma
+/// \brief Shorthand for full epsilon expansion of qq->yy
 template<size_t loop>
-Expansion<Parameter::epsilon, double> qq2gammagamma(const double& s13_s14);
+Expansion<Parameter::epsilon, double> qq2yy(const double& s13_s14);
 
-/// \brief Shorthand for full epsilon expansion of qq->gammagamma+g
+/// \brief Shorthand for full epsilon expansion of qq->yyg
 template<size_t loop>
-Expansion<Parameter::epsilon, double> qq2gammagammag(
-                                                     const double& s12,
-                                                     const double& s13,
-                                                     const double& s14,
-                                                     const double& s23,
-                                                     const double& s24
-                                                     );
+Expansion<Parameter::epsilon, double> qq2yyg(
+                                             const double& zb,
+                                             const double& t12,
+                                             const double& t34,
+                                             const double& u
+                                             );
 
 #endif

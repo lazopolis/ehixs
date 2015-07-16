@@ -57,7 +57,7 @@ set (CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
 
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
 
-#find_package(cln)
+find_package(cln)
 if (CLN_FOUND)
     add_definitions(-DWITH_CLN)
 endif (CLN_FOUND)
