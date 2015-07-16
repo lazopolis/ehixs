@@ -38,6 +38,7 @@ double qq2yygstu6LCbub(const my_float& s13, const my_float& s14, const my_float&
     bool bubSwitch[6] = {true,true,true,true,true,true};
     size_t nPatch = 0;
     double fooLCbub(0.);
+    /// \todo Maybe I can get rid of some explicit template specifications?
     if (todouble<my_float>(fabs<my_float>(s13-s25)/(fabs<my_float>(s13)+fabs<my_float>(s25)))<patchDelta) {
         bubSwitch[1-1]=false;
         bubSwitch[6-1]=false;
@@ -218,11 +219,248 @@ double qq2yygstu6SCbox(const my_float& s13, const my_float& s14, const my_float&
     return (QCD::CA-2.*QCD::CF)*fooSCbox;
 }
 
+double qq2yygstu6Nfbub(const my_float& s13, const my_float& s14, const my_float& s23, const my_float& s24)
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    double fooNfbub(0.);
+    fooNfbub += productCoeff(qq2yygstu6Nf<3>(zb,t12,t34,u),  bubble(s12,3),0);
+    fooNfbub += productCoeff(qq2yygstu6Nf<4>(zb,t12,t34,u),  bubble(s34,3),0);
+    fooNfbub += productCoeff(qq2yygstu6Nf<5>(zb,t12,t34,u),  bubble(s35,3),0);
+    fooNfbub += productCoeff(qq2yygstu6Nf<5>(zb,t12,-t34,-u),bubble(s45,3),0);
+    // CHECK THIS FACTOR
+    return -fooNfbub/512.;
+}
+
+double qq2yygstu6Nfbox(const my_float& s13, const my_float& s14, const my_float& s23, const my_float& s24)
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    double fooNfbox(0.);
+    fooNfbox += productCoeff(qq2yygstu6Nf<1> (zb,t12,t34,u),  box6(s34,s35,s12,3),0);
+    fooNfbox += productCoeff(qq2yygstu6Nf<1> (zb,t12,-t34,-u),box6(s34,s45,s12,3),0);
+    fooNfbox += productCoeff(qq2yygstu6Nf<2> (zb,t12,t34,u),  box6(s35,s45,s12,3),0);
+    // CHECK THIS FACTOR
+    return -fooNfbox/512.;
+}
+
 double qq2yygstu6col(const my_float& s13, const my_float& s14, const my_float& s23, const my_float& s24)
 {
     return (
             qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24)+
             qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24)
+            );
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6LCbubexp(
+                                                         const my_float& s13,
+                                                         const my_float& s14,
+                                                         const my_float& s23,
+                                                         const my_float& s24
+                                                         )
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    size_t nPatch = 0;
+    Expansion<Parameter::epsilon, double> fooLCbub(-2,{0.,0.,0.});
+    fooLCbub += times(qq2yygstu6LC<1>(zb,t12,t34,u),  bubble(s13,3),3);
+    fooLCbub += times(qq2yygstu6LC<1>(zb,t12,-t34,-u),bubble(s14,3),3);
+    fooLCbub += times(qq2yygstu6LC<1>(zb,-t12,t34,-u),bubble(s23,3),3);
+    fooLCbub += times(qq2yygstu6LC<1>(zb,-t12,-t34,u),bubble(s24,3),3);
+    fooLCbub += times(qq2yygstu6LC<2>(zb,t12,t34,u),  bubble(s15,3),3);
+    fooLCbub += times(qq2yygstu6LC<2>(zb,-t12,t34,-u),bubble(s25,3),3);
+    fooLCbub += times(qq2yygstu6LC<3>(zb,t12,t34,u),  bubble(s34,3),3);
+    return QCD::CA*fooLCbub;
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6LCboxexp(
+                                                         const my_float& s13,
+                                                         const my_float& s14,
+                                                         const my_float& s23,
+                                                         const my_float& s24
+                                                         )
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    Expansion<Parameter::epsilon, double> fooLCbox(-2,{0.,0.,0.});
+    fooLCbox += times(qq2yygstu6LC<4>(zb,t12,t34,u),  box6(s13,s15,s24,3),3);
+    fooLCbox += times(qq2yygstu6LC<4>(zb,t12,-t34,-u),box6(s14,s15,s23,3),3);
+    fooLCbox += times(qq2yygstu6LC<4>(zb,-t12,t34,-u),box6(s23,s25,s14,3),3);
+    fooLCbox += times(qq2yygstu6LC<4>(zb,-t12,-t34,u),box6(s24,s25,s13,3),3);
+    fooLCbox += times(qq2yygstu6LC<5>(zb,t12,t34,u),  box6(s13,s34,s25,3),3);
+    fooLCbox += times(qq2yygstu6LC<5>(zb,t12,-t34,-u),box6(s14,s34,s25,3),3);
+    fooLCbox += times(qq2yygstu6LC<5>(zb,-t12,t34,-u),box6(s23,s34,s15,3),3);
+    fooLCbox += times(qq2yygstu6LC<5>(zb,-t12,-t34,u),box6(s24,s34,s15,3),3);
+    fooLCbox += times(qq2yygstu6LC<6>(zb,t12,t34,u),  box6(s15,s25,s34,3),3);
+    return QCD::CA*fooLCbox;
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6SCbubexp(
+                                                         const my_float& s13,
+                                                         const my_float& s14,
+                                                         const my_float& s23,
+                                                         const my_float& s24
+                                                         )
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    Expansion<Parameter::epsilon, double> fooSCbub(-2,{0.,0.,0.});
+    fooSCbub += times(qq2yygstu6SC<1>(zb,t12,t34,u),  bubble(s12,3),3);
+    fooSCbub += times(qq2yygstu6SC<2>(zb,t12,t34,u),  bubble(s13,3),3);
+    fooSCbub += times(qq2yygstu6SC<2>(zb,t12,-t34,-u),bubble(s14,3),3);
+    fooSCbub += times(qq2yygstu6SC<2>(zb,-t12,t34,-u),bubble(s23,3),3);
+    fooSCbub += times(qq2yygstu6SC<2>(zb,-t12,-t34,u),bubble(s24,3),3);
+    fooSCbub += times(qq2yygstu6SC<3>(zb,t12,t34,u),  bubble(s15,3),3);
+    fooSCbub += times(qq2yygstu6SC<3>(zb,-t12,t34,-u),bubble(s25,3),3);
+    fooSCbub += times(qq2yygstu6SC<4>(zb,t12,t34,u),  bubble(s34,3),3);
+    fooSCbub += times(qq2yygstu6SC<5>(zb,t12,t34,u),  bubble(s35,3),3);
+    fooSCbub += times(qq2yygstu6SC<5>(zb,t12,-t34,-u),bubble(s45,3),3);
+    return (QCD::CA-2.*QCD::CF)*fooSCbub;
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6SCboxexp(
+                                                         const my_float& s13,
+                                                         const my_float& s14,
+                                                         const my_float& s23,
+                                                         const my_float& s24
+                                                         )
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    Expansion<Parameter::epsilon, double> fooSCbox(-2,{0.,0.,0.});
+    fooSCbox += times(qq2yygstu6SC<6> (zb,t12,t34,u),  box6(s12,s13,s45,3),3);
+    fooSCbox += times(qq2yygstu6SC<6> (zb,t12,-t34,-u),box6(s12,s14,s35,3),3);
+    fooSCbox += times(qq2yygstu6SC<6> (zb,-t12,t34,-u),box6(s12,s23,s45,3),3);
+    fooSCbox += times(qq2yygstu6SC<6> (zb,-t12,-t34,u),box6(s12,s24,s35,3),3);
+    fooSCbox += times(qq2yygstu6SC<7> (zb,t12,t34,u),  box6(s12,s15,s34,3),3);
+    fooSCbox += times(qq2yygstu6SC<7> (zb,-t12,t34,-u),box6(s12,s25,s34,3),3);
+    fooSCbox += times(qq2yygstu6SC<8> (zb,t12,t34,u),  box6(s13,s34,s25,3),3);
+    fooSCbox += times(qq2yygstu6SC<8> (zb,t12,-t34,-u),box6(s14,s34,s25,3),3);
+    fooSCbox += times(qq2yygstu6SC<8> (zb,-t12,t34,-u),box6(s23,s34,s15,3),3);
+    fooSCbox += times(qq2yygstu6SC<8> (zb,-t12,-t34,u),box6(s24,s34,s15,3),3);
+    fooSCbox += times(qq2yygstu6SC<9> (zb,t12,t34,u),  box6(s13,s35,s24,3),3);
+    fooSCbox += times(qq2yygstu6SC<9> (zb,t12,-t34,-u),box6(s14,s45,s23,3),3);
+    fooSCbox += times(qq2yygstu6SC<9> (zb,-t12,t34,-u),box6(s23,s35,s14,3),3);
+    fooSCbox += times(qq2yygstu6SC<9> (zb,-t12,-t34,u),box6(s24,s45,s13,3),3);
+    fooSCbox += times(qq2yygstu6SC<10>(zb,t12,t34,u),  box6(s15,s35,s24,3),3);
+    fooSCbox += times(qq2yygstu6SC<10>(zb,t12,-t34,-u),box6(s15,s45,s23,3),3);
+    fooSCbox += times(qq2yygstu6SC<10>(zb,-t12,t34,-u),box6(s25,s35,s14,3),3);
+    fooSCbox += times(qq2yygstu6SC<10>(zb,-t12,-t34,u),box6(s25,s45,s13,3),3);
+    fooSCbox += times(qq2yygstu6SC<11>(zb,t12,t34,u),  box6(s34,s35,s12,3),3);
+    fooSCbox += times(qq2yygstu6SC<11>(zb,t12,-t34,-u),box6(s34,s45,s12,3),3);
+    fooSCbox += times(qq2yygstu6SC<12>(zb,t12,t34,u),  box6(s35,s45,s12,3),3);
+    return (QCD::CA-2.*QCD::CF)*fooSCbox;
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6Nfbubexp(
+                                                         const my_float& s13,
+                                                         const my_float& s14,
+                                                         const my_float& s23,
+                                                         const my_float& s24
+                                                         )
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    Expansion<Parameter::epsilon, double> fooNfbub(-2,{0.,0.,0.});
+    fooNfbub += times(qq2yygstu6Nf<3>(zb,t12,t34,u),  bubble(s12,3),2);
+    fooNfbub += times(qq2yygstu6Nf<4>(zb,t12,t34,u),  bubble(s34,3),2);
+    fooNfbub += times(qq2yygstu6Nf<5>(zb,t12,t34,u),  bubble(s35,3),2);
+    fooNfbub += times(qq2yygstu6Nf<5>(zb,t12,-t34,-u),bubble(s45,3),2);
+    // CHECK THIS FACTOR
+    return -1./512.*fooNfbub;
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6Nfboxexp(
+                                                         const my_float& s13,
+                                                         const my_float& s14,
+                                                         const my_float& s23,
+                                                         const my_float& s24
+                                                         )
+{
+    const my_float s12 = static_cast<my_float>(1);
+    const my_float s15 = -s12-s13-s14;
+    const my_float s25 = -s12-s23-s24;
+    const my_float s34 = -s12-s13-s14-s23-s24;
+    const my_float s35 = s12+s14+s24;
+    const my_float s45 = s12+s13+s23;
+    const my_float zb = -s15-s25;
+    const my_float t12 = (s15-s25)/zb;
+    const my_float t34 = (s35-s45)/zb;
+    const my_float u = s13-s14-s23+s24;
+    Expansion<Parameter::epsilon, double> fooNfbox(-2,{0.,0.,0.});
+    fooNfbox += times(qq2yygstu6Nf<1> (zb,t12,t34,u),  box6(s34,s35,s12,3),1);
+    fooNfbox += times(qq2yygstu6Nf<1> (zb,t12,-t34,-u),box6(s34,s45,s12,3),1);
+    fooNfbox += times(qq2yygstu6Nf<2> (zb,t12,t34,u),  box6(s35,s45,s12,3),1);
+    // CHECK THIS FACTOR
+    return -1./512.*fooNfbox;
+}
+
+Expansion<Parameter::epsilon, double> qq2yygstu6colexp(
+                                                       const my_float& s13,
+                                                       const my_float& s14,
+                                                       const my_float& s23,
+                                                       const my_float& s24
+                                                       )
+{
+    return (
+            qq2yygstu6LCbubexp(s13,s14,s23,s24)+qq2yygstu6LCboxexp(s13,s14,s23,s24)+
+            qq2yygstu6SCbubexp(s13,s14,s23,s24)+qq2yygstu6SCboxexp(s13,s14,s23,s24)
             );
 }
 

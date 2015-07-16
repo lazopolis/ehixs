@@ -204,6 +204,7 @@ target_link_libraries(
             gtest
 )
 
+if (CLN_FOUND)
 add_executable(
             mypow_test
             mypow_test.cpp
@@ -212,6 +213,22 @@ target_link_libraries(
             mypow_test
             ${CLN_LIBRARIES}
 )
+endif (CLN_FOUND)
+
+if (CLN_FOUND)
+add_executable(
+            qq2yy_test
+            qq2yy_test.cpp
+)
+target_link_libraries(
+            qq2yy_test
+            gammagamma
+            tools
+            chaplin
+            bbh
+            ${CLN_LIBRARIES}
+)
+endif (CLN_FOUND)
 
 
 
@@ -222,8 +239,7 @@ target_link_libraries(
 
 
 
-                    
-                    
+
                     
                     
                     
