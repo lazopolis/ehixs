@@ -14,10 +14,31 @@
 #include <cmath>       // std::pow
 #include "FormalSum.h"
 
+/**
+ *
+ * \fn    m1n
+ * \brief Shorthand for (-1)^n
+ *
+ */
+
+template <typename intype, typename outtype>
+outtype m1n(const intype& n)
+{
+    if (n%2==0) return 1;
+    else return -1;
+}
+
+/**
+ *
+ * \enum  Parameter
+ * \brief List of the valid parameters for expansions
+ *
+ */
+
 enum class Parameter : char {
     alphas='a',
     epsilon='e'
-};
+    };
 
 /**
  *
@@ -192,6 +213,10 @@ Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom
 template <Parameter Par, typename Type>
 Expansion<Par,Type> times(const Expansion<Par,Type>& first, const Expansion<Par,Type>& second);
 
+/// Get the inverse expansion 1/..., truncated at finite size
+template <Parameter Par, typename Type>
+Expansion<Par,Type> inverse(const Expansion<Par,Type>& that, const size_t trunc, const bool warn = true);
+    
 /// Get the coefficient of a product
 template<Parameter Par, typename Type>
 Type productCoeff(const Expansion<Par,Type>& in1, const Expansion<Par,Type>& in2, const int term);
@@ -263,7 +288,7 @@ Expansion<Par,Type> Expansion<Par,Type>::operator*(const Expansion<Par,Type>& th
     const int bMax = that.maxTerm();
     const int cMin = aMin+bMin;
     int cMax = aMax+bMax;
-    if (accuracy!=0) cMax = min(aMax+bMax,cMin+static_cast<int>(accuracy)-1);
+    if (accuracy!=0) cMax = min(cMax,cMin+static_cast<int>(accuracy)-1);
     for (int c = cMin; c <= cMax; ++c)
         for (int a = max(c-bMax,aMin); a <= min(c-bMin,aMax); ++a)
             foo.addCoefficient(c, this->getCoefficient(a) * that.getCoefficient(c-a));
@@ -306,8 +331,8 @@ Expansion<Par,Type> operator/(const Expansion<Par,Type>& numer, const Type denom
 
 /// Multiply an expansion by another one, with finite size
 template <Parameter Par, typename Type>
-    Expansion<Par,Type> times(const Expansion<Par,Type>& first, const Expansion<Par,Type>& second,
-                              const size_t accuracy = Expansion<Par,Type>::accuracy)
+Expansion<Par,Type> times(const Expansion<Par,Type>& first, const Expansion<Par,Type>& second,
+                          const size_t accuracy = Expansion<Par,Type>::accuracy)
 {
     // This is maybe slightly heavy from the point of view of resizing, but nicer than everything else I can think about
     Expansion<Par,Type> foo; /// \todo Make a function to reserve space
@@ -317,11 +342,70 @@ template <Parameter Par, typename Type>
     const int bMax = second.maxTerm();
     const int cMin = aMin+bMin;
     int cMax = aMax+bMax;
-    if (accuracy!=0) cMax = min(aMax+bMax,cMin+static_cast<int>(accuracy)-1);
+    if (accuracy!=0) cMax = min(cMax,cMin+static_cast<int>(accuracy)-1);
     for (int c = cMin; c <= cMax; ++c)
+    {
+        foo.setCoefficient(c,Type());
         for (int a = max(c-bMax,aMin); a <= min(c-bMin,aMax); ++a)
             foo.addCoefficient(c, first.getCoefficient(a) * second.getCoefficient(c-a));
+    }
     return foo;
+}
+
+/// Auxiliary function for inverse
+/// Note that 'that' had better start at order 0 with coefficient 1
+template <Parameter Par, typename Type>
+Type _expansionInverseP(const Expansion<Par,Type>& that, const size_t j, const size_t k)
+{
+    if (that.minTerm()!=0 || that.getCoefficient(that.minTerm())!=1)
+    {
+        cerr << "called _expansionInverseP with unnormalized expansion" << endl;
+        throw;
+    }
+    if (k==0) return 1;
+    Type foo = Type();
+    for (size_t m = 1; m <= k; ++m)
+    {
+        foo += (static_cast<int>((j+1)*m)-static_cast<int>(k))*that.getCoefficient(m)*_expansionInverseP(that,j,k-m);
+    }
+    return foo/k;
+}
+
+/// Return n!/k! for every k<=n, 1 for k>=n
+inline size_t factorial(const size_t n, const size_t k = 0)
+{
+    return (n <= k) ? 1 : factorial(n-1,k) * n;
+}
+
+/// Return the binomial coefficient n!/(k!(n-k)!)
+inline size_t binomial(const size_t n, const size_t k)
+{
+    return factorial(n,k)/factorial(n-k);
+}
+
+/// Get the inverse expansion 1/..., truncated at finite size at trunc terms
+template <Parameter Par, typename Type>
+Expansion<Par,Type> inverse(const Expansion<Par,Type>& that, const size_t trunc, const bool warn)
+{
+    if (trunc>that.size() && warn) {
+        cerr << "Expansion order too low for computing the desired terms of its inverse." << endl;
+        cerr << "If you know what you are doing, disable this warning with the flag 'warn' in inverse." << endl;
+        throw;
+    }
+    const int start = that.minTerm();
+    Expansion<Par, Type> normd(that);
+    normd = times(Expansion<Par,Type>(-start,1),normd,trunc)/normd.getCoefficient(start);
+    Expansion<Par, Type> foo(-start,1);
+    for (size_t k = 1; k<trunc; ++k)
+    {
+        foo.setCoefficient(-start+k,Type());
+        for (size_t r = 0; r<=k; ++r)
+        {
+            const Type appo = m1n<size_t,double>(r)*binomial(k,r)*(k+1.)/(r+1.)*_expansionInverseP(normd,r,k);
+            foo.addCoefficient(-start+k,appo);
+        }
+    }
+    return foo/that.getCoefficient(start);
 }
 
     

@@ -15,20 +15,6 @@
 
 /**
  *
- * \fn    m1n
- * \brief Shorthand for (-1)^n
- *
- */
-
-template <typename intype, typename outtype>
-outtype m1n(const intype& n)
-{
-    if (n%2==0) return 1;
-    else return -1;
-}
-
-/**
- *
  * \fn    polyLog
  * \brief Shorthand to call polylogarithms from Chaplin
  * \todo  Consider moving into chaplin.h
