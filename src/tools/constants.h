@@ -50,7 +50,8 @@ namespace QCD
     const long double CF = 4./3.;   ///< C_F is the Casimir of the fundamental representation
     const double TF = 0.5;          ///< T_F is the normalization factor of SU(3) matrices
 
-    const size_t Nf = 5;
+    const size_t Nf = 4;            ///< Nf is the number of active quark  flavors
+    const double sumQ2 = 10.;       ///< Sum of squared charges of active flavors, normalized to d charge
 
     enum Flavor {
         d = 1,

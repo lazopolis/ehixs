@@ -12,6 +12,7 @@
 
 #include <algorithm>   // std::min
 #include <cmath>       // std::pow
+#include <float.h>     //DBL_EPSILON
 #include "FormalSum.h"
 
 /**
@@ -357,9 +358,9 @@ Expansion<Par,Type> times(const Expansion<Par,Type>& first, const Expansion<Par,
 template <Parameter Par, typename Type>
 Type _expansionInverseP(const Expansion<Par,Type>& that, const size_t j, const size_t k)
 {
-    if (that.minTerm()!=0 || that.getCoefficient(that.minTerm())!=1)
+    if (that.minTerm()!=0 || abs(that.getCoefficient(that.minTerm())-1.)>DBL_EPSILON)
     {
-        cerr << "called _expansionInverseP with unnormalized expansion" << endl;
+        cerr << "called _expansionInverseP with unnormalized expansion " << that << endl;
         throw;
     }
     if (k==0) return 1;
