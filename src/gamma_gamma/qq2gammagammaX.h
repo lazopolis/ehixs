@@ -14,12 +14,14 @@
 #include "chaplin.h"   // HPL
 #include "constants.h" // QCD::CF, etc...
 #include "expansion.h" // Expansion<>
-#include "qq2yyg/coeffsstucol6Ddouble.h"
-#include "qq2yyg/coeffsstucol6Dquad.h"
+#include "qq2yyg/qq2yygz1double.h"
+#include "qq2yyg/qq2yygz1quad.h"
+#include "qq2yyg/qq2yygz0double.h"
+#include "qq2yyg/qq2yygz0quad.h"
 #ifdef WITH_CLN
-#include "qq2yyg/coeffsstucol6Drat.h"
+#include "qq2yyg/qq2yygz1rat.h"
+#include "qq2yyg/qq2yygz0rat.h"
 #endif
-#include "qq2yyg/coeffsstucol6Dnobar.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double alpha = 1.;

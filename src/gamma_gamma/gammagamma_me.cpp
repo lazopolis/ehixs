@@ -220,8 +220,8 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
         const double s15 = -1-s13-s14;
         const double s25 = -1-s23-s24;
         double qq2yyg = 0.;
-        if (z>0.5) qq2yyg = qq2yygstu6col(s13,s14,s23,s24);
-            else qq2yyg = qq2yygstu6colnobar(s13,s14,s23,s24);
+        if (z>0.5) qq2yyg = qq2yygz1col(s13,s14,s23,s24);
+            else qq2yyg = qq2yygz0col(s13,s14,s23,s24);
         qq2yyg *= 16./3.;
         // Pushing back main event
         _eventBox->push_back( Event(w*qq2yyg,_p) );
@@ -245,24 +245,24 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
             const double u = s13-s14-s23+s24;
             cout << lambda << "\t";
             cout << abs(s14-s25)/(abs(s14)+abs(s25)) << "\t";
-            const double bub13 = productCoeff(qq2yygstu6SC<2>(zb,t12,t34,u),bubble(s13,3),0);
-            const double bub14 = productCoeff(qq2yygstu6SC<3>(zb,t12,t34,u),bubble(s14,3),0);
-            const double bub15 = productCoeff(qq2yygstu6SC<4>(zb,t12,t34,u),bubble(s15,3),0);
-            const double bub23 = productCoeff(qq2yygstu6SC<5>(zb,t12,t34,u),bubble(s23,3),0);
-            const double bub24 = productCoeff(qq2yygstu6SC<6>(zb,t12,t34,u),bubble(s24,3),0);
-            const double bub25 = productCoeff(qq2yygstu6SC<7>(zb,t12,t34,u),bubble(s25,3),0);
-//            cout << bub13+bub24 << "\t" << qq2yygstu6LCbub1324(zb,t12,u) << endl;
-            cout << bub14+bub25 << "\t" << qq2yygstu6SCbub1325(zb,t12,-t34) << endl;
+            const double bub13 = productCoeff(qq2yygz1SC<2>(zb,t12,t34,u),bubble(s13,3),0);
+            const double bub14 = productCoeff(qq2yygz1SC<3>(zb,t12,t34,u),bubble(s14,3),0);
+            const double bub15 = productCoeff(qq2yygz1SC<4>(zb,t12,t34,u),bubble(s15,3),0);
+            const double bub23 = productCoeff(qq2yygz1SC<5>(zb,t12,t34,u),bubble(s23,3),0);
+            const double bub24 = productCoeff(qq2yygz1SC<6>(zb,t12,t34,u),bubble(s24,3),0);
+            const double bub25 = productCoeff(qq2yygz1SC<7>(zb,t12,t34,u),bubble(s25,3),0);
+//            cout << bub13+bub24 << "\t" << qq2yygz1LCbub1324(zb,t12,u) << endl;
+            cout << bub14+bub25 << "\t" << qq2yygz1SCbub1325(zb,t12,-t34) << endl;
 //            cout << s12/(13000.*13000.) << "\t" << 0.5*log(_x.x1/_x.x2) << "\t";
 //            cout << s13 << "\t" << s23 << "\t" << s14 << "\t" << s24 << endl;
 //            cout << s15 << "\t" << s25 << "\t" << s34 << "\t" << s35 << "\t" << s45 << endl;
 //            cout << square(_p[1]-_p[5])/s12 << "\t" << square(_p[2]-_p[5])/s12 << "\t" << square(_p[3]+_p[4])/s12 << "\t" <<  square(_p[3]+_p[5])/s12 << "\t" << square(_p[4]+_p[5])/s12 << "\t";
 //            cout << zb << "\t" << t12 << "\t" << t34 << "\t" << u << "\t";
 //            cout << endl;
-//            cout << qq2yygstu6LCbubpatch(s13,s14,s23,s24) << endl;//"\t";
-//            cout << qq2yygstu6LCbox(s13,s14,s23,s24) << "\t";
-//            cout << qq2yygstu6SCbub(s13,s14,s23,s24) << "\t";
-//            cout << qq2yygstu6SCbox(s13,s14,s23,s24) << endl;
+//            cout << qq2yygz1LCbubpatch(s13,s14,s23,s24) << endl;//"\t";
+//            cout << qq2yygz1LCbox(s13,s14,s23,s24) << "\t";
+//            cout << qq2yygz1SCbub(s13,s14,s23,s24) << "\t";
+//            cout << qq2yygz1SCbox(s13,s14,s23,s24) << endl;
 //            cout << qq2yyg << "\t"
 //                 << _coll(z,lambda,s13/s14) << "\t"
 //                 << _coll(z,1.-lambda,s13/s14) << endl;
@@ -341,8 +341,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = false;
             const bool SCon = true;
             // Intermediate variables
-            const double LC = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-            const double SC = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+            const double LC = qq2yygz1LCbub(s13,s14,s23,s24)+qq2yygz1LCbox(s13,s14,s23,s24);
+            const double SC = qq2yygz1SCbub(s13,s14,s23,s24)+qq2yygz1SCbox(s13,s14,s23,s24);
             const double mycoll1 = _coll1(z,lambda,s13/s14,LCon,SCon);
             const double mycoll2 = _coll2(z,lambda,s13/s14,LCon,SCon);
             const double myfull  = f*(LCon*LC+SCon*SC);
@@ -374,8 +374,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             } else {
                 cout << zeta << "\t\t";
                 // double arithmetics
-                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+                const double LCd = qq2yygz1LCbub(s13,s14,s23,s24)+qq2yygz1LCbox(s13,s14,s23,s24);
+                const double SCd = qq2yygz1SCbub(s13,s14,s23,s24)+qq2yygz1SCbox(s13,s14,s23,s24);
                 const double myfulld = f*(LCon*LCd+SCon*SCd);
                 cout << myfulld << "\t";
                 // quadruple arithmetics
@@ -383,8 +383,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
                 const __float128 s14q = s14;
                 const __float128 s23q = s23;
                 const __float128 s24q = s24;
-                const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
-                const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
+                const double LCq = qq2yygz1LCbub(s13q,s14q,s23q,s24q)+qq2yygz1LCbox(s13q,s14q,s23q,s24q);
+                const double SCq = qq2yygz1SCbub(s13q,s14q,s23q,s24q)+qq2yygz1SCbox(s13q,s14q,s23q,s24q);
                 const double myfullq = f*(LCon*LCq+SCon*SCq);
                 cout << myfullq << "\t";
                 // rational arithmetics
@@ -393,8 +393,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
 //                const cln::cl_RA s14r = cln::rational(s14);
 //                const cln::cl_RA s23r = cln::rational(s23);
 //                const cln::cl_RA s24r = cln::rational(s24);
-//                const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
-//                const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
+//                const double LCr = qq2yygz1LCbub(s13r,s14r,s23r,s24r)+qq2yygz1LCbox(s13r,s14r,s23r,s24r);
+//                const double SCr = qq2yygz1SCbub(s13r,s14r,s23r,s24r)+qq2yygz1SCbox(s13r,s14r,s23r,s24r);
 //                const double myfullr = f*(LCon*LCr+SCon*SCr);
 //                cout << myfullr << "\t";
 #endif
@@ -473,8 +473,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             } else {
                 cout << zeta << "\t";
                 // double arithmetics
-                const double LCd = qq2yygstu6LCbub(s13,s14,s23,s24)+qq2yygstu6LCbox(s13,s14,s23,s24);
-                const double SCd = qq2yygstu6SCbub(s13,s14,s23,s24)+qq2yygstu6SCbox(s13,s14,s23,s24);
+                const double LCd = qq2yygz1LCbub(s13,s14,s23,s24)+qq2yygz1LCbox(s13,s14,s23,s24);
+                const double SCd = qq2yygz1SCbub(s13,s14,s23,s24)+qq2yygz1SCbox(s13,s14,s23,s24);
                 const double myfulld = f*(LCon*LCd+SCon*SCd);
                 cout << myfulld << "\t";
                 // quadruple arithmetics
@@ -482,8 +482,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
                 const __float128 s14q = s14;
                 const __float128 s23q = s23;
                 const __float128 s24q = s24;
-                const double LCq = qq2yygstu6LCbub(s13q,s14q,s23q,s24q)+qq2yygstu6LCbox(s13q,s14q,s23q,s24q);
-                const double SCq = qq2yygstu6SCbub(s13q,s14q,s23q,s24q)+qq2yygstu6SCbox(s13q,s14q,s23q,s24q);
+                const double LCq = qq2yygz1LCbub(s13q,s14q,s23q,s24q)+qq2yygz1LCbox(s13q,s14q,s23q,s24q);
+                const double SCq = qq2yygz1SCbub(s13q,s14q,s23q,s24q)+qq2yygz1SCbox(s13q,s14q,s23q,s24q);
                 const double myfullq = f*(LCon*LCq+SCon*SCq);
                 cout << myfullq << "\t";
                 // rational arithmetics
@@ -492,8 +492,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
                 const cln::cl_RA s14r = cln::rational(s14);
                 const cln::cl_RA s23r = cln::rational(s23);
                 const cln::cl_RA s24r = cln::rational(s24);
-                const double LCr = qq2yygstu6LCbub(s13r,s14r,s23r,s24r)+qq2yygstu6LCbox(s13r,s14r,s23r,s24r);
-                const double SCr = qq2yygstu6SCbub(s13r,s14r,s23r,s24r)+qq2yygstu6SCbox(s13r,s14r,s23r,s24r);
+                const double LCr = qq2yygz1LCbub(s13r,s14r,s23r,s24r)+qq2yygz1LCbox(s13r,s14r,s23r,s24r);
+                const double SCr = qq2yygz1SCbub(s13r,s14r,s23r,s24r)+qq2yygz1SCbox(s13r,s14r,s23r,s24r);
                 const double myfullr = f*(LCon*LCr+SCon*SCr);
                 cout << myfullr << "\t";
 #endif
@@ -532,7 +532,7 @@ double GammaGamma_qq_NNLO_RV::_coll(
                                      const double& ratio,
                                      const bool LCf,
                                      const bool SCf
-                                     ) const
+                                     )
 {
     return _coll1(z,lambda,ratio,LCf,SCf) + _coll2(z,lambda,ratio,LCf,SCf);
 }
@@ -543,7 +543,7 @@ double GammaGamma_qq_NNLO_RV::_coll1(
                                     const double& ratio,
                                     const bool LCf,
                                     const bool SCf
-                                    ) const
+                                    )
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/*muR*/),3),
@@ -558,7 +558,7 @@ double GammaGamma_qq_NNLO_RV::_coll2(
                                      const double& ratio,
                                      const bool LCf,
                                      const bool SCf
-                                     ) const
+                                     )
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(z/*muR*/),3),
@@ -573,7 +573,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft(
                                         const double& ratio,
                                         const bool LCf,
                                         const bool SCf
-                                        ) const
+                                        )
 {
     return _fullsoft1(z,lambda,ratio)+_fullsoft2(z,lambda,ratio);
 }
@@ -584,7 +584,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft1(
                                          const double& ratio,
                                          const bool LCf,
                                          const bool SCf
-                                         ) const
+                                         )
 {
     return LCf*(-2.*productCoeff(CounterForge::soft<1>(z,lambda,3),qq2yy<0>(ratio),0));
 }
@@ -595,7 +595,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft2(
                                          const double& ratio,
                                          const bool LCf,
                                          const bool SCf
-                                         ) const
+                                         )
 {
     return -1.*productCoeff(CounterForge::soft<0>(z,lambda,3),qq2yy<1>(ratio),0)*
         (LCf*0.5*QCD::CA/QCD::CF+SCf*(1.-0.5*QCD::CA/QCD::CF));
