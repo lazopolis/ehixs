@@ -192,7 +192,6 @@ add_executable(
             ihixs_eft
             ihixs_eft.cpp
             )
-
 target_link_libraries(
             ihixs_eft
             ihixs_lib
@@ -230,18 +229,12 @@ target_link_libraries(
 )
 endif (CLN_FOUND)
 
-
-
-
-
-
-
-
-
-
-
-                    
-                    
-                    
-
-
+add_executable(
+            pgenerator_test
+            pgenerator_test.cpp
+)
+target_link_libraries(
+            pgenerator_test
+            kinematics
+            tools
+)
