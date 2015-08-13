@@ -65,6 +65,7 @@ endif (CLN_FOUND)
 if (NOT CMAKE_COMPILER_IS_GNUCC)
     message (SEND_ERROR "Compiler must be gcc for quadruple precision (__float128) support.")
 endif (NOT CMAKE_COMPILER_IS_GNUCC)
+add_definitions(-DWITH_GCC)
 
 include_directories(${EHIXS_SRC_DIR}
                     ${CHAPLIN_SOURCES}

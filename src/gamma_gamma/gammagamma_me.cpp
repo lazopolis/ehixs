@@ -8,15 +8,9 @@
  */
 
 #include "gammagamma_me.h"
+#include "boxmaster.h"
 #include <iostream>
 #include <cfloat> // DBL_EPSILON
-
-/// \fn    Rdist
-
-double Rdist(const FourVector& p1, const FourVector& p2)
-{
-    return sqrt(pow(p1.eta()-p2.eta(),2)+pow(p1.phi()-p2.phi(),2));
-}
 
 /// \class GammaGamma_qq_LO
 
@@ -35,10 +29,10 @@ void GammaGamma_qq_LO::generateEvents(vector<double>& randoms)
 
 template<>
 const SectorInfo XSectionMaker<GammaGamma_qq_LO>::_info(
-                                                   "Born",
-                                                    InitialStateFlavors::quarks,
-                                                    0,
-                                                    4
+                                                        "Born",
+                                                        InitialStateFlavors::quarks,
+                                                        0,
+                                                        4
                                                         );
 
 /// \class GammaGamma_qq_NLO_real
@@ -76,6 +70,7 @@ void GammaGamma_qq_NLO_real::generateEvents(vector<double>& randoms)
         // Pushing back main event, 1-z from phase space
         _eventBox->push_back(Event(w*zb*qq2yyg<0,0>(zb,t12,t34,u),_p));
         // Pushing back collinear counterterms
+        /// \bug Correct phase-space mapping from yyg to yy!!!
         const double cw = w*(CounterForge::Pqq<0>(z)).getCoefficient(0)/z*s12;
         lambdaR = 0.;
         _pg(randoms);
@@ -213,16 +208,14 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
         return;
     } else {
         // Computing invariants
+        const qq2yyg1<dbl>::PSpoint pointdbl(_p);
         const double s13 = square(_p[1]-_p[3])/s12;
         const double s14 = square(_p[1]-_p[4])/s12;
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
         const double s15 = -1-s13-s14;
         const double s25 = -1-s23-s24;
-        double qq2yyg = 0.;
-        if (z>0.5) qq2yyg = qq2yygz1col(s13,s14,s23,s24);
-            else qq2yyg = qq2yygz0col(s13,s14,s23,s24);
-        qq2yyg *= 16./3.;
+        const double qq2yyg = 16./3.*qq2yyg1<dbl>::eval(pointdbl,0);
         // Pushing back main event
         _eventBox->push_back( Event(w*qq2yyg,_p) );
         // Pushing back collinear counterterm
@@ -245,14 +238,14 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
             const double u = s13-s14-s23+s24;
             cout << lambda << "\t";
             cout << abs(s14-s25)/(abs(s14)+abs(s25)) << "\t";
-            const double bub13 = productCoeff(qq2yygz1SC<2>(zb,t12,t34,u),bubble(s13,3),0);
-            const double bub14 = productCoeff(qq2yygz1SC<3>(zb,t12,t34,u),bubble(s14,3),0);
-            const double bub15 = productCoeff(qq2yygz1SC<4>(zb,t12,t34,u),bubble(s15,3),0);
-            const double bub23 = productCoeff(qq2yygz1SC<5>(zb,t12,t34,u),bubble(s23,3),0);
-            const double bub24 = productCoeff(qq2yygz1SC<6>(zb,t12,t34,u),bubble(s24,3),0);
-            const double bub25 = productCoeff(qq2yygz1SC<7>(zb,t12,t34,u),bubble(s25,3),0);
+//            const double bub13 = productCoeff(qq2yygz1SC<2>(zb,t12,t34,u),bubble(s13,3),0);
+//            const double bub14 = productCoeff(qq2yygz1SC<3>(zb,t12,t34,u),bubble(s14,3),0);
+//            const double bub15 = productCoeff(qq2yygz1SC<4>(zb,t12,t34,u),bubble(s15,3),0);
+//            const double bub23 = productCoeff(qq2yygz1SC<5>(zb,t12,t34,u),bubble(s23,3),0);
+//            const double bub24 = productCoeff(qq2yygz1SC<6>(zb,t12,t34,u),bubble(s24,3),0);
+//            const double bub25 = productCoeff(qq2yygz1SC<7>(zb,t12,t34,u),bubble(s25,3),0);
 //            cout << bub13+bub24 << "\t" << qq2yygz1LCbub1324(zb,t12,u) << endl;
-            cout << bub14+bub25 << "\t" << qq2yygz1SCbub1325(zb,t12,-t34) << endl;
+//            cout << bub14+bub25 << "\t" << qq2yygz1SCbub1325(zb,t12,-t34) << endl;
 //            cout << s12/(13000.*13000.) << "\t" << 0.5*log(_x.x1/_x.x2) << "\t";
 //            cout << s13 << "\t" << s23 << "\t" << s14 << "\t" << s24 << endl;
 //            cout << s15 << "\t" << s25 << "\t" << s34 << "\t" << s35 << "\t" << s45 << endl;
@@ -297,20 +290,9 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
         s12 = 1.;
-        const double s15 = -s12-s13-s14;
-        const double s25 = -s12-s23-s24;
-        const double zb = -(s15+s25)/s12;
-        const double s15n = s15/zb;
-        const double s25n = s25/zb;
-        const double s35 = s12+s14+s24;
-        const double s45 = s12+s13+s23;
-        const double s34 = -s12-s15-s25;
-        const double s35n = (s12+s14+s24)/zb;
-        const double s45n = (s12+s13+s23)/zb;
-        const double t12 = (s15-s25)/zb;
-        const double t34 = (s35-s45)/zb;
-        const double u = s13-s14-s23+s24;
-        const double z=1.-zb;
+        const qq2yyg1<dbl>::PSpoint pointdbl(_p);
+        const qq2yyg1<qpl>::PSpoint pointqpl(_p);
+        const qq2yyg1<rtn>::PSpoint pointrtn(_p);
 
         // Printing general information
         if (false) {
@@ -325,8 +307,6 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             cout << "p5 = " << _p[5]/s << "\n";
             cout << "p4.p25 = " << _p[4]*(_p[2]-_p[5])/s << "\n";
             cout << "p4.p4 = " << _p[4]*_p[4]/s << "\np5.p5 = " << _p[5]*_p[5]/s << endl;
-            cout << s13 << "\t" << s14 << "\t" << s23 << "\t" << s24 << "\t";
-            cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
         }
 
         // Counterterms
@@ -341,8 +321,8 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = false;
             const bool SCon = true;
             // Intermediate variables
-            const double LC = qq2yygz1LCbub(s13,s14,s23,s24)+qq2yygz1LCbox(s13,s14,s23,s24);
-            const double SC = qq2yygz1SCbub(s13,s14,s23,s24)+qq2yygz1SCbox(s13,s14,s23,s24);
+            const double LC = qq2yyg1<dbl>::LC::eval(pointdbl,0);
+            const double SC = qq2yyg1<dbl>::SC::eval(pointdbl,0);
             const double mycoll1 = _coll1(z,lambda,s13/s14,LCon,SCon);
             const double mycoll2 = _coll2(z,lambda,s13/s14,LCon,SCon);
             const double myfull  = f*(LCon*LC+SCon*SC);
@@ -374,30 +354,15 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             } else {
                 cout << zeta << "\t\t";
                 // double arithmetics
-                const double LCd = qq2yygz1LCbub(s13,s14,s23,s24)+qq2yygz1LCbox(s13,s14,s23,s24);
-                const double SCd = qq2yygz1SCbub(s13,s14,s23,s24)+qq2yygz1SCbox(s13,s14,s23,s24);
+                const double LCd = qq2yyg1<dbl>::LC::eval(pointdbl,0);
+                const double SCd = qq2yyg1<dbl>::SC::eval(pointdbl,0);
                 const double myfulld = f*(LCon*LCd+SCon*SCd);
                 cout << myfulld << "\t";
                 // quadruple arithmetics
-                const __float128 s13q = s13;
-                const __float128 s14q = s14;
-                const __float128 s23q = s23;
-                const __float128 s24q = s24;
-                const double LCq = qq2yygz1LCbub(s13q,s14q,s23q,s24q)+qq2yygz1LCbox(s13q,s14q,s23q,s24q);
-                const double SCq = qq2yygz1SCbub(s13q,s14q,s23q,s24q)+qq2yygz1SCbox(s13q,s14q,s23q,s24q);
+                const double LCq = qq2yyg1<qpl>::LC::eval(pointqpl,0);
+                const double SCq = qq2yyg1<qpl>::SC::eval(pointqpl,0);
                 const double myfullq = f*(LCon*LCq+SCon*SCq);
                 cout << myfullq << "\t";
-                // rational arithmetics
-#ifdef WITH_CLN
-//                const cln::cl_RA s13r = cln::rational(s13);
-//                const cln::cl_RA s14r = cln::rational(s14);
-//                const cln::cl_RA s23r = cln::rational(s23);
-//                const cln::cl_RA s24r = cln::rational(s24);
-//                const double LCr = qq2yygz1LCbub(s13r,s14r,s23r,s24r)+qq2yygz1LCbox(s13r,s14r,s23r,s24r);
-//                const double SCr = qq2yygz1SCbub(s13r,s14r,s23r,s24r)+qq2yygz1SCbox(s13r,s14r,s23r,s24r);
-//                const double myfullr = f*(LCon*LCr+SCon*SCr);
-//                cout << myfullr << "\t";
-#endif
                 // limits
                 const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
                 const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
@@ -425,36 +390,23 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
         const double s23 = square(_p[2]-_p[3])/s12;
         const double s24 = square(_p[2]-_p[4])/s12;
         s12 = 1.;
-        const double s15 = -s12-s13-s14;
-        const double s25 = -s12-s23-s24;
-        const double zb = -(s15+s25)/s12;
-        const double s15n = s15/zb;
-        const double s25n = s25/zb;
-        const double s35 = s12+s14+s24;
-        const double s45 = s12+s13+s23;
-        const double s34 = -s12-s15-s25;
-        const double s35n = (s12+s14+s24)/zb;
-        const double s45n = (s12+s13+s23)/zb;
-        const double t12 = (s15-s25)/zb;
-        const double t34 = (s35-s45)/zb;
-        const double u = s13-s14-s23+s24;
-        const double z=1.-zb;
+        const qq2yyg1<dbl>::PSpoint pointdbl(_p);
+        const qq2yyg1<qpl>::PSpoint pointqpl(_p);
+        const qq2yyg1<rtn>::PSpoint pointrtn(_p);
 
         // Printing general information
         if (false) {
             const double s = sqrt(square(_p[1]+_p[2]))/2.;
-//            cout << "zbar = " << zbar << "\n";
-//            cout << "x1 = " << _x.x1 << "\t";
-//            cout << "x2 = " << _x.x2 << "\n";
-//            cout << "p1 = " << _p[1]/s << "\n";
-//            cout << "p2 = " << _p[2]/s << "\n";
-//            cout << "p3 = " << _p[3]/s << "\n";
-//            cout << "p4 = " << _p[4]/s << "\n";
-//            cout << "p5 = " << _p[5]/s << "\n";
-//            cout << "p4.p25 = " << _p[4]*(_p[2]-_p[5])/s << "\n";
-//            cout << "p4.p4 = " << _p[4]*_p[4]/s << "\np5.p5 = " << _p[5]*_p[5]/s << endl;
-            cout << s13 << "\t" << s14 << "\t" << s23 << "\t" << s24 << "\t";
-            cout << s15 << "\t" << s25 << "\t" << s35 << "\t" << s45 << "\t" << s34 << endl;
+            cout << "zbar = " << zbar << "\n";
+            cout << "x1 = " << _x.x1 << "\t";
+            cout << "x2 = " << _x.x2 << "\n";
+            cout << "p1 = " << _p[1]/s << "\n";
+            cout << "p2 = " << _p[2]/s << "\n";
+            cout << "p3 = " << _p[3]/s << "\n";
+            cout << "p4 = " << _p[4]/s << "\n";
+            cout << "p5 = " << _p[5]/s << "\n";
+            cout << "p4.p25 = " << _p[4]*(_p[2]-_p[5])/s << "\n";
+            cout << "p4.p4 = " << _p[4]*_p[4]/s << "\np5.p5 = " << _p[5]*_p[5]/s << endl;
         }
 
         // Plotting counterterm vs. full ME
@@ -473,30 +425,20 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             } else {
                 cout << zeta << "\t";
                 // double arithmetics
-                const double LCd = qq2yygz1LCbub(s13,s14,s23,s24)+qq2yygz1LCbox(s13,s14,s23,s24);
-                const double SCd = qq2yygz1SCbub(s13,s14,s23,s24)+qq2yygz1SCbox(s13,s14,s23,s24);
+                const double LCd = qq2yyg1<dbl>::LC::eval(pointdbl,0);
+                const double SCd = qq2yyg1<dbl>::SC::eval(pointdbl,0);
                 const double myfulld = f*(LCon*LCd+SCon*SCd);
                 cout << myfulld << "\t";
                 // quadruple arithmetics
-                const __float128 s13q = s13;
-                const __float128 s14q = s14;
-                const __float128 s23q = s23;
-                const __float128 s24q = s24;
-                const double LCq = qq2yygz1LCbub(s13q,s14q,s23q,s24q)+qq2yygz1LCbox(s13q,s14q,s23q,s24q);
-                const double SCq = qq2yygz1SCbub(s13q,s14q,s23q,s24q)+qq2yygz1SCbox(s13q,s14q,s23q,s24q);
+                const double LCq = qq2yyg1<qpl>::LC::eval(pointqpl,0);
+                const double SCq = qq2yyg1<qpl>::SC::eval(pointqpl,0);
                 const double myfullq = f*(LCon*LCq+SCon*SCq);
                 cout << myfullq << "\t";
                 // rational arithmetics
-#ifdef WITH_CLN
-                const cln::cl_RA s13r = cln::rational(s13);
-                const cln::cl_RA s14r = cln::rational(s14);
-                const cln::cl_RA s23r = cln::rational(s23);
-                const cln::cl_RA s24r = cln::rational(s24);
-                const double LCr = qq2yygz1LCbub(s13r,s14r,s23r,s24r)+qq2yygz1LCbox(s13r,s14r,s23r,s24r);
-                const double SCr = qq2yygz1SCbub(s13r,s14r,s23r,s24r)+qq2yygz1SCbox(s13r,s14r,s23r,s24r);
+                const double LCr = qq2yyg1<rtn>::LC::eval(pointrtn,0);
+                const double SCr = qq2yyg1<rtn>::SC::eval(pointrtn,0);
                 const double myfullr = f*(LCon*LCr+SCon*SCr);
                 cout << myfullr << "\t";
-#endif
                 // limit
                 cout << _fullsoft(z,lambda,s13/s14,LCon,SCon) << endl;
            }

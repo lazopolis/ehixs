@@ -11,7 +11,8 @@
 #define BOXMASTER_H
 
 #include "expansion.h"     // Expansion
-#include "floatconversions.h"
+#include "mpl.h"
+using namespace mpl;
 
 /**
  *

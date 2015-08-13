@@ -1,0 +1,3 @@
+#define TT qpl
+#include "coeffLCbub1324.h"
+#undef TT

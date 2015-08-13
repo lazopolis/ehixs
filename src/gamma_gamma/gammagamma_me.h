@@ -188,17 +188,11 @@ public:
 //                    for (Momenta::const_iterator it = _p.begin(); it != _p.end(); ++it)
 //                        cout << *it << "\n";
                     // Computing invariants
-                    double s12 = square(_p[1]+_p[2]);
-                    const double s13 = square(_p[1]-_p[3])/s12;
-                    const double s14 = square(_p[1]-_p[4])/s12;
-                    const double s23 = square(_p[2]-_p[3])/s12;
-                    const double s24 = square(_p[2]-_p[4])/s12;
-                    const __float128 s13q = s13;
-                    const __float128 s14q = s14;
-                    const __float128 s23q = s23;
-                    const __float128 s24q = s24;
-                    const double qq2yygd1 = qq2yygz1col(s13,s14,s23,s24);
-                    const double qq2yygq1 = qq2yygz1col(s13q,s14q,s23q,s24q);
+                    const qq2yyg1<dbl>::PSpoint pointdbl(_p);
+                    const qq2yyg1<qpl>::PSpoint pointqpl(_p);
+                    const qq2yyg1<rtn>::PSpoint pointrtn(_p);
+                    const double qq2yygd1 = qq2yyg1<dbl>::eval(pointdbl,0);
+                    const double qq2yygq1 = qq2yyg1<qpl>::eval(pointqpl,0);
                     const double scaledreldiff1 = (
                                                   zbar*lambda_safe *
                                                   abs(qq2yygd1-qq2yygq1) /
@@ -209,16 +203,16 @@ public:
                         _lambda_quad = lambda_safe;
                     rands[4] = 1.-lambda_safe;
                     _pg(rands);
-                    const double qq2yygd2 = qq2yygz1col(s23,s24,s13,s14);
-                    const double qq2yygq2 = qq2yygz1col(s23q,s24q,s13q,s14q);
-                    const double scaledreldiff2 = (
-                                                   zbar*(1.-lambda_safe) *
-                                                   abs(qq2yygd2-qq2yygq2) /
-                                                   (abs(qq2yygd2)+abs(qq2yygq2))
-                                                   );
-                    cout << qq2yygd2 << "\t" << qq2yygq2 << "\t" << scaledreldiff2 << endl;
-                    if ( !_cut() && !(scaledreldiff2<_tolerance) )
-                        _lambda_quad = lambda_safe;
+//                    const double qq2yygd2 = qq2yygz1col(s23,s24,s13,s14);
+//                    const double qq2yygq2 = qq2yygz1col(s23q,s24q,s13q,s14q);
+//                    const double scaledreldiff2 = (
+//                                                   zbar*(1.-lambda_safe) *
+//                                                   abs(qq2yygd2-qq2yygq2) /
+//                                                   (abs(qq2yygd2)+abs(qq2yygq2))
+//                                                   );
+//                    cout << qq2yygd2 << "\t" << qq2yygq2 << "\t" << scaledreldiff2 << endl;
+//                    if ( !_cut() && !(scaledreldiff2<_tolerance) )
+//                        _lambda_quad = lambda_safe;
                 }
             }
         }

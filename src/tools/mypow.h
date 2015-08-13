@@ -8,8 +8,9 @@
  *
  */
 
-#ifndef MYPOW_H
-#define MYPOW_H
+////////////////////////////////////////////////////////////////////////////////
+// This file has no header guard because it should NOT be #included directly! //
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  *
@@ -82,5 +83,3 @@ inline BaseT pow<4>(const BaseT base)
     const BaseT pow2=base*base;
     return pow2*pow2;
 }
-
-#endif

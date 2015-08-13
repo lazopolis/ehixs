@@ -214,6 +214,16 @@ target_link_libraries(
 )
 endif (CLN_FOUND)
 
+add_executable(
+            pgenerator_test
+            pgenerator_test.cpp
+)
+target_link_libraries(
+            pgenerator_test
+            kinematics
+            tools
+)
+
 if (CLN_FOUND)
 add_executable(
             qq2yy_test
@@ -230,12 +240,17 @@ target_link_libraries(
 )
 endif (CLN_FOUND)
 
+if (CLN_FOUND)
 add_executable(
-            pgenerator_test
-            pgenerator_test.cpp
+            qq2yyg_test
+            qq2yyg_test.cpp
 )
 target_link_libraries(
-            pgenerator_test
-            kinematics
+            qq2yyg_test
+            gammagamma
             tools
+            chaplin
+            bbh
+            ${CLN_LIBRARIES}
 )
+endif (CLN_FOUND)

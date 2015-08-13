@@ -15,9 +15,9 @@
 
 }*/
 
-void writePSfile(Momenta& k, fstream& file, const size_t& i)
+void writePSfile(Momenta& k, fstream& file, const size_t& i, const string& suff = "")
 {
-    string filename = "/Users/lionetti/ETH/External/MG5_aMC_v2_3_0/ddx2aa/PSpoints/point"+to_string(i)+".input";
+    string filename = "/Users/lionetti/ETH/External/MG5_aMC_v2_3_0/ddx2aa/PSpoints/point"+to_string(i)+".input"+suff;
     file.open(filename,ios_base::out);
     file.precision(16);
     if (file.is_open())
@@ -52,14 +52,21 @@ int main(int argc, char**argv)
     vector<double> randoms = {0.6330989210547898,0.2484647110590450,0.3092652883252196,0.,0.};
 
     //Right now do a single PS scan
-    for (double zeta = -5; true && zeta <= 5; zeta+=1.)
+    for (double zeta = 1.e-5; zeta <= 5; zeta=min(zeta+0.5,zeta*exp(1.5)))
     {
-        randoms[3] = 1./(1+exp(zeta*log(10)));
-        for (double lam = -5; lam <= 5; lam+=1.)
+        randoms[3] = 1.-exp(-2.*zeta);
+        for (double y = -5; y <= 5; y+=1.)
         {
-            randoms[4] = 1.-1./(1+exp(lam*log(10)));
+            const double ey = exp(y);
+            randoms[4] = ey/(ey+1./ey);
             psGen.generateFSMomenta(randoms);
             writePSfile(ps, myfile, ++i);
+            randoms[4] = 0.;
+            psGen.generateFSMomenta(randoms);
+            writePSfile(ps, myfile, i, ".c1");
+            randoms[4] = 1.;
+            psGen.generateFSMomenta(randoms);
+            writePSfile(ps, myfile, i, ".c2");
         }
     }
 return 0;
