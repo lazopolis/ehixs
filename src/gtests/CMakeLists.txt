@@ -222,6 +222,7 @@ add_executable(
 target_link_libraries(
             qq2yy_test
             gammagamma
+            kinematics
             tools
             chaplin
             bbh
