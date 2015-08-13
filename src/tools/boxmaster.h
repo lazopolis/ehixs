@@ -58,8 +58,6 @@ Expansion<Parameter::epsilon, double> bubble(const T& s,
  *
  */
 
-//const double tri2delta = 1.e-4; ///< Value beyond which the Taylor expansion is used
-
 Expansion<Parameter::epsilon, double> tri2(const double& p12,
                                            const double& p22,
                                            const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
