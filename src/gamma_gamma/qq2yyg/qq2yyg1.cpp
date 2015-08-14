@@ -1,6 +1,6 @@
 /**
  *
- * \file    qq2yyg.cpp
+ * \file    qq2yyg1.cpp
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
  * \date    August 2015
@@ -10,8 +10,8 @@
 #include "constants.h" // QCD::CF, etc...
 #include "boxmaster.h" // box, bubble
 
-#include "qq2yyg.h"
-#include "mastersums.inc"
+#include "qq2yyg1.h"
+#include "mastersums.inl"
 
 #define CXM(a,b) [](const PSpoint& p){return std::make_pair(a,b);}
 #define PTC(a)   [](const PSpoint& p){return a;}
@@ -29,7 +29,7 @@ const double patchDelta = 0.001;
 template<typename T>
 double qq2yyg1<T>::eval(const PSpoint& p, const int i)
 {
-    return eval(p).getCoefficient(i);
+    return LC::eval(p,i)+SC::eval(p,i)+Nf::eval(p,i);
 }
 
 template<typename T>
@@ -447,7 +447,7 @@ EpsExp qq2yyg1<T>::Nf::bub::master(const size_t i, const PSpoint& p)
 template<typename T>
 double qq2yyg1<T>::Nf::bub::eval(const PSpoint& p, const int i)
 {
-    return factor()*accTerm<Master*,PSpoint>(masters().begin(),masters().end(),p,i);
+    return factor()*accTerm(masters().begin(),masters().end(),p,i);
 }
 
 template<typename T>
@@ -487,7 +487,7 @@ EpsExp qq2yyg1<T>::Nf::box::master(const size_t i, const PSpoint& p)
 template<typename T>
 double qq2yyg1<T>::Nf::box::eval(const PSpoint& p, const int i)
 {
-    return factor()*accTerm<Master*,PSpoint>(masters().begin(),masters().end(),p,i);
+    return factor()*accTerm(masters().begin(),masters().end(),p,i);
 }
 
 template<typename T>
@@ -527,6 +527,10 @@ EpsExp foomrtnNfbub = qq2yyg1<rtn>::Nf::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,
 EpsExp foomdblNfbox = qq2yyg1<dbl>::Nf::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp foomqplNfbox = qq2yyg1<qpl>::Nf::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp foomrtnNfbox = qq2yyg1<rtn>::Nf::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+
 EpsExp foodbl = qq2yyg1<dbl>::eval(qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp fooqpl = qq2yyg1<qpl>::eval(qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp foortn = qq2yyg1<rtn>::eval(qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+double foodbl0 = qq2yyg1<dbl>::eval(qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4),0);
+double fooqpl0 = qq2yyg1<qpl>::eval(qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4),0);
+double foortn0 = qq2yyg1<rtn>::eval(qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4),0);

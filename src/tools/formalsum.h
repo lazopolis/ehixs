@@ -174,6 +174,6 @@ FormalSum<Type> operator*(const double& factor, FormalSum<Type>& myExpansion);
 template <class Type>
 std::ostream& operator<<(std::ostream& myOut, const FormalSum<Type>& myExp);
 
-#include "formalsum.inc"
+#include "formalsum.inl"
 
 #endif

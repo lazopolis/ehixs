@@ -68,7 +68,7 @@ void GammaGamma_qq_NLO_real::generateEvents(vector<double>& randoms)
         const double t34 = (s35-s45)/zb;
         const double u = s13-s14-s23+s24;
         // Pushing back main event, 1-z from phase space
-        _eventBox->push_back(Event(w*zb*qq2yyg<0,0>(zb,t12,t34,u),_p));
+        _eventBox->push_back(Event(w*zb*qq2yyg0<0>(zb,t12,t34,u),_p));
         // Pushing back collinear counterterms
         /// \bug Correct phase-space mapping from yyg to yy!!!
         const double cw = w*(CounterForge::Pqq<0>(z)).getCoefficient(0)/z*s12;
@@ -118,9 +118,9 @@ void GammaGamma_qq_NLO_real::test(vector<double>& randoms)
 
         // Testing collinear limit
         cout << lambda << "\t"
-        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u) << "\t"
+        << (1-z)*qq2yyg0<0>(zb,t12,t34,u) << "\t"
         << qq2yy<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-lambda*z) << "\t"
-        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u)/
+        << (1-z)*qq2yyg0<0>(zb,t12,t34,u)/
             (qq2yy<0,0>(s13/s14)*(CounterForge::Pqq<0>(z)).getCoefficient(0)/(-lambda*z)) << "\n";
 
     }
@@ -152,9 +152,9 @@ void GammaGamma_qq_NLO_real::test(vector<double>& randoms)
 
         // Testing soft limit
         cout << zbar << "\t"
-        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u) << "\t"
+        << (1-z)*qq2yyg0<0>(zb,t12,t34,u) << "\t"
         << productCoeff(qq2yy<0>(s13/s14),CounterForge::soft<0>(z,lambda),0)/(-1) << "\t"
-        << (1-z)*qq2yyg<0,0>(zb,t12,t34,u)/
+        << (1-z)*qq2yyg0<0>(zb,t12,t34,u)/
            productCoeff(qq2yy<0>(s13/s14),CounterForge::soft<0>(z,lambda),0)*(-1) << "\n";
 
     }

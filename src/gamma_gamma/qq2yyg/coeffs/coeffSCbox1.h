@@ -1,6 +1,6 @@
 /*This file was produced by Simone Lionetti using a Mathematica script*/
 
-#include "qq2yyg/qq2yyg.h"
+#include "qq2yyg/qq2yyg1.h"
 
 // Box type 1: box6(s12,s13,s45)
 

@@ -1,14 +1,14 @@
 /**
  *
- * \file    qq2yyg.h
+ * \file    qq2yyg1.h
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
  * \date    August 2015
  *
  */
 
-#ifndef QQ2YYG_H
-#define QQ2YYG_H
+#ifndef QQ2YYG1_H
+#define QQ2YYG1_H
 
 #include "fourvector.h"
 #include "mastersums.h"

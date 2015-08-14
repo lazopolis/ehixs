@@ -1,6 +1,6 @@
 /**
  *
- * \file    expansion.inc
+ * \file    expansion.inl
  * \ingroup tools
  * \author  Simone Lionetti
  * \date    November 2014

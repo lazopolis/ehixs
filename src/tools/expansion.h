@@ -229,6 +229,6 @@ std::ostream& operator<<(std::ostream& myOut, const Expansion<Par,Type>& myExpan
 // Short name for epsilon expansion with double coefficients
 typedef Expansion<Parameter::epsilon, double> EpsExp;
 
-#include "expansion.inc"
+#include "expansion.inl"
 
 #endif

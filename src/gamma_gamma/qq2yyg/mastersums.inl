@@ -1,6 +1,6 @@
 /**
  *
- * \file    mastersums.inc
+ * \file    mastersums.inl
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
  * \date    August 2015

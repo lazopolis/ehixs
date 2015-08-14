@@ -11,7 +11,7 @@
 #include "counterforge.h"
 #include "isolationcone.h"
 //#include "qq2gammagammaX.h"
-#include "qq2yyg/qq2yyg.h"
+#include "qq2yyg/qq2yyg1.h"
 #include "parametrizations.h"
 #include <fstream>
 
@@ -193,13 +193,13 @@ int main(int argc, char**argv)
 
 //            cout << ratio1 << "\t";
 //            cout << t12 << "\t" << t34 << "\t" << u << "\t";
-//            cout << "\t" << times(coll1(l,z,ratio1),inverse(qq2yyg<0>(zb,t12,t34,u),3),3) << "\t\t";
-//            cout << times(coll2(l,z,ratio1),inverse(qq2yyg<0>(zb,t12,t34,u),3),3) << "\t\t";
-//            cout << qq2yyg<0>(zb,t12,t34,u).getCoefficient(0)/((CounterForge::Pqq<0>(z)).getCoefficient(0)/z*qq2yy<0,0>(ratio1)/l/zb) << "\t";
-//            cout << inverse(qq2yyg<0>(zb,t12,t34,u),3) << "\t";
+//            cout << "\t" << times(coll1(l,z,ratio1),inverse(qq2yyg0(zb,t12,t34,u),3),3) << "\t\t";
+//            cout << times(coll2(l,z,ratio1),inverse(qq2yyg0(zb,t12,t34,u),3),3) << "\t\t";
+//            cout << qq2yyg0(zb,t12,t34,u).getCoefficient(0)/((CounterForge::Pqq<0>(z)).getCoefficient(0)/z*qq2yy<0,0>(ratio1)/l/zb) << "\t";
+//            cout << inverse(qq2yyg0(zb,t12,t34,u),3) << "\t";
 //            std::cout << 2*consts::Pi*productCoeff(
 //                                                   coll1(l,z,ratio1)+coll2(l,z,ratio1),
-//                                                   inverse(qq2yyg<0>(zb,t12,t34,u),3),
+//                                                   inverse(qq2yyg0(zb,t12,t34,u),3),
 //                                                   0
 //                                                   )/zb << "\t";
             cout << endl;

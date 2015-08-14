@@ -1,6 +1,6 @@
 /**
  *
- * \file    formalsum.inc
+ * \file    formalsum.inl
  * \ingroup tools
  * \author  Simone Lionetti
  * \date    November 2014
