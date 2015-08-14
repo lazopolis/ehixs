@@ -1,6 +1,7 @@
 /**
  *
  * \file    counterforge.cpp
+ * \ingroup tools
  * \author  Simone Lionetti
  * \date    November 2014
  *
@@ -22,8 +23,11 @@ const double CounterForge::_4pi = 4.*consts::Pi;
 /// One-loop conventional prefactor (4pi)^e Gamma(1+e) Gamma^2(1-e) / Gamma(1-2e)
 /// Numerically implemented: only combinations of EulerGamma,
 /// zeta(n) and log(4pi), not particularly meaningful
-const Expansion<Parameter::epsilon, double> CounterForge::cGamma = Expansion<Parameter::epsilon, double>(0,{
-    1.00000000000000000},true);/*,
+const Expansion<Parameter::epsilon, double> CounterForge::cGamma()
+{
+    static Expansion<Parameter::epsilon, double>* _cGamma =
+    new Expansion<Parameter::epsilon, double>(0,{
+                                1.00000000000000000},true);/*,
                                 1.95380858206775793,
                                 1.08621695425669817,
                                 -3.16867487054886856,
@@ -40,34 +44,51 @@ const Expansion<Parameter::epsilon, double> CounterForge::cGamma = Expansion<Par
                                 -25.2184891075254644,
                                 -25.2367509972286645
                                 });*/
+    return *_cGamma;
+}
 
 /// Series expansion of (pi epsilon) cot(pi epsilon)
-const Expansion<Parameter::epsilon, double> CounterForge::cotan = Expansion<Parameter::epsilon, double>(0,{
-    1.000000000000000, 0.,
-    -3.289868133696453, 0.,
-    -2.164646467422276, 0.,
-    -2.034686123968898, 0.,
-    -2.008154712395889, 0.,
-    -2.001989150255636, 0.});
+const Expansion<Parameter::epsilon, double> CounterForge::cotan()
+{
+    static Expansion<Parameter::epsilon, double>* _cotan =
+    new Expansion<Parameter::epsilon, double>(0,{
+        +1.000000000000000, 0.,
+        -3.289868133696453, 0.,
+        -2.164646467422276, 0.,
+        -2.034686123968898, 0.,
+        -2.008154712395889, 0.,
+        -2.001989150255636, 0.});
+    return *_cotan;
+}
 
 /// Series expansion of (pi epsilon) / sin(pi epsilon)
-const Expansion<Parameter::epsilon, double> CounterForge::cosec = Expansion<Parameter::epsilon, double>(0,{
-    1.000000000000000, 0.,
-    1.644934066848226, 0.,
-    1.894065658994492, 0.,
-    1.971102182594870, 0.,
-    1.992466003705296, 0.,
-    1.998079015196543, 0.});
+const Expansion<Parameter::epsilon, double> CounterForge::cosec()
+{
+    static Expansion<Parameter::epsilon, double>* _cosec =
+    new Expansion<Parameter::epsilon, double>(0,{
+        1.000000000000000, 0.,
+        1.644934066848226, 0.,
+        1.894065658994492, 0.,
+        1.971102182594870, 0.,
+        1.992466003705296, 0.,
+        1.998079015196543, 0.});
+    return *_cosec;
+}
 
 /// Series expansion of cos(pi epsilon)
-const Expansion<Parameter::epsilon, double> CounterForge::cos = Expansion<Parameter::epsilon, double>(0,{
-     1.0000000000000000,   0.,
-    -4.934802200544679,    0.,
-     4.058712126416768,    0.,
-    -1.335262768854589,    0.,
-     0.2353306303588932,   0.,
-    -0.02580689139001406,  0.,
-     0.001929574309403923, 0.});
+const Expansion<Parameter::epsilon, double> CounterForge::cos()
+{
+    static Expansion<Parameter::epsilon, double>* _cos =
+    new Expansion<Parameter::epsilon, double>(0,{
+        +1.0000000000000000,   0.,
+        -4.934802200544679,    0.,
+        +4.058712126416768,    0.,
+        -1.335262768854589,    0.,
+        +0.2353306303588932,   0.,
+        -0.02580689139001406,  0.,
+        +0.001929574309403923, 0.});
+    return *_cos;
+}
 
 /// \fn _Pqq
 
@@ -169,7 +190,7 @@ Expansion<Parameter::epsilon, double> CounterForge::soft<1>(const double& z, con
     const double zbar = 1.-z;
     const double zll = zbar*lambda*(1.-lambda);
     return times(
-                 times(cGamma,cotan,trunc),
+                 times(cGamma(),cotan(),trunc),
                  Expansion<Parameter::epsilon, double>(-2,-4.*QCD::CA*QCD::CF,true)*
                  Expansion<Parameter::epsilon, double>::exp(-log(zll*zbar),trunc),
                  trunc
@@ -187,7 +208,7 @@ Expansion<Parameter::epsilon, double> CounterForge::softcoll<0>(const double& z,
 template<>
 Expansion<Parameter::epsilon, double> CounterForge::softcoll<1>(const double& z, const double& lambda, const size_t trunc)
 {
-    return cGamma*cotan*
+    return cGamma()*cotan()*
     Expansion<Parameter::epsilon, double>(-2,-8.*QCD::CA*QCD::CF,true)/((1.-z)*lambda)*
     Expansion<Parameter::epsilon, double>::exp(-log(lambda))*
     Expansion<Parameter::epsilon, double>::exp(-2.*log(1.-z));
@@ -197,7 +218,7 @@ Expansion<Parameter::epsilon, double> CounterForge::softcoll<1>(const double& z,
 Expansion<Parameter::epsilon, double> CounterForge::f1_1overz(const double& z, const size_t trunc)
 {
     return times(
-                 cGamma,
+                 cGamma(),
                  times(
                        Expansion<Parameter::epsilon, double>(-2,-2.,true),
                        _2F1(1.,1.-z,trunc),
@@ -211,9 +232,9 @@ Expansion<Parameter::epsilon, double> CounterForge::f1_1overz(const double& z, c
 Expansion<Parameter::epsilon, double> CounterForge::f1_1minus1overz(const double& z, const size_t trunc)
 {
     return times(
-                 times(cGamma,Expansion<Parameter::epsilon, double>(-2,2.,true),trunc),
+                 times(cGamma(),Expansion<Parameter::epsilon, double>(-2,2.,true),trunc),
                  _2F1(-1.,1.-z,trunc)
-                 -times(Expansion<Parameter::epsilon, double>::exp(-log(1.-z),trunc),cotan,trunc),
+                 -times(Expansion<Parameter::epsilon, double>::exp(-log(1.-z),trunc),cotan(),trunc),
                  trunc
                  );
 }
@@ -221,7 +242,7 @@ Expansion<Parameter::epsilon, double> CounterForge::f1_1minus1overz(const double
 /// \fn    f2
 Expansion<Parameter::epsilon, double> CounterForge::f2(const size_t trunc)
 {
-    return times(cGamma,Expansion<Parameter::epsilon, double>(-2,-1.,true),trunc);
+    return times(cGamma(),Expansion<Parameter::epsilon, double>(-2,-1.,true),trunc);
 }
 
 /// \fn fastPqq
@@ -244,7 +265,7 @@ Expansion<Parameter::epsilon, double> CounterForge::fastr3(const double& z)
     const Expansion<Parameter::epsilon, double> f1_1overz_foo = _2F1(1.,1.-z,_acc);
     const Expansion<Parameter::epsilon, double> f1_1minus1overz_foo =
         _2F1(-1.,1.-z,_acc)
-        - Expansion<Parameter::epsilon, double>::exp(-log(1.-z),_acc)*cotan;
+        - Expansion<Parameter::epsilon, double>::exp(-log(1.-z),_acc)*cotan();
     return _f2*(mNc*f1_1minus1overz_foo+1./mNc*f1_1overz_foo)-_r4;
 }
 

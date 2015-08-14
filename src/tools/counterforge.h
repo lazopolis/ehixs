@@ -1,6 +1,7 @@
 /**
  *
  * \file    counterforge.h
+ * \ingroup tools
  * \author  Simone Lionetti
  * \date    November 2014
  *
@@ -52,16 +53,16 @@ public:
     /// One-loop conventional prefactor (4pi)^e Gamma(1+e) Gamma^2(1-e) / Gamma(1-2e)
     /// Numerically implemented: only combinations of EulerGamma,
     /// zeta(n) and log(4pi), not particularly meaningful
-    static const Expansion<Parameter::epsilon, double> cGamma;
+    static const Expansion<Parameter::epsilon, double> cGamma();
     
     /// Series espansion of (pi epsilon) cot(pi epsilon)
-    static const Expansion<Parameter::epsilon, double> cotan;
+    static const Expansion<Parameter::epsilon, double> cotan();
 
     /// Series espansion of (pi epsilon) / sin(pi epsilon)
-    static const Expansion<Parameter::epsilon, double> cosec;
+    static const Expansion<Parameter::epsilon, double> cosec();
 
     /// Series espansion of cos(pi epsilon)
-    static const Expansion<Parameter::epsilon, double> cos;
+    static const Expansion<Parameter::epsilon, double> cos();
 
     /// Quick alias to current accuracy
     static size_t& acc;

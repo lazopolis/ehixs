@@ -1,6 +1,7 @@
 add_library(tools  
             thehatch.cpp
             vegas_adaptor.cpp
+            counterforge.cpp
             histogram.cpp
             cut.cpp
             event.cpp

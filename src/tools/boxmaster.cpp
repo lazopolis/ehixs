@@ -43,7 +43,7 @@ Expansion<Parameter::epsilon, double> continuedExp(const double& z, const double
     //cout << "Called continuedExp(" << z << ", " << a << ", " << n << ")" << endl;
     //cout << -z << "^-(" << a << " eps) = " << Expansion<Parameter::epsilon, double>::exp(a*log(-z),n) << endl;
     if (z>0) return Expansion<Parameter::epsilon, double>::exp(a*log(z),n);
-    else return times(CounterForge::cos,Expansion<Parameter::epsilon, double>::exp(a*log(-z),n),n);
+    else return times(CounterForge::cos(),Expansion<Parameter::epsilon, double>::exp(a*log(-z),n),n);
 }
 
 /// \fn    bubble
@@ -53,7 +53,7 @@ Expansion<Parameter::epsilon, double> bubble(const double& s, const size_t n)
     //cout << "Exponential of " << s << "^-eps = " << continuedExp(s,-1.,n) << endl;
     return times(
                  times(
-                 CounterForge::cGamma*Expansion<Parameter::epsilon, double>(-1,1.,true),
+                 CounterForge::cGamma()*Expansion<Parameter::epsilon, double>(-1,1.,true),
                  Expansion<Parameter::epsilon, double>::geometric(2.,n),
                  n
                  ),
@@ -67,7 +67,7 @@ Expansion<Parameter::epsilon, double> tri2(const double& p12, const double& p22,
 {
 //    if (abs(p12-p22)>tri2delta*abs(p12+p22)) {
         return times(
-                     CounterForge::cGamma*Expansion<Parameter::epsilon, double>(-2,1.,true),
+                     CounterForge::cGamma()*Expansion<Parameter::epsilon, double>(-2,1.,true),
                      (continuedExp(-p12,-1.,n+1)-continuedExp(-p22,-1.,n+1))/(p12-p22),
                      n);
 //    } else {
@@ -98,7 +98,7 @@ Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n)
     }
     else if (z > 1.) {
         Expansion<Parameter::epsilon, double> tmp = Expansion<Parameter::epsilon,double>::exp(log(z),n);
-        tmp = times(tmp,CounterForge::cotan,n);
+        tmp = times(tmp,CounterForge::cotan(),n);
         //cout << "tmp = " << tmp << endl;
         for (size_t i = 1; i<n; ++i)
             tmp.addCoefficient(static_cast<int>(i),m1n<size_t,double>(i)*polyLog(i,1./z));
@@ -122,7 +122,7 @@ Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const
 //    cout << "(-s)^-eps*2F1(-u/t,n) = " << times(continuedExp(-s,-1.,n),twoFone(-u/t,n),n) << endl;
 //    cout << "-(-M2)^-eps*2F1(-(M2*u)/(s*t),n) = " << -times(continuedExp(-M2,-1.,n),twoFone(-(M2*u)/(s*t),n),n) << endl;
     return times(
-                 CounterForge::cGamma*Expansion<Parameter::epsilon, double>(-2,{2./(s*t)},true),
+                 CounterForge::cGamma()*Expansion<Parameter::epsilon, double>(-2,{2./(s*t)},true),
                  (
                   times(continuedExp(-s,-1.,n),twoFone(-u/t,n),n)+
                   times(continuedExp(-t,-1.,n),twoFone(-u/s,n),n)-
@@ -139,7 +139,7 @@ Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, cons
 {
     const double u = M2-s-t;
     return times(
-                 CounterForge::cGamma*
+                 CounterForge::cGamma()*
                  times(
                        Expansion<Parameter::epsilon, double>(-1,1.,true),
                        Expansion<Parameter::epsilon, double>::geometric(2.,n),

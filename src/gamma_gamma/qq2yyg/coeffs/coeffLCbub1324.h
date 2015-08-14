@@ -24,7 +24,7 @@ template<>
 EpsExp qq2yyg1<TT>::LC::bub::c1324(const TT& zb, const TT& t12, const TT& u)
 {
     return times(
-                 CounterForge::cGamma,
+                 CounterForge::cGamma(),
                  EpsExp(-1,{
                     qq2yyg1<TT>::LC::bub::c1324<-1>(zb,t12,u),
                     qq2yyg1<TT>::LC::bub::c1324<0>(zb,t12,u)

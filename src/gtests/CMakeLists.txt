@@ -235,7 +235,6 @@ target_link_libraries(
             kinematics
             tools
             chaplin
-            bbh
             ${CLN_LIBRARIES}
 )
 endif (CLN_FOUND)
@@ -250,7 +249,6 @@ target_link_libraries(
             gammagamma
             tools
             chaplin
-            bbh
             ${CLN_LIBRARIES}
 )
 endif (CLN_FOUND)

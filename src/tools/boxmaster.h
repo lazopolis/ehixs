@@ -48,7 +48,7 @@ template<class T>
 Expansion<Parameter::epsilon, double> bubble(const T& s,
                                              const size_t n = Expansion<Parameter::epsilon, double>::accuracy)
 {
-    return bubble(todouble<T>(s),n);
+    return bubble(todouble(s),n);
 }
 
 /**
