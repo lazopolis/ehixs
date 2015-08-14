@@ -15,6 +15,8 @@
 #include "mpl.h"
 using namespace mpl;
 
+// Short name for pair of epsilon expansions with double coefficients
+typedef std::pair<EpsExp,EpsExp> EpsExp2;
 
 template<typename T>
 struct qq2yyg1
@@ -47,134 +49,272 @@ struct qq2yyg1
         
     };
 
+    using Master = EpsExp2(*)(const PSpoint&);
+    using Patch  = EpsExp (*)(const PSpoint&);
+
+    /// Evaluate matrix element, term
+    static double eval(const PSpoint& p, const int i);
+    /// Evaluate matrix element, epsilon expansion
+    static EpsExp eval(const PSpoint& p);
+
     struct LC
     {
+
         LC() = delete;
+
+        /// Global factor for this matrix element piece
+        static const double& factor();
+
+        /// Evaluate Nf matrix element piece, term
+        static double eval(const PSpoint& p, const int i);
+        /// Evaluate Nf matrix element piece, epsilon expansion
+        static EpsExp eval(const PSpoint& p);
+
         struct bub
         {
+
             bub() = delete;
 
+            /// Basic coefficients, term
             template<size_t n, int m>
             static double c(const T& zb, const T& t12, const T& t34, const T& u);
-
+            /// Basic coefficients, epsilon expansion
             template<size_t n>
             static EpsExp c(const T& zb, const T& t12, const T& t34, const T& u);
 
+            /// Patch expansion 1324 for large cancellations, term
             template<int m>
             static double c1324(const T& zb, const T& t12, const T& u);
-
+            /// Patch expansion 1324 for large cancellations, epsilon expansion
             static EpsExp c1324(const T& zb, const T& t12, const T& u);
 
+            /// Patch expansion 1325 for large cancellations, term
             template<int m>
             static double c1325(const T& zb, const T& t12, const T& t34);
-
+            /// Patch expansion 1325 for large cancellations, epsilon expansion
             static EpsExp c1325(const T& zb, const T& t12, const T& t34);
-            
-            static EpsExp eval(const PSpoint& p);
-            static double eval(const PSpoint& p, const int i);
+
+            /// Single coefficient x master contribution, term
+            static double master(const size_t i, const PSpoint& p, const int j);
+            /// Single coefficient x master contribution, epsilon expansion
+            static EpsExp master(const size_t i, const PSpoint& p);
+
+            /// Sum of coefficients x masters, term
+            static double eval(const PSpoint& p, const int i, const bool taylor = true);
+            /// Sum of coefficients x masters, epsilon expansion
+            static EpsExp eval(const PSpoint& p, const bool taylor = true);
+
+        private:
+
+            /// Details of the combinations coefficient x master
+            static array<Master,7>& masters();
+            /// Details of patches for large cancellations
+            static array<Patch,6>& patches();
+            /// Disable masters for large cancellations
+            static array<bool,7> _on;
+            /// Enable patches for large cancellations
+            static array<bool,6> _patch;
+            /// Set conditional arrays
+            static void patch(const PSpoint& p, const bool taylor = true);
+
         };
 
         struct box
         {
             box() = delete;
 
+            /// Basic coefficients, term
             template<size_t n, int m>
             static double c(const T& zb, const T& t12, const T& t34, const T& u);
-
+            /// Basic coefficients, epsilon expansion
             template<size_t n>
             static EpsExp c(const T& zb, const T& t12, const T& t34, const T& u);
 
-            static EpsExp eval(const PSpoint& p);
+            /// Single coefficient x master contribution, term
+            static double master(const size_t i, const PSpoint& p, const int j);
+            /// Single coefficient x master contribution, epsilon expansion
+            static EpsExp master(const size_t i, const PSpoint& p);
+
+            /// Sum of coefficients x masters, term
             static double eval(const PSpoint& p, const int i);
+            /// Sum of coefficients x masters, epsilon expansion
+            static EpsExp eval(const PSpoint& p);
+
+
+        private:
+
+            /// Details of the combinations coefficient x master
+            static array<Master,9>& masters();
+
         };
 
-        static EpsExp eval(const PSpoint& p);
-        static double eval(const PSpoint& p, const int i);
     };
 
     struct SC
     {
+
         SC() = delete;
+
+        /// Global factor for this matrix element piece
+        static const double& factor();
+
+        /// Evaluate Nf matrix element piece, term
+        static double eval(const PSpoint& p, const int i);
+        /// Evaluate Nf matrix element piece, epsilon expansion
+        static EpsExp eval(const PSpoint& p);
+
         struct bub
         {
+
             bub() = delete;
 
+            /// Basic coefficients, term
             template<size_t n, int m>
             static double c(const T& zb, const T& t12, const T& t34, const T& u);
-
-            template<int n>
+            /// Basic coefficients, epsilon expansion
+            template<size_t n>
             static EpsExp c(const T& zb, const T& t12, const T& t34, const T& u);
 
+            /// Patch expansion 1324 for large cancellations, term
             template<int m>
             static double c1324(const T& zb, const T& t12, const T& u);
-
+            /// Patch expansion 1324 for large cancellations, epsilon expansion
             static EpsExp c1324(const T& zb, const T& t12, const T& u);
 
+            /// Patch expansion 1325 for large cancellations, term
             template<int m>
             static double c1325(const T& zb, const T& t12, const T& t34);
-
+            /// Patch expansion 1325 for large cancellations, epsilon expansion
             static EpsExp c1325(const T& zb, const T& t12, const T& t34);
-            
-            static EpsExp eval(const PSpoint& p);
-            static double eval(const PSpoint& p, const int i);
+
+            /// Single coefficient x master contribution, term
+            static double master(const size_t i, const PSpoint& p, const int j);
+            /// Single coefficient x master contribution, epsilon expansion
+            static EpsExp master(const size_t i, const PSpoint& p);
+
+            /// Sum of coefficients x masters, term
+            static double eval(const PSpoint& p, const int i, const bool taylor = true);
+            /// Sum of coefficients x masters, epsilon expansion
+            static EpsExp eval(const PSpoint& p, const bool taylor = true);
+
+        private:
+
+            /// Details of the combinations coefficient x master
+            static array<Master,10>& masters();
+            /// Details of patches for large cancellations
+            static array<Patch,6 >& patches();
+            /// Disable masters for large cancellations
+            static array<bool,10> _on;
+            /// Enable patches for large cancellations
+            static array<bool,6 > _patch;
+            /// Set conditional arrays
+            static void patch(const PSpoint& p, const bool taylor = true);
+
         };
 
         struct box
         {
             box() = delete;
 
+            /// Basic coefficients, term
             template<size_t n, int m>
             static double c(const T& zb, const T& t12, const T& t34, const T& u);
-
+            /// Basic coefficients, epsilon expansion
             template<size_t n>
             static EpsExp c(const T& zb, const T& t12, const T& t34, const T& u);
 
-            static EpsExp eval(const PSpoint& p);
-            static double eval(const PSpoint& p, const int i);
-        };
+            /// Single coefficient x master contribution, term
+            static double master(const size_t i, const PSpoint& p, const int j);
+            /// Single coefficient x master contribution, epsilon expansion
+            static EpsExp master(const size_t i, const PSpoint& p);
 
-        static EpsExp eval(const PSpoint& p);
-        static double eval(const PSpoint& p, const int i);
+            /// Sum of coefficients x masters, term
+            static double eval(const PSpoint& p, const int i);
+            /// Sum of coefficients x masters, epsilon expansion
+            static EpsExp eval(const PSpoint& p);
+            
+            
+        private:
+            
+            /// Details of the combinations coefficient x master
+            static array<Master,21>& masters();
+            
+        };
+        
     };
 
     struct Nf
     {
+
         Nf() = delete;
+
+        /// Global factor for this matrix element piece
+        static const double& factor();
+
+        /// Evaluate Nf matrix element piece, term
+        static double eval(const PSpoint& p, const int i);
+        /// Evaluate Nf matrix element piece, epsilon expansion
+        static EpsExp eval(const PSpoint& p);
 
         struct bub
         {
+
             bub() = delete;
 
-            template<size_t n, size_t m>
+            /// Basic coefficients, term
+            template<size_t n, int m>
             static double c(const T& zb, const T& t12, const T& t34, const T& u);
-
+            /// Basic coefficients, epsilon expansion
             template<size_t n>
             static EpsExp c(const T& zb, const T& t12, const T& t34, const T& u);
 
-            static EpsExp eval(const PSpoint& p);
+            /// Single coefficient x master contribution, term
+            static double master(const size_t i, const PSpoint& p, const int j);
+            /// Single coefficient x master contribution, epsilon expansion
+            static EpsExp master(const size_t i, const PSpoint& p);
+
+            /// Sum of coefficients x masters, term
             static double eval(const PSpoint& p, const int i);
+            /// Sum of coefficients x masters, epsilon expansion
+            static EpsExp eval(const PSpoint& p);
+
+        private:
+
+            /// Details of the combinations coefficient x master
+            static array<Master,4>& masters();
+            
         };
 
         struct box
         {
             box() = delete;
 
-            template<size_t n, size_t m>
+            /// Basic coefficients, term
+            template<size_t n, int m>
             static double c(const T& zb, const T& t12, const T& t34, const T& u);
-
+            /// Basic coefficients, epsilon expansion
             template<size_t n>
             static EpsExp c(const T& zb, const T& t12, const T& t34, const T& u);
 
-            static EpsExp eval(const PSpoint& p);
+            /// Single coefficient x master contribution, term
+            static double master(const size_t i, const PSpoint& p, const int j);
+            /// Single coefficient x master contribution, epsilon expansion
+            static EpsExp master(const size_t i, const PSpoint& p);
+
+            /// Sum of coefficients x masters, term
             static double eval(const PSpoint& p, const int i);
+            /// Sum of coefficients x masters, epsilon expansion
+            static EpsExp eval(const PSpoint& p);
+            
+
+        private:
+
+            /// Details of the combinations coefficient x master
+            static array<Master,3>& masters();
+
         };
 
-        static EpsExp eval(const PSpoint& p);
-        static double eval(const PSpoint& p, const int i);
     };
-
-    static Expansion<Parameter::epsilon, double> eval(const PSpoint& p);
-    static double eval(const PSpoint& p, const int i);
 
 };
 

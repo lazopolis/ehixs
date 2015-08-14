@@ -3,7 +3,7 @@
  * \file    qq2yyg.cpp
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
- * \date    May 2015
+ * \date    August 2015
  *
  */
 
@@ -11,6 +11,93 @@
 #include "boxmaster.h" // box, bubble
 
 #include "qq2yyg.h"
+
+#define CXM(a,b) [](const PSpoint& p){return std::make_pair(a,b);}
+#define PTC(a)   [](const PSpoint& p){return a;}
+
+// Computes the product of a pair of epsilon expansions keeping terms up to order eps^0
+EpsExp x2Finite(const EpsExp2& pair)
+{
+    const int startorder = pair.first.minTerm() + pair.second.minTerm();
+    if (startorder>0) return EpsExp();
+    else return times(pair.first,pair.second,static_cast<size_t>(abs(startorder)+1));
+}
+
+// Computes a single term in the product of a pair of epsilon expansions
+double xTerm(const EpsExp2& pair, const int term)
+{
+    return productCoeff(pair.first,pair.second,term);
+}
+
+template<typename IT, typename T>
+double accTerm(IT begin, const IT end, const T& x, const int term, double init = 0)
+{
+    while (begin != end)
+    {
+        init += xTerm((*begin)(x),term);
+        ++begin;
+    }
+    return init;
+}
+
+template<typename IT, typename T>
+double selAccTerm(IT begin, const IT end, bool* check, const T& x, const int term, double init = 0)
+{
+    while (begin != end)
+    {
+        if (*check) init += xTerm((*begin)(x),term);
+        ++begin;
+        ++check;
+    }
+    return init;
+}
+
+template<typename IT, typename T>
+double selAccPatchTerm(IT begin, const IT end, bool* check, const T& x, const int term, double init = 0)
+{
+    while (begin != end)
+    {
+        if (*check) init += (*begin)(x).getCoefficient(term);
+        ++begin;
+        ++check;
+    }
+    return init;
+}
+
+template<typename IT, typename T>
+EpsExp acc2Finite(IT begin, const IT end, const T& x, EpsExp init = EpsExp())
+{
+    while (begin != end)
+    {
+        init += x2Finite((*begin)(x));
+        ++begin;
+    }
+    return init;
+}
+
+template<typename IT, typename T>
+EpsExp selAcc2Finite(IT begin, const IT end, bool* check, const T& x, EpsExp init = EpsExp())
+{
+    while (begin != end)
+    {
+        if(*check) init += x2Finite((*begin)(x));
+        ++begin;
+        ++check;
+    }
+    return init;
+}
+
+template<typename IT, typename T>
+EpsExp selAccPatch2Finite(IT begin, const IT end, bool* check, const T& x, EpsExp init = EpsExp())
+{
+    while (begin != end)
+    {
+        if(*check) init += (*begin)(x);
+        ++begin;
+        ++check;
+    }
+    return init;
+}
 
 /**
  * \par   patchDelta
@@ -20,259 +107,10 @@
 
 const double patchDelta = 0.001;
 
-template<typename T>
-EpsExp qq2yyg1<T>::LC::bub::eval(const PSpoint& p)
-{
-    EpsExp fooLCbub(-2,{0.,0.,0.});
-    bool on[13] = {true,true,true,true,true,true,true,false,false,false,false,false,false};
-    size_t nPatch = 0;
-    if (todouble(fabs(p.s13-p.s25)/(fabs(p.s13)+fabs(p.s25)))<patchDelta) {
-        on[1-1]=false;
-        on[6-1]=false;
-        on[8-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s14-p.s25)/(fabs(p.s14)+fabs(p.s25)))<patchDelta) {
-        on[2-1]=false;
-        on[6-1]=false;
-        on[9-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s23-p.s15)/(fabs(p.s23)+fabs(p.s15)))<patchDelta) {
-        on[3-1]=false;
-        on[5-1]=false;
-        on[10-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s24-p.s15)/(fabs(p.s24)+fabs(p.s15)))<patchDelta) {
-        on[4-1]=false;
-        on[5-1]=false;
-        on[11-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s13-p.s24)/(fabs(p.s13)+fabs(p.s24)))<patchDelta*todouble(p.zb)) {
-        on[1-1]=false;
-        on[4-1]=false;
-        on[12-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s14-p.s23)/(fabs(p.s14)+fabs(p.s23)))<patchDelta*todouble(p.zb)) {
-        on[2-1]=false;
-        on[3-1]=false;
-        on[13-1]=true;
-        ++nPatch;
-    }
-    if (nPatch>1) {
-        std::cerr << "Error in qq2yyg: too many large cancellations!" << std::endl;
-        return EpsExp();
-    }
-    if (on[1-1])  fooLCbub += times(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s13,2),2);
-    if (on[2-1])  fooLCbub += times(c<1>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s14,2),2);
-    if (on[3-1])  fooLCbub += times(c<1>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s23,2),2);
-    if (on[4-1])  fooLCbub += times(c<1>(p.zb,-p.t12,-p.t34,p.u),bubble(p.s24,2),2);
-    if (on[5-1])  fooLCbub += times(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s15,3),3);
-    if (on[6-1])  fooLCbub += times(c<2>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s25,3),3);
-    if (on[7-1])  fooLCbub += times(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,2),2);
-    if (on[8-1])  fooLCbub += c1325(p.zb,p.t12,p.t34);
-    if (on[9-1])  fooLCbub += c1325(p.zb,p.t12,-p.t34);
-    if (on[10-1]) fooLCbub += c1325(p.zb,-p.t12,p.t34);
-    if (on[11-1]) fooLCbub += c1325(p.zb,-p.t12,-p.t34);
-    if (on[12-1]) fooLCbub += c1324(p.zb,p.t12,p.u);
-    if (on[13-1]) fooLCbub += c1324(p.zb,-p.t12,-p.u);
-    return QCD::CA*fooLCbub;
-}
+// qq2yyg1
 
 template<typename T>
-EpsExp qq2yyg1<T>::LC::box::eval(const PSpoint& p)
-{
-    EpsExp fooLCbox(-2,{0.,0.,0.});
-    fooLCbox += times(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s15,p.s24,3),3);
-    fooLCbox += times(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s15,p.s23,3),3);
-    fooLCbox += times(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s25,p.s14,3),3);
-    fooLCbox += times(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s25,p.s13,3),3);
-    fooLCbox += times(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,3),3);
-    fooLCbox += times(c<2>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,3),3);
-    fooLCbox += times(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,3),3);
-    fooLCbox += times(c<2>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,3),3);
-    fooLCbox += times(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s25,p.s34,3),3);
-    return QCD::CA*fooLCbox;
-}
-
-template<typename T>
-double qq2yyg1<T>::LC::bub::eval(const PSpoint& p, const int i)
-{
-    return eval(p).getCoefficient(i);
-}
-
-template<typename T>
-double qq2yyg1<T>::LC::box::eval(const PSpoint& p, const int i)
-{
-    return eval(p).getCoefficient(i);
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::LC::eval(const PSpoint& p)
-{
-    return bub::eval(p)+box::eval(p);
-}
-
-template<typename T>
-double qq2yyg1<T>::LC::eval(const PSpoint& p, const int i)
-{
-    return bub::eval(p,i)+box::eval(p,i);
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::SC::bub::eval(const PSpoint& p)
-{
-    EpsExp fooSCbub(-2,{0.,0.,0.});
-    bool on[16] = {
-        true,true,true,true,true,true,true,true,true,true,
-        false,false,false,false,false,false
-    };
-    size_t nPatch = 0;
-    if (todouble(fabs(p.s13-p.s25)/(fabs(p.s13)+fabs(p.s25)))<patchDelta) {
-        on[2-1]=false;
-        on[7-1]=false;
-        on[11-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s14-p.s25)/(fabs(p.s14)+fabs(p.s25)))<patchDelta) {
-        on[3-1]=false;
-        on[7-1]=false;
-        on[12-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s23-p.s15)/(fabs(p.s23)+fabs(p.s15)))<patchDelta) {
-        on[4-1]=false;
-        on[6-1]=false;
-        on[13-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s24-p.s15)/(fabs(p.s24)+fabs(p.s15)))<patchDelta) {
-        on[5-1]=false;
-        on[6-1]=false;
-        on[14-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s13-p.s24)/(fabs(p.s13)+fabs(p.s24)))<patchDelta*todouble(p.zb)) {
-        on[2-1]=false;
-        on[5-1]=false;
-        on[15-1]=true;
-        ++nPatch;
-    }
-    if (todouble(fabs(p.s14-p.s23)/(fabs(p.s14)+fabs(p.s23)))<patchDelta*todouble(p.zb)) {
-        on[3-1]=false;
-        on[4-1]=false;
-        on[16-1]=true;
-        ++nPatch;
-    }
-    if (nPatch>1) {
-        std::cerr << "Error in qq2yyg: too many large cancellations!" << std::endl;
-        return EpsExp();
-    }
-    if (on[1-1])  fooSCbub += times(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,3),3);
-    if (on[2-1])  fooSCbub += times(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s13,3),3);
-    if (on[3-1])  fooSCbub += times(c<2>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s14,3),3);
-    if (on[4-1])  fooSCbub += times(c<2>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s23,3),3);
-    if (on[5-1])  fooSCbub += times(c<2>(p.zb,-p.t12,-p.t34,p.u),bubble(p.s24,3),3);
-    if (on[6-1])  fooSCbub += times(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s15,3),3);
-    if (on[7-1])  fooSCbub += times(c<3>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s25,3),3);
-    if (on[8-1])  fooSCbub += times(c<4>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,3),3);
-    if (on[9-1])  fooSCbub += times(c<5>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,3),3);
-    if (on[10-1]) fooSCbub += times(c<5>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,3),3);
-    if (on[11-1]) fooSCbub += c1325(p.zb,p.t12,p.t34);
-    if (on[12-1]) fooSCbub += c1325(p.zb,p.t12,-p.t34);
-    if (on[13-1]) fooSCbub += c1325(p.zb,-p.t12,p.t34);
-    if (on[14-1]) fooSCbub += c1325(p.zb,-p.t12,-p.t34);
-    if (on[15-1]) fooSCbub += c1324(p.zb,p.t12,p.u);
-    if (on[16-1]) fooSCbub += c1324(p.zb,-p.t12,-p.u);
-    return static_cast<double>(QCD::CA-2.*QCD::CF)*fooSCbub;
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::SC::box::eval(const PSpoint& p)
-{
-    EpsExp fooSCbox(-2,{0.,0.,0.});
-    fooSCbox += times(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s13,p.s45,3),3);
-    fooSCbox += times(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s12,p.s14,p.s35,3),3);
-    fooSCbox += times(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s23,p.s45,3),3);
-    fooSCbox += times(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s12,p.s24,p.s35,3),3);
-    fooSCbox += times(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s15,p.s34,3),3);
-    fooSCbox += times(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s25,p.s34,3),3);
-    fooSCbox += times(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,3),3);
-    fooSCbox += times(c<3>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,3),3);
-    fooSCbox += times(c<3>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,3),3);
-    fooSCbox += times(c<3>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,3),3);
-    fooSCbox += times(c<4>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s35,p.s24,3),3);
-    fooSCbox += times(c<4>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s45,p.s23,3),3);
-    fooSCbox += times(c<4>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s35,p.s14,3),3);
-    fooSCbox += times(c<4>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s45,p.s13,3),3);
-    fooSCbox += times(c<5>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s35,p.s24,3),3);
-    fooSCbox += times(c<5>(p.zb,p.t12,-p.t34,-p.u),box6(p.s15,p.s45,p.s23,3),3);
-    fooSCbox += times(c<5>(p.zb,-p.t12,p.t34,-p.u),box6(p.s25,p.s35,p.s14,3),3);
-    fooSCbox += times(c<5>(p.zb,-p.t12,-p.t34,p.u),box6(p.s25,p.s45,p.s13,3),3);
-    fooSCbox += times(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,3),3);
-    fooSCbox += times(c<6>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,3),3);
-    fooSCbox += times(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,3),3);
-    return static_cast<double>(QCD::CA-2.*QCD::CF)*fooSCbox;
-}
-
-template<typename T>
-double qq2yyg1<T>::SC::bub::eval(const PSpoint& p, const int i)
-{
-    return eval(p).getCoefficient(i);
-}
-
-template<typename T>
-double qq2yyg1<T>::SC::box::eval(const PSpoint& p, const int i)
-{
-    return eval(p).getCoefficient(i);
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::SC::eval(const PSpoint& p)
-{
-    return bub::eval(p)+box::eval(p);
-}
-
-template<typename T>
-double qq2yyg1<T>::SC::eval(const PSpoint& p, const int i)
-{
-    return bub::eval(p,i)+box::eval(p,i);
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::Nf::bub::eval(const PSpoint& p)
-{
-    EpsExp fooNfbub(-2,{0.,0.,0.});
-    fooNfbub += times(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,3),2);
-    fooNfbub += times(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,3),2);
-    fooNfbub += times(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,3),2);
-    fooNfbub += times(c<3>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,3),2);
-    // CHECK THIS FACTOR
-    return -QCD::sumQ2/512.*fooNfbub;
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::Nf::box::eval(const PSpoint& p)
-{
-    EpsExp fooNfbox(-2,{0.,0.,0.});
-    fooNfbox += times(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,3),1);
-    fooNfbox += times(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,3),1);
-    fooNfbox += times(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,3),1);
-    // CHECK THIS FACTOR
-    return -QCD::sumQ2/512.*fooNfbox;
-}
-
-template<typename T>
-EpsExp qq2yyg1<T>::Nf::eval(const PSpoint& p)
-{
-    return bub::eval(p)+box::eval(p);
-}
-
-template<typename T>
-double qq2yyg1<T>::Nf::eval(const PSpoint& p, const int i)
+double qq2yyg1<T>::eval(const PSpoint& p, const int i)
 {
     return eval(p).getCoefficient(i);
 }
@@ -283,13 +121,495 @@ EpsExp qq2yyg1<T>::eval(const PSpoint& p)
     return LC::eval(p)+SC::eval(p)+Nf::eval(p);
 }
 
+// LC
+
 template<typename T>
-double qq2yyg1<T>::eval(const PSpoint& p, const int i)
+const double& qq2yyg1<T>::LC::factor()
 {
-    return eval(p).getCoefficient(i);
+    return QCD::CA;
 }
 
+template<typename T>
+double qq2yyg1<T>::LC::eval(const PSpoint& p, const int i)
+{
+    return bub::eval(p,i)+box::eval(p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::LC::eval(const PSpoint& p)
+{
+    return bub::eval(p)+box::eval(p);
+}
+
+// LC bub
+
+template<typename T>
+array<bool,7> qq2yyg1<T>::LC::bub::_on = array<bool,7>();
+
+template<typename T>
+array<bool,6> qq2yyg1<T>::LC::bub::_patch = array<bool,6>();
+
+template<typename T>
+double qq2yyg1<T>::LC::bub::master(const size_t i, const PSpoint& p, const int j)
+{
+    if (i>masters().size()) throw;
+    return xTerm(masters()[i-1](p),j);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::LC::bub::master(const size_t i, const PSpoint& p)
+{
+    if (i>masters().size()) throw;
+    return x2Finite(masters()[i-1](p));
+}
+
+template<typename T>
+double qq2yyg1<T>::LC::bub::eval(const PSpoint& p, const int i, const bool taylor)
+{
+    patch(p, taylor);
+    return factor()*(
+                     selAccTerm(masters().begin(),masters().end(),_on.begin(),p,i)+
+                     selAccPatchTerm(patches().begin(),patches().end(),_patch.begin(),p,i)
+                     );
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::LC::bub::eval(const PSpoint& p, const bool taylor)
+{
+    patch(p,taylor);
+    return factor()*(
+                     selAcc2Finite(masters().begin(),masters().end(),_on.begin(),p)+
+                     selAccPatch2Finite(patches().begin(),patches().end(),_patch.begin(),p)
+                     );
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Master,7>& qq2yyg1<T>::LC::bub::masters()
+{
+    static array<Master,7>* _masters = new array<Master,7>({
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s13,2)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s14,2)),
+        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s23,2)),
+        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),bubble(p.s24,2)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s15,3)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s25,3)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,2))
+    });
+    return *_masters;
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Patch,6>& qq2yyg1<T>::LC::bub::patches()
+{
+    static array<Patch,6>* _patches = new array<Patch,6>({
+        PTC(c1325(p.zb,p.t12,p.t34)),
+        PTC(c1325(p.zb,p.t12,-p.t34)),
+        PTC(c1325(p.zb,-p.t12,p.t34)),
+        PTC(c1325(p.zb,-p.t12,-p.t34)),
+        PTC(c1324(p.zb,p.t12,p.u)),
+        PTC(c1324(p.zb,-p.t12,-p.u))
+    });
+    return *_patches;
+}
+
+template<typename T>
+void qq2yyg1<T>::LC::bub::patch(const PSpoint& p, const bool taylor)
+{
+    _on.fill(true);
+    _patch.fill(false);
+    if (!taylor) return;
+    size_t nPatch = 0;
+    if (todouble(fabs(p.s13-p.s25)/(fabs(p.s13)+fabs(p.s25)))<patchDelta) {
+        _on[1-1]=false; _on[6-1]=false; _patch[1-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s14-p.s25)/(fabs(p.s14)+fabs(p.s25)))<patchDelta) {
+        _on[2-1]=false; _on[6-1]=false; _patch[2-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s23-p.s15)/(fabs(p.s23)+fabs(p.s15)))<patchDelta) {
+        _on[3-1]=false; _on[5-1]=false; _patch[3-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s24-p.s15)/(fabs(p.s24)+fabs(p.s15)))<patchDelta) {
+        _on[4-1]=false; _on[5-1]=false; _patch[4-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s13-p.s24)/(fabs(p.s13)+fabs(p.s24)))<patchDelta*todouble(p.zb)) {
+        _on[1-1]=false; _on[4-1]=false; _patch[5-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s14-p.s23)/(fabs(p.s14)+fabs(p.s23)))<patchDelta*todouble(p.zb)) {
+        _on[2-1]=false; _on[3-1]=false; _patch[6-1]=true;
+        ++nPatch;
+    }
+    if (nPatch>1) {
+        std::cerr << "Error in qq2yyg1 patch: too many large cancellations!" << std::endl;
+        _on.fill(true);
+        _patch.fill(false);
+    }
+    return;
+}
+
+
+// LC box
+
+template<typename T>
+double qq2yyg1<T>::LC::box::master(const size_t i, const PSpoint& p, const int j)
+{
+    if (i>masters().size()) throw;
+    return xTerm(masters()[i-1](p),j);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::LC::box::master(const size_t i, const PSpoint& p)
+{
+    if (i>masters().size()) throw;
+    return x2Finite(masters()[i-1](p));
+}
+
+template<typename T>
+double qq2yyg1<T>::LC::box::eval(const PSpoint& p, const int i)
+{
+    return factor()*accTerm(masters().begin(),masters().end(),p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::LC::box::eval(const PSpoint& p)
+{
+    return factor()*acc2Finite(masters().begin(),masters().end(),p);
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Master,9>& qq2yyg1<T>::LC::box::masters()
+{
+    static array<Master,9>* _masters = new array<Master,9>({
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s15,p.s24,3)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s15,p.s23,3)),
+        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s25,p.s14,3)),
+        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s25,p.s13,3)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,3)),
+        CXM(c<2>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,3)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,3)),
+        CXM(c<2>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,3)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s25,p.s34,3))
+    });
+    return *_masters;
+}
+
+// SC
+
+template<typename T>
+const double& qq2yyg1<T>::SC::factor()
+{
+    static double* _factor = new double(static_cast<double>(QCD::CA-2.*QCD::CF));
+    return *_factor;
+}
+
+template<typename T>
+double qq2yyg1<T>::SC::eval(const PSpoint& p, const int i)
+{
+    return bub::eval(p,i)+box::eval(p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::SC::eval(const PSpoint& p)
+{
+    return bub::eval(p)+box::eval(p);
+}
+
+// SC bub
+
+template<typename T>
+array<bool,10> qq2yyg1<T>::SC::bub::_on = array<bool,10>();
+
+template<typename T>
+array<bool,6 > qq2yyg1<T>::SC::bub::_patch = array<bool,6>();
+
+template<typename T>
+double qq2yyg1<T>::SC::bub::master(const size_t i, const PSpoint& p, const int j)
+{
+    if (i>masters().size()) throw;
+    return xTerm(masters()[i-1](p),j);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::SC::bub::master(const size_t i, const PSpoint& p)
+{
+    if (i>masters().size()) throw;
+    return x2Finite(masters()[i-1](p));
+}
+
+template<typename T>
+double qq2yyg1<T>::SC::bub::eval(const PSpoint& p, const int i, const bool taylor)
+{
+    patch(p, taylor);
+    return factor()*(
+                     selAccTerm(masters().begin(),masters().end(),_on.begin(),p,i)+
+                     selAccPatchTerm(patches().begin(),patches().end(),_patch.begin(),p,i)
+                     );
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::SC::bub::eval(const PSpoint& p, const bool taylor)
+{
+    patch(p,taylor);
+    return factor()*(
+                     selAcc2Finite(masters().begin(),masters().end(),_on.begin(),p)+
+                     selAccPatch2Finite(patches().begin(),patches().end(),_patch.begin(),p)
+                     );
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Master,10>& qq2yyg1<T>::SC::bub::masters()
+{
+    static array<Master,10>* _masters = new array<Master,10>({
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,3)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s13,3)),
+        CXM(c<2>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s14,3)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s23,3)),
+        CXM(c<2>(p.zb,-p.t12,-p.t34,p.u),bubble(p.s24,3)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s15,3)),
+        CXM(c<3>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s25,3)),
+        CXM(c<4>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,3)),
+        CXM(c<5>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,3)),
+        CXM(c<5>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,3))
+    });
+    return *_masters;
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Patch,6>& qq2yyg1<T>::SC::bub::patches()
+{
+    static array<Patch,6>* _patches = new array<Patch,6>({
+        PTC(c1325(p.zb,p.t12,p.t34)),
+        PTC(c1325(p.zb,p.t12,-p.t34)),
+        PTC(c1325(p.zb,-p.t12,p.t34)),
+        PTC(c1325(p.zb,-p.t12,-p.t34)),
+        PTC(c1324(p.zb,p.t12,p.u)),
+        PTC(c1324(p.zb,-p.t12,-p.u))
+    });
+    return *_patches;
+}
+
+template<typename T>
+void qq2yyg1<T>::SC::bub::patch(const PSpoint& p, const bool taylor)
+{
+    _on.fill(true);
+    _patch.fill(false);
+    if (!taylor) return;
+    size_t nPatch = 0;
+    if (todouble(fabs(p.s13-p.s25)/(fabs(p.s13)+fabs(p.s25)))<patchDelta) {
+        _on[2-1]=false; _on[7-1]=false; _patch[1-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s14-p.s25)/(fabs(p.s14)+fabs(p.s25)))<patchDelta) {
+        _on[3-1]=false; _on[7-1]=false; _patch[2-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s23-p.s15)/(fabs(p.s23)+fabs(p.s15)))<patchDelta) {
+        _on[4-1]=false; _on[6-1]=false; _patch[3-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s24-p.s15)/(fabs(p.s24)+fabs(p.s15)))<patchDelta) {
+        _on[5-1]=false; _on[6-1]=false; _patch[4-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s13-p.s24)/(fabs(p.s13)+fabs(p.s24)))<patchDelta*todouble(p.zb)) {
+        _on[2-1]=false; _on[5-1]=false; _patch[5-1]=true;
+        ++nPatch;
+    }
+    if (todouble(fabs(p.s14-p.s23)/(fabs(p.s14)+fabs(p.s23)))<patchDelta*todouble(p.zb)) {
+        _on[3-1]=false; _on[4-1]=false; _patch[6-1]=true;
+        ++nPatch;
+    }
+    if (nPatch>1) {
+        std::cerr << "Error in qq2yyg1 patch: too many large cancellations!" << std::endl;
+        _on.fill(true);
+        _patch.fill(false);
+    }
+    return;
+}
+
+
+// SC box
+
+template<typename T>
+double qq2yyg1<T>::SC::box::master(const size_t i, const PSpoint& p, const int j)
+{
+    if (i>masters().size()) throw;
+    return xTerm(masters()[i-1](p),j);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::SC::box::master(const size_t i, const PSpoint& p)
+{
+    if (i>masters().size()) throw;
+    return x2Finite(masters()[i-1](p));
+}
+
+template<typename T>
+double qq2yyg1<T>::SC::box::eval(const PSpoint& p, const int i)
+{
+    return factor()*accTerm(masters().begin(),masters().end(),p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::SC::box::eval(const PSpoint& p)
+{
+    return factor()*acc2Finite(masters().begin(),masters().end(),p);
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Master,21>& qq2yyg1<T>::SC::box::masters()
+{
+    static array<Master,21>* _masters = new array<Master,21>({
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s13,p.s45,3)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s12,p.s14,p.s35,3)),
+        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s23,p.s45,3)),
+        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s12,p.s24,p.s35,3)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s15,p.s34,3)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s25,p.s34,3)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,3)),
+        CXM(c<3>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,3)),
+        CXM(c<3>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,3)),
+        CXM(c<3>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,3)),
+        CXM(c<4>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s35,p.s24,3)),
+        CXM(c<4>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s45,p.s23,3)),
+        CXM(c<4>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s35,p.s14,3)),
+        CXM(c<4>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s45,p.s13,3)),
+        CXM(c<5>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s35,p.s24,3)),
+        CXM(c<5>(p.zb,p.t12,-p.t34,-p.u),box6(p.s15,p.s45,p.s23,3)),
+        CXM(c<5>(p.zb,-p.t12,p.t34,-p.u),box6(p.s25,p.s35,p.s14,3)),
+        CXM(c<5>(p.zb,-p.t12,-p.t34,p.u),box6(p.s25,p.s45,p.s13,3)),
+        CXM(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,3)),
+        CXM(c<6>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,3)),
+        CXM(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,3))
+    });
+    return *_masters;
+}
+
+// Nf
+
+template<typename T>
+const double& qq2yyg1<T>::Nf::factor()
+{
+    // CHECK THIS FACTOR
+    static double* _factor = new double(-QCD::sumQ2/512.);
+    return *_factor;
+}
+
+template<typename T>
+double qq2yyg1<T>::Nf::eval(const PSpoint& p, const int i)
+{
+    return bub::eval(p,i)+box::eval(p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::Nf::eval(const PSpoint& p)
+{
+    return bub::eval(p)+box::eval(p);
+}
+
+// Nf bub
+
+template<typename T>
+double qq2yyg1<T>::Nf::bub::master(const size_t i, const PSpoint& p, const int j)
+{
+    if (i>masters().size()) throw;
+    return xTerm(masters()[i-1](p),j);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::Nf::bub::master(const size_t i, const PSpoint& p)
+{
+    if (i>masters().size()) throw;
+    return x2Finite(masters()[i-1](p));
+}
+
+template<typename T>
+double qq2yyg1<T>::Nf::bub::eval(const PSpoint& p, const int i)
+{
+    return factor()*accTerm<Master*,PSpoint>(masters().begin(),masters().end(),p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::Nf::bub::eval(const PSpoint& p)
+{
+    return factor()*acc2Finite(masters().begin(),masters().end(),p);
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Master,4>& qq2yyg1<T>::Nf::bub::masters()
+{
+    static array<Master,4>* _masters = new array<Master,4>({
+    CXM(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,3)),
+    CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,3)),
+    CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,3)),
+    CXM(c<3>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,3))
+    });
+    return *_masters;
+}
+
+// Nf box
+
+template<typename T>
+double qq2yyg1<T>::Nf::box::master(const size_t i, const PSpoint& p, const int j)
+{
+    if (i>masters().size()) throw;
+    return xTerm(masters()[i-1](p),j);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::Nf::box::master(const size_t i, const PSpoint& p)
+{
+    if (i>masters().size()) throw;
+    return x2Finite(masters()[i-1](p));
+}
+
+template<typename T>
+double qq2yyg1<T>::Nf::box::eval(const PSpoint& p, const int i)
+{
+    return factor()*accTerm<Master*,PSpoint>(masters().begin(),masters().end(),p,i);
+}
+
+template<typename T>
+EpsExp qq2yyg1<T>::Nf::box::eval(const PSpoint& p)
+{
+    return factor()*acc2Finite(masters().begin(),masters().end(),p);
+}
+
+template<typename T>
+array<typename qq2yyg1<T>::Master,3>& qq2yyg1<T>::Nf::box::masters()
+{
+    static array<Master,3>* _masters = new array<Master,3>({
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,3)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,3)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,3))
+    });
+    return *_masters;
+}
+
+// Explicitly compute stuff once to enforce compilation
+
+EpsExp foomdblLCbub = qq2yyg1<dbl>::LC::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomqplLCbub = qq2yyg1<qpl>::LC::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomrtnLCbub = qq2yyg1<rtn>::LC::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomdblLCbox = qq2yyg1<dbl>::LC::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomqplLCbox = qq2yyg1<qpl>::LC::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomrtnLCbox = qq2yyg1<rtn>::LC::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomdblSCbub = qq2yyg1<dbl>::SC::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomqplSCbub = qq2yyg1<qpl>::SC::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomrtnSCbub = qq2yyg1<rtn>::SC::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomdblSCbox = qq2yyg1<dbl>::SC::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomqplSCbox = qq2yyg1<qpl>::SC::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomrtnSCbox = qq2yyg1<rtn>::SC::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomdblNfbub = qq2yyg1<dbl>::Nf::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomqplNfbub = qq2yyg1<qpl>::Nf::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomrtnNfbub = qq2yyg1<rtn>::Nf::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomdblNfbox = qq2yyg1<dbl>::Nf::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomqplNfbox = qq2yyg1<qpl>::Nf::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+EpsExp foomrtnNfbox = qq2yyg1<rtn>::Nf::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp foodbl = qq2yyg1<dbl>::eval(qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp fooqpl = qq2yyg1<qpl>::eval(qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp foortn = qq2yyg1<rtn>::eval(qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
-//
