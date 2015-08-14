@@ -3,7 +3,7 @@
  * \file    qq2yyg.h
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
- * \date    May 2015
+ * \date    August 2015
  *
  */
 
@@ -15,8 +15,6 @@
 #include "mpl.h"
 using namespace mpl;
 
-// Dunno if this goes here, but I'm tired of writing it
-typedef Expansion<Parameter::epsilon, double> EpsExp;
 
 template<typename T>
 struct qq2yyg1

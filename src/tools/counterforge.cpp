@@ -23,7 +23,7 @@ const double CounterForge::_4pi = 4.*consts::Pi;
 /// One-loop conventional prefactor (4pi)^e Gamma(1+e) Gamma^2(1-e) / Gamma(1-2e)
 /// Numerically implemented: only combinations of EulerGamma,
 /// zeta(n) and log(4pi), not particularly meaningful
-const Expansion<Parameter::epsilon, double> CounterForge::cGamma()
+const Expansion<Parameter::epsilon, double>& CounterForge::cGamma()
 {
     static Expansion<Parameter::epsilon, double>* _cGamma =
     new Expansion<Parameter::epsilon, double>(0,{
@@ -48,7 +48,7 @@ const Expansion<Parameter::epsilon, double> CounterForge::cGamma()
 }
 
 /// Series expansion of (pi epsilon) cot(pi epsilon)
-const Expansion<Parameter::epsilon, double> CounterForge::cotan()
+const Expansion<Parameter::epsilon, double>& CounterForge::cotan()
 {
     static Expansion<Parameter::epsilon, double>* _cotan =
     new Expansion<Parameter::epsilon, double>(0,{
@@ -62,7 +62,7 @@ const Expansion<Parameter::epsilon, double> CounterForge::cotan()
 }
 
 /// Series expansion of (pi epsilon) / sin(pi epsilon)
-const Expansion<Parameter::epsilon, double> CounterForge::cosec()
+const Expansion<Parameter::epsilon, double>& CounterForge::cosec()
 {
     static Expansion<Parameter::epsilon, double>* _cosec =
     new Expansion<Parameter::epsilon, double>(0,{
@@ -76,7 +76,7 @@ const Expansion<Parameter::epsilon, double> CounterForge::cosec()
 }
 
 /// Series expansion of cos(pi epsilon)
-const Expansion<Parameter::epsilon, double> CounterForge::cos()
+const Expansion<Parameter::epsilon, double>& CounterForge::cos()
 {
     static Expansion<Parameter::epsilon, double>* _cos =
     new Expansion<Parameter::epsilon, double>(0,{

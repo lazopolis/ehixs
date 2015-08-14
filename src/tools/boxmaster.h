@@ -96,7 +96,7 @@ template<class T>
 Expansion<Parameter::epsilon, double> box6(const T& s, const T&t, const T& M2,
                                            const size_t n = Expansion<Parameter::epsilon, double>::accuracy)
 {
-    return box6(todouble<T>(s),todouble<T>(t),todouble<T>(M2),n);
+    return box6(todouble(s),todouble(t),todouble(M2),n);
 }
 
 #endif
