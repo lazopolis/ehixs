@@ -14,4 +14,5 @@ add_library(gammagamma
             gammagamma_me
             qq2yyg/qq2yyg0
             qq2yyg/qq2yyg1
+            qq2yyg/qq2yyg1rescue
             )
