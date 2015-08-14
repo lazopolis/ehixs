@@ -9,10 +9,7 @@
 #ifndef BB2HX_H
 #define BB2HX_H
 
-#include "chaplin.h"   // HPL
-#include "constants.h" // QCD::CF, etc...
-#include "expansion.h" // Expansion<>
-#include "boxmaster.h" // Expansion<>
+#include "expansion.h" // EpsExp
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
 constexpr double yukawa_bottom = 1.0;
@@ -29,14 +26,14 @@ double bb2Hg(const double& z, const double& lambda);
 
 /// \brief Shorthand for full epsilon expansion of bb->H
 template<size_t loop>
-Expansion<Parameter::epsilon, double> bb2H();
+EpsExp bb2H();
 
 /// \brief Full epsilon expansion of bb->H, implementation with Bubble
 template<size_t loop>
-Expansion<Parameter::epsilon, double> bb2Hbis();
+EpsExp bb2Hbis();
 
 /// \brief Shorthand for full epsilon expansion of bb->Hg
 template<size_t loop>
-Expansion<Parameter::epsilon, double> bb2Hg(const double& z, const double& lambda);
+EpsExp bb2Hg(const double& z, const double& lambda);
 
 #endif

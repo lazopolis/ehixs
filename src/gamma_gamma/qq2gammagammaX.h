@@ -13,7 +13,7 @@
 
 #include "chaplin.h"   // HPL
 #include "constants.h" // QCD::CF, etc...
-#include "expansion.h" // Expansion<>
+#include "expansion.h" // EpsExp
 #include "qq2yyg/qq2yyg.h"
 
 /// \todo Move this to either Constants, UserInterface, Model or whatever
@@ -34,15 +34,15 @@ double qq2yyg(
 
 /// \brief Shorthand for full epsilon expansion of qq->yy
 template<size_t loop>
-Expansion<Parameter::epsilon, double> qq2yy(const double& s13_s14);
+EpsExp qq2yy(const double& s13_s14);
 
 /// \brief Shorthand for full epsilon expansion of qq->yyg
 template<size_t loop>
-Expansion<Parameter::epsilon, double> qq2yyg(
-                                             const double& zb,
-                                             const double& t12,
-                                             const double& t34,
-                                             const double& u
-                                             );
+EpsExp qq2yyg(
+              const double& zb,
+              const double& t12,
+              const double& t34,
+              const double& u
+              );
 
 #endif

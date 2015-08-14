@@ -11,12 +11,9 @@
 #define QQ2YYG_H
 
 #include "fourvector.h"
-#include "expansion.h"
+#include "mastersums.h"
 #include "mpl.h"
 using namespace mpl;
-
-// Short name for pair of epsilon expansions with double coefficients
-typedef std::pair<EpsExp,EpsExp> EpsExp2;
 
 template<typename T>
 struct qq2yyg1

@@ -154,7 +154,7 @@ Expansion<Parameter::epsilon, double> qq2yy<0>(const double& s13os14)
 template<>
 Expansion<Parameter::epsilon, double> qq2yy<1>(const double& s13os14)
 {
-    return static_cast<double>(QCD::CF) * alphas/(2.*consts::Pi)*
+    return QCD::CF * alphas/(2.*consts::Pi)*
         Expansion<Parameter::epsilon, double>(-2,{
             qq2yy<1,-2>(s13os14),
             qq2yy<1,-1>(s13os14),

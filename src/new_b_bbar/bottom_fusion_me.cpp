@@ -197,7 +197,7 @@ double BottomFusion_bb_NNLO_RV::explicitcoll(const double& z, const double& lamb
     const double ll = log(lambda);
     const double z2 = z*z;
     //Nasty, should move back to CA and CF...
-    return 2.*pow(alphas,2)*static_cast<double>(QCD::CF)*bb2H<0,0>()*
+    return 2.*pow(alphas,2)*QCD::CF*bb2H<0,0>()*
     (
      -16 + 14*consts::pi_square - 10*z - 6*z2 + 14*consts::pi_square*z2
      -36*(1.+z2)*l1z*l1z + 34*lz - 68*z*lz + 34*z2*lz - 25*lz*lz

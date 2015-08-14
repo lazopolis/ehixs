@@ -32,8 +32,8 @@ double polyLog(const size_t n, const double& z);
  *
  */
 
-Expansion<Parameter::epsilon, double> continuedExp(const double& z, const double& a,
-                                                   const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+EpsExp continuedExp(const double& z, const double& a,
+                    const size_t n = EpsExp::accuracy);
 
 /**
  *
@@ -42,11 +42,11 @@ Expansion<Parameter::epsilon, double> continuedExp(const double& z, const double
  *
  */
 
-Expansion<Parameter::epsilon, double> bubble(const double& s,
-                                             const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+EpsExp bubble(const double& s,
+              const size_t n = EpsExp::accuracy);
 template<class T>
-Expansion<Parameter::epsilon, double> bubble(const T& s,
-                                             const size_t n = Expansion<Parameter::epsilon, double>::accuracy)
+EpsExp bubble(const T& s,
+              const size_t n = EpsExp::accuracy)
 {
     return bubble(todouble(s),n);
 }
@@ -59,9 +59,9 @@ Expansion<Parameter::epsilon, double> bubble(const T& s,
  *
  */
 
-Expansion<Parameter::epsilon, double> tri2(const double& p12,
-                                           const double& p22,
-                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+EpsExp tri2(const double& p12,
+            const double& p22,
+            const size_t n = EpsExp::accuracy);
 
 /**
  *
@@ -70,7 +70,7 @@ Expansion<Parameter::epsilon, double> tri2(const double& p12,
  *
  */
 
-Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+EpsExp twoFone(const double& z, const size_t n = EpsExp::accuracy);
 
 /**
  *
@@ -79,8 +79,8 @@ Expansion<Parameter::epsilon, double> twoFone(const double& z, const size_t n = 
  *
  */
 
-Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const double& M2,
-                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+EpsExp box(const double& s, const double&t, const double& M2,
+           const size_t n = EpsExp::accuracy);
 
 /**
  *
@@ -90,11 +90,11 @@ Expansion<Parameter::epsilon, double> box(const double& s, const double&t, const
  *
  */
 
-Expansion<Parameter::epsilon, double> box6(const double& s, const double&t, const double& M2,
-                                          const size_t n = Expansion<Parameter::epsilon, double>::accuracy);
+EpsExp box6(const double& s, const double&t, const double& M2,
+            const size_t n = EpsExp::accuracy);
 template<class T>
-Expansion<Parameter::epsilon, double> box6(const T& s, const T&t, const T& M2,
-                                           const size_t n = Expansion<Parameter::epsilon, double>::accuracy)
+EpsExp box6(const T& s, const T&t, const T& M2,
+            const size_t n = EpsExp::accuracy)
 {
     return box6(todouble(s),todouble(t),todouble(M2),n);
 }

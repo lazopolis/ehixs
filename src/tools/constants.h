@@ -47,7 +47,7 @@ namespace QCD
 {
     const size_t Nc = 3;            ///< N_c is the number of colors
     const double CA = 3.;           ///< C_A is the Casimir of the adjoint representation
-    const long double CF = 4./3.;   ///< C_F is the Casimir of the fundamental representation
+    const double CF = 4./3.;        ///< C_F is the Casimir of the fundamental representation
     const double TF = 0.5;          ///< T_F is the normalization factor of SU(3) matrices
 
     const size_t Nf = 4;            ///< Nf is the number of active quark  flavors

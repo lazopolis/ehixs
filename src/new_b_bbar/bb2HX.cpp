@@ -6,6 +6,9 @@
  *
  */
 
+#include "chaplin.h"   // HPL
+#include "constants.h" // QCD::CF, etc...
+#include "boxmaster.h" // bubble
 #include "bb2HX.h"
 
 /// \brief Matrix elements for bb->H
@@ -47,14 +50,14 @@ double bb2H<1,0>()
 template<>
 double bb2Hg<0,0>(const double& z, const double& lambda)
 {
-    return 8.*consts::Pi*static_cast<double>(QCD::CF)*alphas * bb2H<0,0>() *
+    return 8.*consts::Pi*QCD::CF*alphas * bb2H<0,0>() *
         (1.+z*z)/((1.-z)*lambda*(1.-lambda));
 }
 
 template<>
 double bb2Hg<0,1>(const double& z, const double& lambda)
 {
-    return -8.*consts::Pi*static_cast<double>(QCD::CF)*alphas * bb2H<0,0>() *
+    return -8.*consts::Pi*QCD::CF*alphas * bb2H<0,0>() *
         (1.-z)/(lambda*(1.-lambda));
 }
 
@@ -83,7 +86,7 @@ double bb2Hg<1,0>(const double& z, const double& lambda)
     - 4.*l1*(-9. + 9.*l2 - 9.*l3 - 9.*l4 + 4.*l5 + 4.*l6)
     + 18.*pl1 + 2.*pl2 + 20.*pl3 + 2.*pl4 + 20.*pl5 - 2.*pl6 - 2.*pl7
     + 36.*l1*l1 + 17.*l2*l2 + 9.*l3*l3 + 9.*l4*l4 + 8.*l5*l5 + 8.*l6*l6 - 14.*consts::pi_square;
-    return -2.*pow(alphas,2)*static_cast<double>(QCD::CF)*bb2H<0,0>() * (
+    return -2.*pow(alphas,2)*QCD::CF*bb2H<0,0>() * (
                   (16.+compr)
                   - 2. * (-5. + 36.*l1 - 34.*l2 + 18.*l3 + 18.*l4)*z
                   + (6.+compr)*z*z
@@ -119,7 +122,7 @@ Expansion<Parameter::epsilon, double> bb2Hbis<0>()
 template<>
 Expansion<Parameter::epsilon, double> bb2Hbis<1>()
 {
-    return static_cast<double>(QCD::CF)*times(
+    return QCD::CF*times(
                                               Expansion<Parameter::epsilon, double>(-1,{-1.,2.,-1.},true),
                                               bubble(-1.,3),
                                               3
