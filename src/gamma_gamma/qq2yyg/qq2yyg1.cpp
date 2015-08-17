@@ -282,15 +282,15 @@ array<typename qq2yyg1<T>::Master,10>& qq2yyg1<T>::SC::bub::masters()
 {
     static array<Master,10>* _masters = new array<Master,10>({
         CXM(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,3)),
-        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s13,3)),
-        CXM(c<2>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s14,3)),
-        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s23,3)),
-        CXM(c<2>(p.zb,-p.t12,-p.t34,p.u),bubble(p.s24,3)),
-        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s15,3)),
-        CXM(c<3>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s25,3)),
-        CXM(c<4>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,3)),
-        CXM(c<5>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,3)),
-        CXM(c<5>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,3))
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s13,2)),
+        CXM(c<2>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s14,2)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s23,2)),
+        CXM(c<2>(p.zb,-p.t12,-p.t34,p.u),bubble(p.s24,2)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s15,2)),
+        CXM(c<3>(p.zb,-p.t12,p.t34,-p.u),bubble(p.s25,2)),
+        CXM(c<4>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,2)),
+        CXM(c<5>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,2)),
+        CXM(c<5>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,2))
     });
     return *_masters;
 }
@@ -460,10 +460,10 @@ template<typename T>
 array<typename qq2yyg1<T>::Master,4>& qq2yyg1<T>::Nf::bub::masters()
 {
     static array<Master,4>* _masters = new array<Master,4>({
-    CXM(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,3)),
-    CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,3)),
-    CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,3)),
-    CXM(c<3>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,3))
+    CXM(c<1>(p.zb,p.t12,p.t34,p.u),  bubble(p.s12,2)),
+    CXM(c<2>(p.zb,p.t12,p.t34,p.u),  bubble(p.s34,2)),
+    CXM(c<3>(p.zb,p.t12,p.t34,p.u),  bubble(p.s35,2)),
+    CXM(c<3>(p.zb,p.t12,-p.t34,-p.u),bubble(p.s45,2))
     });
     return *_masters;
 }
