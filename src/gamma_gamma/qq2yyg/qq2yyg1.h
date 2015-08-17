@@ -50,9 +50,9 @@ struct qq2yyg1
     using Patch  = EpsExp (*)(const PSpoint&);
 
     /// Evaluate matrix element, term
-    static double eval(const PSpoint& p, const int i);
+    static double eval(const PSpoint& p, const int i, const bool taylor = true);
     /// Evaluate matrix element, epsilon expansion
-    static EpsExp eval(const PSpoint& p);
+    static EpsExp eval(const PSpoint& p, const bool taylor = true);
 
     struct LC
     {
@@ -63,9 +63,9 @@ struct qq2yyg1
         static const double& factor();
 
         /// Evaluate Nf matrix element piece, term
-        static double eval(const PSpoint& p, const int i);
+        static double eval(const PSpoint& p, const int i, const bool taylor = true);
         /// Evaluate Nf matrix element piece, epsilon expansion
-        static EpsExp eval(const PSpoint& p);
+        static EpsExp eval(const PSpoint& p, const bool taylor = true);
 
         struct bub
         {
@@ -156,9 +156,9 @@ struct qq2yyg1
         static const double& factor();
 
         /// Evaluate Nf matrix element piece, term
-        static double eval(const PSpoint& p, const int i);
+        static double eval(const PSpoint& p, const int i, const bool taylor = true);
         /// Evaluate Nf matrix element piece, epsilon expansion
-        static EpsExp eval(const PSpoint& p);
+        static EpsExp eval(const PSpoint& p, const bool taylor = true);
 
         struct bub
         {

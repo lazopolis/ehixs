@@ -27,15 +27,15 @@ const double patchDelta = 0.001;
 // qq2yyg1
 
 template<typename T>
-double qq2yyg1<T>::eval(const PSpoint& p, const int i)
+double qq2yyg1<T>::eval(const PSpoint& p, const int i, const bool t)
 {
-    return LC::eval(p,i)+SC::eval(p,i)+Nf::eval(p,i);
+    return LC::eval(p,i,t)+SC::eval(p,i,t)+Nf::eval(p,i);
 }
 
 template<typename T>
-EpsExp qq2yyg1<T>::eval(const PSpoint& p)
+EpsExp qq2yyg1<T>::eval(const PSpoint& p, const bool t)
 {
-    return LC::eval(p)+SC::eval(p)+Nf::eval(p);
+    return LC::eval(p,t)+SC::eval(p,t)+Nf::eval(p);
 }
 
 // LC
@@ -47,15 +47,15 @@ const double& qq2yyg1<T>::LC::factor()
 }
 
 template<typename T>
-double qq2yyg1<T>::LC::eval(const PSpoint& p, const int i)
+double qq2yyg1<T>::LC::eval(const PSpoint& p, const int i, const bool t)
 {
-    return bub::eval(p,i)+box::eval(p,i);
+    return bub::eval(p,i,t)+box::eval(p,i);
 }
 
 template<typename T>
-EpsExp qq2yyg1<T>::LC::eval(const PSpoint& p)
+EpsExp qq2yyg1<T>::LC::eval(const PSpoint& p, const bool t)
 {
-    return bub::eval(p)+box::eval(p);
+    return bub::eval(p,t)+box::eval(p);
 }
 
 // LC bub
@@ -224,15 +224,15 @@ const double& qq2yyg1<T>::SC::factor()
 }
 
 template<typename T>
-double qq2yyg1<T>::SC::eval(const PSpoint& p, const int i)
+double qq2yyg1<T>::SC::eval(const PSpoint& p, const int i, const bool t)
 {
-    return bub::eval(p,i)+box::eval(p,i);
+    return bub::eval(p,i,t)+box::eval(p,i);
 }
 
 template<typename T>
-EpsExp qq2yyg1<T>::SC::eval(const PSpoint& p)
+EpsExp qq2yyg1<T>::SC::eval(const PSpoint& p, const bool t)
 {
-    return bub::eval(p)+box::eval(p);
+    return bub::eval(p,t)+box::eval(p);
 }
 
 // SC bub
