@@ -22,52 +22,17 @@ struct qq2yyg1_rescue
     using alt = EpsExp(*)(const PSpoint&, const bool);
 
     /// Evaluate matrix element, term
-    static double eval(const PSpoint& p, const int i);
+    static double eval(const PSpoint& p, const int i, const bool taylor = true);
     /// Evaluate matrix element, epsilon expansion
-    static EpsExp eval(const PSpoint& p);
+    static EpsExp eval(const PSpoint& p, const bool taylor = true);
 
     struct LC
     {
 
         LC() = delete;
 
-        /// Evaluate Nf matrix element piece, term
-        static double eval(const PSpoint& p, const int i);
-        /// Evaluate Nf matrix element piece, epsilon expansion
-        static EpsExp eval(const PSpoint& p);
-
-        struct bub
-        {
-
-            bub() = delete;
-
-            /// Sum of coefficients x masters, term
-            static double eval(const PSpoint& p, const int i, const bool taylor = true);
-            /// Sum of coefficients x masters, epsilon expansion
-            static EpsExp eval(const PSpoint& p, const bool taylor = true);
-
-        private:
-
-            static std::vector<alt> _options;
-
-        };
-
-        struct box
-        {
-
-            box() = delete;
-
-            /// Sum of coefficients x masters, term
-            static double eval(const PSpoint& p, const int i);
-            /// Sum of coefficients x masters, epsilon expansion
-            static EpsExp eval(const PSpoint& p);
-
-        };
-
         /// Coefficients of Catani's formula
         static EpsExp polecoeffs(const double s15, const double s25);
-        /// Poles as predicted by Catani
-        static EpsExp poles(const PSpoint& p);
 
     };
 
@@ -76,79 +41,19 @@ struct qq2yyg1_rescue
 
         SC() = delete;
 
-        /// Evaluate Nf matrix element piece, term
-        static double eval(const PSpoint& p, const int i);
-        /// Evaluate Nf matrix element piece, epsilon expansion
-        static EpsExp eval(const PSpoint& p);
-
-        struct bub
-        {
-
-            bub() = delete;
-
-            /// Sum of coefficients x masters, term
-            static double eval(const PSpoint& p, const int i, const bool taylor = true);
-            /// Sum of coefficients x masters, epsilon expansion
-            static EpsExp eval(const PSpoint& p, const bool taylor = true);
-
-        };
-
-        struct box
-        {
-
-            box() = delete;
-
-            /// Sum of coefficients x masters, term
-            static double eval(const PSpoint& p, const int i);
-            /// Sum of coefficients x masters, epsilon expansion
-            static EpsExp eval(const PSpoint& p);
-
-        };
-        
+        /// Coefficients of Catani's formula
+        static EpsExp polecoeffs();
     };
 
-    struct Nf
-    {
-
-        Nf() = delete;
-
-        /// Evaluate Nf matrix element piece, term
-        static double eval(const PSpoint& p, const int i);
-        /// Evaluate Nf matrix element piece, epsilon expansion
-        static EpsExp eval(const PSpoint& p);
-
-        struct bub
-        {
-
-            bub() = delete;
-
-            /// Sum of coefficients x masters, term
-            static double eval(const PSpoint& p, const int i);
-            /// Sum of coefficients x masters, epsilon expansion
-            static EpsExp eval(const PSpoint& p);
-
-        };
-
-        struct box
-        {
-
-            box() = delete;
-
-            /// Sum of coefficients x masters, term
-            static double eval(const PSpoint& p, const int i);
-            /// Sum of coefficients x masters, epsilon expansion
-            static EpsExp eval(const PSpoint& p);
-            
-        };
-
-    };
+    /// Poles as predicted by Catani
+    static EpsExp poles(const PSpoint& p);
 
 private:
+
+    static std::vector<alt> _options;
 
     static bool _checkpoles(const EpsExp& poles, const EpsExp& me);
 
 };
-
-#include "qq2yyg/qq2yyg1rescue.inl"
 
 #endif
