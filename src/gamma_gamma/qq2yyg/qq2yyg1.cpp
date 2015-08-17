@@ -201,15 +201,15 @@ template<typename T>
 array<typename qq2yyg1<T>::Master,9>& qq2yyg1<T>::LC::box::masters()
 {
     static array<Master,9>* _masters = new array<Master,9>({
-        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s15,p.s24,3)),
-        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s15,p.s23,3)),
-        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s25,p.s14,3)),
-        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s25,p.s13,3)),
-        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,3)),
-        CXM(c<2>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,3)),
-        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,3)),
-        CXM(c<2>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,3)),
-        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s25,p.s34,3))
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s15,p.s24,1)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s15,p.s23,1)),
+        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s25,p.s14,1)),
+        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s25,p.s13,1)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,1)),
+        CXM(c<2>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,1)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,1)),
+        CXM(c<2>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,1)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s25,p.s34,1))
     });
     return *_masters;
 }
@@ -381,27 +381,27 @@ template<typename T>
 array<typename qq2yyg1<T>::Master,21>& qq2yyg1<T>::SC::box::masters()
 {
     static array<Master,21>* _masters = new array<Master,21>({
-        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s13,p.s45,3)),
-        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s12,p.s14,p.s35,3)),
-        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s23,p.s45,3)),
-        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s12,p.s24,p.s35,3)),
-        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s15,p.s34,3)),
-        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s25,p.s34,3)),
-        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,3)),
-        CXM(c<3>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,3)),
-        CXM(c<3>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,3)),
-        CXM(c<3>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,3)),
-        CXM(c<4>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s35,p.s24,3)),
-        CXM(c<4>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s45,p.s23,3)),
-        CXM(c<4>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s35,p.s14,3)),
-        CXM(c<4>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s45,p.s13,3)),
-        CXM(c<5>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s35,p.s24,3)),
-        CXM(c<5>(p.zb,p.t12,-p.t34,-p.u),box6(p.s15,p.s45,p.s23,3)),
-        CXM(c<5>(p.zb,-p.t12,p.t34,-p.u),box6(p.s25,p.s35,p.s14,3)),
-        CXM(c<5>(p.zb,-p.t12,-p.t34,p.u),box6(p.s25,p.s45,p.s13,3)),
-        CXM(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,3)),
-        CXM(c<6>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,3)),
-        CXM(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,3))
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s13,p.s45,1)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s12,p.s14,p.s35,1)),
+        CXM(c<1>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s23,p.s45,1)),
+        CXM(c<1>(p.zb,-p.t12,-p.t34,p.u),box6(p.s12,p.s24,p.s35,1)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s12,p.s15,p.s34,1)),
+        CXM(c<2>(p.zb,-p.t12,p.t34,-p.u),box6(p.s12,p.s25,p.s34,1)),
+        CXM(c<3>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s34,p.s25,1)),
+        CXM(c<3>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s34,p.s25,1)),
+        CXM(c<3>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s34,p.s15,1)),
+        CXM(c<3>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s34,p.s15,1)),
+        CXM(c<4>(p.zb,p.t12,p.t34,p.u),  box6(p.s13,p.s35,p.s24,1)),
+        CXM(c<4>(p.zb,p.t12,-p.t34,-p.u),box6(p.s14,p.s45,p.s23,1)),
+        CXM(c<4>(p.zb,-p.t12,p.t34,-p.u),box6(p.s23,p.s35,p.s14,1)),
+        CXM(c<4>(p.zb,-p.t12,-p.t34,p.u),box6(p.s24,p.s45,p.s13,1)),
+        CXM(c<5>(p.zb,p.t12,p.t34,p.u),  box6(p.s15,p.s35,p.s24,1)),
+        CXM(c<5>(p.zb,p.t12,-p.t34,-p.u),box6(p.s15,p.s45,p.s23,1)),
+        CXM(c<5>(p.zb,-p.t12,p.t34,-p.u),box6(p.s25,p.s35,p.s14,1)),
+        CXM(c<5>(p.zb,-p.t12,-p.t34,p.u),box6(p.s25,p.s45,p.s13,1)),
+        CXM(c<6>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,1)),
+        CXM(c<6>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,1)),
+        CXM(c<7>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,1))
     });
     return *_masters;
 }
@@ -500,9 +500,9 @@ template<typename T>
 array<typename qq2yyg1<T>::Master,3>& qq2yyg1<T>::Nf::box::masters()
 {
     static array<Master,3>* _masters = new array<Master,3>({
-        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,3)),
-        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,3)),
-        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,3))
+        CXM(c<1>(p.zb,p.t12,p.t34,p.u),  box6(p.s34,p.s35,p.s12,1)),
+        CXM(c<1>(p.zb,p.t12,-p.t34,-p.u),box6(p.s34,p.s45,p.s12,1)),
+        CXM(c<2>(p.zb,p.t12,p.t34,p.u),  box6(p.s35,p.s45,p.s12,1))
     });
     return *_masters;
 }
