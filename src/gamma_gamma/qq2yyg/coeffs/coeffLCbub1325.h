@@ -1,7 +1,16 @@
 #include "qq2yyg/qq2yyg1.h"
 #include "counterforge.h"
 
-// Expansion order epsilon^-1 of c13*bubble(13)+c25*bubble(25) 
+// Expansion order epsilon^-1 of c13*bubble(13)+c25*bubble(25)
+template<>
+template<>
+double qq2yyg1<TT>::LC::bub::c1325<-2>(const TT& zb, const TT& t12, const TT& t34)
+{
+    const TT foo = (-32-16*t12+16*t34+zb*(96+t12*(72+24*t12-24*t34)-72*t34+zb*(-104+t34*(108+t34*(-24+4*t34))+t12*(-108+(72-12*t34)*t34+t12*(-72-16*t12+24*t34))+(36+t34*(-54+(24-6*t34)*t34)+t12*(54+t34*(-54+(18-2*t34)*t34)+t12*(54+t12*(24+8*t12-8*t34)+t34*(-36+6*t34))))*zb)))/(zb*zb*(2-2*t34+t12*(2-2*t34+t12*(-2+2*t34+t12*(-2+2*t34)))+zb*(-4+(5-t34)*t34+t12*(-5+(6-t34)*t34+t12*(3+(-4+t34)*t34+t12*(5+t12*(1-t34)+(-6+t34)*t34)))+(2+(-3+t34)*t34+t12*(3+(-4+t34)*t34+t12*(-1+(2-t34)*t34+t12*(-3+t12*(-1+t34)+(4-t34)*t34))))*zb)));
+    return todouble(foo);
+}
+
+// Expansion order epsilon^-1 of c13*bubble(13)+c25*bubble(25)
 template<>
 template<>
 double qq2yyg1<TT>::LC::bub::c1325<-1>(const TT& zb, const TT& t12, const TT& t34)
@@ -19,16 +28,17 @@ double qq2yyg1<TT>::LC::bub::c1325<0>(const TT& zb, const TT& t12, const TT& t34
     return todouble(foo);
 }
 
-// Series in epsilon of c13*bubble(13)+c25*bubble(245)
+// Series in epsilon of c13*bubble(13)+c25*bubble(25)
 template<>
 EpsExp qq2yyg1<TT>::LC::bub::c1325(const TT& zb, const TT& t12, const TT& t34)
 {
     return times(
                  CounterForge::cGamma(),
-                 EpsExp(-1,{
+                 EpsExp(-2,{
+                    qq2yyg1<TT>::LC::bub::c1325<-2>(zb,t12,t34),
                     qq2yyg1<TT>::LC::bub::c1325<-1>(zb,t12,t34),
                     qq2yyg1<TT>::LC::bub::c1325<0>(zb,t12,t34)
                  }),
-                 2
+                 3
                  );
 }
