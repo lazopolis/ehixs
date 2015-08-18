@@ -22,7 +22,7 @@
  * \todo  Find a way to move this to a header file
  */
 
-const double patchDelta = 0.001;
+const double patchDelta = 1.e-5;
 
 // qq2yyg1
 
@@ -160,6 +160,7 @@ void qq2yyg1<T>::LC::bub::patch(const PSpoint& p, const bool taylor)
         _on[2-1]=false; _on[3-1]=false; _patch[6-1]=true;
         ++nPatch;
     }
+    if (nPatch==1) std::cerr << "Taylor Expansion patch kicked in." << std::endl;
     if (nPatch>1) {
         std::cerr << "Error in qq2yyg1 patch: too many large cancellations!" << std::endl;
         _on.fill(true);
