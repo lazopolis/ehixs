@@ -50,9 +50,17 @@ EpsExp qq2yyg1_rescue::eval(const PSpoint& p, const bool taylor)
     std::cerr << "Could not compute PS point with enough precision!!" << std::endl;
     std::cerr << "PS point: " << p.s13 << ", " << p.s14 << ", " << p.s23 << ", " << p.s24 << std::endl;
     std::cerr << "Catani poles   : " << mypoles << std::endl;
-    std::cerr << "Matrix element : " << foo << std::endl;
+    std::cerr << "Matrix element : " << 32./3.*consts::Pi*foo << std::endl;
     throw;
     return foo;
+}
+
+EpsExp qq2yyg1_rescue::polecoeffs(const double s15, const double s25)
+{
+    return (
+            qq2yyg1<dbl>::LC::factor()*LC::polecoeffs(s15,s25)+
+            qq2yyg1<dbl>::SC::factor()*SC::polecoeffs()
+            );
 }
 
 EpsExp qq2yyg1_rescue::poles(const PSpoint& p)
@@ -61,12 +69,7 @@ EpsExp qq2yyg1_rescue::poles(const PSpoint& p)
         qq2yyg0<0>(p.zb,p.t12,p.t34,p.u),
         qq2yyg0<1>(p.zb,p.t12,p.t34,p.u)
     });
-    return p.zb*times(
-                      qq2yyg1<dbl>::LC::factor()*LC::polecoeffs(p.s15,p.s25)+
-                      qq2yyg1<dbl>::SC::factor()*SC::polecoeffs(),
-                      foo,
-                      2
-                      );
+    return p.zb*times(polecoeffs(p.s15,p.s25),foo,2);
 }
 
 // LC

@@ -45,6 +45,8 @@ struct qq2yyg1_rescue
         static EpsExp polecoeffs();
     };
 
+    /// Coefficients of Catani's formula
+    static EpsExp polecoeffs(const double s15, const double s25);
     /// Poles as predicted by Catani
     static EpsExp poles(const PSpoint& p);
 
