@@ -20,13 +20,13 @@ Process* ptr_to_process;
 
 #define my_hdecay my_hdecay_
 
-int Integrand(const int *ndim, const double xx[],
-              const int *ncomp, double ff[],void * therun, double* weight, int* iteration_number)
+int Integrand(const int* ndim, const double xx[],
+              const int* ncomp, double ff[], void* therun, double* weight, int* iteration_number)
 {
 	ptr_to_process->Vegas.vegas_weight = *weight;
 	ptr_to_process->Vegas.vegas_iteration_number = *iteration_number;
 	ptr_to_process->Evaluate_integral(xx);
-	for(int p = 0; p <= ptr_to_process->Vegas.number_of_components; ++p)
+	for(int p = 0; p < ptr_to_process->Vegas.number_of_components; ++p)
     {
 		ff[p]=ptr_to_process->Vegas.ff_vegas[p];
     }
@@ -37,13 +37,13 @@ int Integrand(const int *ndim, const double xx[],
 
 
 Process::Process(const UserInterface & UI)
-:
-Vegas(UI)
+: Vegas(UI)
 {
     decay_particle_id_=-1;
     //cout<<"\n[ehixs] new Process"<<endl;
     //UI.PrintAllOptions();
     //: DEFAULT SETTINGS
+    Vegas.ff_vegas.resize(1,0.);
     Vegas.number_of_components=1;
     Vegas.set_ptr_to_the_hatch(&the_hatch);
     Vegas.set_ptr_to_integrand(&Integrand);
@@ -152,7 +152,7 @@ void Process::perform()
         cout<<"\n[ehixs] : Sectors are not properly defined. I exit!"<<endl;
         exit(1);
     }
-    Vegas.ConfigureNumberOfComponents(1);
+    Vegas.ff_vegas.resize(1,0.);
 
     if (events_writing_) open_event_filename();
 

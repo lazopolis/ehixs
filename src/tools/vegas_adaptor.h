@@ -47,7 +47,6 @@ public:
 
     VegasAdaptor(const UserInterface & UI);
     VegasAdaptor(const UserInterface & UI,const pointer_to_Integrand ptr,int dim);
-    void ConfigureNumberOfComponents(int);
     void call_vegas();
     void call_vegas_final();
     void prepare_for_final_iteration();

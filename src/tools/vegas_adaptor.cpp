@@ -50,18 +50,6 @@ void VegasAdaptor::prepare_for_final_iteration()
     vegas_prob_output.clear();
 }
 
-void VegasAdaptor::ConfigureNumberOfComponents(int n)
-{
-    // the first "Nmember" components are for the pdf error
-    number_of_components=n;
-    
-    for (int i=0;i<number_of_components;i++)
-    {
-        ff_vegas.push_back(0.0);
-    }   
-}
-
-
 void VegasAdaptor::call_vegas()
 {
     cout<<"\n["<<__func__<<"] Calling Vegas "<<endl;
