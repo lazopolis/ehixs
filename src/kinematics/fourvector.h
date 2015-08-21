@@ -251,6 +251,10 @@ class Momenta : public vector<FourVector>
 
 public:
 
+    Momenta(const size_t n = 0)
+    : vector<FourVector>(n, FourVector())
+    {}
+
     const FourVector& operator[](const size_t& i) const
     {
         return vector<FourVector>::operator[](i-1);
