@@ -22,7 +22,7 @@
  * \todo  Find a way to move this to a header file
  */
 
-const double patchDelta = 1.e-5;
+const double patchDelta = 1.e-7;
 
 // Hack for soft gluon points
 template<typename T>
