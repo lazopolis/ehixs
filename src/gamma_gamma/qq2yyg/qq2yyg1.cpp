@@ -24,6 +24,36 @@
 
 const double patchDelta = 1.e-5;
 
+// Hack for soft gluon points
+template<typename T>
+inline T div00(const T& a, const T& b)
+{
+    if (b == 0) return 0;
+    else return a/b;
+}
+
+// PSpoint
+
+template<typename T>
+qq2yyg1<T>::PSpoint::PSpoint(const double& is13, const double& is14, const double& is23, const double& is24)
+: s12(static_cast<T>(1)),
+s13(fromdouble<T>(is13)), s14(fromdouble<T>(is14)),
+s23(fromdouble<T>(is23)), s24(fromdouble<T>(is24)),
+s15(-s12-s13-s14), s25(-s12-s23-s24), s34(-s12-s13-s14-s23-s24),
+s35(s12+s14+s24), s45(s12+s13+s23), zb(-s15-s25),
+t12(div00(s15-s25,zb)), t34(div00(s35-s45,zb)), u(s13-s14-s23+s24)
+{}
+
+template<typename T>
+qq2yyg1<T>::PSpoint::PSpoint(const double& is12, const double& is13, const double& is14, const double& is23, const double& is24)
+: PSpoint(div00(is13,is12),div00(is14,is12),div00(is23,is12),div00(is24,is12))
+{}
+
+template<typename T>
+qq2yyg1<T>::PSpoint::PSpoint(const Momenta& p)
+: PSpoint(square(p[1]+p[2]),square(p[1]-p[3]),square(p[1]-p[4]),square(p[2]-p[3]),square(p[2]-p[4]))
+{}
+
 // qq2yyg1
 
 template<typename T>
@@ -160,7 +190,7 @@ void qq2yyg1<T>::LC::bub::patch(const PSpoint& p, const bool taylor)
         _on[2-1]=false; _on[3-1]=false; _patch[6-1]=true;
         ++nPatch;
     }
-    if (nPatch==1) std::cerr << "Taylor Expansion patch kicked in." << std::endl;
+//    if (nPatch==1) std::cerr << "Taylor Expansion patch kicked in." << std::endl;
     if (nPatch>1) {
         std::cerr << "Error in qq2yyg1 patch: too many large cancellations!" << std::endl;
         _on.fill(true);
@@ -535,3 +565,7 @@ EpsExp foortn = qq2yyg1<rtn>::eval(qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
 double foodbl0 = qq2yyg1<dbl>::eval(qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4),0);
 double fooqpl0 = qq2yyg1<qpl>::eval(qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4),0);
 double foortn0 = qq2yyg1<rtn>::eval(qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4),0);
+
+qq2yyg1<dbl>::PSpoint foopdbl(Momenta(5));
+qq2yyg1<qpl>::PSpoint foopqpl(Momenta(5));
+qq2yyg1<rtn>::PSpoint fooprtn(Momenta(5));

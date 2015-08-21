@@ -13,6 +13,10 @@
 #include "qq2yyg/qq2yyg0.h"
 #include "qq2yyg/qq2yyg1.h"
 
+extern template struct qq2yyg1<dbl>;
+extern template struct qq2yyg1<qpl>;
+extern template struct qq2yyg1<rtn>;
+
 struct qq2yyg1_rescue
 {
 
