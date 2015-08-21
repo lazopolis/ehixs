@@ -7,6 +7,7 @@
  *
  */
 
+#include "qq2yyg/qq2yyg1rescue.h"
 #include "gammagamma_me.h"
 #include "boxmaster.h"
 #include <iostream>
@@ -176,28 +177,20 @@ const SectorInfo XSectionMaker<GammaGamma_qq_NLO_real>::_info(
 
 void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
 {
-    ++_i;
-    std::cout.width(12);
-    std::cout.precision(10);
-    randoms[0]=0.623847728931;
-    randoms[1]=0.346123429920;
-    randoms[2]=0.123098470796;
-    randoms[3]=0.645725573737;
-//    randoms[0] = 0.1623847728931;
-//    randoms[1] = 0.73461234920;
-//    randoms[2] = 0.012309847096;
-//    randoms[3] = 0.645725573737;
-    //randoms[4]=0.809993;
-    if (_hackIsFirstEvent) {
-        _hackIsFirstEvent = false;
+    cout.precision(12);
+    if (_discard != 0) {
+        --_discard;
         return;
     }
-    // if (_i > 30000) exit(0);
-    test(randoms);
+    randoms[0]=0.938775483229;
+    randoms[1]=0.728345969387;
+    randoms[2]=0.123493873457;
+    //test(randoms);
     // Defining auxiliary names
     double& lambdaR = randoms.back();
     const double lambda = randoms.back();
-    const double& z = randoms[3];
+    double& zR = randoms[3];
+    const double z = randoms[3];
     // Generating momenta
     double w = _prefactor * _factor * _pg(randoms);
     const double s12 = square(_p[1]+_p[2]);
@@ -208,60 +201,30 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
         return;
     } else {
         // Computing invariants
-        const qq2yyg1<dbl>::PSpoint pointdbl(_p);
-        const double s13 = square(_p[1]-_p[3])/s12;
-        const double s14 = square(_p[1]-_p[4])/s12;
-        const double s23 = square(_p[2]-_p[3])/s12;
-        const double s24 = square(_p[2]-_p[4])/s12;
-        const double s15 = -1-s13-s14;
-        const double s25 = -1-s23-s24;
-        const double qq2yyg = 16./3.*qq2yyg1<dbl>::eval(pointdbl,0);
+        const double qq2yyg = 16./3.*qq2yyg1_rescue::eval(_p,0);
         // Pushing back main event
         _eventBox->push_back( Event(w*qq2yyg,_p) );
-        // Pushing back collinear counterterm
+        // Pushing back collinear counterterms
         lambdaR = 0.;
         _pg(randoms);
-        _eventBox->push_back( Event(w*_coll(z,lambda,s13/s14),_p) );
+        const qq2yyg1_rescue::PSpoint pc1(_p);
+        _eventBox->push_back( Event(w*_coll(z,lambda,pc1.s13/pc1.s14),_p) );
         lambdaR = 1.;
         _pg(randoms);
-        _eventBox->push_back( Event(w*_coll(z,1.-lambda,s13/s14),_p) );
-        // Checking bubble cancellation
-        if (false && ++_i % 50 == 0)
-        {
-            if (w == 0) cout << "Bad point:\t";
-            const double s34 = -1-s13-s14-s23-s24;
-            const double s35 = 1+s14+s24;
-            const double s45 = 1+s13+s23;
-            const double zb = -s15-s25;
-            const double t12 = (s15-s25)/zb;
-            const double t34 = (s35-s45)/zb;
-            const double u = s13-s14-s23+s24;
-            cout << lambda << "\t";
-            cout << abs(s14-s25)/(abs(s14)+abs(s25)) << "\t";
-//            const double bub13 = productCoeff(qq2yygz1SC<2>(zb,t12,t34,u),bubble(s13,3),0);
-//            const double bub14 = productCoeff(qq2yygz1SC<3>(zb,t12,t34,u),bubble(s14,3),0);
-//            const double bub15 = productCoeff(qq2yygz1SC<4>(zb,t12,t34,u),bubble(s15,3),0);
-//            const double bub23 = productCoeff(qq2yygz1SC<5>(zb,t12,t34,u),bubble(s23,3),0);
-//            const double bub24 = productCoeff(qq2yygz1SC<6>(zb,t12,t34,u),bubble(s24,3),0);
-//            const double bub25 = productCoeff(qq2yygz1SC<7>(zb,t12,t34,u),bubble(s25,3),0);
-//            cout << bub13+bub24 << "\t" << qq2yygz1LCbub1324(zb,t12,u) << endl;
-//            cout << bub14+bub25 << "\t" << qq2yygz1SCbub1325(zb,t12,-t34) << endl;
-//            cout << s12/(13000.*13000.) << "\t" << 0.5*log(_x.x1/_x.x2) << "\t";
-//            cout << s13 << "\t" << s23 << "\t" << s14 << "\t" << s24 << endl;
-//            cout << s15 << "\t" << s25 << "\t" << s34 << "\t" << s35 << "\t" << s45 << endl;
-//            cout << square(_p[1]-_p[5])/s12 << "\t" << square(_p[2]-_p[5])/s12 << "\t" << square(_p[3]+_p[4])/s12 << "\t" <<  square(_p[3]+_p[5])/s12 << "\t" << square(_p[4]+_p[5])/s12 << "\t";
-//            cout << zb << "\t" << t12 << "\t" << t34 << "\t" << u << "\t";
-//            cout << endl;
-//            cout << qq2yygz1LCbubpatch(s13,s14,s23,s24) << endl;//"\t";
-//            cout << qq2yygz1LCbox(s13,s14,s23,s24) << "\t";
-//            cout << qq2yygz1SCbub(s13,s14,s23,s24) << "\t";
-//            cout << qq2yygz1SCbox(s13,s14,s23,s24) << endl;
-//            cout << qq2yyg << "\t"
-//                 << _coll(z,lambda,s13/s14) << "\t"
-//                 << _coll(z,1.-lambda,s13/s14) << endl;
-        }
-        return;
+        const qq2yyg1_rescue::PSpoint pc2(_p);
+        _eventBox->push_back( Event(w*_coll(z,1.-lambda,pc2.s13/pc2.s14),_p) );
+        // Pushing back soft counterterm
+        lambdaR = lambda;
+        zR = 1.;
+        _pg(randoms);
+        const qq2yyg1_rescue::PSpoint ps(_p);
+        const double r = ps.s13/ps.s14;
+        _eventBox->push_back( Event(w*_soft(z,lambda,r),_p) );
+        // Pushing back soft-collinear counterterms
+        _eventBox->push_back( Event(-w*_softcoll(z,lambda,r),_p) );
+        _eventBox->push_back( Event(-w*_softcoll(z,1.-lambda,r),_p) );
     }
+    return;
 }
 
 
@@ -277,26 +240,18 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
     //z=0.52984766/2.;
     z=0.645725573737;
     cout << "z = " << z << endl << endl;
-    //for (lambda = /*1.-*/0.85123419384234; false && /*1.-*/lambda > 5.e-8/*-16*/; lambda=/*1.-0.7*(1.-lambda)*/lambda*=0.8)
-    for (double zeta = -12; true && zeta <= 12; zeta+=0.1)
+    for (double Y = -12; true && Y <= 12+1.e-7; Y+=0.1/*025*/)
     {
-        lambda = 1.-1./(1+exp(zeta*log(10)));
+        const double ey = exp(Y);
+        lambda = ey/(ey+1./ey);
 
         // Generating momenta
         const double w = _prefactor * _factor * (1.-z) * _pg(randoms); // 1-z from phase space
-        double s12 = square(_p[1]+_p[2]);
-        const double s13 = square(_p[1]-_p[3])/s12;
-        const double s14 = square(_p[1]-_p[4])/s12;
-        const double s23 = square(_p[2]-_p[3])/s12;
-        const double s24 = square(_p[2]-_p[4])/s12;
-        s12 = 1.;
-        const qq2yyg1<dbl>::PSpoint pointdbl(_p);
-        const qq2yyg1<qpl>::PSpoint pointqpl(_p);
-        const qq2yyg1<rtn>::PSpoint pointrtn(_p);
+        const qq2yyg1_rescue::PSpoint p(_p);
 
         // Printing general information
         if (false) {
-            const double s = sqrt(square(_p[1]+_p[2]))/2.;
+            const double s = p.s12/2.;
             cout << "lambda = " << lambda << "\n";
             cout << "x1 = " << _x.x1 << "\t";
             cout << "x2 = " << _x.x2 << "\n";
@@ -311,33 +266,6 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
 
         // Counterterms
 
-        // Testing collinear counterterm, color decomposition
-        if (false)
-        {
-            // Fudge factor
-            /// \todo Figure out where this fudge belongs
-            const double f = -16./3.; // this is 4*alphas^2*CF
-            // Switches
-            const bool LCon = false;
-            const bool SCon = true;
-            // Intermediate variables
-            const double LC = qq2yyg1<dbl>::LC::eval(pointdbl,0);
-            const double SC = qq2yyg1<dbl>::SC::eval(pointdbl,0);
-            const double mycoll1 = _coll1(z,lambda,s13/s14,LCon,SCon);
-            const double mycoll2 = _coll2(z,lambda,s13/s14,LCon,SCon);
-            const double myfull  = f*(LCon*LC+SCon*SC);
-            // Printing
-            cout << lambda << "\t\t"
-                 // log(lambda)/lambda piece
-                 << mycoll1/myfull << "\t"
-                 // residual
-                 << (myfull-mycoll1)/mycoll2 << "\t"
-                 // total ratio
-                 << myfull/(mycoll1+mycoll2) << "\t"
-                 // percent difference counterterm-full ME
-                 << 2*(myfull-mycoll1-mycoll2)/(myfull+mycoll1+mycoll2) <<"\n";
-        }
-
         // Plotting counterterm vs. full ME
         if (true)
         {
@@ -348,55 +276,50 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = true;
             const bool SCon = true;
             // Intermediate variables
-            if (_cut(false)) {
-                cout << zeta <<  "\t\t" << 0 << "\t" << 0 << "\t" << 0 << "\t";
-                cout << 0 << "\t" << 0 << endl;
-            } else {
-                cout << zeta << "\t\t";
-                // double arithmetics
-                const double LCd = qq2yyg1<dbl>::LC::eval(pointdbl,0);
-                const double SCd = qq2yyg1<dbl>::SC::eval(pointdbl,0);
-                const double myfulld = f*(LCon*LCd+SCon*SCd);
-                cout << myfulld << "\t";
-                // quadruple arithmetics
-                const double LCq = qq2yyg1<qpl>::LC::eval(pointqpl,0);
-                const double SCq = qq2yyg1<qpl>::SC::eval(pointqpl,0);
-                const double myfullq = f*(LCon*LCq+SCon*SCq);
-                cout << myfullq << "\t";
-                // limits
-                const double mycoll1 = _coll(z,lambda,s13/s14,LCon,SCon);
-                const double mycoll2 = _coll(z,1.-lambda,s13/s14,LCon,SCon);
-                cout << mycoll1 << "\t" << mycoll2 << endl;
+            cout << Y << "\t\t";
+            // Full ME
+            double myfull;
+            if (LCon && SCon) myfull = f*qq2yyg1_rescue::eval(_p,0);
+            else {
+                const qq2yyg1<rtn>::PSpoint prtn = qq2yyg1<rtn>::PSpoint(_p);
+                if (LCon) myfull = f*qq2yyg1<rtn>::LC::eval(prtn,0);
+                if (SCon) myfull = f*qq2yyg1<rtn>::SC::eval(prtn,0);
+                if (!LCon && !SCon) myfull = f*qq2yyg1<rtn>::Nf::eval(prtn,0);
             }
+            cout << myfull << "\t";
+            // limits
+            const double lam = lambda;
+            lambda = 0.;
+            _pg(randoms);
+            const qq2yyg1_rescue::PSpoint pc1(_p);
+            const double mycoll1 = _coll(z,lam,pc1.s13/pc1.s14,LCon,SCon);
+            lambda = 1.;
+            _pg(randoms);
+            const qq2yyg1_rescue::PSpoint pc2(_p);
+            const double mycoll2 = _coll(z,1.-lam,pc2.s13/pc2.s14,LCon,SCon);
+            cout << mycoll1 << "\t" << mycoll2 << endl;
         }
 
     }
 
     // Loop on z
     cout << "Testing soft limit" << endl;
-    lambda=0.52984766;///2.;
+    lambda=0.852984766;
     cout << "lambda = " << lambda << endl << endl;
-//    for (double zbar = 0.8123419384701234; true && zbar > 5.e-8; zbar*=0.9) {
-    for (double zeta = -12; true && zeta <= 12; zeta+=0.1) {
-        double zbar = 1.-1./(1+exp(zeta*log(10)));
-        z=1.-zbar;
-        if (z==1.) exit(1234);
+    for (double H = -10; true && H <= 10+1.e-7; H+=0.1/*025*/) {
+
+        const double emh = exp(-H);
+        const double eh = exp(H);
+        z = emh/(emh+eh);
+        double zbar = eh/(emh+eh);
 
         // Generating momenta
-        const double w = _prefactor * _factor * (1.-z) * _pg(randoms); // 1-z from phase space
-        double s12 = square(_p[1]+_p[2]);
-        const double s13 = square(_p[1]-_p[3])/s12;
-        const double s14 = square(_p[1]-_p[4])/s12;
-        const double s23 = square(_p[2]-_p[3])/s12;
-        const double s24 = square(_p[2]-_p[4])/s12;
-        s12 = 1.;
-        const qq2yyg1<dbl>::PSpoint pointdbl(_p);
-        const qq2yyg1<qpl>::PSpoint pointqpl(_p);
-        const qq2yyg1<rtn>::PSpoint pointrtn(_p);
+        const double w = _prefactor * _factor * zbar * _pg(randoms); // 1-z from phase space
+        const qq2yyg1_rescue::PSpoint p(_p);
 
         // Printing general information
         if (false) {
-            const double s = sqrt(square(_p[1]+_p[2]))/2.;
+            const double s = p.s12/2.;
             cout << "zbar = " << zbar << "\n";
             cout << "x1 = " << _x.x1 << "\t";
             cout << "x2 = " << _x.x2 << "\n";
@@ -419,31 +342,90 @@ void GammaGamma_qq_NNLO_RV::test(vector<double>& randoms)
             const bool LCon = true;
             const bool SCon = true;
             // Intermediate variables
-            if (_cut(false)) {
-                cout << zeta <<  "\t\t" << 0 << "\t" << 0 << "\t" << 0 << "\t";
-                cout << 0 << "\t" << 0 << endl;
-            } else {
-                cout << zeta << "\t";
-                // double arithmetics
-                const double LCd = qq2yyg1<dbl>::LC::eval(pointdbl,0);
-                const double SCd = qq2yyg1<dbl>::SC::eval(pointdbl,0);
-                const double myfulld = f*(LCon*LCd+SCon*SCd);
-                cout << myfulld << "\t";
-                // quadruple arithmetics
-                const double LCq = qq2yyg1<qpl>::LC::eval(pointqpl,0);
-                const double SCq = qq2yyg1<qpl>::SC::eval(pointqpl,0);
-                const double myfullq = f*(LCon*LCq+SCon*SCq);
-                cout << myfullq << "\t";
-                // rational arithmetics
-                const double LCr = qq2yyg1<rtn>::LC::eval(pointrtn,0);
-                const double SCr = qq2yyg1<rtn>::SC::eval(pointrtn,0);
-                const double myfullr = f*(LCon*LCr+SCon*SCr);
-                cout << myfullr << "\t";
-                // limit
-                cout << _fullsoft(z,lambda,s13/s14,LCon,SCon) << endl;
-           }
+            cout << H << "\t";
+            // Full ME
+            double myfull;
+            if (LCon && SCon) myfull = f*qq2yyg1_rescue::eval(_p,0);
+            else {
+                const qq2yyg1<rtn>::PSpoint prtn = qq2yyg1<rtn>::PSpoint(_p);
+                if (LCon) myfull = f*qq2yyg1<rtn>::LC::eval(prtn,0);
+                if (SCon) myfull = f*qq2yyg1<rtn>::SC::eval(prtn,0);
+                if (!LCon && !SCon) myfull = f*qq2yyg1<rtn>::Nf::eval(prtn,0);
+            }
+            cout << myfull << "\t";
+            // Soft limit
+            z = 1.;
+            _pg(randoms);
+            const qq2yyg1_rescue::PSpoint ps(_p);
+            cout << _fullsoft(1.-zbar,lambda,ps.s13/ps.s14,LCon,SCon) << endl;
         }
 
+    }
+
+    // Soft-collinear
+    cout << "Testing soft-collinear limit" << endl;
+    for (double H = -8; true && H <= 8+1.e-7; H+=0.1/*02*/) {
+
+        const double emh = exp(-H);
+        const double eh = exp(H);
+        z = emh/(emh+eh);
+        double zbar = eh/(emh+eh);
+        lambda = zbar;
+        double lam = lambda;
+
+        // Generating momenta
+        const double w = _prefactor * _factor * zbar * _pg(randoms); // 1-z from phase space
+        const qq2yyg1_rescue::PSpoint p(_p);
+
+        // Plotting counterterm vs. full ME
+        if (false)
+        {
+            // Fudge factor
+            /// \todo Figure out where this fudge belongs
+            const double f = -16./3.; // this is 4*alphas^2*CF
+            // Switches
+            const bool LCon = true;
+            const bool SCon = true;
+            // Intermediate variables
+            cout << H << "\t";
+            // Full ME
+            double myfull;
+            if (LCon && SCon) myfull = f*qq2yyg1_rescue::eval(_p,0);
+            else {
+                const qq2yyg1<rtn>::PSpoint prtn = qq2yyg1<rtn>::PSpoint(_p);
+                if (LCon) myfull = f*qq2yyg1<rtn>::LC::eval(prtn,0);
+                if (SCon) myfull = f*qq2yyg1<rtn>::SC::eval(prtn,0);
+                if (!LCon && !SCon) myfull = f*qq2yyg1<rtn>::Nf::eval(prtn,0);
+            }
+            cout << myfull << "\t";
+            // Coll limit
+            lambda = 0.;
+            _pg(randoms);
+            const qq2yyg1_rescue::PSpoint pc(_p);
+            cout << _coll(z,lam,pc.s13/pc.s14,LCon,SCon) << "\t";
+            // Soft limit
+            lambda = lam;
+            z = 1.;
+            _pg(randoms);
+            const qq2yyg1_rescue::PSpoint ps(_p);
+            cout << _fullsoft(1.-zbar,lambda,ps.s13/ps.s14,LCon,SCon) << "\t";
+            // Soft-collinear limit
+            // (same kinematics as soft!)
+            cout << _fullsoftcoll(1.-zbar,lambda,ps.s13/ps.s14) << endl;
+        }
+        
+        // Plotting full vs. simplified soft/soft-collinear
+        if (true)
+        {
+            cout << H << "\t";
+            z = 1.;
+            _pg(randoms);
+            const qq2yyg1_rescue::PSpoint ps(_p);
+            const double r = ps.s13/ps.s14;
+            const double zz = 1.-zbar;
+            cout << _fullsoft(zz,lambda,r)-_fullsoftcoll(zz,lambda,r)-_fullsoftcoll(zz,1.-lambda,r) << "\t";
+            cout << _soft(zz,lambda,r)-_softcoll(zz,lambda,r)-_softcoll(zz,1.-lambda,r) << endl;
+        }
     }
 
     exit(1);
@@ -480,12 +462,12 @@ double GammaGamma_qq_NNLO_RV::_coll(
 }
 
 double GammaGamma_qq_NNLO_RV::_coll1(
-                                    const double& z,
-                                    const double& lambda,
-                                    const double& ratio,
-                                    const bool LCf,
-                                    const bool SCf
-                                    )
+                                     const double& z,
+                                     const double& lambda,
+                                     const double& ratio,
+                                     const bool LCf,
+                                     const bool SCf
+                                     )
 {
     return productCoeff(
                         Expansion<Parameter::epsilon,double>::exp(-log(lambda*(1.-z)/*muR*/),3),
@@ -517,7 +499,7 @@ double GammaGamma_qq_NNLO_RV::_fullsoft(
                                         const bool SCf
                                         )
 {
-    return _fullsoft1(z,lambda,ratio)+_fullsoft2(z,lambda,ratio);
+    return _fullsoft1(z,lambda,ratio,LCf,SCf)+_fullsoft2(z,lambda,ratio,LCf,SCf);
 }
 
 double GammaGamma_qq_NNLO_RV::_fullsoft1(
@@ -545,22 +527,24 @@ double GammaGamma_qq_NNLO_RV::_fullsoft2(
 
 double GammaGamma_qq_NNLO_RV::_fullsoftcoll(const double& z, const double& lambda, const double& ratio) const
 {
-    return productCoeff(CounterForge::softcoll<1>(z,lambda),qq2yy<0>(ratio),0) +
-           productCoeff(CounterForge::softcoll<0>(z,lambda),qq2yy<1>(ratio),0);
+    return -1.*(
+                productCoeff(CounterForge::softcoll<1>(z,lambda,3),qq2yy<0>(ratio),0) +
+                productCoeff(CounterForge::softcoll<0>(z,lambda,3),qq2yy<1>(ratio),0)
+                );
 }
 
 double GammaGamma_qq_NNLO_RV::_soft(const double& z, const double& lambda, const double& ratio) const
 {
     // This is NOT the full soft limit, only the one-loop soft current term:
     // The tree soft current always cancels between soft and soft-collinear
-    return productCoeff(CounterForge::soft<1>(z,lambda),qq2yy<0>(ratio),0);
+    return -2.*productCoeff(CounterForge::soft<1>(z,lambda,3),qq2yy<0>(ratio),0);
 }
 
 double GammaGamma_qq_NNLO_RV::_softcoll(const double& z, const double& lambda, const double& ratio) const
 {
     // This is NOT the full soft-collinear limit, only the one-loop soft-collinear current term:
     // The tree soft-collinear current always cancels between soft and soft-collinear
-    return productCoeff(CounterForge::softcoll<1>(z,lambda),qq2yy<0>(ratio),0);
+    return -1.*productCoeff(CounterForge::softcoll<1>(z,lambda,3),qq2yy<0>(ratio),0);
 }
 
 

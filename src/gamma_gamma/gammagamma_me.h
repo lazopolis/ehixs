@@ -154,79 +154,16 @@ public:
 
 
     GammaGamma_qq_NNLO_RV(const UserInterface& UI) :
-    GammaGamma_qq<1>(UI, XSectionMaker<GammaGamma_qq_NLO_real>::_info), _hackIsFirstEvent(true)
-    {
-        cout << "\nStarting phase-space scan to switch between double and quadruple." << endl;
-
-        // Initializing own random number generator
-        size_t seed = chrono::system_clock::now().time_since_epoch().count();
-        default_random_engine generator(static_cast<unsigned int>(seed));
-        uniform_real_distribution<double> distribution(0.,1.);
-
-        vector<double> rands(2,1.);
-        _xg(rands);
-        rands.resize(5);
-        rands[2] = 0.0; // global phi: irrelevant
-        for (size_t i = 0; i<100; ++i)
-        {
-            // Generating born phase-space randomly
-            rands[0] = distribution(generator); // phi_gamma
-            rands[1] = distribution(generator); // cos_theta_gamma
-            // Scanning real emission phase space
-            for (double zbar = 0.5; zbar > 1.e-8; zbar /= 1.5)
-            {
-                cout << "zbar = " << zbar << endl;
-                rands[3] = 1.-zbar;
-                for (double lambda_safe = 0.5; lambda_safe > _lambda_quad; lambda_safe /= 1.5)
-                {
-                    cout << "lambda = " << lambda_safe << endl;
-                    rands[4] = lambda_safe;
-//                    for (vector<double>::const_iterator it = rands.begin(); it != rands.end(); ++it)
-//                        cout << *it << "\t";
-                    cout << endl;
-                    _pg(rands);
-//                    for (Momenta::const_iterator it = _p.begin(); it != _p.end(); ++it)
-//                        cout << *it << "\n";
-                    // Computing invariants
-                    const qq2yyg1<dbl>::PSpoint pointdbl(_p);
-                    const qq2yyg1<qpl>::PSpoint pointqpl(_p);
-                    const qq2yyg1<rtn>::PSpoint pointrtn(_p);
-                    const double qq2yygd1 = qq2yyg1<dbl>::eval(pointdbl,0);
-                    const double qq2yygq1 = qq2yyg1<qpl>::eval(pointqpl,0);
-                    const double scaledreldiff1 = (
-                                                  zbar*lambda_safe *
-                                                  abs(qq2yygd1-qq2yygq1) /
-                                                  (abs(qq2yygd1)+abs(qq2yygq1))
-                                                  );
-                    cout << qq2yygd1 << "\t" << qq2yygq1 << "\t" << scaledreldiff1 << endl;
-                    if ( !_cut() && !(scaledreldiff1<_tolerance) )
-                        _lambda_quad = lambda_safe;
-                    rands[4] = 1.-lambda_safe;
-                    _pg(rands);
-//                    const double qq2yygd2 = qq2yygz1col(s23,s24,s13,s14);
-//                    const double qq2yygq2 = qq2yygz1col(s23q,s24q,s13q,s14q);
-//                    const double scaledreldiff2 = (
-//                                                   zbar*(1.-lambda_safe) *
-//                                                   abs(qq2yygd2-qq2yygq2) /
-//                                                   (abs(qq2yygd2)+abs(qq2yygq2))
-//                                                   );
-//                    cout << qq2yygd2 << "\t" << qq2yygq2 << "\t" << scaledreldiff2 << endl;
-//                    if ( !_cut() && !(scaledreldiff2<_tolerance) )
-//                        _lambda_quad = lambda_safe;
-                }
-            }
-        }
-        cout << "\nThe switch between double and quadruple precision for lambda is " << _lambda_quad << endl;
-    }
+    GammaGamma_qq<1>(UI, XSectionMaker<GammaGamma_qq_NLO_real>::_info), _discard(2)
+    {}
 
     void generateEvents(vector<double>& randoms);
     void test(vector<double>& randoms);
 
 private:
 
-    bool _hackIsFirstEvent;
+    size_t _discard;
     bool _cut(const bool verbose = false) const;
-    double _lambda_quad = 0.;
     static double _coll(
                  const double& z,
                  const double& lambda,
@@ -274,9 +211,6 @@ private:
     double _softcoll(const double& z, const double& lambda, const double& ratio) const;
 
     const double _lambda_tech_cutoff = 1.e-16;
-    const double _delta = 2.5e-3;
-    const double _tolerance = 1.e-4;
-    size_t _i = 0;
 
 };
 
