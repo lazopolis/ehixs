@@ -50,12 +50,17 @@ int main(int argc, char**argv)
     size_t i = 0;
 
     vector<double> randoms = {0.6330989210547898,0.2484647110590450,0.3092652883252196,0.,0.};
+//    vector<double> randoms = {0.9320489174054389,0.4851921362917242,0.6764105546573512,0.,0.};
+//    vector<double> randoms = {0.1558282452843024,0.0255120657464279,0.3750084685457403,0.,0.};
 
     //Right now do a single PS scan
-    for (double zeta = 1.e-5; zeta <= 5; zeta=min(zeta+0.5,zeta*exp(1.5)))
+//    for (double zeta = -6; zeta <= 6; zeta+=0.5)
+    for (double zeta = -4.5; zeta <= 4.5; zeta+=1.5)
     {
-        randoms[3] = 1.-exp(-2.*zeta);
-        for (double y = -5; y <= 5; y+=1.)
+        const double ez = exp(zeta);
+        randoms[3] = ez/(ez+1./ez);
+//        for (double y = -6; y <= 6; y+=0.5)
+        for (double y = -5; y <= 5; y+=0.1)
         {
             const double ey = exp(y);
             randoms[4] = ey/(ey+1./ey);
