@@ -155,65 +155,51 @@ VegasAdaptor::VegasAdaptor(const UserInterface & UI,pointer_to_Integrand ptr,int
 
 
 VegasAdaptor::VegasAdaptor(const UserInterface & UI )
-{
-     //: MC, setting options
-     epsrel=UI.epsrel; 
-     epsabs=UI.epsabs;
-     verbose=UI.verbose;
-     mineval=UI.mineval;
-     maxeval=UI.maxeval;
-     nstart=UI.nstart;
-     nincrease=UI.nincrease;
-    number_of_dims = 0;
-    total_number_of_points_ =0;
-    
-    
-    epsrel_therm=UI.epsrel_therm;
-    epsabs_therm=UI.epsabs_therm;
-    mineval_therm=UI.mineval_therm;
-    maxeval_therm=UI.maxeval_therm;
-    nstart_therm=UI.nstart_therm;
-    nincrease_therm=UI.nincrease_therm;
-    
-    // initial run with thermalized variables
-    epsrel_cur=epsrel_therm;
-    epsabs_cur=epsabs_therm;
-    mineval_cur=mineval_therm;
-    maxeval_cur=maxeval_therm;
-    nstart_cur=nstart_therm;
-    nincrease_cur=nincrease_therm;
-    grid_file_name_ = "vegas_grid";
-
-    
-    
-}
+: epsrel(UI.epsrel), epsabs(UI.epsabs),
+epsrel_therm(UI.epsrel_therm), epsabs_therm(UI.epsabs_therm),
+epsrel_cur(UI.epsrel_therm), epsabs_cur(UI.epsabs_therm),
+verbose(UI.verbose),
+mineval(UI.mineval), maxeval(UI.maxeval),
+nstart(UI.nstart), nincrease(UI.nincrease), number_of_dims(0),
+mineval_therm(UI.mineval_therm), maxeval_therm(UI.maxeval_therm),
+nstart_therm(UI.nstart_therm), nincrease_therm(UI.nincrease_therm),
+mineval_cur(mineval_therm), maxeval_cur(maxeval_therm), nstart_cur(nstart_therm),
+nincrease_cur(nincrease_therm),
+the_hatch(NULL), my_integrand(NULL),
+total_number_of_points_(0),
+grid_file_name_("vegas_grid"),
+gridno(0),
+ff_vegas(),
+number_of_components(0),
+vegas_integral_output(), vegas_error_output(), vegas_prob_output(),
+vegas_weight(), vegas_iteration_number(), vegas_NOP_in_current_iteration(),
+NOP_in_previous_iteration(), vegas_iteration_number_old()
+{}
 
 
 
 bool VegasAdaptor::new_iteration_has_started()
 {
-     //:flushing ff_vegas[]
-     for(int p = 0; p <= number_of_components; ++p)
-		{
-		ff_vegas[p]=0.0;// cleaning up ff_vegas
-		}
-     //:checking whether this is the first point of new iteration
-     if (vegas_iteration_number!=vegas_iteration_number_old)
-     {
-     
-         
-          NOP_in_previous_iteration=vegas_NOP_in_current_iteration;
-          vegas_NOP_in_current_iteration = 1;
-          vegas_iteration_number_old=vegas_iteration_number;
-          
-          return true;
-     }
-     else 
-     {
-     total_number_of_points_ ++;
-          vegas_NOP_in_current_iteration++;
-          return false;
-     }
+    //:flushing ff_vegas[]
+    for(vector<double>::iterator p = ff_vegas.begin(); p != ff_vegas.end(); ++p)
+        *p = 0.;
+    //:checking whether this is the first point of new iteration
+    if (vegas_iteration_number!=vegas_iteration_number_old)
+    {
+
+
+        NOP_in_previous_iteration=vegas_NOP_in_current_iteration;
+        vegas_NOP_in_current_iteration = 1;
+        vegas_iteration_number_old=vegas_iteration_number;
+
+        return true;
+    }
+    else
+    {
+        total_number_of_points_++;
+        vegas_NOP_in_current_iteration++;
+        return false;
+    }
 }
 
 void VegasAdaptor::flush()
