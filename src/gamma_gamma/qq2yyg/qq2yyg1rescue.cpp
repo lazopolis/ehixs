@@ -18,41 +18,52 @@
 
 // qq2yyg1_rescue
 
-std::vector<typename qq2yyg1_rescue::alt> qq2yyg1_rescue::_options =
-vector<qq2yyg1_rescue::alt>({
-    [](const PSpoint& p, const bool t){
-        return qq2yyg1<dbl>::eval(p,t);
-    },
-    [](const PSpoint& p, const bool t){
-        return qq2yyg1<qpl>::eval(qq2yyg1<qpl>::PSpoint(p.s13,p.s14,p.s23,p.s24),t);
-    },
-    [](const PSpoint& p, const bool t){
-        return qq2yyg1<rtn>::eval(qq2yyg1<rtn>::PSpoint(p.s13,p.s14,p.s23,p.s24),t);
-    }
-});
-
-double qq2yyg1_rescue::eval(const PSpoint& p, const int i, const bool taylor)
+template<typename T>
+EpsExp qq2yyg1_rescue::evalT(const Momenta& ps, const bool t)
 {
-    return eval(p,taylor).getCoefficient(i);
+    return qq2yyg1<T>::eval(typename qq2yyg1<T>::PSpoint(ps),t);
 }
 
-
-EpsExp qq2yyg1_rescue::eval(const PSpoint& p, const bool taylor)
+std::vector<typename qq2yyg1_rescue::alt> qq2yyg1_rescue::_options()
 {
+    static std::vector<typename qq2yyg1_rescue::alt>* _opt =
+    new std::vector<typename qq2yyg1_rescue::alt>({
+        evalT<dbl>, evalT<qpl>, evalT<rtn>
+    });
+    return *_opt;
+}
+
+EpsExp qq2yyg1_rescue::eval(const Momenta& ps, const bool taylor)
+{
+    PSpoint p(ps);
     EpsExp mypoles = poles(p);
     EpsExp foo;
-    for (vector<alt>::iterator it = _options.begin(); it != _options.end(); ++it)
+    for (size_t i = 0; i != _options().size(); ++i)
     {
-        foo = (*it)(p,taylor);
+        alt f = _options()[i];
+        foo = f(ps,taylor);
         if (isfinite(foo.getCoefficient(0)) && _checkpoles(mypoles,32./3.*consts::Pi*foo)) return foo;
-        //cout << "no!" << endl;
+//        cout << "no!" << endl;
     }
+//    for (vector<alt>::iterator it = _options().begin(); it != _options().end(); ++it)
+//    {
+//        std::cout << "Computing" << std::endl;
+//        foo = (*it)(ps,taylor);
+//        std::cout << "done" << std::endl;
+//        if (isfinite(foo.getCoefficient(0)) && _checkpoles(mypoles,32./3.*consts::Pi*foo)) return foo;
+//        cout << "no!" << endl;
+//    }
     std::cerr << "Could not compute PS point with enough precision!!" << std::endl;
     std::cerr << "PS point: " << p.s13 << ", " << p.s14 << ", " << p.s23 << ", " << p.s24 << std::endl;
     std::cerr << "Catani poles   : " << mypoles << std::endl;
     std::cerr << "Matrix element : " << 32./3.*consts::Pi*foo << std::endl;
     throw;
     return foo;
+}
+
+double qq2yyg1_rescue::eval(const Momenta& p, const int i, const bool taylor)
+{
+    return (eval(p,taylor)).getCoefficient(i);
 }
 
 EpsExp qq2yyg1_rescue::polecoeffs(const double s15, const double s25)
@@ -90,9 +101,9 @@ EpsExp qq2yyg1_rescue::SC::polecoeffs()
 
 bool qq2yyg1_rescue::_checkpoles(const EpsExp& poles, const EpsExp& me)
 {
-    //cout << "Checking poles..." << poles << "   vs   " << me << "   ...   ";
+//    cout << "Checking poles..." << poles << "   vs   " << me << "   ...   ";
     /// \todo Move this in header
-    static double reltolerance = 1.e-4;
+    static double reltolerance = 1.e-5;
     for (int i = poles.minTerm(); i != poles.maxTerm()+1; ++i)
     {
         double x(poles.getCoefficient(i)), y(me.getCoefficient(i));
@@ -101,6 +112,6 @@ bool qq2yyg1_rescue::_checkpoles(const EpsExp& poles, const EpsExp& me)
         // Checking relative difference in normal case
         if (2.*abs(x-y)/(abs(x)+abs(y)) > reltolerance) return false;
     }
-    //cout << "yes!" << endl;
+//    cout << "yes!" << endl;
     return true;
 }

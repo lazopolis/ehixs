@@ -23,12 +23,12 @@ struct qq2yyg1_rescue
     qq2yyg1_rescue() = delete;
 
     typedef qq2yyg1<dbl>::PSpoint PSpoint;
-    using alt = EpsExp(*)(const PSpoint&, const bool);
+    using alt = EpsExp(*)(const Momenta&, const bool);
 
     /// Evaluate matrix element, term
-    static double eval(const PSpoint& p, const int i, const bool taylor = true);
+    static double eval(const Momenta& ps, const int i, const bool taylor = true);
     /// Evaluate matrix element, epsilon expansion
-    static EpsExp eval(const PSpoint& p, const bool taylor = true);
+    static EpsExp eval(const Momenta& ps, const bool taylor = true);
 
     struct LC
     {
@@ -56,7 +56,10 @@ struct qq2yyg1_rescue
 
 private:
 
-    static std::vector<alt> _options;
+    template<typename T>
+    static EpsExp evalT(const Momenta& ps, const bool t);
+
+    static std::vector<alt> _options();
 
     static bool _checkpoles(const EpsExp& poles, const EpsExp& me);
 
