@@ -1,6 +1,6 @@
 #include "exact_lo_inclusive.h"
 
-#include "chaplin/chaplin.h"
+#include "chaplin.h"
 
 
 #include<math.h>

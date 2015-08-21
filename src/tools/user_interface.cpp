@@ -358,29 +358,29 @@ int UserInterface::ParseFile(const string& in, bool verbose)
      return 0;
 }
 
-option * UserInterface::create_getopt_option_array()
+option* UserInterface::create_getopt_option_array()
 {
-     // create the long_option array
-     // it has #options elements
-     int N=int(options.size());
-     option *long_options = new option[N+1];
-     // feed them
-     for(unsigned i=0; i<N; ++i)
-          {
-          long_options[i].name = new char[strlen(options[i]->name.c_str())];
-          strcpy(const_cast<char*>(long_options[i].name), options[i]->name.c_str());
-          long_options[i].has_arg = options[i]->get_type();
-          long_options[i].flag = NULL;
-          long_options[i].val = options[i]->short_name;
-          }
-     // last element (viva old school C)
-     long_options[N+1].name = NULL;
-     long_options[N+1].has_arg = 0;
-     long_options[N+1].flag = NULL;
-     long_options[N+1].val = 0;
+    // create the long_option array
+    // it has #options elements
+    size_t N = options.size();
+    option* long_options = new option[N+1];
+    // feed them
+    for (size_t i = 0; i < N; ++i)
+    {
+        char* foo = new char[strlen(options[i]->name.c_str())+1];
+        strcpy(foo, options[i]->name.c_str());
+        long_options[i].name = foo;
+        long_options[i].has_arg = options[i]->get_type();
+        long_options[i].flag = NULL;
+        long_options[i].val = options[i]->short_name;
+    }
+    // last element (viva old school C)
+    long_options[N].name = NULL;
+    long_options[N].has_arg = 0;
+    long_options[N].flag = NULL;
+    long_options[N].val = 0;
 
-
-     return long_options;
+    return long_options;
 }
 
 string UserInterface::create_getopt_optdesc()

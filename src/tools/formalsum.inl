@@ -115,13 +115,13 @@ FormalSum<Type>& FormalSum<Type>::setCoefficient(const int term, const Type& val
         } else {
             _coefficients[static_cast<size_t>(term - minTerm())] = value;
             if ( term == maxTerm() ) {
-                while ( _coefficients.back() == Type() )
+                while ( !_coefficients.empty() && _coefficients.back() == Type() )
                 {
                     _coefficients.pop_back();
                 }
             }
             if ( term == minTerm() ) {
-                while ( _coefficients.front() == Type() && !_coefficients.empty() )
+                while ( !_coefficients.empty() && _coefficients.front() == Type() )
                 {
                     _coefficients.erase(_coefficients.begin());
                     ++_lowestTerm;

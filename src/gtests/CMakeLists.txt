@@ -181,12 +181,12 @@ add_executable(
             ihixs_as_series.cpp
             )
 target_link_libraries(
-                    ihixs_as_series
-                    ihixs_lib
-                    mincuba
-                    tools
-                    gtest
-                    )
+            ihixs_as_series
+            ihixs_lib
+            mincuba
+            tools
+            gtest
+            )
                     
 add_executable(
             ihixs_eft
@@ -226,21 +226,6 @@ target_link_libraries(
 
 if (CLN_FOUND)
 add_executable(
-            qq2yy_test
-            qq2yy_test.cpp
-)
-target_link_libraries(
-            qq2yy_test
-            gammagamma
-            kinematics
-            tools
-            chaplin
-            ${CLN_LIBRARIES}
-)
-endif (CLN_FOUND)
-
-if (CLN_FOUND)
-add_executable(
             qq2yyg_test
             qq2yyg_test.cpp
 )
@@ -248,7 +233,8 @@ target_link_libraries(
             qq2yyg_test
             gammagamma
             tools
-            chaplin
+            ${CHAPLIN_LIBRARY}
             ${CLN_LIBRARIES}
-)
+            quadmath
+            )
 endif (CLN_FOUND)
