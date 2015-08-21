@@ -1,6 +1,3 @@
-
-
-
 cmake_minimum_required(VERSION 2.6)
 project(ehixs)
 set (ehixstests_VERSION_MAJOR 0)
@@ -12,7 +9,7 @@ set (ehixstests_VERSION_MINOR 9)
 #   please edit below to set the absolute path for lhapdf 
 #   (don't forget to remove the '#' before 'SET(..)'
 #
-#   SET(LHAPDF_DIR my_lhapdf_directory)
+#   SET(LHAPDF_ROOT_DIR my_lhapdf_directory)
 #
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
@@ -22,7 +19,7 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/ehixs_config.h.in"
   "${PROJECT_BINARY_DIR}/ehixs_config.h"
   )
- 
+
 # add the binary tree to the search path for include files
 # so that we will find TutorialConfig.h
 include_directories("${PROJECT_BINARY_DIR}")
@@ -49,13 +46,16 @@ else (Fortran_COMPILER_NAME STREQUAL "gfortran")
   set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g")
 endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
 
-set (CMAKE_CXX_FLAGS " -std=c++11 -DGTEST_HAS_PTHREAD=0 -pthread")
+set (CMAKE_CXX_FLAGS "-std=c++11 -DGTEST_HAS_PTHREAD=0 -pthread")
 
 set (EHIXS_SRC_DIR ${PROJECT_SOURCE_DIR})
 
-set (CHAPLIN_SOURCES ${EHIXS_SRC_DIR}/chaplin)
-
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/modules)
+
+find_library(CHAPLIN_LIBRARY NAMES chaplin)
+get_filename_component(CHAPLIN_LIBRARY_DIRS ${CHAPLIN_LIBRARY} PATH)
+
+find_package(LHAPDF)
 
 find_package(cln)
 if (CLN_FOUND)
@@ -68,8 +68,6 @@ endif (NOT CMAKE_COMPILER_IS_GNUCC)
 add_definitions(-DWITH_GCC)
 
 include_directories(${EHIXS_SRC_DIR}
-                    ${CHAPLIN_SOURCES}
-                    ${LHAPDF_DIR}/include
                     ${CUBA_DIR}
                     ${EHIXS_SRC_DIR}/new_b_bbar
                     ${EHIXS_SRC_DIR}/gluon_fusion
@@ -85,7 +83,6 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/models
                     ${EHIXS_SRC_DIR}/core
                     ${EHIXS_SRC_DIR}/pdf
-                    ${EHIXS_SRC_DIR}/chaplin
                     ${EHIXS_SRC_DIR}/ihixs_dir
                     ${EHIXS_SRC_DIR}/../user_src
                     ${EHIXS_SRC_DIR}/../user_src/ggf_production
@@ -96,20 +93,22 @@ include_directories(${EHIXS_SRC_DIR}
                     ${EHIXS_SRC_DIR}/mincuba
                     ${EHIXS_SRC_DIR}/gtest-1.7.0/include
                     ${CLN_INCLUDE_DIR}
+                    ${LHAPDF_INCLUDE_DIR}
                     )
 
 link_directories(
-                ${LHAPDF_DIR}/lib/
-                ${CLN_LIBRARY_DIRS}
-               )
+                 ${LHAPDF_LIBRARY_DIRS}
+                 ${CLN_LIBRARY_DIRS}
+                 ${CHAPLIN_LIBRARY_DIRS}
+                )
 
+set(CMAKE_BUILD_TYPE Debug)
 
 #-------------------------------------------------------------------------------
 #
 #   core and peripheral libs
 #
 add_subdirectory(mincuba)
-add_subdirectory(chaplin)
 add_subdirectory(tools)
 add_subdirectory(models)
 add_subdirectory(core)
@@ -141,12 +140,6 @@ add_subdirectory(ihixs_dir)
 #-------------------------------------------------------------------------------
 
 #find_library(gtest ssl{GTEST_PATH})
-
-#find_library(LHAPDF ssl $ENV{LHAPDF_PATH})
-#This will check the environment for a variable named LHAPDF_PATH. 
-#If it exists, you can then use
-#target_link_libraries(ehixs ${LHAPDF})
-#If it does not, it can be set through the CMake GUI.
 
 set (GGF_LIBS gluon_fusion
             fortran_ggf 
@@ -187,11 +180,12 @@ set (LIBRARIES_FOR_GLOBAL_TESTS
 
 add_executable(ehixs  
             ${EHIXS_SRC_DIR}/ehixs.cpp)
-target_link_libraries(ehixs 
+target_link_libraries(ehixs
             ${LIBRARIES_FOR_GLOBAL_TESTS}
             ${CLN_LIBRARIES}
-)
-            
+            ${CHAPLIN_LIBRARY}
+            )
+
             
 add_executable(ihixs
             ${EHIXS_SRC_DIR}/ihixs.cpp)
@@ -207,4 +201,3 @@ target_link_libraries(ihixs
             LHAPDF
             mincuba)
 
-set(CMAKE_BUILD_TYPE Release)

@@ -15,3 +15,4 @@ run/*.png
 run/*.pyc
 doxygen/*
 ehixs.xcodeproj/*
+codelite/*
