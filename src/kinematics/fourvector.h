@@ -31,9 +31,9 @@ using namespace std;
 
 enum Axis : unsigned short
 {
-    x = 1,
-    y = 2,
-    z = 3
+    xaxis = 1,
+    yaxis = 2,
+    zaxis = 3
 };
 
 /// Cycles between axes
@@ -115,27 +115,27 @@ public:
     double abs(void) const;
 
     /// Return the azimuthal angle of the four-vector
-    double phi(const Axis a = Axis::z) const;
+    double phi(const Axis a = Axis::zaxis) const;
 
     /// Return the rapidity of the four-vector wrt the Axis a
-    double Y(const Axis a = Axis::z) const
+    double Y(const Axis a = Axis::zaxis) const
     {
         return 0.5*log( (operator[](0)+operator[](a)) / (operator[](0)-operator[](a)) );
     }
 
     /// Return the modulus of the rapidity of the four-vector wrt the Axis a
-    double absY(const Axis a = Axis::z) const
+    double absY(const Axis a = Axis::zaxis) const
     {
         return std::fabs(Y(a));
     }
 
     /// Return the pseudorapidity of the four-vector wrt the Axis a
-    double eta(const Axis a = Axis::z) const;
+    double eta(const Axis a = Axis::zaxis) const;
 
     /// Return the transverse component of the four-vector wrt the Axis a
-    double T(const Axis a = Axis::z) const
+    double T(const Axis a = Axis::zaxis) const
     {
-        return sqrt(pow(operator[](a+Axis::x),2.)+pow(operator[](a+Axis::y),2.));
+        return sqrt(pow(operator[](a+Axis::xaxis),2.)+pow(operator[](a+Axis::yaxis),2.));
     }
 
     /// Compute the JADE distance of two FourVectors
@@ -201,13 +201,13 @@ public:
 
     /// Boost along a specific Axis a with velocity b
     /// beware of the sign ambiguity in the velocity
-    FourVector& boost(const double& b, const Axis a = Axis::z);
+    FourVector& boost(const double& b, const Axis a = Axis::zaxis);
 
     /// Boost along a specific Axis a with rapidity eta
-    FourVector& rapBoost(const double& eta, const Axis a = Axis::z);
+    FourVector& rapBoost(const double& eta, const Axis a = Axis::zaxis);
 
     /// Rotate around the Axis a by an angle theta
-    FourVector& rotate(const double& theta, const Axis a = Axis::z);
+    FourVector& rotate(const double& theta, const Axis a = Axis::zaxis);
 
     /// Scalar product with another momentum
     double operator*(const FourVector& q) const

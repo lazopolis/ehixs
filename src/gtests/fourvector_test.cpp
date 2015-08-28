@@ -14,7 +14,7 @@ TEST(FourVectorTest,fourvectortest)
 {
     
     // Testing Axis
-    ASSERT_TRUE( Axis::x+Axis::x == Axis::y );
+    ASSERT_TRUE( Axis::xaxis+Axis::xaxis == Axis::yaxis );
 
     // Testing constructors (effectively later)
     FourVector v;
@@ -43,7 +43,7 @@ TEST(FourVectorTest,fourvectortest)
     ASSERT_TRUE( fabs(v.rapBoost(-Y)[3] - (n/(gamma*(1.+beta)))[3]) < DBL_EPSILON ) << "FourVector: error in rapidity boost.";
     ASSERT_TRUE( (v.boost(0.1, 0.1, 0.1).boost(-0.1, -0.1, -0.1)-ncpy).abs() < sqrt(2.)*DBL_EPSILON ) << "FourVector: generic boost is inconsistent.";
     ASSERT_TRUE( FourVector(0., 0., 1., 1.).abs() == sqrt(2.) ) << "FourVector: three-vector modulus does not work.";
-    ASSERT_TRUE( FourVector(0., 0., 0.3, sqrt(3.)).T(Axis::z) == 0.3 ) << "FourVector: problem when computing transverse component.";
+    ASSERT_TRUE( FourVector(0., 0., 0.3, sqrt(3.)).T(Axis::zaxis) == 0.3 ) << "FourVector: problem when computing transverse component.";
     ASSERT_TRUE( fabs(FourVector(4.4,1.2,2.4,0.).rapBoost(0.12345).Y() - 0.12345) < DBL_EPSILON ) << "FourVector: rapidity check failed.";
     ASSERT_TRUE( fabs(FourVector(0.5*sqrt(2),0.,0.5,0.5).Y() - FourVector(0.5*sqrt(2),0.,0.5,0.5).eta()) < DBL_EPSILON ) << "FourVector: rapidity and pseudo-rapidity do not correspond.";
     

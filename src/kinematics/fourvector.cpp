@@ -15,7 +15,7 @@
 Axis operator+(const Axis& a, const Axis& b)
 {
     const int foo = (static_cast<int>(a)+static_cast<int>(b))%3;
-    if ( foo == 0 ) return Axis::z;
+    if ( foo == 0 ) return Axis::zaxis;
     else return static_cast<Axis>(foo);
 }
 
@@ -51,8 +51,8 @@ double FourVector::abs(void) const
 double FourVector::phi(const Axis a) const
 {
     double res = 0.;
-    const Axis x = a+Axis::x;
-    const Axis y = a+Axis::y;
+    const Axis x = a+Axis::xaxis;
+    const Axis y = a+Axis::yaxis;
     // handle special values
     if(operator[](x)==0.)
     {
@@ -203,11 +203,11 @@ FourVector& FourVector::rotate(const double& theta, const Axis a)
     const double s = sin(theta);
     const double c = cos(theta);
     // Rotate
-    const double pi = c*operator[](a+Axis::x) - s*operator[](a+Axis::y);
-    const double pj = s*operator[](a+Axis::x) + c*operator[](a+Axis::y);
+    const double pi = c*operator[](a+Axis::xaxis) - s*operator[](a+Axis::yaxis);
+    const double pj = s*operator[](a+Axis::xaxis) + c*operator[](a+Axis::yaxis);
     // Set
-    operator[](a+Axis::x) = pi;
-    operator[](a+Axis::y) = pj;
+    operator[](a+Axis::xaxis) = pi;
+    operator[](a+Axis::yaxis) = pj;
     return *this;
 }
 
