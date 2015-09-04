@@ -196,7 +196,7 @@ void GammaGamma_qq_NNLO_RV::generateEvents(vector<double>& randoms)
     const double s12 = square(_p[1]+_p[2]);
     w /= s12;
     // Photon isolation criterion: measurement function
-    if (_cut()) {
+    if (_cut()||_tech_cut()) {
         _eventBox->push_back(Event(0.,_p));
         return;
     } else {
@@ -437,13 +437,27 @@ bool GammaGamma_qq_NNLO_RV::_cut(const bool verbose) const
     if (verbose) {
         if (_cone.inside(_p[3],_p[5])) cout << "Gluon is inside cone of photon 3." << endl;
         if (_cone.inside(_p[4],_p[5])) cout << "Gluon is inside cone of photon 4." << endl;
-        if (z*square(_p[1]+_p[2])<20.) cout << "The diphoton system is too soft." << endl;
+        if (square(_p[3]+_p[4])<20.*20.) cout << "The diphoton system is too soft." << endl;
         if (_p[3].T()<20.) cout << "Photon 3 does not have enough pT." << endl;
         if (_p[4].T()<20.) cout << "Photon 4 does not have enough pT." << endl;
     }
     if (
-        _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])
-        ||z*square(_p[1]+_p[2])<20.||_p[3].T()<20.||_p[4].T()<20.
+        _cone.inside(_p[3],_p[5])||_cone.inside(_p[4],_p[5])||Rdist(_p[3],_p[4])<0.5
+        ||square(_p[3]+_p[4])<20.*20.||_p[3].T()<20.||_p[4].T()<20.
+        ||square(_p[3]+_p[4])<(100.*100.)||square(_p[3]+_p[4])>(160.*160.)
+        )
+        return true;
+    else return false;
+
+}
+
+bool GammaGamma_qq_NNLO_RV::_tech_cut(const bool verbose) const
+{
+    if (verbose) {
+        if ( log(square(_p[1]+_p[5])*square(_p[2]+_p[5]))/log(0.1)>12.) cout << "Technical cut!" << endl;
+    }
+    if (
+        log(square(_p[1]+_p[5])*square(_p[2]+_p[5]))/log(0.1)>12.
         )
         return true;
     else return false;

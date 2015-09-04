@@ -1,15 +1,17 @@
 add_library(tools  
-            thehatch.cpp
-            vegas_adaptor.cpp
-            counterforge.cpp
-            histogram.cpp
-            cut.cpp
-            event.cpp
             bin.cpp
-            convolutions.cpp
-            user_interface.cpp
-            epsilon_series.cpp
-            constants.cpp
-            formalsum.cpp
             boxmaster.cpp
+            constants.cpp
+            convolutions.cpp
+            counterforge.cpp
+            cut.cpp
+            cutbox.cpp
+            epsilon_series.cpp
+            event.cpp
+            formalsum.cpp
+            histogram.cpp
+            option.cpp
+            thehatch.cpp
+            user_interface.cpp
+            vegas_adaptor.cpp
             )

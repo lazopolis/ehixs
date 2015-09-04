@@ -164,6 +164,7 @@ private:
 
     size_t _discard;
     bool _cut(const bool verbose = false) const;
+    bool _tech_cut(const bool verbose = false) const;
     static double _coll(
                  const double& z,
                  const double& lambda,
@@ -209,8 +210,6 @@ private:
     double _fullsoftcoll(const double& z, const double& lambda, const double& ratio) const;
     double _soft(const double& z, const double& lambda, const double& ratio) const;
     double _softcoll(const double& z, const double& lambda, const double& ratio) const;
-
-    const double _lambda_tech_cutoff = 1.e-16;
 
 };
 

@@ -25,16 +25,15 @@ perturbative_order = 1
 #
 #---------- histograms
 #
-#histogram = [HistogramHiggsPt,20,0,100.0]
-#histogram = [HistogramHiggsY,20,-5.0,5.0]
+histogram = [HistogramDiphotonMass,20,100.,160.]
+#histogram = [HistogramLeadingPhotonPt,20,0.,500.]
 #bin_by_bin_integration = true
 #
 #---------- cuts
 #
-cut = [GammaGamma_Q2,  20.0]
-cut = [GammaGamma_pT1, 20.0]
-cut = [GammaGamma_pT2, 20.0]
-#cut = [GammaGamma_pT1jet, 2.0]
+#cut = [GammaGamma_Q2,  20.0]
+#cut = [GammaGamma_pT1, 20.0]
+#cut = [GammaGamma_pT2, 20.0]
 #
 #---------- vegas variables
 #
@@ -42,14 +41,14 @@ cut = [GammaGamma_pT2, 20.0]
 #no_grid_adaptation = true
 epsrel_therm = 0.03
 epsabs_therm = 0.1
-nstart_therm = 10000
-mineval_therm = 100000
+nstart_therm = 50000
+mineval_therm = 500000
 maxeval_therm = 10000000
-nincrease_therm = 1000
+nincrease_therm = 5000
 #
-epsrel = 0.01
+epsrel = 0.001
 epsabs = 0.000001
-nstart = 100000
-mineval = 100000
+nstart = 500000
+mineval = 1000000
 nincrease = 0
 maxeval = 50000000

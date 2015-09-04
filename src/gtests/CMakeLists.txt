@@ -224,6 +224,16 @@ target_link_libraries(
             tools
 )
 
+add_executable(
+            cut_test
+            cut_test.cpp
+)
+target_link_libraries(
+            cut_test
+            kinematics
+            tools
+)
+
 if (CLN_FOUND)
 add_executable(
             qq2yyg_test

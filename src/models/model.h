@@ -2,7 +2,7 @@
 #define MODEL_H
 
 #include "particle.h"
-#include<vector>
+#include <vector>
 #include <stdlib.h> //: for exit()
 using namespace std;
 

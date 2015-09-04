@@ -164,7 +164,7 @@ int main(int argc, char**argv)
 //                                            )/pdbl.zb << "\t";
 
     std::cout << 2.*consts::Pi*productCoeff(
-                                            16./3.*qq2yyg1_rescue::eval(pdbl),
+                                            16./3.*qq2yyg1_rescue::eval(p),
                                             inverse(qq2yyg0(pdbl.zb,pdbl.t12,pdbl.t34,pdbl.u),3),
                                             0
                                             )/pdbl.zb << "\t";

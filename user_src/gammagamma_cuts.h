@@ -3,6 +3,8 @@
 
 #include "cut.h"
 
+/// \todo Review this, I think it's plain wrong
+
 // In order for the cross section to be finite,
 // it is necessary to ensure that the two photons
 // be isolated from each other and from the beam.

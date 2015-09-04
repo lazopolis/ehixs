@@ -43,6 +43,9 @@ EpsExp qq2yyg1_rescue::eval(const Momenta& ps, const bool taylor)
         alt f = _options()[i];
         foo = f(ps,taylor);
         if (isfinite(foo.getCoefficient(0)) && _checkpoles(mypoles,32./3.*consts::Pi*foo)) return foo;
+        // Try also the other Taylor expansion option
+        foo = f(ps,!taylor);
+        if (isfinite(foo.getCoefficient(0)) && _checkpoles(mypoles,32./3.*consts::Pi*foo)) return foo;
 //        cout << "no!" << endl;
     }
 //    for (vector<alt>::iterator it = _options().begin(); it != _options().end(); ++it)
@@ -53,8 +56,10 @@ EpsExp qq2yyg1_rescue::eval(const Momenta& ps, const bool taylor)
 //        if (isfinite(foo.getCoefficient(0)) && _checkpoles(mypoles,32./3.*consts::Pi*foo)) return foo;
 //        cout << "no!" << endl;
 //    }
+    std::cerr.precision(15);
     std::cerr << "Could not compute PS point with enough precision!!" << std::endl;
-    std::cerr << "PS point: " << p.s13 << ", " << p.s14 << ", " << p.s23 << ", " << p.s24 << std::endl;
+    std::cerr << "PS point       : " << p.s13 << ", " << p.s14 << ", " << p.s23 << ", " << p.s24 << std::endl;
+    std::cerr << "PS point vars  : " << p.zb << ", " << p.t12 << ", " << p.t34 << ", " << p.u << std::endl;
     std::cerr << "Catani poles   : " << mypoles << std::endl;
     std::cerr << "Matrix element : " << 32./3.*consts::Pi*foo << std::endl;
     throw;
@@ -99,18 +104,16 @@ EpsExp qq2yyg1_rescue::SC::polecoeffs()
 
 // qq2yyg1_rescue
 
-bool qq2yyg1_rescue::_checkpoles(const EpsExp& poles, const EpsExp& me)
+bool qq2yyg1_rescue::_checkpoles(const EpsExp& poles, const EpsExp& me, const double reltol)
 {
 //    cout << "Checking poles..." << poles << "   vs   " << me << "   ...   ";
-    /// \todo Move this in header
-    static double reltolerance = 1.e-5;
     for (int i = poles.minTerm(); i != poles.maxTerm()+1; ++i)
     {
         double x(poles.getCoefficient(i)), y(me.getCoefficient(i));
         // Trying to catch the exceptional case where a pole vanishes analytically
-        if (x==0 && y!=0 && y > reltolerance*me.getCoefficient(i+1)) return false;
+        if (x==0 && y!=0 && y > reltol*me.getCoefficient(i+1)) return false;
         // Checking relative difference in normal case
-        if (2.*abs(x-y)/(abs(x)+abs(y)) > reltolerance) return false;
+        if (2.*abs(x-y)/(abs(x)+abs(y)) > reltol) return false;
     }
 //    cout << "yes!" << endl;
     return true;

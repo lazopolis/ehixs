@@ -73,7 +73,10 @@ EpsExp qq2yyg1<T>::eval(const PSpoint& p, const bool t)
 template<typename T>
 const double& qq2yyg1<T>::LC::factor()
 {
-    return QCD::CA;
+    static double* _factor = new double(QCD::CA);
+    return *_factor;
+    //Unfortunately "return QCD::CA" does not work when optimization is on
+    //The compiler inlines this and then does not find the symbol =(
 }
 
 template<typename T>
@@ -540,24 +543,28 @@ array<typename qq2yyg1<T>::Master,3>& qq2yyg1<T>::Nf::box::masters()
 
 // Explicitly compute stuff once to enforce compilation
 
-EpsExp foomdblLCbub = qq2yyg1<dbl>::LC::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomqplLCbub = qq2yyg1<qpl>::LC::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomrtnLCbub = qq2yyg1<rtn>::LC::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomdblLCbox = qq2yyg1<dbl>::LC::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomqplLCbox = qq2yyg1<qpl>::LC::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomrtnLCbox = qq2yyg1<rtn>::LC::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomdblSCbub = qq2yyg1<dbl>::SC::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomqplSCbub = qq2yyg1<qpl>::SC::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomrtnSCbub = qq2yyg1<rtn>::SC::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomdblSCbox = qq2yyg1<dbl>::SC::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomqplSCbox = qq2yyg1<qpl>::SC::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomrtnSCbox = qq2yyg1<rtn>::SC::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomdblNfbub = qq2yyg1<dbl>::Nf::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomqplNfbub = qq2yyg1<qpl>::Nf::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomrtnNfbub = qq2yyg1<rtn>::Nf::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomdblNfbox = qq2yyg1<dbl>::Nf::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomqplNfbox = qq2yyg1<qpl>::Nf::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
-EpsExp foomrtnNfbox = qq2yyg1<rtn>::Nf::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+static template class qq2yyg1<dbl>;
+static template class qq2yyg1<qpl>;
+static template class qq2yyg1<rtn>;
+
+//EpsExp foomdblLCbub = qq2yyg1<dbl>::LC::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomqplLCbub = qq2yyg1<qpl>::LC::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomrtnLCbub = qq2yyg1<rtn>::LC::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomdblLCbox = qq2yyg1<dbl>::LC::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomqplLCbox = qq2yyg1<qpl>::LC::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomrtnLCbox = qq2yyg1<rtn>::LC::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomdblSCbub = qq2yyg1<dbl>::SC::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomqplSCbub = qq2yyg1<qpl>::SC::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomrtnSCbub = qq2yyg1<rtn>::SC::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomdblSCbox = qq2yyg1<dbl>::SC::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomqplSCbox = qq2yyg1<qpl>::SC::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomrtnSCbox = qq2yyg1<rtn>::SC::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomdblNfbub = qq2yyg1<dbl>::Nf::bub::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomqplNfbub = qq2yyg1<qpl>::Nf::bub::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomrtnNfbub = qq2yyg1<rtn>::Nf::bub::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomdblNfbox = qq2yyg1<dbl>::Nf::box::master(1,qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomqplNfbox = qq2yyg1<qpl>::Nf::box::master(1,qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));
+//EpsExp foomrtnNfbox = qq2yyg1<rtn>::Nf::box::master(1,qq2yyg1<rtn>::PSpoint(0.1,0.2,0.3,0.4));
 
 EpsExp foodbl = qq2yyg1<dbl>::eval(qq2yyg1<dbl>::PSpoint(0.1,0.2,0.3,0.4));
 EpsExp fooqpl = qq2yyg1<qpl>::eval(qq2yyg1<qpl>::PSpoint(0.1,0.2,0.3,0.4));

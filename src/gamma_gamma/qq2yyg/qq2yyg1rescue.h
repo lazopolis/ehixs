@@ -61,7 +61,7 @@ private:
 
     static std::vector<alt> _options();
 
-    static bool _checkpoles(const EpsExp& poles, const EpsExp& me);
+    static bool _checkpoles(const EpsExp& poles, const EpsExp& me, const double reltol = 1.e-5);
 
 };
 
