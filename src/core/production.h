@@ -15,15 +15,26 @@
 #include "model.h"
 #include "cut.h"
 #include "interface_to_amplitudes.h"
-#include "user_interface.h"
+#include "option.h"
 //#include "luminosity.h"
 #include "thehatch.h"
 #include "event.h"
 #include "xsectionmaker.h"
 using namespace std;
 
+class IProduction : protected OptionSet
+{
+    
+    IProduction(){
+        /// \todo make this int?
+        _opts().push_back(new Option<string>("sector_for_production",'s',"number of the production sector to run: attention: the id number depends on other user defined parameters, like the channel, the perturbative order, the pole etc.  ",Need::Required,sector_for_production,"none"));
+    };
+    
+    string sector_for_production;
+};
+
 ///\class Production
-class Production
+class Production : protected IProcess
 {
 
 public:
@@ -44,7 +55,7 @@ public:
 
     /// @}
 
-	void Configure(const UserInterface& UI);
+	void Configure();
 
     bool is_sector_defined() const
     {
@@ -89,7 +100,7 @@ protected:
 
 private:
 
-    void find_the_xs(const UserInterface& UI);
+    void find_the_xs();
 
 };
 

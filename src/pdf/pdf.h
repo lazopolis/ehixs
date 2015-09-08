@@ -8,9 +8,9 @@
 #include "interpolator.h"
 #include "cached_interpolator.h"
 #include "splitting_kernels.h"
-#include "user_interface.h"
-#include<sstream>
+#include <sstream>
 using namespace std;
+
 struct pdf_desc
 {
     pdf_desc(int x):i(x),j(x),n_as(0),n_eps(0){};

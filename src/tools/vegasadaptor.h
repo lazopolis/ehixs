@@ -28,13 +28,31 @@ typedef int (*pointer_to_Integrand)(
     void* therun, double* weight, int* iteration_number
 );
 
-struct IVegas : public OptionSet
+struct IVegas : protected OptionSet
 {
     double epsrel, epsabs, epsrel_therm, epsabs_therm;
-    size_t maxeval, mineval, nstart, nincrease;
-    size_t maxeval_therm, mineval_therm, nstart_therm, nincrease_therm;
+    size_t mineval, maxeval, nstart, nincrease;
+    size_t mineval_therm, maxeval_therm, nstart_therm, nincrease_therm;
     bool   bin_by_bin_integration, no_grid_adaptation;
     int    verbose;
+    
+    IVegas()
+    : OptionSet()
+    {
+        _opts.push_back(new Option<double>("epsrel",0,"Vegas: target relative error",Need::Required,epsrel,0.01));
+        _opts.push_back(new Option<double>("epsabs",0,"Vegas: target absolute error",Need::Required,epsabs,1.e-10));
+        _opts.push_back(new Option<double>("epsrel_therm",0,"Vegas: target relative error for thermalization phase",Need::Required,epsrel_therm,0.01));
+        _opts.push_back(new Option<double>("epsabs_therm",0,"Vegas: target absolute error for thermalization phase",Need::Required,epsabs_therm,1e-10));
+        _opts.push_back(new Option<size_t>("mineval",0,"Vegas: minimum points to be evaluated",Need::Required,mineval,200000));
+        _opts.push_back(new Option<size_t>("maxeval",0,"Vegas: maximum points to be evaluated",Need::Required,maxeval,50000000));
+        _opts.push_back(new Option<size_t>("nstart",0,"Vegas: # of points for first iteration",Need::Required,nstart,20000));
+        _opts.push_back(new Option<size_t>("nincrease",0,"Vegas: # of points for step increase",Need::Required,nincrease,1000));
+        _opts.push_back(new Option<size_t>("mineval_therm",0,"Vegas: minimum points to be evaluated in thermalization phase",Need::Required,mineval_therm,1000));
+        _opts.push_back(new Option<size_t>("maxeval_therm",0,"Vegas: maximum points to be evaluated in thermalization phase",Need::Required,maxeval_therm,1000));
+        _opts.push_back(new Option<size_t>("nstart_therm",0,"Vegas: # of points for first iteration in thermalization phase",Need::Required,nstart_therm,1000));
+        _opts.push_back(new Option<size_t>("nincrease_therm",0,"Vegas: # of points for step increase in thermalization phase",Need::Required,nincrease_therm,0));
+        _opts.push_back(new Option<int>("verbose",0,"level of verbosity",Need::Required,verbose,2));
+    }
 };
 
 /// \todo this is how it should be organized, left for later because of compatibility with CHistogram

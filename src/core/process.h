@@ -2,8 +2,6 @@
 #define PROCESS_H
 
 
-//#include "CConstants.h"
-
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -28,7 +26,7 @@ using namespace std;
 #include "cut.h"
 
 //#include "Interface_to_amplitudes.h"
-#include "user_interface.h"
+#include "option.h"
 //#include "luminosity.h"
 #include "thehatch.h"
 #include "decay.h"
@@ -46,46 +44,75 @@ class AverageObservable;
 //#include "momenta.h"
 #include "histogram.h"
 
+class IProcess : protected OptionSet
+{
 
-class Process
+protected:
+
+    /// \name Data Members
+    /// @{
+    
+    bool final_iteration_;
+    bool no_grid_adaptation_;
+    bool bin_by_bin_integration_;
+    int current_bin_;
+    Production* my_production;
+    /// \todo make Decay stuff vectors
+    int decay_particle_id_;
+    Decay* my_decay;
+    
+    /// @}
+    
+public:
+    
+    /// \name Constructors and destructor
+    /// @{
+    
+    IProcess()
+    : OptionSet()
+    {
+        _opts().push_back(new Option<string>("production",0,"production process",Need::Required,production,"ggF"));
+        _opts().push_back(new Option<string>("decay",0,"decay process",Need::Required,decay,""));
+        _opts().push_back(new Option<bool>("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)",Need::Optional,bin_by_bin_integration,false));
+        _opts().push_back(new Option<bool>("no_grid_adaptation",0,"switch off grid adaptation in Vegas (default is on)",Need::Optional,no_grid_adaptation,false));
+    };
+    
+    virtual ~IProcess(){};
+    
+    /// @}
+    
+};
+
+class Process : protected IProcess
 {
 public://methods
     Process(const UserInterface& UI);
     void  perform();
     //: public because it has to be accessed by Integrand
     void  Evaluate_integral(const double xx[]);
-	
+    
     double total_xs(){return Vegas.vegas_integral_output[0];}
     double total_err(){return Vegas.vegas_error_output[0];}
-    vector<string> give_sector_names(const string & pleft,
-                                     const string & pright,
-                                     const string & myorder,
-                                     const int&,const string & );
+    vector<string> give_sector_names(const string& pleft,
+                                     const string& pright,
+                                     const string& myorder,
+                                     const int&, const string&);
     int number_of_active_histograms(){return _histograms->size();}
     CHistogram* ptr_to_histogram_with_id(unsigned m)
-                    {return _histograms->ptr_to_histogram_with_id(m);}
+    {return _histograms->ptr_to_histogram_with_id(m);}
     
 public://data
     VegasAdaptor Vegas;
     //: public so that histograms from different sectors can be compared
     
 private://data
-    UserInterface my_UI;
     TheHatch the_hatch;
     HistogramBox* _histograms;
     
-    Decay* my_decay;
-    Production* my_production;
     fstream my_event_stream;
     bool events_writing_;
     TimeKeeper myclock_;
     
-    int decay_particle_id_;
-    
-    bool final_iteration_;
-    bool no_grid_adaptation_;
-    bool bin_by_bin_integration_;
-    int current_bin_;
     CHistogram* current_histogram_;
     //ostringstream vegas_info_;
     
@@ -106,15 +133,15 @@ private://methods
     void book_decay_event(Event *);
     void print_output_intermediate();
     void print_output();
-	bool sectors_are_defined_in_production_and_decay();
-	void calculate_dimension_of_integration();
+    bool sectors_are_defined_in_production_and_decay();
+    void calculate_dimension_of_integration();
     bool production_is_defined;
     bool decay_is_defined;
     //: event printing
     void open_event_filename();
     void close_event_filename();
     void write_event(const CombinedEvent& the_event);
-
+    
 };
 
 

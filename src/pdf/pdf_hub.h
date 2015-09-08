@@ -1,28 +1,50 @@
 #ifndef PDFHUB_H
 #define PDFHUB_H
 
-#include "user_interface.h"
+#include "option.h"
 #include "pdf.h"
 
 #include<vector>
 using namespace std;
 
+class IPDFHub : protected OptionSet
+{
+    string pdf_provider;
+    string pdf_set;
+    double number_of_flavours;
+
+    IPDFHub()
+    {
+        _opts().push_back(new Option<string>("pdf_provider",0,"pdf provider",Need::Required,pdf_provider,"none"));
+        /// \todo Nf double? Seriously?
+        _opts().push_back(new Option<double>("number_of_flavours",0,"number of active flavors (do not change)",Need::Required,number_of_flavours,5.0));
+//        _opts().push_back(new Option<string>("Fleft",0,"specifies the flavor of the parton on left beam",Need::Required,Fleft, "none"));
+//        _opts().push_back(new Option<string>("Fright",0,"specifies the flavor of the parton on right beam",Need::Required,Fright, "none"));
+        _opts().push_back(new Option<string>(
+                                             "pdf_set",0,
+                                             "choose a specific pdf set name (one from the LHAPDF6 list found at\
+                                             lhapdf.hepforge.org/pdfsets.html). This set will be used irrespectively of order for the entire computation. This option is incompatible with pdf_provider. ",
+                                             Need::Required,
+                                             pdf_set,
+                                             "none"));
+    }
+
+};
+
 class PDFHub
 {
 public:
-    PDFHub(const UserInterface& UI);
+    PDFHub();
     CPDF* construct_or_locate_pdf(const pdf_desc&);
     vector<double> calculate_pdf_error(const vector<double>& result);
     int size(){return grids_->size();}
     vector<double> alpha_s_at_mz(){return _alpha_s_at_mz;}
 private:
-    string provider_;
     bool pdf_error_;
     unsigned pert_order_;
     //unsigned number_of_members_;
     double muf_;
     double mur_;
-    double Nf_;
     vector<double> _alpha_s_at_mz;
     PDFGrid* grids_;
     vector<CPDF*> all_pdfs_;

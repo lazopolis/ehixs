@@ -23,7 +23,7 @@ const CModel& Production::model()
    return the_xs_->model;
 }
 
-void Production::Configure(const UserInterface& UI)
+void Production::Configure()
 {
     if (sectors.empty()) cerr << "\n[Production] Warning: sectors is empty!" << endl;
     if (UI.info)
@@ -34,7 +34,7 @@ void Production::Configure(const UserInterface& UI)
     else
     {
         //if (the_xs_ != NULL) delete the_xs_;
-        find_the_xs(UI);
+        find_the_xs();
         if (is_sector_defined())
         {
             ConfigureCuts();
@@ -47,16 +47,16 @@ void Production::Configure(const UserInterface& UI)
 }
 
 
-void Production::find_the_xs(const UserInterface& UI)
+void Production::find_the_xs()
 {
-    if (UI.sector_for_production=="none")
+    if (sector_for_production=="none")
     {
         cout<<"\n[find_sector] Error: you haven't declared a sector_for_production"<<endl;
         throw "\n[find_sector] Can't proceed!\n";
     }
     else
     {
-        size_t sector_id=atoi(UI.sector_for_production.c_str());
+        size_t sector_id=atoi(sector_for_production.c_str());
         if (sector_id<sectors.size())
         {
             the_xs_ = sectors[sector_id]->create(UI);

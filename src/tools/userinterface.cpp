@@ -7,11 +7,6 @@ UserInterface::UserInterface()
 {
     options.push_back(new Option<double>("Etot",0,"COM energy of the collider in GeV",Need::Required,&Etot,7000.0));
     options.push_back(new Option<double>("m_higgs",0,"higgs mass in GeV","Required",&m_higgs,125.0));
-    options.push_back(new Option<double>("epsrel",0,"vegas argument: target relative error","Required",&epsrel,0.01));
-    options.push_back(new Option<double>("epsabs",0,"vegas argument: target absolute error","Required",&epsabs,1e-10));
-
-    options.push_back(new Option<double>("epsrel_therm",0,"vegas argument: target relative error for thermalization phase","Required",&epsrel_therm,0.01));
-    options.push_back(new Option<double>("epsabs_therm",0,"vegas argument: target absolute error for thermalization phase","Required",&epsabs_therm,1e-10));
 
     options.push_back(new Option<double>("muf_over_mhiggs",0,"mu_f / m_h","Required",&muf_over_mhiggs,1.0));
     options.push_back(new Option<double>("mur_over_mhiggs",0,"mu_r / m_h","Required",&mur_over_mhiggs,1.0));
@@ -19,22 +14,14 @@ UserInterface::UserInterface()
     options.push_back(new Option<double>("mur",0,"mur (do not use this for Higgs production)","Required",&mur,80.0));
     options.push_back(new Option<double>("muf",0,"muf (do not use this for Higgs production)","Required",&muf,80.0));
 
-    options.push_back(new Option<double>("number_of_flavours",0,"number of active flavors (do not change)","Required",&number_of_flavours,5.0));
-
     options.push_back(new Option<double>("astar_m3",0,")virtuality of photon no 3","Required",&astar_m3,5.0));
     options.push_back(new Option<double>("astar_m4",0,")virtuality of photon no 4","Required",&astar_m4,5.0));
 
 
-    options.push_back(new Option<string>("production",0,"production process","Required",&production,"ggF"));
-    options.push_back(new Option<string>("decay",0,"decay process","Required",&decay,""));
-    options.push_back(new Option<string>("pdf_provider",0,"pdf provider","Required",&pdf_provider,"none"));
     options.push_back(new Option<string>("sector_name",0,"name of the production sector to run","Required",&sector_name,"none"));
-    options.push_back(new Option<string>("sector_for_production",'s',"number of the production sector to run: attention: the id number depends on other user defined parameters, like the channel, the perturbative order, the pole etc.  ","Required",&sector_for_production,"none"));
     options.push_back(new Option<string>("input_filename",'i',"filename to use as runcard","Required",&input_filename,"runcard"));
     options.push_back(new Option<string>("output_filename",'o',"filename to write output","Required",&output_filename,"ehixs_output"));
     options.push_back(new Option<string>("matrix_element_approximation",0,"effective vs exact field theory for Gluon Fusion","Required",&matrix_element_approximation,"effective"));
-    options.push_back(new Option<string>("Fleft",0,"specifies the flavor of the parton on left beam","Required",&Fleft, "none"));
-    options.push_back(new Option<string>("Fright",0,"specifies the flavor of the parton on right beam","Required",&Fright, "none"));
     options.push_back(new Option<string>("leptonic_decay_mode_in_wwzz",0,"specifies the decay mode in WWZZ decay: eemumu,llll, lvlv, lvlv_interference","Required",&leptonic_decay_mode_in_wwzz, "none"));
     options.push_back(new Option<string>("xml_info",0,"file for xml-formatted info (only active with --info) ","Required",&xml_info, "none"));
     options.push_back(new Option<string>(
@@ -49,27 +36,6 @@ UserInterface::UserInterface()
                                          "Required",
                                          &rr_treatment,
                                          "none"));
-    options.push_back(new Option<string>(
-                                         "pdf_set",0,
-                                         "choose a specific pdf set name (one from the LHAPDF6 list found at\
-                                         lhapdf.hepforge.org/pdfsets.html). This set will be used irrespectively of order for the entire computation. This option is incompatible with pdf_provider. ",
-                                         "Required",
-                                         &pdf_set,
-                                         "none"));
-
-    options.push_back(new Option<int>("verbose",0,"level of verbosity","Required",&verbose,2));
-    options.push_back(new Option<int>("mineval",0,"vegas argument: minimum points to be evaluated","Required",&mineval,200000));
-    options.push_back(new Option<int>("maxeval",0,"vegas argument: maximum points to be evaluated","Required",&maxeval,50000000));
-    options.push_back(new Option<int>("nstart",0,"vegas argument: #of points for first iteration","Required",&nstart,20000));
-    options.push_back(new Option<int>("nincrease",0,"vegas argument: # of points for step increase","Required",&nincrease,1000));
-
-
-    options.push_back(new Option<int>("mineval_therm",0,"vegas argument: minimum points to be evaluated  for thermalization phase","Required",&mineval_therm,1000));
-    options.push_back(new Option<int>("maxeval_therm",0,"vegas argument: maximum points to be evaluated for thermalization phase","Required",&maxeval_therm,1000));
-    options.push_back(new Option<int>("nstart_therm",0,"vegas argument: #of points for first iteration for thermalization phase","Required",&nstart_therm,1000));
-    options.push_back(new Option<int>("nincrease_therm",0,"vegas argument: # of points for step increase  for thermalization phase","Required",&nincrease_therm,0));
-
-
     options.push_back(new Option<int>("perturbative_order",0,
                                       "a_s perturbative order (0,1,2) for PDF choice and mass evolution",
                                       "Required",
@@ -107,8 +73,6 @@ UserInterface::UserInterface()
                                        "Optional",
                                        &only_ew_h_j,false));
     options.push_back(new Option<bool>("dummy_process",0,"indicate that this is a dummy_process, i.e. without a sector_name defined (used to get  a vector of sector names, for tests etc.)","Optional",&dummy_process, false));
-    options.push_back(new Option<bool>("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)","Optional",&bin_by_bin_integration, false));
-    options.push_back(new Option<bool>("no_grid_adaptation",0,"switch off grid adaptation in Vegas (default is on)","Optional",&no_grid_adaptation, false));
     options.push_back(new Option<bool>("write_events",0,"write events to file (default is off)","Optional",&write_events, false));
     options.push_back(new Option<bool>("convolutions_by_interpolation",0,"convolutions by interpolation, as opposed to \'on the fly\' which requires on more monte carlo variable","Optional",&write_events, true));
 
@@ -122,7 +86,7 @@ UserInterface::UserInterface()
     options.push_back(new HistogramOption("histogram",0,"generic histogram option","Required",my_generic_cut,default_hist));
 }
 
-void UserInterface::ParseInput(int argc, char * const *argv)
+void UserInterface::ParseInput(int argc, char* const *argv)
 {
     // parse command line arguments
     vector<vector<string> > parsed_options = ParseCmd(argc, argv, true);
@@ -247,31 +211,14 @@ void UserInterface::ParseInput(int argc, char * const *argv)
 }
 
 
-void UserInterface::RunSanityChecks()
-{
-    CheckIf(perturbative_order >= alpha_s_power-2,
-            "you requested a perturbative order smaller than the power of a_s.");
-}
-
-void UserInterface::CheckIf(bool condition, const string& error_message)
-{
-    if (not condition)
-    {
-        cout<<"\n[ehixs] Sanity check failed: "<<error_message;
-        cout<<"\n[ehixs] ehixs has to exit!"<<endl<<endl;
-        exit(1);
-    }
-}
-
 int UserInterface::ParseFile(const string& in, bool verbose)
 {
     // oooopen
-    std::fstream file(in.c_str(), std::fstream::in);
-
+    fstream file(in.c_str(), fstream::in);
 
     // and do the job
     if(!file.good()) {
-        std::cout << "[ehixs] Tried to open runcard file named: " << in << " but failed!\nThe program will use default parameters overwritten by command line options." << std::endl;
+        cout << "[ehixs] Failed to open runcard file named: " << in << " !\nThe program will use default parameters overwritten by command line options." << endl;
         return 1;
     }
     else
@@ -283,7 +230,7 @@ int UserInterface::ParseFile(const string& in, bool verbose)
         for(unsigned c=1; !file.eof(); ++c)
         {
             // convert to string
-            std::string s;
+            string s;
             // ...discard spaces and comments
             for(char *p=buff; *p!='\0'; ++p)
                 if(*p == '#')
@@ -309,7 +256,7 @@ int UserInterface::ParseFile(const string& in, bool verbose)
                 {
                     // valid line !
                     bool did=false;
-                    for(unsigned i=0; i<options.size(); ++i)
+                    for(size_t i=0; i<options.size(); ++i)
                         if(s.substr(0, pos) == options[i]->name)
                         {
                             options[i]->set(s.substr(pos+1, s.npos));
@@ -366,16 +313,16 @@ option* UserInterface::create_getopt_option_array()
 string UserInterface::create_getopt_optdesc()
 {
     // create short options descriptor
-    std::string optdesc;
-    for(unsigned i=0; i<options.size(); ++i)
+    string optdesc;
+    for (size_t i=0; i < options.size(); ++i)
     {
         // help and version need special treatment later
-        if(options[i]->short_name!=0) //: 0 is the default value for short_name when there is no short name
+        if (options[i]->short_name!=0) //: 0 is the default value for short_name when there is no short name
         {
             // feed the optiondesc string
             optdesc += options[i]->short_name;
-            if(options[i]->get_type() == required_argument) optdesc += ":";
-            if(options[i]->get_type() == optional_argument) optdesc += "::";
+           if (options[i]->get_type() == Need::Required) optdesc += ":";
+           if ((*it)->need == Need::Optional) optdesc += "::";
         }
     }
     return optdesc;
@@ -404,105 +351,56 @@ void UserInterface::PrintAllOptions() const
     cout<<endl;
 }
 
-vector<vector<string> > UserInterface::ParseCmd(int argc,  char * const *argv, bool locverbose)
+void UserInterface::parseCmd(int argc, char* const *argv)
 {
-    cout<<"[ehixs] command line args: ";
-    for (int i=0;i<argc;i++) cout<<argv[i]<<" ";
-    cout<<endl;
-    // getopt quirckiness:
-    char * const * argv_for_getopt = argv;
-    // create the long_option array
-    option *long_options = create_getopt_option_array();
-    // create short options descriptor
-    string optdesc=create_getopt_optdesc();
-    // we will put all found options in parsed_options
-    vector<vector<string> > parsed_options;
-
-    // Get all options with getopt_long
-    int option_index=0;
-    int c;
-    // reinit global (?) vars... (i do not get it but seems to work)
-
-    optarg=0;
-    optind=0;
-    //: getopt_long returns a character equal to
-    //: 0 for any other LONG option
-    //: -1 for the end of parsing
-    //: 'x' for any short option corresponding to short-name='x'
-    //: in the case 0, the variable option_index holds
-    //: the position of the recognized option in the long_option array
-    while((c = getopt_long(argc, argv_for_getopt, optdesc.c_str(), long_options, &option_index)) != -1)
-    {
-        // do flag
-        bool did=false;
-        switch (c)
-        {
-                // --long_option
-            case 0:
-                // loop over other possibilities
-                for(unsigned i=0; i<options.size(); ++i)
-                {
-                    // check if indeed the name in long_options is the same as the name in options
-                    if( options[i]->name == long_options[option_index].name )
-                    {
-                        vector<string> loc_parsed_opt;
-                        loc_parsed_opt.push_back(options[i]->name);
-                        did = true;
-
-
-                        // for normal options
-                        if(optarg!=0)
-                        {
-                            string locarg = optarg;
-                            loc_parsed_opt.push_back(optarg);
-                        }
-                        // for flags
-                        else loc_parsed_opt.push_back("true");//options[i]->set("1");
-                        parsed_options.push_back(loc_parsed_opt);
-                        break;
-                    }
-                }
-
-                break;
-
-            case '?':// getopt_long already printed an error message.
-            {stringstream msg;
-                msg << "Unrecognised command line option";
-                throw(msg.str());
-
-                //exit(1);
-                break;}
-                // short options
-            default:
-                // loop over expected short options
-                for(unsigned i=0; i<options.size(); ++i)
-                {
-                    if( c == options[i]->short_name )
-                    {
-                        vector<string> loc_parsed_opt;
-                        loc_parsed_opt.push_back(options[i]->name);
-                        did = true;
-                        // for normal options
-                        if(optarg)
-                        {
-                            loc_parsed_opt.push_back(optarg);
-                        }
-                        // for flags
-                        else loc_parsed_opt.push_back("true");
-                        parsed_options.push_back(loc_parsed_opt);
-                        break;
-                    }
-                }
-        }
-    }
-
-
-    return parsed_options;
+   cout << "[ehixs] command line args: ";
+   for (int i = 0; i < argc; ++i) cout << argv[i] << " ";
+   cout << endl;
+   // getopt quirckiness:
+   char* const *argv_for_getopt = argv;
+   // create the long_option array
+   option* long_options = create_getopt_option_array();
+   // create short options descriptor
+   string optdesc = create_getopt_optdesc();
+   
+   // Get all options with getopt_long
+   int opti=0;
+   int c;
+   // reinit global (?) vars... (i do not get it but seems to work)
+   
+   optarg=0;
+   optind=0;
+   //: getopt_long returns a character equal to
+   //: 0 for any other LONG option
+   //: -1 for the end of parsing
+   //: 'x' for any short option corresponding to short-name='x'
+   //: in the case 0, the variable option_index holds
+   //: the position of the recognized option in the long_option array
+   while ( (c = getopt_long(argc, argv_for_getopt, optdesc.c_str(), long_options, &opti)) != -1 )
+   {
+      // do flag
+      bool did = false;
+      switch (c)
+      {
+         // long option
+         case 0:
+            BaseOption* foo = find(long_options[opti].name);
+            if(optarg!=0) foo->set(optarg);
+            else foo->set("true"); // for flags
+            break;
+            
+         // getopt_long already printed an error message
+         case '?':
+            throw("Unrecognised command line option");
+            break;
+         
+         // short option
+         default:
+            BaseOption* foo = find(c);
+            if(optarg!=0) foo->set(optarg);
+            else foo->set("true"); // for flags
+            break;
+      }
+   }
+   return;
 }
-
-
-
-
-
-
-

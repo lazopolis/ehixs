@@ -67,9 +67,12 @@ struct Option : public BaseOption
 
 };
 
-struct OptionSet
+class OptionSet
 {
-    vector<BaseOption*> _opts;
+protected:
+    static BaseOption* find(const string& name);
+    static BaseOption* find(const char& name);
+    static vector<BaseOption*> _opts();
 };
 
 //class CutOption : public Option<NameAndArgs>
