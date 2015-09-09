@@ -39,8 +39,6 @@ public:
     static map& lookup()
     {
         static map* _lookup = new map();
-        for (typename map::iterator it = _lookup->begin(); it != _lookup->end(); ++it)
-            std::cout << it->first << std::endl;
         return *_lookup;
     };
 
@@ -98,7 +96,6 @@ public:
     Factory(const std::string& name = "", const std::string& info = "") :
     BaseFactory<BaseObj>(), _info(info)
     {
-        std::cout << "emplacing" << std::endl;
         BaseFactory<BaseObj>::lookup().emplace(name,this);
     }
 

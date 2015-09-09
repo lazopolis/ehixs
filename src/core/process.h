@@ -17,31 +17,21 @@ using namespace std;
 
 // ==================================================
 // First includes
-//#include "CPDF.h"
-//#include "CMonteCarlo.h"
 #include "model.h"
 #include "chaplin.h"
-//#include "fvector.h"
-//#include "CConstants.h"
 #include "cut.h"
 
-//#include "Interface_to_amplitudes.h"
 #include "option.h"
-//#include "luminosity.h"
 #include "thehatch.h"
 #include "decay.h"
-#include "decay_wwzz.h"
-#include "decay_h_to_gamma_gamma.h"
-#include "decay_z_gamma.h"
 #include "production.h"
-#include "vegas_adaptor.h"
+#include "vegasadaptor.h"
 // ==================================================
 // Forward declarations
 class CHistogram;
 class CHistogram2d;
 class AverageObservable;
 
-//#include "momenta.h"
 #include "histogram.h"
 
 class IProcess : protected OptionSet
@@ -71,11 +61,19 @@ public:
     IProcess()
     : OptionSet()
     {
-        _opts().push_back(new Option<string>("production",0,"production process",Need::Required,production,"ggF"));
-        _opts().push_back(new Option<string>("decay",0,"decay process",Need::Required,decay,""));
-        _opts().push_back(new Option<bool>("bin_by_bin_integration",0,"switch on bin by bin integration (for every histogram separately)",Need::Optional,bin_by_bin_integration,false));
-        _opts().push_back(new Option<bool>("no_grid_adaptation",0,"switch off grid adaptation in Vegas (default is on)",Need::Optional,no_grid_adaptation,false));
-    };
+        _opts().push_back(new Option<string>("production",0,
+                                             "production process",
+                                             Arg::Required,production,"ggF"));
+        _opts().push_back(new Option<string>("decay",0,
+                                             "decay process",
+                                             Arg::Required,decay,""));
+        _opts().push_back(new Option<bool>  ("bin_by_bin_integration",0,
+                                             "switch on bin by bin integration (for every histogram separately)",
+                                             Arg::Optional,bin_by_bin_integration,false));
+        _opts().push_back(new Option<bool>  ("no_grid_adaptation",0,
+                                             "switch off grid adaptation in Vegas (default is on)",
+                                             Arg::Optional,no_grid_adaptation,false));
+    }
     
     virtual ~IProcess(){};
     
@@ -86,7 +84,7 @@ public:
 class Process : protected IProcess
 {
 public://methods
-    Process(const UserInterface& UI);
+    Process();
     void  perform();
     //: public because it has to be accessed by Integrand
     void  Evaluate_integral(const double xx[]);

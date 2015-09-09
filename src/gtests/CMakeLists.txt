@@ -234,6 +234,16 @@ target_link_libraries(
             tools
 )
 
+add_executable(
+            parser_test
+            parser_test.cpp
+)
+target_link_libraries(
+            parser_test
+            kinematics
+            tools
+)
+
 if (CLN_FOUND)
 add_executable(
             qq2yyg_test

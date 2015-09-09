@@ -3,16 +3,13 @@
  * \file   cut_test.cpp
  * \author Simone Lionetti
  * \date   April 2015
- * \brief  Tests for my pow function
+ * \brief  Tests for cuts
  *
  */
 
 #include "cutbox.h"
+#include "defaultcuts.h"
 #include <iostream>
-
-//Factory<Cut,pT3cut> pT3cutFactory("pT3cut","this is a cut on the pT of particle 3.");
-//
-//extern template class BaseFactory<Cut>;
 
 /*TEST(ExpansionBasicTest,expansion_test)
 {
@@ -22,14 +19,15 @@
 int main(int argc, char**argv)
 {
 
-//    std::cout << &BaseFactory<Cut>::lookup() << std::endl;
-
+    cout << "Entering main" << endl;
     CutBox mycutbox;
+    cout << "Cutbox created" << endl;
     NameAndArgs foo = NameAndArgs::split("[pT3cut,10.]");
     std::cout << foo.name << std::endl;
     for (size_t i = 0; i < foo.args.size(); ++i)
         std::cout << foo.args[i] << std::endl;
     mycutbox.add(foo);
+    cout << "Cut added" << endl;
     const double th = 0.001;
     Momenta ps;
     ps.push_back({100.,0.,0.,+100.});
@@ -38,6 +36,7 @@ int main(int argc, char**argv)
     ps.push_back({100.,-100.*sin(th),0,-100.*cos(th)});
     Event myevent(1.,ps);
     std::cout << (mycutbox.isCut(myevent) ? "true" : "false") << std::endl;
+    cout << "Cut applied" << endl;
     return 0;
 
 }

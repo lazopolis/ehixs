@@ -15,16 +15,16 @@ class IPDFHub : protected OptionSet
 
     IPDFHub()
     {
-        _opts().push_back(new Option<string>("pdf_provider",0,"pdf provider",Need::Required,pdf_provider,"none"));
+        _opts().push_back(new Option<string>("pdf_provider",0,"pdf provider",Arg::Required,pdf_provider,"none"));
         /// \todo Nf double? Seriously?
-        _opts().push_back(new Option<double>("number_of_flavours",0,"number of active flavors (do not change)",Need::Required,number_of_flavours,5.0));
-//        _opts().push_back(new Option<string>("Fleft",0,"specifies the flavor of the parton on left beam",Need::Required,Fleft, "none"));
-//        _opts().push_back(new Option<string>("Fright",0,"specifies the flavor of the parton on right beam",Need::Required,Fright, "none"));
+        _opts().push_back(new Option<double>("number_of_flavours",0,"number of active flavors (do not change)",Arg::Required,number_of_flavours,5.0));
+//        _opts().push_back(new Option<string>("Fleft",0,"specifies the flavor of the parton on left beam",Arg::Required,Fleft, "none"));
+//        _opts().push_back(new Option<string>("Fright",0,"specifies the flavor of the parton on right beam",Arg::Required,Fright, "none"));
         _opts().push_back(new Option<string>(
                                              "pdf_set",0,
                                              "choose a specific pdf set name (one from the LHAPDF6 list found at\
                                              lhapdf.hepforge.org/pdfsets.html). This set will be used irrespectively of order for the entire computation. This option is incompatible with pdf_provider. ",
-                                             Need::Required,
+                                             Arg::Required,
                                              pdf_set,
                                              "none"));
     }

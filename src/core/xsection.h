@@ -11,11 +11,11 @@
 #ifndef XSECTION_H
 #define XSECTION_H
 
-#include <string>
 #include "convolutions.h" // InitialStateFlavors, Event
 #include "model.h"        // Model
 #include "bjorken.h"      // Bjorken
-#include "user_interface.h" // UI
+#include "option.h"       // Option
+#include <string>
 using namespace std;
 
 /**

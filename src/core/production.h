@@ -13,10 +13,8 @@
 
 #include <iostream>
 #include "model.h"
-#include "cut.h"
-#include "interface_to_amplitudes.h"
+#include "cutbox.h"
 #include "option.h"
-//#include "luminosity.h"
 #include "thehatch.h"
 #include "event.h"
 #include "xsectionmaker.h"
@@ -27,14 +25,14 @@ class IProduction : protected OptionSet
     
     IProduction(){
         /// \todo make this int?
-        _opts().push_back(new Option<string>("sector_for_production",'s',"number of the production sector to run: attention: the id number depends on other user defined parameters, like the channel, the perturbative order, the pole etc.  ",Need::Required,sector_for_production,"none"));
+        _opts().push_back(new Option<int>("sector_for_production",'s',"number of the production sector to run: attention: the id number depends on other user defined parameters, like the channel, the perturbative order, the pole etc.  ",Arg::Required,sector,-1));
     };
     
-    string sector_for_production;
+    int sector;
 };
 
 ///\class Production
-class Production : protected IProcess
+class Production : protected IProduction
 {
 
 public:

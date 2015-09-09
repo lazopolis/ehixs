@@ -11,30 +11,27 @@
 #define CUTBOX_H
 
 #include "option.h"
+#include "factory.h"
 #include "cut.h"
 
-class CutBox
+class CutBox : protected OptionSet
 {
 
 public:
 
-    CutBox()
-    : _cuts()
-    {}
+    CutBox(const string& name = "cut", const char abbr = 'c', const string& desc = "generic cuts")
+    : cuts()
+    {
+        _opts().push_back(new Option<CutBox>(name,abbr,desc,Arg::Required,*this));
+    }
 
     void add(const NameAndArgs& cut);
-    void add(const std::vector<NameAndArgs>& opts);
+//    void add(const std::vector<NameAndArgs>& opts);
 
     bool isCut(const Event& event) const;
 
-    //    void show_cut_info_and_exit();
-
-private:
-
-    std::vector<Cut*> _cuts;
+    vector<Cut*> cuts;
 
 };
-
-
 
 #endif

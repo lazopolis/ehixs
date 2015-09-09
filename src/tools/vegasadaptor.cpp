@@ -20,13 +20,13 @@ int Integrand(
               );
 
 VegasAdaptor::VegasAdaptor(pointer_to_Integrand ptr, const int ndim)
-: IVegas(), number_of_dims(ndim),
-epsrel_cur(epsrel_therm),
-epsabs_cur(epsabs_therm),
-mineval_cur(mineval_therm),
-maxeval_cur(maxeval_therm),
-nstart_cur(nstart_therm),
-nincrease_cur(nincrease_therm),
+: IVegas(), _number_of_dims(ndim),
+_epsrel_cur(epsrel_therm),
+_epsabs_cur(epsabs_therm),
+_mineval_cur(mineval_therm),
+_maxeval_cur(maxeval_therm),
+_nstart_cur(nstart_therm),
+_nincrease_cur(nincrease_therm),
 the_hatch(NULL),
 my_integrand(ptr),
 total_number_of_points_(0),
@@ -43,7 +43,7 @@ void VegasAdaptor::call()
 {
     cout<<"\n["<<__func__<<"] Calling Vegas "<<endl;
     cout<<"\n["<<__func__<<"] dimension of integration =  "
-        <<number_of_dims <<endl;
+        <<_number_of_dims <<endl;
     
      double integral[number_of_components];
      double error[number_of_components];
@@ -57,18 +57,18 @@ void VegasAdaptor::call()
      int nbatch=10;
      //
      Vegas(
-           number_of_dims,
+           _number_of_dims,
            number_of_components,
            integrand_t(my_integrand),
            NULL,
-           epsrel_cur,
-           epsabs_cur,
+           _epsrel_cur,
+           _epsabs_cur,
            verbose,
            seed,  
-           mineval_cur, // = mineval
-           maxeval_cur,
-           nstart_cur,
-           nincrease_cur,
+           _mineval_cur, // = mineval
+           _maxeval_cur,
+           _nstart_cur,
+           _nincrease_cur,
            nbatch,
            gridno, 
            grid_file_name_.c_str(),
@@ -88,12 +88,12 @@ void VegasAdaptor::call()
 
 void VegasAdaptor::prepare_for_final_iteration()
 {
-    epsrel_cur=epsrel;
-    epsabs_cur=epsabs;
-    mineval_cur=mineval;
-    maxeval_cur=maxeval;
-    nstart_cur=nstart;
-    nincrease_cur=nincrease;
+    _epsrel_cur=epsrel;
+    _epsabs_cur=epsabs;
+    _mineval_cur=mineval;
+    _maxeval_cur=maxeval;
+    _nstart_cur=nstart;
+    _nincrease_cur=nincrease;
     ff[0]=0.0;
     integral_output.clear();
     error_output.clear();
@@ -150,7 +150,7 @@ string VegasAdaptor::xml()
 ostream& operator<<(ostream& stream, const VegasAdaptor& Vegas)
 {
     stream << "\n\n[ehixs] cross section [pb]" << endl;
-    for (int i = 0; i < number_of_components; ++i)
+    for (int i = 0; i < Vegas.number_of_components; ++i)
     {
         stream << "[ehixs] sigma = " << Vegas.integral_output[i]
         << " +- " << Vegas.error_output[i]

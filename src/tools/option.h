@@ -16,7 +16,7 @@
 
 using namespace std;
 
-enum Need {
+enum Arg {
     None=0,
     Required=1,
     Optional=2
@@ -37,9 +37,9 @@ struct BaseOption
     const string name;
     const char   abbr;
     const string desc;
-    const Need   need;
+    const Arg    need;
 
-    BaseOption(const string& iname, char iabbr, const string& idesc, const Need ineed)
+    BaseOption(const string& iname, char iabbr, const string& idesc, const Arg ineed)
     : name(iname), abbr(iabbr), desc(idesc), need(ineed)
     {}
 
@@ -47,7 +47,8 @@ struct BaseOption
     {}
 
     virtual void set(const string& input) = 0;
-    
+    virtual string print() const = 0;
+
 };
 
 template<class T>
@@ -56,7 +57,11 @@ struct Option : public BaseOption
 
     T& value;
 
-    Option(const string& iname, char iabbr, const string& idesc, const Need ineed, T& ibind, const T& ival = T())
+    Option(const string& iname, char iabbr, const string& idesc, const Arg ineed, T& ibind)
+    : BaseOption(iname,iabbr,idesc,ineed), value(ibind)
+    {}
+
+    Option(const string& iname, char iabbr, const string& idesc, const Arg ineed, T& ibind, const T& ival)
     : BaseOption(iname,iabbr,idesc,ineed), value(ibind)
     {
         value = ival;
@@ -64,15 +69,19 @@ struct Option : public BaseOption
     }
 
     void set(const string& input);
+    string print() const;
 
 };
 
 class OptionSet
 {
+public:
+    typedef vector<BaseOption*>::iterator iterator;
+
 protected:
     static BaseOption* find(const string& name);
     static BaseOption* find(const char& name);
-    static vector<BaseOption*> _opts();
+    static vector<BaseOption*>& _opts();
 };
 
 //class CutOption : public Option<NameAndArgs>

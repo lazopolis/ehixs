@@ -64,7 +64,7 @@ void Option<int>::set(const string& input)
 template<>
 void Option<bool>::set(const string& input)
 {
-    value = (input=="true" or input=="True" or input==0);
+    value = (input=="true" or input=="True");
     return;
 }
 
@@ -75,11 +75,45 @@ void Option<NameAndArgs>::set(const string& input)
     return;
 }
 
+template<>
+string Option<string>::print() const
+{
+    return value;
+}
+
+template<>
+string Option<double>::print() const
+{
+    return to_string(value);
+}
+
+template<>
+string Option<int>::print() const
+{
+    return to_string(value);
+}
+
+template<>
+string Option<bool>::print() const
+{
+    if (value) return "True";
+    else return "False";
+}
+
+template<>
+string Option<NameAndArgs>::print() const
+{
+    string foo = value.name;
+    for (vector<string>::const_iterator it = value.args.cbegin(); it != value.args.cend(); ++it)
+        foo = foo+" "+(*it);
+    return foo;
+}
+
 BaseOption* OptionSet::find(const string& name)
 {
    for (vector<BaseOption*>::iterator it = _opts().begin(); it != _opts().end(); ++it)
       if ((*it)->name == name) return *it;
-   cerr << "Option " << name << " not found." << endl;
+   cerr << "[OptionSet] Warning: option " << name << " not found." << endl;
    return NULL;
 }
 
@@ -87,12 +121,12 @@ BaseOption* OptionSet::find(const char& name)
 {
    for (vector<BaseOption*>::iterator it = _opts().begin(); it != _opts().end(); ++it)
       if ((*it)->abbr == name) return *it;
-   cerr << "Short option " << name << " not recognized." << endl;
+   cerr << "[OptionSet] Warning: short option " << name << " not recognized." << endl;
    return NULL;
 }
 
 
-vector<BaseOption*> OptionSet::_opts()
+vector<BaseOption*>& OptionSet::_opts()
 {
    static vector<BaseOption*>* __opts = new vector<BaseOption*>();
    return *__opts;

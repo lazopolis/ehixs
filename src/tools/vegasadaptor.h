@@ -39,19 +39,45 @@ struct IVegas : protected OptionSet
     IVegas()
     : OptionSet()
     {
-        _opts.push_back(new Option<double>("epsrel",0,"Vegas: target relative error",Need::Required,epsrel,0.01));
-        _opts.push_back(new Option<double>("epsabs",0,"Vegas: target absolute error",Need::Required,epsabs,1.e-10));
-        _opts.push_back(new Option<double>("epsrel_therm",0,"Vegas: target relative error for thermalization phase",Need::Required,epsrel_therm,0.01));
-        _opts.push_back(new Option<double>("epsabs_therm",0,"Vegas: target absolute error for thermalization phase",Need::Required,epsabs_therm,1e-10));
-        _opts.push_back(new Option<size_t>("mineval",0,"Vegas: minimum points to be evaluated",Need::Required,mineval,200000));
-        _opts.push_back(new Option<size_t>("maxeval",0,"Vegas: maximum points to be evaluated",Need::Required,maxeval,50000000));
-        _opts.push_back(new Option<size_t>("nstart",0,"Vegas: # of points for first iteration",Need::Required,nstart,20000));
-        _opts.push_back(new Option<size_t>("nincrease",0,"Vegas: # of points for step increase",Need::Required,nincrease,1000));
-        _opts.push_back(new Option<size_t>("mineval_therm",0,"Vegas: minimum points to be evaluated in thermalization phase",Need::Required,mineval_therm,1000));
-        _opts.push_back(new Option<size_t>("maxeval_therm",0,"Vegas: maximum points to be evaluated in thermalization phase",Need::Required,maxeval_therm,1000));
-        _opts.push_back(new Option<size_t>("nstart_therm",0,"Vegas: # of points for first iteration in thermalization phase",Need::Required,nstart_therm,1000));
-        _opts.push_back(new Option<size_t>("nincrease_therm",0,"Vegas: # of points for step increase in thermalization phase",Need::Required,nincrease_therm,0));
-        _opts.push_back(new Option<int>("verbose",0,"level of verbosity",Need::Required,verbose,2));
+        _opts().push_back(new Option<double>("epsrel",0,
+                                             "Vegas: target relative error",
+                                             Arg::Required,epsrel,0.01));
+        _opts().push_back(new Option<double>("epsabs",0,
+                                             "Vegas: target absolute error",
+                                             Arg::Required,epsabs,1.e-10));
+        _opts().push_back(new Option<double>("epsrel_therm",0,
+                                             "Vegas: target relative error for thermalization phase",
+                                             Arg::Required,epsrel_therm,0.01));
+        _opts().push_back(new Option<double>("epsabs_therm",0,
+                                             "Vegas: target absolute error for thermalization phase",
+                                             Arg::Required,epsabs_therm,1e-10));
+        _opts().push_back(new Option<size_t>("mineval",0,
+                                             "Vegas: minimum points to be evaluated",
+                                             Arg::Required,mineval,200000));
+        _opts().push_back(new Option<size_t>("maxeval",0,
+                                             "Vegas: maximum points to be evaluated",
+                                             Arg::Required,maxeval,50000000));
+        _opts().push_back(new Option<size_t>("nstart",0,
+                                             "Vegas: # of points for first iteration",
+                                             Arg::Required,nstart,20000));
+        _opts().push_back(new Option<size_t>("nincrease",0,
+                                             "Vegas: # of points for step increase",
+                                             Arg::Required,nincrease,1000));
+        _opts().push_back(new Option<size_t>("mineval_therm",0,
+                                             "Vegas: minimum points to be evaluated in thermalization phase",
+                                             Arg::Required,mineval_therm,1000));
+        _opts().push_back(new Option<size_t>("maxeval_therm",0,
+                                             "Vegas: maximum points to be evaluated in thermalization phase",
+                                             Arg::Required,maxeval_therm,1000));
+        _opts().push_back(new Option<size_t>("nstart_therm",0,
+                                             "Vegas: # of points for first iteration in thermalization phase",
+                                             Arg::Required,nstart_therm,1000));
+        _opts().push_back(new Option<size_t>("nincrease_therm",0,
+                                             "Vegas: # of points for step increase in thermalization phase",
+                                             Arg::Required,nincrease_therm,0));
+        _opts().push_back(new Option<int>("verbose",0,
+                                          "level of verbosity",
+                                          Arg::Required,verbose,2));
     }
 };
 
@@ -96,7 +122,7 @@ public:
     int NOP_in_previous_iteration;
     int iteration_number_old;
 
-    VegasAdaptor(pointer_to_Integrand ptr = NULL, const size_t ndim = 0);
+    VegasAdaptor(pointer_to_Integrand ptr = NULL, const int ndim = 0);
     void call();
     void prepare_for_final_iteration();
 
@@ -104,7 +130,7 @@ public:
     bool new_iteration_has_started();
     void flush();
     void set_ptr_to_the_hatch(TheHatch* in_hatch) {the_hatch=in_hatch;}
-    void set_number_of_dimensions(int dd) {number_of_dims=dd;}
+    void set_number_of_dimensions(int dd) {_number_of_dims=dd;}
     void set_ptr_to_integrand(pointer_to_Integrand ptr) {my_integrand=ptr;}
     int total_number_of_points() const {return total_number_of_points_;}
     string xml();

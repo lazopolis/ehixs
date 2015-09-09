@@ -26,13 +26,6 @@ const CModel& Production::model()
 void Production::Configure()
 {
     if (sectors.empty()) cerr << "\n[Production] Warning: sectors is empty!" << endl;
-    if (UI.info)
-    {
-        info();
-        exit(0);
-    }
-    else
-    {
         //if (the_xs_ != NULL) delete the_xs_;
         find_the_xs();
         if (is_sector_defined())
@@ -42,22 +35,20 @@ void Production::Configure()
             cuts_.ParseCuts(UI);
             cout << "[ehixs] CrossSection name : " << the_xs_->info->name << endl;
         }
-    }
     return;
 }
 
 
 void Production::find_the_xs()
 {
-    if (sector_for_production=="none")
+    if (sector<0)
     {
         cout<<"\n[find_sector] Error: you haven't declared a sector_for_production"<<endl;
         throw "\n[find_sector] Can't proceed!\n";
     }
     else
     {
-        size_t sector_id=atoi(sector_for_production.c_str());
-        if (sector_id<sectors.size())
+        if (static_cast<size_t>(sector)<sectors.size())
         {
             the_xs_ = sectors[sector_id]->create(UI);
             the_xs_->setEventBox(&event_box);
@@ -65,7 +56,7 @@ void Production::find_the_xs()
         else
         {
             cout<<"\n[find_sector] The sector id number you asked for, "
-            <<sector_id
+            << static_cast<size_t>(sector)
             <<", was outside the bounds [0,"
             << sectors.size() << ")";
             cout<<"\n[find_sector] Please run with UI.info=true"

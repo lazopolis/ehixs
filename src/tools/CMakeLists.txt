@@ -4,14 +4,13 @@ add_library(tools
             constants.cpp
             convolutions.cpp
             counterforge.cpp
-            cut.cpp
             cutbox.cpp
             epsilon_series.cpp
             event.cpp
             formalsum.cpp
-            histogram.cpp
+#histogram.cpp
             option.cpp
+            parser.cpp
             thehatch.cpp
-            user_interface.cpp
-            vegas_adaptor.cpp
+            vegasadaptor.cpp
             )
