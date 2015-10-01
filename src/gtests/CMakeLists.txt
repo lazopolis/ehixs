@@ -1,25 +1,7 @@
-
-#SET(GTEST_DIR /Users/lazopolis/other_codes/gtest-1.7.0)
-#
-#include_directories(
-#                ${GTEST_DIR}/include
-#                    )
-#
-#link_directories(
-#                ${GTEST_DIR}/mybuild/
-#               )
-
 #add_library(test_utils test_utils.cpp)
-
-#add_executable(UI_test
-#            test_UI.cpp)
-#target_link_libraries(UI_test
-#                        tools gtest)
-
 
 #add_executable(nlo_poles_test  ggf_pole_cancelation_nlo_test.cpp)
 #target_link_libraries(nlo_poles_test ${LIBRARIES_FOR_GLOBAL_TESTS})
-
 
 #add_executable(nlo_gg_xs_test ggf_nlo_gg_channel_xsection_test.cpp)
 #target_link_libraries(nlo_gg_xs_test ${LIBRARIES_FOR_GLOBAL_TESTS})
@@ -61,20 +43,6 @@
 #target_link_libraries(nlo_exact_test
 #            ${LIBRARIES_FOR_GLOBAL_TESTS})
 			
-
-#add_executable(one_d_interpolator_test
-#            one_d_interpolator_test.cpp)
-#target_link_libraries(one_d_interpolator_test
-#            tools pdf gtest avh_olo LHAPDF ${LHAPDF})
-            
-
-
-#add_executable(live_convolution_test
-#            live_convolution_test.cpp)
-#target_link_libraries(live_convolution_test
-#                    pdf tools mincuba LHAPDF ${LHAPDF}
-#                    gtest)
-
 #add_executable(test_ihixs
 #            iggf.cpp)
 #target_link_libraries(test_ihixs
@@ -86,7 +54,6 @@
 #            off_line_histograming.cpp)
 #target_link_libraries(off_line_histograming
 #            tools gtest)
-
 
 #add_executable(iggf
 #            iggf.cpp)

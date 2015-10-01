@@ -18,7 +18,6 @@ using namespace std;
 // ==================================================
 // First includes
 #include "model.h"
-#include "chaplin.h"
 #include "cut.h"
 
 #include "option.h"
@@ -37,20 +36,18 @@ class AverageObservable;
 class IProcess : protected OptionSet
 {
 
+    typedef vector<Decay*> DecayBox;
+
 protected:
 
     /// \name Data Members
     /// @{
-    
-    bool final_iteration_;
-    bool no_grid_adaptation_;
-    bool bin_by_bin_integration_;
-    int current_bin_;
-    Production* my_production;
-    /// \todo make Decay stuff vectors
-    int decay_particle_id_;
-    Decay* my_decay;
-    
+
+    bool _binbybin;
+    bool _adaptive;
+    Production* production;
+    DecayBox*   decays;
+
     /// @}
     
 public:
@@ -61,18 +58,18 @@ public:
     IProcess()
     : OptionSet()
     {
-        _opts().push_back(new Option<string>("production",0,
-                                             "production process",
-                                             Arg::Required,production,"ggF"));
-        _opts().push_back(new Option<string>("decay",0,
-                                             "decay process",
-                                             Arg::Required,decay,""));
-        _opts().push_back(new Option<bool>  ("bin_by_bin_integration",0,
-                                             "switch on bin by bin integration (for every histogram separately)",
-                                             Arg::Optional,bin_by_bin_integration,false));
-        _opts().push_back(new Option<bool>  ("no_grid_adaptation",0,
-                                             "switch off grid adaptation in Vegas (default is on)",
-                                             Arg::Optional,no_grid_adaptation,false));
+        _opts().push_back(new Option<bool>("bin_by_bin",0,
+                                           "switch on bin by bin integration (for every histogram separately)",
+                                            Arg::Optional,_binbybin,false));
+        _opts().push_back(new Option<bool>("adaptive",0,
+                                            "switch for grid adaptation in Vegas",
+                                            Arg::Optional,_adaptive,true));
+        _opts().push_back(new Option<Production*>("production",0,
+                                                  "production process",
+                                                  Arg::Required,production,NULL));
+        _opts().push_back(new Option<DecayBox*>("decay",0,
+                                                "decay process",
+                                                Arg::Required,decays,NULL));
     }
     
     virtual ~IProcess(){};
@@ -113,22 +110,19 @@ private://data
     
     CHistogram* current_histogram_;
     //ostringstream vegas_info_;
-    
+    bool final_iteration_;
+    int current_bin_;
+
 private://methods
-    void choose_production(const UserInterface & UI);
-    void choose_decay(const UserInterface & UI);
-    void set_decay(Decay * thedecay);
-    
+
     void perform_bin_by_bin_mode();
-    void perform_no_adaptation_mode();
-    void perform_default_mode();
     
     void book_null_event();
     void book_event(const CombinedEvent&);
     void proceed_to_production_phase();
     void proceed_to_decay_phase(Event*);
     void perform_decay_alone();
-    void book_decay_event(Event *);
+    void book_decay_event(Event*);
     void print_output_intermediate();
     void print_output();
     bool sectors_are_defined_in_production_and_decay();

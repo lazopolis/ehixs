@@ -1,15 +1,39 @@
-#ifndef TIME_KEEPER_H
-#define TIME_KEEPER_H
+/**
+ *
+ * \file    timekeeper.h
+ * \ingroup tools
+ * \author  Achilleas Lazopoulos
+ *
+ */
+
+#ifndef TIMEKEEPER_H
+#define TIMEKEEPER_H
 
 #include <time.h>
 
 class TimeKeeper
 {
-public:
-    TimeKeeper(){initial_time = clock();}
-    void StartMeasurement(){initial_time = clock();}
-    float GiveMeasurement(){return float(clock()-initial_time)/CLOCKS_PER_SEC;}
+
 private:
-    clock_t initial_time;
+
+    clock_t _start;
+    
+public:
+
+    TimeKeeper()
+    : _start(clock())
+    {}
+
+    void reset()
+    {
+        _start = clock();
+    }
+
+    float give()
+    {
+        return float(clock()-_start)/CLOCKS_PER_SEC;
+    }
+
 };
+
 #endif

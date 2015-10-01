@@ -8,6 +8,3 @@
  */
 
 #include "thehatch.h"
-
-/// TheHatch
-

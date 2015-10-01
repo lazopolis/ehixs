@@ -1,26 +1,24 @@
 /**
  *
- * \file    xsection.cpp
+ * \file    sector.cpp
  * \ingroup core
  * \author  Achilleas Lazopoulos
  * \author  Simone Lionetti
- * \date    September 2014
+ * \date    September 2015
  *
  */
 
-#include "xsection.h"
+#include "sector.h"
 
 /// \class XSection
 
 /// \name Constructors and destructor
 
 /// Default constructor
-XSection::XSection(const UserInterface& UI, const SectorInfo& myInfo) :
+Sector::Sector() :
     // Initializing empty stuff
     _model(), _eventBox(NULL), _lumi(NULL), _x(),
-    _as_pi(0.), _prefactor(consts::convert_GeV_to_pb), _factor(1.),
-    // Getting general parameters from the user interface
-    info(&myInfo), _muR(UI.mur), _muF(UI.muf)
+    _as_pi(0.), _prefactor(consts::convert_GeV_to_pb), _factor(1.)
 {
     // Configuring the luminosity
     /// \warning Luminosity allocation assumes left-right symmetry right now

@@ -4,16 +4,14 @@
  * \ingroup gamma_gamma
  * \author  Simone Lionetti
  * \date    January 2015
+ * \brief   Production P P -> gamma gamma + X
  *
  */
 
 #ifndef GAMMAGAMMA_H
 #define GAMMAGAMMA_H
 
-// Implementing the process P P -> gamma gamma + X
-
 #include "production.h"
-#include "xsection.h"
 #include "gammagamma_me.h"
 
 class GammaGamma : public Production
@@ -22,15 +20,16 @@ class GammaGamma : public Production
 public:
 
     GammaGamma()
+    : Production()
     {
-        sectors.push_back(new XSectionMaker<GammaGamma_qq_LO>());
-        sectors.push_back(new XSectionMaker<GammaGamma_qq_NLO_real>());
-        sectors.push_back(new XSectionMaker<GammaGamma_qq_NNLO_RV>());
+        sectors.push_back(new Factory<Sector,GammaGamma_qq_LO>("LO","leading order"));
+        sectors.push_back(new Factory<Sector,GammaGamma_qq_NLO_real>("R","real emission correction"));
+        sectors.push_back(new Factory<Sector,GammaGamma_qq_NNLO_RV>("RV","real-virtual correction"));
         return;
     }
 
-    void ConfigureCuts();
-
 };
+
+static Factory<Production,GammaGamma> gammagammafactory("gammagamma","production of two on-shell photons");
 
 #endif

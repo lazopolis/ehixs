@@ -9,91 +9,19 @@
  */
 
 #include "production.h"
-#include <stdlib.h> //: for exit()
 
-
-#ifndef ONCE_EC
-#define ONCE_EC
-//Production* EC; //: static global pointer to use as a handle for plugins (like the fortran or c++ NNLO double real pieces)
-//Process* ptr_to_process;
-#endif
-
-const CModel& Production::model()
+template<>
+void Option<Production*>::set(const string& input)
 {
-   return the_xs_->model;
-}
-
-void Production::Configure()
-{
-    if (sectors.empty()) cerr << "\n[Production] Warning: sectors is empty!" << endl;
-        //if (the_xs_ != NULL) delete the_xs_;
-        find_the_xs();
-        if (is_sector_defined())
-        {
-            ConfigureCuts();
-
-            cuts_.ParseCuts(UI);
-            cout << "[ehixs] CrossSection name : " << the_xs_->info->name << endl;
-        }
+    NameAndArgs foo = NameAndArgs::split(input);
+    BaseFactory<Production>::map::iterator factory = BaseFactory<Production>::lookup().find(foo.name);
+    if (factory != BaseFactory<Production>::lookup().end())
+        value = factory->second->create(foo.args);
     return;
 }
 
-
-void Production::find_the_xs()
+template<>
+string Option<Production*>::print() const
 {
-    if (sector<0)
-    {
-        cout<<"\n[find_sector] Error: you haven't declared a sector_for_production"<<endl;
-        throw "\n[find_sector] Can't proceed!\n";
-    }
-    else
-    {
-        if (static_cast<size_t>(sector)<sectors.size())
-        {
-            the_xs_ = sectors[sector_id]->create(UI);
-            the_xs_->setEventBox(&event_box);
-        }
-        else
-        {
-            cout<<"\n[find_sector] The sector id number you asked for, "
-            << static_cast<size_t>(sector)
-            <<", was outside the bounds [0,"
-            << sectors.size() << ")";
-            cout<<"\n[find_sector] Please run with UI.info=true"
-            <<" or --info to get the list of sector names"<<endl;
-            throw "\n[find_sector] Can't proceed!\n";
-        }
-    }
-}
-
-
-// dimension_of_integration depends on the particular integral (e.g. the LO is one-dimensional, the nlo and nnlo are higher), so it's setting is delegated to the particular cross section object that is requested by the user
-size_t Production::dimension_of_integration()
-{
-    if (is_sector_defined()) return the_xs_->info->dim;
-    else
-    {
-        cout<<"\nError: you asked for the dimension of integration, but the sector is not yet defined!"<<endl;
-        exit(0);
-    }
-}
-
-
-void Production::evaluate_sector()
-{
-    the_xs_->evaluate(xx_vegas);
-    return;
-}
-
-void Production::info()
-{
-    for (size_t i = 0; i < sectors.size(); ++i)
-        cout << "\n" << i << " : " << sectors[i]->info();
-    cout << endl << endl;
-    return;
-}
-
-void Production::xml_info(const char * output_fname)
-{
-    //???!?!
+    return "This is the poineter to production";
 }

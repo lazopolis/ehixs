@@ -6,13 +6,8 @@
 
 #ifndef ONCE_PTR_2_PROCESS
 #define ONCE_PTR_2_PROCESS
-
 Process* ptr_to_process;
-
 #endif
-
-
-#define my_hdecay my_hdecay_
 
 int Integrand(const int* ndim, const double xx[],
               const int* ncomp, double ff[], void* therun, double* weight, int* iteration_number)
@@ -24,36 +19,19 @@ int Integrand(const int* ndim, const double xx[],
         ff[p]=ptr_to_process->Vegas.ff[p];
     return(0);
 }
-//-----------------------------------------------------------------------------
-
-
 
 Process::Process()
-: Vegas()
+: Vegas(), current_bin_(0)
 {
-    decay_particle_id_=-1;
-    //cout<<"\n[ehixs] new Process"<<endl;
-    //UI.PrintAllOptions();
-    //: DEFAULT SETTINGS
+
     Vegas.ff.resize(1,0.);
     Vegas.number_of_components=1;
     Vegas.set_ptr_to_the_hatch(&the_hatch);
     Vegas.set_ptr_to_integrand(&Integrand);
 
-    if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
-
-    /// \deprecated This is terrible!!!
-    if (UI.number_of_flavours!=5)
-    {
-        cout<<"\n\nerror in constructor of ExclusiveClass: during refactoring the nf became a global variable consts::nf and we don't want to be changing it from 5. If you really feel like doing so, uncomment the next line in the code";exit(1);
-    }
     ptr_to_process=this;
-    production_is_defined=false;
-    decay_is_defined=false;
-    //: setting production
-    // process forking
-    choose_production(UI);
-    choose_decay(UI);
+
+    if (UI.histogram_info) _histograms->show_histogram_info_and_exit();
 
     if (UI.cut_info)
     {
@@ -61,79 +39,12 @@ Process::Process()
         my_decay->cuts_->show_cut_info_and_exit();
     }
 
-    final_iteration_ = false;
-    bin_by_bin_integration_ = UI.bin_by_bin_integration;
-    no_grid_adaptation_ = UI.no_grid_adaptation;
-    current_bin_ =0;
-
     if (UI.write_events) events_writing_=true;
     else events_writing_ = false;
 
-}
-
-void Process::choose_production(const UserInterface & UI)
-{
-    //    std::cout<<"\n[ehixs] Process initiated with production "
-    //            <<UI.production<<endl;
-    if (UI.production=="ggF")
-        //{cout<<"\nError: ggF temporarily unavailable"<<endl;exit(0);}
-        my_production = new GluonFusion;
-    else if (UI.production=="GammaStarGammaStar")
-        //my_production = new GammaStarGammaStar;
-    {cout<<"\nError: GammaStarGammaStar temporarily unavailable"<<endl;exit(0);}
-    //{cout<<"\nError: GammaStarGammaStar temporarily unavailable"<<endl;exit(0);}
-    else if (UI.production=="bbH")
-    {
-        my_production = new BottomFusion;
-        decay_particle_id_ = 3;
-    }
-    else if (UI.production=="gammagamma")
-    {
-        my_production = new GammaGamma;
-    }
-    else
-    {
-        cout<<endl<<"[ehixs] Process "<<UI.production<<" not implemented";
-        throw "non-implemented process";
-    }
-    my_production->Configure(UI);
-    my_production->set_up_the_hatch(the_hatch);
-    Vegas.set_number_of_dimensions(the_hatch.n());
-    production_is_defined=true;
-}
-
-void Process::choose_decay(const UserInterface & UI)
-{
-    if( UI.decay == "" || UI.decay == "1" )
-    {
-        std::cout << "[ehixs] No decay specified" << endl;
-    }
-    else
-    {
-        std::cout<<"[ehixs] Process initiated with decay "<<UI.decay;
-        //if (UI.decay=="4leptons") set_decay(new Decay_WWZZ(UI));
-        //else if(UI.decay=="gamma_gamma") set_decay(new Decay_gammagamma(UI));
-        //else if(UI.decay=="Z_gamma") set_decay(new Decay_H_to_Z_Gamma(UI));
-        //else
-        {
-            cout<<endl<<"[ehixs] Process "<<UI.decay<<" not implemented";
-            throw "non-implemented process";
-        }
-    }
+    return;
 
 }
-
-
-void Process::set_decay(Decay * thedecay)
-{
-    my_decay = thedecay;
-    my_decay->set_up_the_hatch(the_hatch);
-    Vegas.set_number_of_dimensions(the_hatch.n());
-    decay_is_defined=true;
-    if (production_is_defined) my_decay->SetModel(my_production->model());
-
-}
-
 
 void Process::perform()
 {
@@ -146,13 +57,20 @@ void Process::perform()
 
     if (events_writing_) open_event_filename();
 
-    if (bin_by_bin_integration_)
+    if (_binbybin)
         perform_bin_by_bin_mode();
     else
-        if (no_grid_adaptation_)
-            perform_no_adaptation_mode();
-        else
-            perform_default_mode();
+        if (_adaptive) {
+            cout<<"[ehixs] adaptation phase"<<endl;
+            Vegas.call();
+            Vegas.prepare_for_final_iteration();
+
+        } else {
+            cout << "[Process] main integration" << endl;
+            Vegas.call();
+            _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_current_iteration);
+            print_output();
+        }
 
     if (events_writing_) close_event_filename();
 
@@ -177,7 +95,7 @@ void Process::perform_bin_by_bin_mode()
             cout<<"[ehixs] evaluating histogram #"<<chist+1
             <<" bin # " << current_bin_+1<<" / "<<current_histogram_->size()<<endl;
             Vegas.flush();
-            Vegas.call_vegas();
+            Vegas.call();
             current_histogram_->set_bin(current_bin_,
                                         Vegas.integral_output[0],
                                         Vegas.error_output[0],
@@ -188,31 +106,6 @@ void Process::perform_bin_by_bin_mode()
             print_output();
         }
     }
-}
-
-void Process::perform_no_adaptation_mode()
-{
-    cout<<"[ehixs] mode of operation: no adaptation"<<endl;
-    cout<<"[ehixs] main integration"<<endl;
-    Vegas.call_vegas();
-
-    _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_current_iteration);
-    print_output();
-}
-
-void Process::perform_default_mode()
-{
-    cout<<"\n[ehixs] mode of operation: default"<<endl;
-    cout<<"[ehixs] adaptation phase"<<endl;
-    Vegas.call_vegas();
-    Vegas.prepare_for_final_iteration();
-    final_iteration_ = true;
-    cout<<"[ehixs]"<<endl;
-    cout<<"[ehixs] main integration"<<endl;
-    Vegas.call_vegas();
-    _histograms->update_histograms_end_of_iteration(Vegas.NOP_in_current_iteration);
-    print_output();
-
 }
 
 bool Process::sectors_are_defined_in_production_and_decay()

@@ -30,8 +30,6 @@ Parser::Parser()
 //    options.push_back(new Option<double>("Etot",0,"COM energy of the collider in GeV",Arg::Required,&Etot,7000.0));
 //    options.push_back(new Option<double>("m_higgs",0,"higgs mass in GeV","Required",&m_higgs,125.0));
 //
-//    options.push_back(new Option<double>("mur",0,"mur (do not use this for Higgs production)","Required",&mur,80.0));
-//    options.push_back(new Option<double>("muf",0,"muf (do not use this for Higgs production)","Required",&muf,80.0));
 //
 //    options.push_back(new Option<double>("astar_m3",0,")virtuality of photon no 3","Required",&astar_m3,5.0));
 //    options.push_back(new Option<double>("astar_m4",0,")virtuality of photon no 4","Required",&astar_m4,5.0));

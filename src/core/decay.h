@@ -1,41 +1,36 @@
+/**
+ *
+ * \file    decay.h
+ * \ingroup core
+ * \author  Achilleas Lazopoulos
+ * \date    September 2015
+ *
+ */
+
+/// \todo Decays are in very bad shape and need redesign.
+
 #ifndef DECAY_H
 #define DECAY_H
 
+#include "option.h"
+#include "constants.h"
+#include "thehatch.h"
+#include "cutbox.h"
 #include <string>
 #include <complex>
 using namespace std;
 
-#include "user_interface.h"
-//#include "fvector.h"
-#include "constants.h"
-#include "thehatch.h"
-//#include "momenta.h"
-#include "model.h"
-#include "chaplin.h"
-#include "cut.h"
-/** \brief Decay base class
- It takes care of decay vegas variables,
- it hosts the decay_events vector of pointers,
- and the generic PSP routine.
- It does not know about sectors, so sector disambiguation should be implemented within init(), which is called at the end of the ExclusiveClass constructor
- To inherit from it you need to define
- a void init(CModel&); that at least sets up the dimensionality of integration
- and a void do_decay(Momenta&); which computes the decay weight and fills up the decay_events with events.
-
- */
 class Decay
 {
+
 public:
-    Decay(){my_sector_name = "If you see this, the specific decay hasn't declared it's sector_name yet.";sector_defined=false;
+
+    Decay(){
+        my_sector_name = "If you see this, the specific decay hasn't declared it's sector_name yet.";
+        sector_defined=false;
         cuts_ = new CutBox();
     }
-    //double  decay_WW();
 
-
-
-    //Momenta decay_momenta;
-    //CModel Model;
-    //string decay_mode;
     virtual int NumberOfParticles() = 0;
     virtual void do_decay(FourVector p)=0;
     virtual void do_decay()=0;//: default decay at rest frame
@@ -52,7 +47,7 @@ public:
         the_hatch.request(decay_xx_vegas, dimension_of_integration());
     }
     CutBox* cuts_;
-    bool this_event_passes_cuts(int i){return cuts_->passes_cuts(&event_box[i]);}
+    bool this_event_passes_cuts(int i){return !cuts_->isCut(event_box[i]);}
 protected:
     string decay_mode;
     vector<double> decay_xx_vegas;
